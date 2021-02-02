@@ -13,6 +13,12 @@
     <ClCompile Include="src\deleteMe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giPlatformMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giVector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -20,6 +26,15 @@
     </ClInclude>
     <ClInclude Include="include\giPlatformTypes.h">
       <Filter>Source Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPlatformMath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giRadians.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector2.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

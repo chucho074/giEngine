@@ -270,10 +270,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\deleteMe.cpp" />
+    <ClCompile Include="src\giPlatformMath.cpp" />
+    <ClCompile Include="src\giVector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h" />
+    <ClInclude Include="include\giPlatformMath.h" />
     <ClInclude Include="include\giPlatformTypes.h" />
+    <ClInclude Include="include\giRadians.h" />
+    <ClInclude Include="include\giVector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
