@@ -1,7 +1,13 @@
 #include "../include/giRadians.h"
 #include "../include/giDegrees.h"
+#include "../include/giPlatformMath.h"
 
-const giRadians& 
+float giRadians::degVal() const
+{
+  return m_RadianAngle * PlatformMath::RAD2DEG;
+}
+
+const giRadians&
 giRadians::operator+() const
 {
   return *this;

@@ -8,7 +8,7 @@ using std::atan;
 
 class PlatformMath
 {
-
+ public:
   static const float PI;
   static const float DEG2RAD;
   static const float RAD2DEG;

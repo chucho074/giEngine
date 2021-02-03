@@ -28,12 +28,15 @@ public:
   }
   ~giRadians() = default;
 
-  float getRadians() { return m_RadianAngle; }
+  float 
+  getRadians() { return m_RadianAngle; }
 
-  float getDegrees() { return m_RadianAngle; }
+  float 
+  getDegrees() { return m_RadianAngle; }
 
-  //+ += - -= * *= / /= < <= == != >= > 
-  //Radians 
+  float
+  degVal() const;
+
 
   const giRadians&
   operator+() const;
