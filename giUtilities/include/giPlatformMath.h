@@ -25,6 +25,12 @@ class PlatformMath
   invSqr(float val) {
     return 1.0f / sqrtf(val);
   }
+  //Raiz cuadrada
+  //coseno seno tangente
+  //Exponentes
+  //logaritmo natural
+  //logaritmo
+  //Lo anterior pero float
 
 
 };

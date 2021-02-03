@@ -19,6 +19,12 @@
     <ClCompile Include="src\giVector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giRadians.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giDegrees.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -34,6 +40,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giVector2.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giDegrees.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
