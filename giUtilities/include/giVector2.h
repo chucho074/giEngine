@@ -28,12 +28,13 @@ class giVector2
   setX(float inVal) {
     x = inVal;
   }
+
   void
   setY(float inVal) {
     y = inVal;
   }
 
-  //+ - * / vectores
+
   giVector2
   operator+(const giVector2& otherVect);
 
@@ -46,7 +47,7 @@ class giVector2
   giVector2
   operator/(const giVector2& otherVect);
   
-  //+ - * / float
+
   giVector2
   operator+(const float& otherVal);
 
@@ -60,12 +61,21 @@ class giVector2
   operator/(const float& otherVal);
 
 
-  // += -= <= >= ==
+  
   bool
-  operator+=(const float& otherVal);
+  operator>=(const giVector2& otherVect);
 
   bool
-  operator-=(const float& otherVal);
+  operator<=(const giVector2& otherVect);
+
+  bool
+  operator==(const giVector2& otherVect);
+
+  bool
+  operator<(const giVector2& otherVect);
+
+  bool
+  operator>(const giVector2& otherVect);
   
   bool
   operator>=(const float& otherVal);
@@ -76,6 +86,23 @@ class giVector2
   bool
   operator==(const float& otherVal);
 
+  bool
+  operator<(const float& otherVal);
+
+  bool
+  operator>(const float& otherVal);
+
+  float
+  dotProd(const giVector2& inVect);
+
+  float 
+  crossProd(const giVector2& inVect);
+
+  void
+  normalize();
+
+  float
+  magnitude();
 
  protected:
  	

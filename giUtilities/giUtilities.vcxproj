@@ -274,6 +274,7 @@
     <ClCompile Include="src\giPlatformMath.cpp" />
     <ClCompile Include="src\giRadians.cpp" />
     <ClCompile Include="src\giVector2.cpp" />
+    <ClCompile Include="src\giVector2i.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDegrees.h" />
@@ -282,6 +283,7 @@
     <ClInclude Include="include\giPlatformTypes.h" />
     <ClInclude Include="include\giRadians.h" />
     <ClInclude Include="include\giVector2.h" />
+    <ClInclude Include="include\giVector2i.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
