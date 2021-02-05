@@ -28,6 +28,12 @@
     <ClCompile Include="src\giVector2i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giVector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giVector3i.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -49,6 +55,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giVector2i.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector3i.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
