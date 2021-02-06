@@ -10,7 +10,7 @@
 #pragma once
 
 #define GI_PLATFORM_WIN32 1                     //Windows Platform
-#define GI_PLATFORM_WIN32 2                     //Linux Platform
+#define GI_PLATFORM_LINUX 2                     //Linux Platform
 
 
 #define GI_COMPILER_MSVC 1                      //Visual Studio Compiler
@@ -136,7 +136,8 @@
 # endif
 # ifndef GCC_ALIGN
 #   define GCC_ALIGN(n)
-# endif (GI_COMPILER == GI_COMPILER_GNUC)
+# endif
+# elif (GI_COMPILER == GI_COMPILER_GNUC)
 # define MS_ALIGN(n)
 # define GCC_PACK(n)
 # define GCC_ALIGN(n) __attribute__( (__aligned(n)) )

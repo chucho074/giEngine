@@ -174,22 +174,22 @@ giVector3i::normalize()
 {
   int32 mag = magnitude();
   if (mag > 0) {
-    int32 tmp = 1.0f / mag;
+    int32 tmp = 1 / mag;
     x *= tmp;
     y *= tmp;
     z *= tmp;
   }
   else {
-    x = 0.0f;
-    y = 0.0f;
-    z = 0.0f;
+    x = 0;
+    y = 0;
+    z = 0;
   }
 }
 
 int32
 giVector3i::magnitude()
 {
-  return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
+  return int32(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
 }
 
 
