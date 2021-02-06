@@ -1,98 +1,98 @@
-#include "giVector4.h"
+#include "giVector4i.h"
 
 
-giVector4::giVector4(float inX, float inY, float inZ, float inW) {
+giVector4i::giVector4i(int32 inX, int32 inY, int32 inZ, int32 inW) {
   x = inX;
   y = inY;
   z = inZ;
   w = inW;
 }
 
-giVector4::giVector4(giVector4& inVect) {
+giVector4i::giVector4i(giVector4i& inVect) {
   x = inVect.getX();
   y = inVect.getY();
   z = inVect.getZ();
   w = inVect.getW();
 }
 
-giVector4::~giVector4() {
+giVector4i::~giVector4i() {
 
 }
 
-giVector4
-giVector4::operator+(const giVector4& otherVect)
+giVector4i
+giVector4i::operator+(const giVector4i& otherVect)
 {
-  return giVector4(x + otherVect.x, 
+  return giVector4i(x + otherVect.x, 
                    y + otherVect.y, 
                    z + otherVect.z, 
                    w + otherVect.w);
 }
 
-giVector4
-giVector4::operator-(const giVector4& otherVect)
+giVector4i
+giVector4i::operator-(const giVector4i& otherVect)
 {
-  return giVector4(x - otherVect.x, 
+  return giVector4i(x - otherVect.x, 
                    y - otherVect.y, 
                    z - otherVect.z, 
                    w - otherVect.w);
 }
 
-giVector4
-giVector4::operator*(const giVector4& otherVect)
+giVector4i
+giVector4i::operator*(const giVector4i& otherVect)
 {
-  return giVector4(x * otherVect.x, 
+  return giVector4i(x * otherVect.x, 
                    y * otherVect.y, 
                    z * otherVect.z, 
                    w * otherVect.w);
 }
 
-giVector4
-giVector4::operator/(const giVector4& otherVect)
+giVector4i
+giVector4i::operator/(const giVector4i& otherVect)
 {
-  return giVector4(x / otherVect.x, 
+  return giVector4i(x / otherVect.x, 
                    y / otherVect.y, 
                    z / otherVect.z, 
                    w / otherVect.w);
 }
 
-giVector4
-giVector4::operator+(const float& otherVal)
+giVector4i
+giVector4i::operator+(const int32& otherVal)
 {
-  return giVector4(x + otherVal, 
+  return giVector4i(x + otherVal, 
                    y + otherVal, 
                    z + otherVal, 
                    w + otherVal);
 }
 
-giVector4
-giVector4::operator-(const float& otherVal)
+giVector4i
+giVector4i::operator-(const int32& otherVal)
 {
-  return giVector4(x - otherVal, 
+  return giVector4i(x - otherVal, 
                    y - otherVal, 
                    z - otherVal, 
                    w - otherVal);
 }
 
-giVector4
-giVector4::operator*(const float& otherVal)
+giVector4i
+giVector4i::operator*(const int32& otherVal)
 {
-  return giVector4(x * otherVal, 
+  return giVector4i(x * otherVal, 
                    y * otherVal, 
                    z * otherVal, 
                    w * otherVal);
 }
 
-giVector4
-giVector4::operator/(const float& otherVal)
+giVector4i
+giVector4i::operator/(const int32& otherVal)
 {
-  return giVector4(x / otherVal, 
+  return giVector4i(x / otherVal, 
                    y / otherVal, 
                    z / otherVal, 
                    w / otherVal);
 }
 
 bool
-giVector4::operator>=(const giVector4& otherVect)
+giVector4i::operator>=(const giVector4i& otherVect)
 {
   if (otherVect.x <= x && 
       otherVect.y <= y && 
@@ -105,7 +105,7 @@ giVector4::operator>=(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator<=(const giVector4& otherVect)
+giVector4i::operator<=(const giVector4i& otherVect)
 {
   if (otherVect.x >= x && 
       otherVect.y >= y && 
@@ -118,7 +118,7 @@ giVector4::operator<=(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator==(const giVector4& otherVect)
+giVector4i::operator==(const giVector4i& otherVect)
 {
   if (otherVect.x == x && 
       otherVect.y == y && 
@@ -131,7 +131,7 @@ giVector4::operator==(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator<(const giVector4& otherVect)
+giVector4i::operator<(const giVector4i& otherVect)
 {
   if (otherVect.x > x && 
       otherVect.y > y && 
@@ -144,7 +144,7 @@ giVector4::operator<(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator>(const giVector4& otherVect)
+giVector4i::operator>(const giVector4i& otherVect)
 {
   if (otherVect.x < x && 
       otherVect.y < y && 
@@ -157,7 +157,7 @@ giVector4::operator>(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator>=(const float& otherVal)
+giVector4i::operator>=(const int32& otherVal)
 {
   if (otherVal <= x && 
       otherVal <= y && 
@@ -170,7 +170,7 @@ giVector4::operator>=(const float& otherVal)
 }
 
 bool
-giVector4::operator<=(const float& otherVal)
+giVector4i::operator<=(const int32& otherVal)
 {
   if (otherVal >= x && 
       otherVal >= y && 
@@ -183,7 +183,7 @@ giVector4::operator<=(const float& otherVal)
 }
 
 bool
-giVector4::operator==(const float& otherVal)
+giVector4i::operator==(const int32& otherVal)
 {
   if (otherVal == x && 
       otherVal == y && 
@@ -196,7 +196,7 @@ giVector4::operator==(const float& otherVal)
 }
 
 bool
-giVector4::operator<(const float& otherVal)
+giVector4i::operator<(const int32& otherVal)
 {
   if (otherVal > x && 
       otherVal > y && 
@@ -209,7 +209,7 @@ giVector4::operator<(const float& otherVal)
 }
 
 bool
-giVector4::operator>(const float& otherVal)
+giVector4i::operator>(const int32& otherVal)
 {
   if (otherVal < x && 
       otherVal < y && 
@@ -221,8 +221,8 @@ giVector4::operator>(const float& otherVal)
   return false;
 }
 
-float
-giVector4::dotProd(const giVector4& inVect)
+int32
+giVector4i::dotProd(const giVector4i& inVect)
 {
   return ((x * inVect.x) + 
           (y * inVect.y) + 
@@ -230,8 +230,8 @@ giVector4::dotProd(const giVector4& inVect)
           (w * inVect.w));
 }
 
-float
-giVector4::crossProd(const giVector4& inVect)
+int32
+giVector4i::crossProd(const giVector4i& inVect)
 {
   return (((y * inVect.z) - (z * inVect.y)),
           ((z * inVect.x) - (x * inVect.z)),
@@ -240,11 +240,11 @@ giVector4::crossProd(const giVector4& inVect)
 }
 
 void
-giVector4::normalize()
+giVector4i::normalize()
 {
-  float mag = magnitude();
+  int32 mag = magnitude();
   if (mag > 0) {
-    float tmp = 1.0f / mag;
+    int32 tmp = 1.0f / mag;
     x *= tmp;
     y *= tmp;
     z *= tmp;
@@ -258,10 +258,8 @@ giVector4::normalize()
   }
 }
 
-float
-giVector4::magnitude()
+int32
+giVector4i::magnitude()
 {
   return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2) + powf(w, 2));
 }
-
-

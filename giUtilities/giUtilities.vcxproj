@@ -278,6 +278,7 @@
     <ClCompile Include="src\giVector3.cpp" />
     <ClCompile Include="src\giVector3i.cpp" />
     <ClCompile Include="src\giVector4.cpp" />
+    <ClCompile Include="src\giVector4i.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDegrees.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="include\giVector3.h" />
     <ClInclude Include="include\giVector3i.h" />
     <ClInclude Include="include\giVector4.h" />
+    <ClInclude Include="include\giVector4i.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
