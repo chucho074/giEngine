@@ -271,6 +271,7 @@
   <ItemGroup>
     <ClCompile Include="src\deleteMe.cpp" />
     <ClCompile Include="src\giDegrees.cpp" />
+    <ClCompile Include="src\giMatrix4.cpp" />
     <ClCompile Include="src\giPlatformMath.cpp" />
     <ClCompile Include="src\giRadians.cpp" />
     <ClCompile Include="src\giVector2.cpp" />
@@ -282,10 +283,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDegrees.h" />
+    <ClInclude Include="include\giMatrix4.h" />
     <ClInclude Include="include\giPlatformDefines.h" />
     <ClInclude Include="include\giPlatformMath.h" />
     <ClInclude Include="include\giPlatformTypes.h" />
+    <ClInclude Include="include\giPrerequisitesUtilities.h" />
     <ClInclude Include="include\giRadians.h" />
+    <ClInclude Include="include\giStdHeaders.h" />
     <ClInclude Include="include\giVector2.h" />
     <ClInclude Include="include\giVector2i.h" />
     <ClInclude Include="include\giVector3.h" />

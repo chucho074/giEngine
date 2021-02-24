@@ -20,7 +20,7 @@ giVector4::~giVector4() {
 }
 
 giVector4
-giVector4::operator+(const giVector4& otherVect)
+giVector4::operator+(const giVector4& otherVect) const
 {
   return giVector4(x + otherVect.x, 
                    y + otherVect.y, 
@@ -29,7 +29,7 @@ giVector4::operator+(const giVector4& otherVect)
 }
 
 giVector4
-giVector4::operator-(const giVector4& otherVect)
+giVector4::operator-(const giVector4& otherVect) const 
 {
   return giVector4(x - otherVect.x, 
                    y - otherVect.y, 
@@ -38,7 +38,7 @@ giVector4::operator-(const giVector4& otherVect)
 }
 
 giVector4
-giVector4::operator*(const giVector4& otherVect)
+giVector4::operator*(const giVector4& otherVect) const 
 {
   return giVector4(x * otherVect.x, 
                    y * otherVect.y, 
@@ -47,7 +47,7 @@ giVector4::operator*(const giVector4& otherVect)
 }
 
 giVector4
-giVector4::operator/(const giVector4& otherVect)
+giVector4::operator/(const giVector4& otherVect) const 
 {
   return giVector4(x / otherVect.x, 
                    y / otherVect.y, 
@@ -92,7 +92,7 @@ giVector4::operator/(const float& otherVal)
 }
 
 bool
-giVector4::operator>=(const giVector4& otherVect)
+giVector4::operator>=(const giVector4& otherVect) const
 {
   if (otherVect.x <= x && 
       otherVect.y <= y && 
@@ -105,7 +105,7 @@ giVector4::operator>=(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator<=(const giVector4& otherVect)
+giVector4::operator<=(const giVector4& otherVect) const
 {
   if (otherVect.x >= x && 
       otherVect.y >= y && 
@@ -118,7 +118,7 @@ giVector4::operator<=(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator==(const giVector4& otherVect)
+giVector4::operator==(const giVector4& otherVect) const
 {
   if (otherVect.x == x && 
       otherVect.y == y && 
@@ -130,8 +130,20 @@ giVector4::operator==(const giVector4& otherVect)
   return false;
 }
 
+bool giVector4::operator!=(const giVector4& otherVect) const
+{
+    if (otherVect.x != x && 
+        otherVect.y != y && 
+        otherVect.z != z && 
+        otherVect.w != w) {
+
+    return true;
+  }
+  return false;
+}
+
 bool
-giVector4::operator<(const giVector4& otherVect)
+giVector4::operator<(const giVector4& otherVect) const
 {
   if (otherVect.x > x && 
       otherVect.y > y && 
@@ -144,7 +156,7 @@ giVector4::operator<(const giVector4& otherVect)
 }
 
 bool
-giVector4::operator>(const giVector4& otherVect)
+giVector4::operator>(const giVector4& otherVect) const
 {
   if (otherVect.x < x && 
       otherVect.y < y && 

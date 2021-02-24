@@ -40,6 +40,9 @@
     <ClCompile Include="src\giVector4i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giMatrix4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -73,6 +76,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giVector4i.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giMatrix4.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPrerequisitesUtilities.h">
+      <Filter>Source Files\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giStdHeaders.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

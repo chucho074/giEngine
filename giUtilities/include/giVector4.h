@@ -15,22 +15,22 @@ public:
   ~giVector4();
 
   float
-  getX() {
+  getX() const {
     return x;
   }
 
   float
-  getY() {
+  getY() const {
     return y;
   }
 
   float
-  getZ() {
+  getZ() const {
     return z;
   }
 
   float
-  getW() {
+  getW() const {
     return w;
   }
 
@@ -56,16 +56,16 @@ public:
 
 
   giVector4
-  operator+(const giVector4& otherVect);
+  operator+(const giVector4& otherVect) const;
   
   giVector4
-  operator-(const giVector4& otherVect);
+  operator-(const giVector4& otherVect) const;
   
   giVector4
-  operator*(const giVector4& otherVect);
+  operator*(const giVector4& otherVect) const;
   
   giVector4
-  operator/(const giVector4& otherVect);
+  operator/(const giVector4& otherVect) const;
   
   
   giVector4
@@ -83,19 +83,22 @@ public:
   
   
   bool
-  operator>=(const giVector4& otherVect);
+  operator>=(const giVector4& otherVect) const;
   
   bool
-  operator<=(const giVector4& otherVect);
+  operator<=(const giVector4& otherVect) const;
   
   bool
-  operator==(const giVector4& otherVect);
+  operator==(const giVector4& otherVect) const;
   
   bool
-  operator<(const giVector4& otherVect);
+  operator!=(const giVector4& otherVect) const;
   
   bool
-  operator>(const giVector4& otherVect);
+  operator<(const giVector4& otherVect) const;
+  
+  bool
+  operator>(const giVector4& otherVect) const;
   
   bool
   operator>=(const float& otherVal);
