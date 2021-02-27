@@ -1,98 +1,99 @@
 #include "giVector4.h"
 
-
-giVector4::giVector4(float inX, float inY, float inZ, float inW) {
+namespace giEngineSDK {
+  
+  giVector4::giVector4(float inX, float inY, float inZ, float inW) {
   x = inX;
   y = inY;
   z = inZ;
   w = inW;
 }
-
-giVector4::giVector4(giVector4& inVect) {
+  
+  giVector4::giVector4(giVector4& inVect) {
   x = inVect.getX();
   y = inVect.getY();
   z = inVect.getZ();
   w = inVect.getW();
 }
-
-giVector4::~giVector4() {
+  
+  giVector4::~giVector4() {
 
 }
-
-giVector4
-giVector4::operator+(const giVector4& otherVect) const
+  
+  giVector4
+  giVector4::operator+(const giVector4& otherVect) const
 {
   return giVector4(x + otherVect.x, 
                    y + otherVect.y, 
                    z + otherVect.z, 
                    w + otherVect.w);
 }
-
-giVector4
-giVector4::operator-(const giVector4& otherVect) const 
-{
-  return giVector4(x - otherVect.x, 
-                   y - otherVect.y, 
-                   z - otherVect.z, 
-                   w - otherVect.w);
-}
-
-giVector4
-giVector4::operator*(const giVector4& otherVect) const 
-{
-  return giVector4(x * otherVect.x, 
-                   y * otherVect.y, 
-                   z * otherVect.z, 
-                   w * otherVect.w);
-}
-
-giVector4
-giVector4::operator/(const giVector4& otherVect) const 
-{
-  return giVector4(x / otherVect.x, 
-                   y / otherVect.y, 
-                   z / otherVect.z, 
-                   w / otherVect.w);
-}
-
-giVector4
-giVector4::operator+(const float& otherVal)
+  
+  giVector4
+  giVector4::operator-(const giVector4& otherVect) const 
+  {
+    return giVector4(x - otherVect.x, 
+                     y - otherVect.y, 
+                     z - otherVect.z, 
+                     w - otherVect.w);
+  }
+  
+  giVector4
+  giVector4::operator*(const giVector4& otherVect) const 
+  {
+    return giVector4(x * otherVect.x, 
+                     y * otherVect.y, 
+                     z * otherVect.z, 
+                     w * otherVect.w);
+  }
+  
+  giVector4
+  giVector4::operator/(const giVector4& otherVect) const 
+  {
+    return giVector4(x / otherVect.x, 
+                     y / otherVect.y, 
+                     z / otherVect.z, 
+                     w / otherVect.w);
+  }
+  
+  giVector4
+  giVector4::operator+(const float& otherVal)
 {
   return giVector4(x + otherVal, 
                    y + otherVal, 
                    z + otherVal, 
                    w + otherVal);
 }
-
-giVector4
-giVector4::operator-(const float& otherVal)
+  
+  giVector4
+  giVector4::operator-(const float& otherVal)
 {
   return giVector4(x - otherVal, 
                    y - otherVal, 
                    z - otherVal, 
                    w - otherVal);
 }
-
-giVector4
-giVector4::operator*(const float& otherVal)
+  
+  giVector4
+  giVector4::operator*(const float& otherVal)
 {
   return giVector4(x * otherVal, 
                    y * otherVal, 
                    z * otherVal, 
                    w * otherVal);
 }
-
-giVector4
-giVector4::operator/(const float& otherVal)
+  
+  giVector4
+  giVector4::operator/(const float& otherVal)
 {
   return giVector4(x / otherVal, 
                    y / otherVal, 
                    z / otherVal, 
                    w / otherVal);
 }
-
-bool
-giVector4::operator>=(const giVector4& otherVect) const
+  
+  bool
+  giVector4::operator>=(const giVector4& otherVect) const
 {
   if (otherVect.x <= x && 
       otherVect.y <= y && 
@@ -103,9 +104,9 @@ giVector4::operator>=(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool
-giVector4::operator<=(const giVector4& otherVect) const
+  
+  bool
+  giVector4::operator<=(const giVector4& otherVect) const
 {
   if (otherVect.x >= x && 
       otherVect.y >= y && 
@@ -116,9 +117,9 @@ giVector4::operator<=(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool
-giVector4::operator==(const giVector4& otherVect) const
+  
+  bool
+  giVector4::operator==(const giVector4& otherVect) const
 {
   if (otherVect.x == x && 
       otherVect.y == y && 
@@ -129,8 +130,9 @@ giVector4::operator==(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool giVector4::operator!=(const giVector4& otherVect) const
+  
+  bool 
+  giVector4::operator!=(const giVector4& otherVect) const
 {
     if (otherVect.x != x && 
         otherVect.y != y && 
@@ -141,9 +143,9 @@ bool giVector4::operator!=(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool
-giVector4::operator<(const giVector4& otherVect) const
+  
+  bool
+  giVector4::operator<(const giVector4& otherVect) const
 {
   if (otherVect.x > x && 
       otherVect.y > y && 
@@ -154,9 +156,9 @@ giVector4::operator<(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool
-giVector4::operator>(const giVector4& otherVect) const
+  
+  bool
+  giVector4::operator>(const giVector4& otherVect) const
 {
   if (otherVect.x < x && 
       otherVect.y < y && 
@@ -167,9 +169,9 @@ giVector4::operator>(const giVector4& otherVect) const
   }
   return false;
 }
-
-bool
-giVector4::operator>=(const float& otherVal)
+  
+  bool
+  giVector4::operator>=(const float& otherVal)
 {
   if (otherVal <= x && 
       otherVal <= y && 
@@ -180,9 +182,9 @@ giVector4::operator>=(const float& otherVal)
   }
   return false;
 }
-
-bool
-giVector4::operator<=(const float& otherVal)
+  
+  bool
+  giVector4::operator<=(const float& otherVal)
 {
   if (otherVal >= x && 
       otherVal >= y && 
@@ -193,9 +195,9 @@ giVector4::operator<=(const float& otherVal)
   }
   return false;
 }
-
-bool
-giVector4::operator==(const float& otherVal)
+  
+  bool
+  giVector4::operator==(const float& otherVal)
 {
   if (otherVal == x && 
       otherVal == y && 
@@ -206,9 +208,9 @@ giVector4::operator==(const float& otherVal)
   }
   return false;
 }
-
-bool
-giVector4::operator<(const float& otherVal)
+  
+  bool
+  giVector4::operator<(const float& otherVal)
 {
   if (otherVal > x && 
       otherVal > y && 
@@ -219,9 +221,9 @@ giVector4::operator<(const float& otherVal)
   }
   return false;
 }
-
-bool
-giVector4::operator>(const float& otherVal)
+  
+  bool
+  giVector4::operator>(const float& otherVal)
 {
   if (otherVal < x && 
       otherVal < y && 
@@ -232,27 +234,27 @@ giVector4::operator>(const float& otherVal)
   }
   return false;
 }
-
-float
-giVector4::dotProd(const giVector4& inVect)
+  
+  float
+  giVector4::dotProd(const giVector4& inVect)
 {
   return ((x * inVect.x) + 
           (y * inVect.y) + 
           (z * inVect.z) + 
           (w * inVect.w));
 }
-
-float
-giVector4::crossProd(const giVector4& inVect)
+  
+  float
+  giVector4::crossProd(const giVector4& inVect)
 {
   return (((y * inVect.z) - (z * inVect.y)),
           ((z * inVect.x) - (x * inVect.z)),
           ((x * inVect.y) - (y * inVect.z)),
           0.f);
 }
-
-void
-giVector4::normalize()
+  
+  void
+  giVector4::normalize()
 {
   float mag = magnitude();
   if (mag > 0) {
@@ -269,11 +271,11 @@ giVector4::normalize()
     w = 0.0f;
   }
 }
-
-float
-giVector4::magnitude()
+  
+  float
+  giVector4::magnitude()
 {
   return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2) + powf(w, 2));
 }
-
-
+  
+}

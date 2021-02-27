@@ -12,9 +12,9 @@
 
 namespace giEngineSDK {
 
-  class giMatrix4
+  class GI_UTILITY_EXPORT giMatrix4
   {
-  public:
+   public:
     //Default constructor
     giMatrix4() = default;
     
@@ -162,7 +162,8 @@ namespace giEngineSDK {
     giMatrix4
     transpose() const;
 
-
+    void 
+    swap();
 
 
 

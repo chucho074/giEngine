@@ -5,7 +5,10 @@
 
 using giEngineSDK::int32;
 
-class giVector2i
+
+namespace giEngineSDK {
+  
+  class giVector2i
 {
 public:
 
@@ -113,3 +116,5 @@ private:
   int32 y;
 
 };
+  
+}
