@@ -1,10 +1,11 @@
 #pragma once
 
+#include "giPrerequisitesUtilities.h"
 #include "giPlatformMath.h"
 
 namespace giEngineSDK {
 
-  class giVector4
+  class GI_UTILITY_EXPORT giVector4
   {
    public:
   

@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include "giPrerequisitesUtilities.h"
 #include"giPlatformTypes.h"
 
 //using std::sqrt;

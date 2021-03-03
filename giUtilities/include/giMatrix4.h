@@ -8,6 +8,8 @@
  */
 
 #pragma once
+
+#include "giPrerequisitesUtilities.h"
 #include "giVector4.h"
 
 namespace giEngineSDK {

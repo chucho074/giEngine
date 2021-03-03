@@ -1,12 +1,12 @@
 #pragma once
 
+#include "giPrerequisitesUtilities.h"
 #include "giPlatformMath.h"
 
-using giEngineSDK::int32;
 
 namespace giEngineSDK {
   
-  class giVector3i
+  class GI_UTILITY_EXPORT giVector3i
   {
    public:
   

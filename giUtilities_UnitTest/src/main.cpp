@@ -45,3 +45,14 @@ TEST(giUtilities, BasicTest) {
   
   
 }
+
+
+
+TEST(VectorTest, VectorTest) {
+  giVector2i tmpVector = {2,2};
+  //giVector2i tmpVector2 = {3, 3};
+  //giVector2i tmpVectorRes = tmpVector + tmpVector2;
+  //auto tmpData = tmpVectorRes.getX();
+  //EXPECT_EQ(tmpData, 5);
+
+}

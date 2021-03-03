@@ -4,7 +4,7 @@
 
 namespace giEngineSDK {
 
-  class giVector2
+  class GI_UTILITY_EXPORT giVector2
   {
    public:
     
@@ -18,23 +18,23 @@ namespace giEngineSDK {
     
     float
     getX() {
-    return x;
-  }
+      return x;
+    }
     
     float
     getY() {
-    return y;
-  }
+      return y;
+    }
     
     void
     setX(float inVal) {
-    x = inVal;
-  }
+      x = inVal;
+    }
     
     void
     setY(float inVal) {
-    y = inVal;
-  }
+      y = inVal;
+    }
     
     
     giVector2
@@ -110,8 +110,8 @@ namespace giEngineSDK {
   	
   
   private:
-   float x;
-   float y;
+    float x;
+    float y;
   
   };
   

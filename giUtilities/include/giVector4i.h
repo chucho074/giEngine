@@ -20,43 +20,43 @@ namespace giEngineSDK {
   
     int32
     getX() {
-    return x;
-  }
+      return x;
+    }
   
     int32
     getY() {
-    return y;
-  }
+      return y;
+    }
   
     int32
     getZ() {
-    return z;
-  }
+      return z;
+    }
   
     int32
     getW() {
-    return w;
-  }
+      return w;
+    }
   
     void
     setX(int32 inVal) {
-    x = inVal;
-  }
+      x = inVal;
+    }
   
     void
     setY(int32 inVal) {
-    y = inVal;
-  }
+      y = inVal;
+    }
   
     void
     setZ(int32 inVal) {
-    z = inVal;
-  }
+      z = inVal;
+    }
   
     void
     setW(int32 inVal) {
-    w = inVal;
-  }
+      w = inVal;
+    }
   
   
     giVector4i
