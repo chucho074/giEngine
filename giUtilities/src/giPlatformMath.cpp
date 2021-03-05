@@ -7,4 +7,10 @@ namespace giEngineSDK {
 
   const float PlatformMath::RAD2DEG = static_cast<float>(180.0f / PI);
 
+  const float PlatformMath::SMALL_NUMBER = static_cast<float>(1.e-6f);
+
+  const float PlatformMath::KINDA_SMALL_NUMBER = static_cast<float>(1.e-4f);
+
+  const float PlatformMath::BIG_NUMBER = static_cast<float>(3.4e+38f);
+
 }

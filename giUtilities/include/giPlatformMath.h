@@ -16,6 +16,9 @@ namespace giEngineSDK {
     static const float PI;
     static const float DEG2RAD;
     static const float RAD2DEG;
+    static const float SMALL_NUMBER;
+    static const float KINDA_SMALL_NUMBER;
+    static const float BIG_NUMBER;
     //Invert Sqrt
     template<typename Type>
     static Type

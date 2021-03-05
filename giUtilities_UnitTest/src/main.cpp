@@ -41,7 +41,7 @@ TEST(giUtilities, BasicTest) {
   EXPECT_EQ(sizeof(double), 8);
 
   //EXPECT_EQ(static_cast<uint32>(-1), NumLimit::MAX_UINT32);
-  //EXPECT_FLOAT_EQ(Math::PI, 3.141592f);
+  //EXPECT_FLOAT_EQ(PlatformMath::PI, 3.141592f);
   
   
 }
@@ -49,7 +49,7 @@ TEST(giUtilities, BasicTest) {
 
 
 TEST(VectorTest, VectorTest) {
-  giVector2i tmpVector = {2,2};
+  giVector2i tmpVector(2,2);
   //giVector2i tmpVector2 = {3, 3};
   //giVector2i tmpVectorRes = tmpVector + tmpVector2;
   //auto tmpData = tmpVectorRes.getX();
