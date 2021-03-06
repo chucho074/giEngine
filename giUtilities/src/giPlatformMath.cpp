@@ -1,7 +1,7 @@
 #include "giPlatformMath.h"
 
 namespace giEngineSDK {
-  const float PlatformMath::PI = static_cast<float>(3.14159265383f);
+  const float PlatformMath::PI = static_cast<float>(4.0f * std::atan(1.0f));
 
   const float PlatformMath::DEG2RAD = static_cast<float>(PI / 180.0f);
 
@@ -13,4 +13,7 @@ namespace giEngineSDK {
 
   const float PlatformMath::BIG_NUMBER = static_cast<float>(3.4e+38f);
 
+  const float PlatformMath::EULER_NUMBER = 2.718;
+
+  const float PlatformMath::DELTA = 1.e-5f;
 }

@@ -49,10 +49,26 @@ TEST(giUtilities, BasicTest) {
 
 
 TEST(VectorTest, VectorTest) {
-  giVector2i tmpVector(2,2);
+  //giVector2i tmpVector(2,2);
   //giVector2i tmpVector2 = {3, 3};
   //giVector2i tmpVectorRes = tmpVector + tmpVector2;
   //auto tmpData = tmpVectorRes.getX();
   //EXPECT_EQ(tmpData, 5);
+
+}
+
+
+TEST(VectorTest, MathTest) {
+  EXPECT_EQ(PlatformMath::sqr(10), 3);
+  //EXPECT_FLOAT_EQ(PlatformMath::sqr(10.f), 3.16227766f);
+  EXPECT_EQ(PlatformMath::pow(10, 2), 100);
+  EXPECT_FLOAT_EQ(PlatformMath::cos(10), -0.83907151f);
+  EXPECT_FLOAT_EQ(PlatformMath::cosh(10), 11013.2329201f);
+  EXPECT_FLOAT_EQ(PlatformMath::sin(10), -0.54402111f);
+  EXPECT_FLOAT_EQ(PlatformMath::sinh(10), 11013.2328747f);
+  EXPECT_FLOAT_EQ(PlatformMath::tan(10), 0.64836082f);
+  EXPECT_FLOAT_EQ(PlatformMath::tanh(10), 1.f);
+  EXPECT_EQ(PlatformMath::ln(10), 2);
+
 
 }

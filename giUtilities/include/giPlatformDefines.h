@@ -257,3 +257,5 @@
 #  define GI_DEBUG_ONLY(x)
 #  define GI_ASSERT(x)
 #endif
+
+#define GI_UNREFERENCED_PARAMETER(x) (void)x

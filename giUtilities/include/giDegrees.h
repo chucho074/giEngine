@@ -41,7 +41,7 @@ namespace giEngineSDK {
     operator+(const giDegrees& inDeg) const;
     
     giDegrees
-    operator+(const giRadians& inRad);
+    operator+(const giRadians& inRad) const;
     
     giDegrees&
     operator+=(const giDegrees& inDeg);
@@ -56,7 +56,7 @@ namespace giEngineSDK {
     operator-(const giDegrees& inDeg) const;
     
     giDegrees
-    operator-(const giRadians& inRad);
+    operator-(const giRadians& inRad) const;
     
     giDegrees&
     operator-=(const giDegrees& inDeg);
@@ -119,6 +119,6 @@ namespace giEngineSDK {
   protected:
     
   private:
-    float m_DegreesAngle;
+    static float m_DegreesAngle;
   };
 }

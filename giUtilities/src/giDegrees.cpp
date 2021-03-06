@@ -23,7 +23,7 @@ namespace giEngineSDK {
   }
   
   giDegrees 
-  giDegrees::operator+(const giRadians& inRad)
+  giDegrees::operator+(const giRadians& inRad) const
   {
     return giDegrees(m_DegreesAngle + inRad.degVal());
   }
@@ -55,7 +55,7 @@ namespace giEngineSDK {
   }
   
   giDegrees 
-  giDegrees::operator-(const giRadians& inRad)
+  giDegrees::operator-(const giRadians& inRad) const
   {
     return giDegrees(m_DegreesAngle - inRad.degVal());
   }

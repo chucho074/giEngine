@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giUtilities", "giUtilities\giUtilities.vcxproj", "{6EB17E95-6FFD-4E78-A336-75A798229FA7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giUtilities_UnitTest", "giUtilities_UnitTest\giUtilities_UnitTest.vcxproj", "{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7} = {6EB17E95-6FFD-4E78-A336-75A798229FA7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +18,6 @@ Global
 		Debug|x86 = Debug|x86
 		Release_DLL|x64 = Release_DLL|x64
 		Release_DLL|x86 = Release_DLL|x86
-		Release_Static|x64 = Release_Static|x64
-		Release_Static|x86 = Release_Static|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -33,10 +34,6 @@ Global
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x64.Build.0 = Release_DLL|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.ActiveCfg = Debug_DLL|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.Build.0 = Debug_DLL|Win32
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_Static|x64.ActiveCfg = Release_Static|x64
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_Static|x64.Build.0 = Release_Static|x64
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_Static|x86.ActiveCfg = Release_Static|Win32
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_Static|x86.Build.0 = Release_Static|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x64.ActiveCfg = Release_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x64.Build.0 = Release_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x86.ActiveCfg = Release_Static|Win32
@@ -53,10 +50,6 @@ Global
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_DLL|x64.Build.0 = Release|x64
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_DLL|x86.ActiveCfg = Release|Win32
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_DLL|x86.Build.0 = Release|Win32
-		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_Static|x64.ActiveCfg = Release|x64
-		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_Static|x64.Build.0 = Release|x64
-		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_Static|x86.ActiveCfg = Release|Win32
-		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release_Static|x86.Build.0 = Release|Win32
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release|x64.ActiveCfg = Release|x64
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release|x64.Build.0 = Release|x64
 		{B307084D-BF95-41D0-ACF0-FB315B7F0E8F}.Release|x86.ActiveCfg = Release|Win32

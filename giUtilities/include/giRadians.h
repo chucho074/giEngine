@@ -122,6 +122,6 @@ namespace giEngineSDK {
     
   private:
   
-    float m_RadianAngle = 0;
+    static float m_RadianAngle = 0.f;
   };
 }
