@@ -24,19 +24,20 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT giRadians {
   public:
     giRadians() = default;
+
     giRadians(float inVal) {
-      m_RadianAngle = inVal;
+      m_radianAngle = inVal;
     }
+
     ~giRadians() = default;
   
     float 
-    getRadians() { return m_RadianAngle; }
+    getRadians() { 
+      return m_radianAngle;
+    }
   
     float 
-    getDegrees() { return m_RadianAngle; }
-  
-    float
-    degVal() const;
+    getDegrees() ;
   
   
     const giRadians&
@@ -122,6 +123,6 @@ namespace giEngineSDK {
     
   private:
   
-    static float m_RadianAngle = 0.f;
+    float m_radianAngle;
   };
 }

@@ -26,13 +26,14 @@ namespace giEngineSDK {
     giDegrees() = default;
   
     giDegrees(float inVal) {
-    m_DegreesAngle = inVal;
-  }
+      m_degreesAngle = inVal;
+    }
+    
+    giDegrees(const giRadians& inVal) {
+      m_degreesAngle = inVal.getRadians();
+    }
   
     ~giDegrees() = default;
-  
-    float
-    radVal() const;
   
     const giDegrees&
     operator+() const;
@@ -119,6 +120,6 @@ namespace giEngineSDK {
   protected:
     
   private:
-    static float m_DegreesAngle;
+    float m_degreesAngle;
   };
 }

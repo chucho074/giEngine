@@ -282,6 +282,7 @@
     <ClCompile Include="src\giVector4i.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="giMath.h" />
     <ClInclude Include="include\giDegrees.h" />
     <ClInclude Include="include\giMatrix4.h" />
     <ClInclude Include="include\giPlatformDefines.h" />

@@ -87,5 +87,8 @@
     <ClInclude Include="include\giStdHeaders.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="giMath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
