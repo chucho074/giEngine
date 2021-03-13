@@ -297,6 +297,7 @@
     <ClInclude Include="include\giVector3i.h" />
     <ClInclude Include="include\giVector4.h" />
     <ClInclude Include="include\giVector4i.h" />
+    <ClInclude Include="include\giWindowsMath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

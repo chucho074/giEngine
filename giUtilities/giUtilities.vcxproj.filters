@@ -90,5 +90,8 @@
     <ClInclude Include="giMath.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giWindowsMath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
