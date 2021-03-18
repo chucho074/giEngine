@@ -21,105 +21,107 @@ class giRadians;
  */
 namespace giEngineSDK {
   
-  class GI_UTILITY_EXPORT giDegrees {
-  public:
-    giDegrees() = default;
-  
-    giDegrees(float inVal) {
-      m_degreesAngle = inVal;
-    }
-    
-    giDegrees(const giRadians& inVal) {
-      m_degreesAngle = inVal.getRadians();
-    }
-  
-    ~giDegrees() = default;
-  
-    const giDegrees&
-    operator+() const;
-    
-    giDegrees
-    operator+(const giDegrees& inDeg) const;
-    
-    giDegrees
-    operator+(const giRadians& inRad) const;
-    
-    giDegrees&
-    operator+=(const giDegrees& inDeg);
-    
-    giDegrees&
-    operator+=(const giRadians& inRad);
-    
-    giDegrees
-    operator-() const;
-    
-    giDegrees
-    operator-(const giDegrees& inDeg) const;
-    
-    giDegrees
-    operator-(const giRadians& inRad) const;
-    
-    giDegrees&
-    operator-=(const giDegrees& inDeg);
-    
-    giDegrees&
-    operator-=(giRadians& inRad);
-    
-    giDegrees
-    operator*(float inFloat) const;
-    
-    giDegrees
-    operator*(const giDegrees& inFloat) const;
-    
-    giDegrees&
-    operator*=(float inFloat);
-    
-    giDegrees
-    operator/(float inFloat) const;
-    
-    giDegrees&
-    operator/=(float inFloat);
-    
-    bool
-    operator<(const giDegrees& inDeg) const;
-    
-    bool
-    operator<=(const giDegrees& inDeg) const;
-    
-    bool
-    operator==(const giDegrees& inDeg) const;
-    
-    bool
-    operator!=(const giDegrees& inDeg) const;
-    
-    bool
-    operator>=(const giDegrees& inDeg) const;
-    
-    bool 
-    operator>(const giDegrees& inDeg) const;
-    
-    bool
-    operator<(const float& inVal) const;
-    
-    bool
-    operator<=(const float& inVal) const;
-    
-    bool
-    operator==(const float& inVal) const;
-    
-    bool
-    operator!=(const float& inVal) const;
-    
-    bool
-    operator>=(const float& inVal) const;
-    
-    bool
-    operator>(const float& inVal) const;
-  
-  
-  protected:
-    
-  private:
-    float m_degreesAngle;
+  class GI_UTILITY_EXPORT giDegrees 
+  {
+   public:
+     giDegrees() = default;
+     
+     giDegrees(float inVal) {
+       m_degreesAngle = inVal;
+     }
+     
+     giDegrees(const giRadians& inVal);
+     
+     ~giDegrees() = default;
+     
+     float 
+     getRadians() const;
+     
+     float 
+     getDegrees() const;
+     
+     const giDegrees&
+     operator+() const;
+     
+     giDegrees
+     operator+(const giDegrees& inDeg) const;
+     
+     giDegrees
+     operator+(const giRadians& inRad) const;
+     
+     giDegrees&
+     operator+=(const giDegrees& inDeg);
+     
+     giDegrees&
+     operator+=(const giRadians& inRad);
+     
+     giDegrees
+     operator-() const;
+     
+     giDegrees
+     operator-(const giDegrees& inDeg) const;
+     
+     giDegrees
+     operator-(const giRadians& inRad) const;
+     
+     giDegrees&
+     operator-=(const giDegrees& inDeg);
+     
+     giDegrees&
+     operator-=(giRadians& inRad);
+     
+     giDegrees
+     operator*(float inFloat) const;
+     
+     giDegrees
+     operator*(const giDegrees& inFloat) const;
+     
+     giDegrees&
+     operator*=(float inFloat);
+     
+     giDegrees
+     operator/(float inFloat) const;
+     
+     giDegrees&
+     operator/=(float inFloat);
+     
+     bool
+     operator<(const giDegrees& inDeg) const;
+     
+     bool
+     operator<=(const giDegrees& inDeg) const;
+     
+     bool
+     operator==(const giDegrees& inDeg) const;
+     
+     bool
+     operator!=(const giDegrees& inDeg) const;
+     
+     bool
+     operator>=(const giDegrees& inDeg) const;
+     
+     bool 
+     operator>(const giDegrees& inDeg) const;
+     
+     bool
+     operator<(const float& inVal) const;
+     
+     bool
+     operator<=(const float& inVal) const;
+     
+     bool
+     operator==(const float& inVal) const;
+     
+     bool
+     operator!=(const float& inVal) const;
+     
+     bool
+     operator>=(const float& inVal) const;
+     
+     bool
+     operator>(const float& inVal) const;
+       
+   private:
+     float m_degreesAngle;
   };
 }

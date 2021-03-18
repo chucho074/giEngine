@@ -11,8 +11,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giUtilities_UnitTest", "giU
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giCore", "giCore\giCore.vcxproj", "{4E5979E7-8E58-4C71-8906-931883E0B749}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7} = {6EB17E95-6FFD-4E78-A336-75A798229FA7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giDirectX", "giDirectX\giDirectX.vcxproj", "{86D1F112-EC48-420C-8DA1-E9D4CC942C73}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4E5979E7-8E58-4C71-8906-931883E0B749} = {4E5979E7-8E58-4C71-8906-931883E0B749}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,16 +34,16 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x64.ActiveCfg = Debug_DLL|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x64.Build.0 = Debug_DLL|x64
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x86.ActiveCfg = Release_DLL|Win32
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x86.Build.0 = Release_DLL|Win32
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x86.ActiveCfg = Debug_DLL|Win32
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug_DLL|x86.Build.0 = Debug_DLL|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug|x64.ActiveCfg = Debug_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug|x64.Build.0 = Debug_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug|x86.ActiveCfg = Debug_Static|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Debug|x86.Build.0 = Debug_Static|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x64.ActiveCfg = Release_DLL|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x64.Build.0 = Release_DLL|x64
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.ActiveCfg = Debug_DLL|Win32
-		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.Build.0 = Debug_DLL|Win32
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.ActiveCfg = Release_DLL|Win32
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release_DLL|x86.Build.0 = Release_DLL|Win32
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x64.ActiveCfg = Release_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x64.Build.0 = Release_Static|x64
 		{6EB17E95-6FFD-4E78-A336-75A798229FA7}.Release|x86.ActiveCfg = Release_Static|Win32

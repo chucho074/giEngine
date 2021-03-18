@@ -3,25 +3,33 @@
 #include "giMath.h"
 
 namespace giEngineSDK {
-  
-  float 
-  giDegrees::radVal() const {
-    return m_degreesAngle * Math::DEG2RAD;
+  giDegrees::giDegrees(const giRadians& inVal) {
+    m_degreesAngle = inVal.getRadians();
+  }
+
+  float
+  giDegrees::getRadians() const {
+    return getDegrees() * Math::DEG2RAD;
+  }
+
+  float
+  giDegrees::getDegrees() const {
+    return m_degreesAngle;
   }
   
-  const 
-  giDegrees& giDegrees::operator+() const {
-    return *this;
+  const giDegrees& 
+  giDegrees::operator+() const {
+    return getDegrees();
   }
   
   giDegrees 
   giDegrees::operator+(const giDegrees& inDeg) const {
-    return giDegrees(m_degreesAngle + inDeg.m_degreesAngle);
+    return giDegrees(m_degreesAngle + inDeg.getDegrees());
   }
   
   giDegrees 
   giDegrees::operator+(const giRadians& inRad) const {
-    return giDegrees(m_degreesAngle + inRad.degVal());
+    return giDegrees(getDegrees() + inRad.getDegrees());
   }
   
   giDegrees& 
@@ -32,7 +40,7 @@ namespace giEngineSDK {
   
   giDegrees& 
   giDegrees::operator+=(const giRadians& inRad) {
-    m_degreesAngle += inRad.degVal();
+    m_degreesAngle += inRad.getDegrees();
     return *this;
   }
   
@@ -43,12 +51,12 @@ namespace giEngineSDK {
   
   giDegrees 
   giDegrees::operator-(const giDegrees& inDeg) const {
-    return giDegrees(m_degreesAngle - inDeg.m_degreesAngle);
+    return giDegrees(getDegrees() - inDeg.getDegrees());
   }
   
   giDegrees 
   giDegrees::operator-(const giRadians& inRad) const {
-    return giDegrees(m_degreesAngle - inRad.degVal());
+    return giDegrees(getDegrees() - inRad.getDegrees());
   }
   
   giDegrees& 
@@ -59,18 +67,18 @@ namespace giEngineSDK {
   
   giDegrees& 
   giDegrees::operator-=(giRadians& inRad) {
-    m_degreesAngle -= inRad.degVal();
+    m_degreesAngle -= inRad.getDegrees();
     return *this;
   }
   
   giDegrees 
   giDegrees::operator*(float inFloat) const {
-    return giDegrees(m_degreesAngle * inFloat);
+    return giDegrees(getDegrees() * inFloat);
   }
   
   giDegrees 
   giDegrees::operator*(const giDegrees& inFloat) const {
-    return giDegrees(m_degreesAngle * inFloat.m_degreesAngle);
+    return giDegrees(getDegrees() * inFloat.getDegrees());
   }
   
   giDegrees& 
@@ -81,7 +89,7 @@ namespace giEngineSDK {
   
   giDegrees 
   giDegrees::operator/(float inFloat) const {
-    return giDegrees(m_degreesAngle / inFloat);
+    return giDegrees(getDegrees() / inFloat);
   }
   
   giDegrees& 
@@ -92,61 +100,61 @@ namespace giEngineSDK {
   
   bool 
   giDegrees::operator<(const giDegrees& inDeg) const {
-    return m_degreesAngle < inDeg.m_degreesAngle;
+    return getDegrees() < inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator<=(const giDegrees& inDeg) const {
-    return m_degreesAngle <= inDeg.m_degreesAngle;
+    return getDegrees() <= inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator==(const giDegrees& inDeg) const {
-    return m_degreesAngle == inDeg.m_degreesAngle;
+    return getDegrees() == inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator!=(const giDegrees& inDeg) const {
-    return m_degreesAngle != inDeg.m_degreesAngle;
+    return getDegrees() != inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator>=(const giDegrees& inDeg) const {
-    return m_degreesAngle >= inDeg.m_degreesAngle;
+    return getDegrees() >= inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator>(const giDegrees& inDeg) const {
-    return m_degreesAngle > inDeg.m_degreesAngle;
+    return getDegrees() > inDeg.getDegrees();
   }
   
   bool 
   giDegrees::operator<(const float& inVal) const {
-    return m_degreesAngle < inVal;
+    return getDegrees() < inVal;
   }
   
   bool 
   giDegrees::operator<=(const float& inVal) const {
-    return m_degreesAngle <= inVal;
+    return getDegrees() <= inVal;
   }
   
   bool 
   giDegrees::operator==(const float& inVal) const {
-    return m_degreesAngle == inVal;
+    return getDegrees() == inVal;
   }
   
   bool 
   giDegrees::operator!=(const float& inVal) const {
-    return m_degreesAngle != inVal;
+    return getDegrees() != inVal;
   }
   
   bool 
   giDegrees::operator>=(const float& inVal) const {
-    return m_degreesAngle >= inVal;
+    return getDegrees() >= inVal;
   }
   
   bool 
   giDegrees::operator>(const float& inVal) const {
-    return m_degreesAngle > inVal;
+    return getDegrees() > inVal;
   }
 }

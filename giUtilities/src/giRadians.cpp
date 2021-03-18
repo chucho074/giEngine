@@ -3,9 +3,13 @@
 #include "giMath.h"
 
 namespace giEngineSDK {
-
   float 
-  giRadians::getDegrees() {
+  giRadians::getRadians() const {
+    return m_radianAngle;
+  }
+
+  float
+  giRadians::getDegrees() const {
     return m_radianAngle * Math::RAD2DEG;
   }
   
