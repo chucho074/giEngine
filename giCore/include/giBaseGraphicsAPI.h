@@ -240,7 +240,7 @@ namespace giEngineSDK {
       */
      virtual void 
      psSetConstantBuffer(unsigned int inSlot, 
-                                      CBuffer * inBuffer) = 0;
+     /******************/CBuffer * inBuffer) = 0;
      
      /**
       * @brief    Pixel Shadder Set Shader Resource.
@@ -248,7 +248,7 @@ namespace giEngineSDK {
       */
      virtual void 
      psSetShaderResource(unsigned int inSlot, 
-                                      CTexture2D * inTexture = nullptr) = 0;
+     /******************/CTexture2D * inTexture = nullptr) = 0;
      
      /**
       * @brief    Pixel Shader Set Samplers.
@@ -279,7 +279,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     draw(unsigned int inNumIndexes, unsigned int inStartLocation) = 0;
+     draw(unsigned int inNumIndexes, 
+     /***/unsigned int inStartLocation) = 0;
      
      /**
       * @brief    Gets the default Render Target.
@@ -297,5 +298,5 @@ namespace giEngineSDK {
   
   };
   
-  static CBaseGraphicsAPI& g_GraphicsAPI();
+  //static CBaseGraphicsAPI& g_GraphicsAPI();
 }
