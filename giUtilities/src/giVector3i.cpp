@@ -1,178 +1,139 @@
+/**
+ * @file    giVector3i.cpp
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    26/03/2021
+ * @brief   A basic Vector 3 for ints.
+ * @bug     No known Bugs.
+ */
+ 
+/**
+ * @include
+ */
 #include "giVector3i.h"
 
 namespace giEngineSDK {
 
-  giVector3i::giVector3i(int32 inX, int32 inY, int32 inZ) {
+  Vector3i::Vector3i(int32 inX, int32 inY, int32 inZ) {
     x = inX;
     y = inY;
     z = inZ;
   }
   
-  giVector3i::giVector3i(giVector3i& inVect) {
-    x = inVect.getX();
-    y = inVect.getY();
-    z = inVect.getZ();
+  Vector3i::Vector3i(Vector3i& inVect) {
+    x = inVect.x;
+    y = inVect.y;
+    z = inVect.z;
   }
   
-  giVector3i::~giVector3i() {
+  Vector3i::~Vector3i() {
 
   }
   
-  giVector3i
-  giVector3i::operator+(const giVector3i& otherVect)
-  {
-    return giVector3i(x + otherVect.x, y + otherVect.y, z + otherVect.z);
+  Vector3i
+  Vector3i::operator+(const Vector3i& otherVect) {
+    return Vector3i(x + otherVect.x, y + otherVect.y, z + otherVect.z);
   }
   
-  giVector3i
-  giVector3i::operator-(const giVector3i& otherVect)
-  {
-    return giVector3i(x - otherVect.x, y - otherVect.y, z - otherVect.z);
+  Vector3i
+  Vector3i::operator-(const Vector3i& otherVect) {
+    return Vector3i(x - otherVect.x, y - otherVect.y, z - otherVect.z);
   }
   
-  giVector3i
-  giVector3i::operator*(const giVector3i& otherVect)
-  {
-    return giVector3i(x * otherVect.x, y * otherVect.y, z * otherVect.z);
+  Vector3i
+  Vector3i::operator*(const Vector3i& otherVect) {
+    return Vector3i(x * otherVect.x, y * otherVect.y, z * otherVect.z);
   }
   
-  giVector3i
-  giVector3i::operator/(const giVector3i& otherVect)
-  {
-    return giVector3i(x / otherVect.x, y / otherVect.y, z / otherVect.z);
+  Vector3i
+  Vector3i::operator/(const Vector3i& otherVect) {
+    return Vector3i(x / otherVect.x, y / otherVect.y, z / otherVect.z);
   }
   
-  giVector3i
-  giVector3i::operator+(const int32& otherVal)
-  {
-    return giVector3i(x + otherVal, y + otherVal, z + otherVal);
+  Vector3i
+  Vector3i::operator+(const int32& otherVal) {
+    return Vector3i(x + otherVal, y + otherVal, z + otherVal);
   }
   
-  giVector3i
-  giVector3i::operator-(const int32& otherVal)
-  {
-    return giVector3i(x - otherVal, y - otherVal, z - otherVal);
+  Vector3i
+  Vector3i::operator-(const int32& otherVal) {
+    return Vector3i(x - otherVal, y - otherVal, z - otherVal);
   }
   
-  giVector3i
-  giVector3i::operator*(const int32& otherVal)
-  {
-    return giVector3i(x * otherVal, y * otherVal, z * otherVal);
+  Vector3i
+  Vector3i::operator*(const int32& otherVal) {
+    return Vector3i(x * otherVal, y * otherVal, z * otherVal);
   }
   
-  giVector3i
-  giVector3i::operator/(const int32& otherVal)
-  {
-    return giVector3i(x / otherVal, y / otherVal, z / otherVal);
+  Vector3i
+  Vector3i::operator/(const int32& otherVal) {
+    return Vector3i(x / otherVal, y / otherVal, z / otherVal);
   }
   
   bool
-  giVector3i::operator>=(const giVector3i& otherVect)
-  {
-    if (otherVect.x <= x && otherVect.y <= y && otherVect.z <= z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator>=(const Vector3i& otherVect) {
+    return (otherVect.x <= x && otherVect.y <= y && otherVect.z <= z);
   }
   
   bool
-  giVector3i::operator<=(const giVector3i& otherVect)
-  {
-    if (otherVect.x >= x && otherVect.y >= y && otherVect.z >= z) {
-     return true;
-    }
-    return false;
+  Vector3i::operator<=(const Vector3i& otherVect) {
+    return (otherVect.x >= x && otherVect.y >= y && otherVect.z >= z);
   }
   
   bool
-  giVector3i::operator==(const giVector3i& otherVect)
-  {
-    if (otherVect.x == x && otherVect.y == y && otherVect.z == z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator==(const Vector3i& otherVect) {
+    return (otherVect.x == x && otherVect.y == y && otherVect.z == z);
   }
   
   bool
-  giVector3i::operator<(const giVector3i& otherVect)
-  {
-    if (otherVect.x > x && otherVect.y > y && otherVect.z > z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator<(const Vector3i& otherVect) {
+    return (otherVect.x > x && otherVect.y > y && otherVect.z > z);
   }
   
   bool
-  giVector3i::operator>(const giVector3i& otherVect)
-  {
-    if (otherVect.x < x && otherVect.y < y && otherVect.z < z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator>(const Vector3i& otherVect) {
+    return (otherVect.x < x && otherVect.y < y && otherVect.z < z);
   }
   
   bool
-  giVector3i::operator>=(const int32& otherVal)
-  {
-    if (otherVal <= x && otherVal <= y && otherVal <= z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator>=(const int32& otherVal) {
+    return (otherVal <= x && otherVal <= y && otherVal <= z);
   }
   
   bool
-  giVector3i::operator<=(const int32& otherVal)
-  {
-    if (otherVal >= x && otherVal >= y && otherVal >= z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator<=(const int32& otherVal) {
+    return (otherVal >= x && otherVal >= y && otherVal >= z);
   }
   
   bool
-  giVector3i::operator==(const int32& otherVal)
-  {
-    if (otherVal == x && otherVal == y && otherVal == z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator==(const int32& otherVal) {
+    return (otherVal == x && otherVal == y && otherVal == z);
   }
   
   bool
-  giVector3i::operator<(const int32& otherVal)
-  {
-    if (otherVal > x && otherVal > y && otherVal > z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator<(const int32& otherVal) {
+    return (otherVal > x && otherVal > y && otherVal > z);
   }
   
   bool
-  giVector3i::operator>(const int32& otherVal)
-  {
-    if (otherVal < x && otherVal < y && otherVal < z) {
-      return true;
-    }
-    return false;
+  Vector3i::operator>(const int32& otherVal) {
+    return (otherVal < x && otherVal < y && otherVal < z);
   }
   
   int32
-  giVector3i::dotProd(const giVector3i& inVect)
-  {
+  Vector3i::dotProd(const Vector3i& inVect) {
     return ((x * inVect.x) + (y * inVect.y) + (z * inVect.z));
   }
   
   int32
-  giVector3i::crossProd(const giVector3i& inVect)
-  {
+  Vector3i::crossProd(const Vector3i& inVect) {
     return (((y * inVect.z) - (z * inVect.y)),
-      ((z * inVect.x) - (x * inVect.z)),
-      ((x * inVect.y) - (y * inVect.z)));
+            ((z * inVect.x) - (x * inVect.z)),
+            ((x * inVect.y) - (y * inVect.z)));
   }
   
   void
-  giVector3i::normalize()
-  {
+  Vector3i::normalize() {
     int32 mag = magnitude();
     if (mag > 0) {
       int32 tmp = 1 / mag;
@@ -188,10 +149,8 @@ namespace giEngineSDK {
   }
   
   int32
-  giVector3i::magnitude()
-  {
+  Vector3i::magnitude() {
     return int32(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
   }
-
 
 }

@@ -12,8 +12,7 @@
 namespace giEngineSDK {
 
   giMatrix4
-  giMatrix4::operator+(const giMatrix4& inMatrix) const
-  {
+  giMatrix4::operator+(const giMatrix4& inMatrix) const {
     giMatrix4 tmpMatrix;
     tmpMatrix.m_xColumn = m_xColumn + inMatrix.m_xColumn;
     tmpMatrix.m_yColumn = m_yColumn + inMatrix.m_yColumn;
@@ -23,8 +22,7 @@ namespace giEngineSDK {
   }
 
   giMatrix4
-  giMatrix4::operator-(const giMatrix4& inMatrix) const
-  {
+  giMatrix4::operator-(const giMatrix4& inMatrix) const {
     giMatrix4 tmpMatrix;
     tmpMatrix.m_xColumn = m_xColumn - inMatrix.m_xColumn;
     tmpMatrix.m_yColumn = m_yColumn - inMatrix.m_yColumn;
@@ -34,8 +32,7 @@ namespace giEngineSDK {
   }
 
   giMatrix4
-  giMatrix4::operator*(const giMatrix4& inMatrix) const
-  {
+  giMatrix4::operator*(const giMatrix4& inMatrix) const {
     giMatrix4 Result;
     //Transponer y multiplicar los vectores
     Result.m_xColumn.setX(m_xColumn.getX() * inMatrix.m_xColumn.getX()
@@ -125,8 +122,7 @@ namespace giEngineSDK {
   }
 
   void
-  giMatrix4::operator*=(float inValue)
-  {
+  giMatrix4::operator*=(float inValue) {
     m_xColumn = m_xColumn * inValue;
     m_yColumn = m_yColumn * inValue;
     m_zColumn = m_zColumn * inValue;
@@ -134,8 +130,7 @@ namespace giEngineSDK {
   }
 
   bool
-  giMatrix4::operator==(const giMatrix4& inMatrix) const
-  {
+  giMatrix4::operator==(const giMatrix4& inMatrix) const {
     if ((m_xColumn == inMatrix.m_xColumn) &&
       (m_yColumn == inMatrix.m_yColumn) &&
       (m_zColumn == inMatrix.m_zColumn) &&
@@ -148,20 +143,17 @@ namespace giEngineSDK {
   }
 
   bool
-  giMatrix4::operator!=(const giMatrix4& inMatrix) const
-  {
+  giMatrix4::operator!=(const giMatrix4& inMatrix) const {
     return !this->operator==(inMatrix);
   }
 
   giMatrix4 
-  giMatrix4::inverse() const
-  {
+  giMatrix4::inverse() const {
     return giMatrix4();
   }
 
   float
-  giMatrix4::determinant() const
-  {
+  giMatrix4::determinant() const {
     return m_xColumn.getX() * (
       m_yColumn.getY() * (m_zColumn.getZ() *
         m_wColumn.getW() - m_zColumn.getW() *
@@ -201,8 +193,7 @@ namespace giEngineSDK {
   }
   
   giMatrix4 
-  giMatrix4::transpose() const
-  {
+  giMatrix4::transpose() const {
     giMatrix4	Result;
 
     //Result.m[0][0] = m[0][0];

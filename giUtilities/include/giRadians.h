@@ -7,13 +7,13 @@
  * @bug     No known Bugs.
  */
 
- /**
-   * @include
-   */
+/**
+  * @include
+  */
 #pragma once
+
 #include "giPrerequisitesUtilities.h"
 
-class giDegrees;
 
 
 /**
@@ -21,104 +21,77 @@ class giDegrees;
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
+
+  class giDegrees;
+
   class GI_UTILITY_EXPORT giRadians 
   {
    public:
-     giRadians() = default;
+    giRadians() = default;
     
-     giRadians(float inVal) {
-       m_radianAngle = inVal;
-     }
+    giRadians(float inVal);
     
-     ~giRadians() = default;
-    
-     float 
-     getRadians() const;
-    
-     float 
-     getDegrees() const;
+    giRadians(const giDegrees& inDeg);
     
     
-     const giRadians&
-     operator+() const;
+    ~giRadians() = default;
     
-     giRadians
-     operator+(const giRadians& inRad) const;
+    float 
+    getRadians() const;
     
-     giRadians
-     operator+(const giDegrees& inDeg) const;
+    float 
+    getDegrees() const;
+     
+    const giRadians&
+    operator+() const;
     
-     giRadians&
-     operator+=(const giRadians& inRad);
+    giRadians
+    operator+(const giRadians& inRad) const;
     
-     giRadians&
-     operator+=(const giDegrees& d);
+    giRadians&
+    operator+=(const giRadians& inRad);
     
-     giRadians
-     operator-() const ;
+    giRadians
+    operator-() const ;
     
-     giRadians
-     operator-(const giRadians& r) const;
+    giRadians
+    operator-(const giRadians& inRad) const;
     
-     giRadians
-     operator-(const giDegrees& d) const;
+    giRadians&
+    operator-=(const giRadians& inRad);
     
-     giRadians&
-     operator-=(const giRadians& inRad);
+    giRadians
+    operator*(float inVal) const ;
     
-     giRadians&
-     operator-=(const giDegrees& d);
+    giRadians
+    operator*(const giRadians& inVal) const;
     
-     giRadians
-     operator*(float f) const ;
+    giRadians&
+    operator*=(float inVal);
     
-     giRadians
-     operator*(const giRadians& f) const;
+    giRadians
+    operator/(float inVal) const;
     
-     giRadians&
-     operator*=(float f);
+    giRadians&
+    operator/=(float inVal);
     
-     giRadians
-     operator/(float f) const;
+    bool
+    operator<(const giRadians& inRad) const;
     
-     giRadians&
-     operator/=(float f);
+    bool
+    operator<=(const giRadians& inRad) const;
     
-     bool
-     operator<(const giRadians& r) const;
+    bool
+    operator==(const giRadians& inRad) const;
     
-     bool
-     operator<=(const giRadians& r) const;
+    bool
+    operator!=(const giRadians& inRad) const;
     
-     bool
-     operator==(const giRadians& r) const;
+    bool
+    operator>=(const giRadians& inRad) const;
     
-     bool
-     operator!=(const giRadians& r) const;
-    
-     bool
-     operator>=(const giRadians& r) const;
-    
-     bool
-     operator>(const giRadians& r) const;
-    
-     bool
-     operator<(const float& v) const;
-    
-     bool
-     operator<=(const float& v) const;
-    
-     bool
-     operator==(const float& v) const;
-    
-     bool
-     operator!=(const float& v) const ;
-    
-     bool
-     operator>=(const float& v) const;
-    
-     bool 
-     operator>(const float& v) const;
+    bool
+    operator>(const giRadians& inRad) const;
     
    private:
   

@@ -1,3 +1,15 @@
+/**
+ * @file    giMath.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    26/03/2021
+ * @brief   Management of the Math.
+ * @bug     No known Bugs.
+ */
+ 
+/**
+ * @include
+ */
 #pragma once
 
 #include "giPrerequisitesUtilities.h"

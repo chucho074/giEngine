@@ -2,189 +2,141 @@
 
 namespace giEngineSDK {
 
-  giVector2i::giVector2i(int32 inX, int32 inY) {
-  x = inX;
-  y = inY;
-}
+  Vector2i::Vector2i(int32 inX, int32 inY) {
+    x = inX;
+    y = inY;
+  }
   
-  giVector2i::giVector2i(giVector2i& inVect) {
-  x = inVect.getX();
-  y = inVect.getY();
-}
+  Vector2i::Vector2i(Vector2i& inVect) {
+    x = inVect.x;
+    y = inVect.y;
+  }
   
-  giVector2i::~giVector2i() {
+  Vector2i::~Vector2i() {
 
-}
+  }
   
-  giVector2i
-  giVector2i::operator+(const giVector2i& otherVect)
-{
-  return giVector2i(x + otherVect.x, y + otherVect.y);
-}
+  Vector2i
+  Vector2i::operator+(const Vector2i& otherVect) {
+    return Vector2i(x + otherVect.x, y + otherVect.y);
+  }
   
-  giVector2i
-  giVector2i::operator-(const giVector2i& otherVect)
-{
-  return giVector2i(x - otherVect.x, y - otherVect.y);
-}
+  Vector2i
+  Vector2i::operator-(const Vector2i& otherVect) {
+    return Vector2i(x - otherVect.x, y - otherVect.y);
+  }
   
-  giVector2i
-  giVector2i::operator*(const giVector2i& otherVect)
-{
-  return giVector2i(x * otherVect.x, y * otherVect.y);
-}
+  Vector2i
+  Vector2i::operator*(const Vector2i& otherVect) {
+    return Vector2i(x * otherVect.x, y * otherVect.y);
+  }
   
-  giVector2i
-  giVector2i::operator/(const giVector2i& otherVect)
-{
-  return giVector2i(x / otherVect.x, y / otherVect.y);
-}
+  Vector2i
+  Vector2i::operator/(const Vector2i& otherVect) {
+    return Vector2i(x / otherVect.x, y / otherVect.y);
+  }
   
-  giVector2i
-  giVector2i::operator+(const int32& otherVal)
-{
-  return giVector2i(x + otherVal, y + otherVal);
-}
+  Vector2i
+  Vector2i::operator+(const int32& otherVal) {
+    return Vector2i(x + otherVal, y + otherVal);
+  }
   
-  giVector2i
-  giVector2i::operator-(const int32& otherVal)
-{
-  return giVector2i(x - otherVal, y - otherVal);
-}
+  Vector2i
+  Vector2i::operator-(const int32& otherVal) {
+    return Vector2i(x - otherVal, y - otherVal);
+  }
   
-  giVector2i
-  giVector2i::operator*(const int32& otherVal)
-{
-  return giVector2i(x * otherVal, y * otherVal);
-}
+  Vector2i
+  Vector2i::operator*(const int32& otherVal) {
+    return Vector2i(x * otherVal, y * otherVal);
+  }
   
-  giVector2i
-  giVector2i::operator/(const int32& otherVal)
-{
-  return giVector2i(x / otherVal, y / otherVal);
-}
+  Vector2i
+  Vector2i::operator/(const int32& otherVal) {
+    return Vector2i(x / otherVal, y / otherVal);
+  }
   
   bool
-  giVector2i::operator>=(const giVector2i& otherVect)
-{
-  if (otherVect.x <= x && otherVect.y <= y) {
-    return true;
+  Vector2i::operator>=(const Vector2i& otherVect) {
+    return (otherVect.x <= x && otherVect.y <= y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator<=(const giVector2i& otherVect)
-{
-  if (otherVect.x >= x && otherVect.y >= y) {
-    return true;
+  Vector2i::operator<=(const Vector2i& otherVect) {
+    return (otherVect.x >= x && otherVect.y >= y); 
   }
-  return false;
-}
   
   bool
-  giVector2i::operator==(const giVector2i& otherVect)
-{
-  if (otherVect.x == x && otherVect.y == y) {
-    return true;
+  Vector2i::operator==(const Vector2i& otherVect) {
+    return (otherVect.x == x && otherVect.y == y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator<(const giVector2i& otherVect)
-{
-  if (otherVect.x > x && otherVect.y > y) {
-    return true;
+  Vector2i::operator<(const Vector2i& otherVect) {
+    return (otherVect.x > x && otherVect.y > y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator>(const giVector2i& otherVect)
-{
-  if (otherVect.x < x && otherVect.y < y) {
-    return true;
+  Vector2i::operator>(const Vector2i& otherVect) {
+    return (otherVect.x < x && otherVect.y < y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator>=(const int32& otherVal)
-{
-  if (otherVal <= x && otherVal <= y) {
-    return true;
+  Vector2i::operator>=(const int32& otherVal) {
+    return (otherVal <= x && otherVal <= y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator<=(const int32& otherVal)
-{
-  if (otherVal >= x && otherVal >= y) {
-    return true;
+  Vector2i::operator<=(const int32& otherVal) {
+    return (otherVal >= x && otherVal >= y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator==(const int32& otherVal)
-{
-  if (otherVal == x && otherVal == y) {
-    return true;
+  Vector2i::operator==(const int32& otherVal)
+  {
+    if (otherVal == x && otherVal == y) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  giVector2i::operator<(const int32& otherVal)
-{
-  if (otherVal > x && otherVal > y) {
-    return true;
+  Vector2i::operator<(const int32& otherVal) {
+    return (otherVal > x && otherVal > y);
   }
-  return false;
-}
   
   bool
-  giVector2i::operator>(const int32& otherVal)
-{
-  if (otherVal < x && otherVal < y) {
-    return true;
+  Vector2i::operator>(const int32& otherVal) {
+    return (otherVal < x && otherVal < y);
   }
-  return false;
-}
   
   int32
-  giVector2i::dotProd(const giVector2i& inVect)
-{
-  return ((x * inVect.x) + (y * inVect.y));
-}
+  Vector2i::dotProd(const Vector2i& inVect) {
+    return ((x * inVect.x) + (y * inVect.y));
+  }
   
   int32
-  giVector2i::crossProd(const giVector2i& inVect)
-{
-  return ((x * inVect.y) - (y * inVect.x));
-}
+  Vector2i::crossProd(const Vector2i& inVect) {
+    return ((x * inVect.y) - (y * inVect.x));
+  }
   
   void
-  giVector2i::normalize()
-{
-  int32 mag = magnitude();
-  if (mag > 0) {
-    int32 tmp = 1 / mag;
-    x *= tmp;
-    y *= tmp;
+  Vector2i::normalize() {
+    int32 mag = magnitude();
+    if (mag > 0) {
+      int32 tmp = 1 / mag;
+      x *= tmp;
+      y *= tmp;
+    }
+    else {
+      x = 0;
+      y = 0;
+    }
   }
-  else {
-    x = 0;
-    y = 0;
-  }
-}
   
   int32
-  giVector2i::magnitude()
-{
-  return int32(sqrt(pow(x, 2) + pow(y, 2)));
-}
+  Vector2i::magnitude() {
+    return int32(sqrt(pow(x, 2) + pow(y, 2)));
+  }
   
 }

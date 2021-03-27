@@ -1,105 +1,78 @@
+/**
+ * @file    giVector4i.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    05/03/2021
+ * @brief   Vectors 4 for ints management.
+ * @bug     No known Bugs.
+ */
+
+/**
+ * @include
+ */
 #pragma once
 
-#include "giPlatformMath.h"
+#include "giPrerequisitesUtilities.h"
 
 using::giEngineSDK::int32;
 
+/**
+ * @class    Vector4i.
+ * @brief    Vectors 4 for ints management.
+ * @bug      No known Bugs.
+ */
 namespace giEngineSDK {
 
-  class GI_UTILITY_EXPORT giVector4i
+  class GI_UTILITY_EXPORT Vector4i
   {
    public:
   
-    giVector4i() = default;
+    Vector4i() = default;
   
-    giVector4i(int32 inX, int32 inY, int32 inZ, int32 inW);
+    Vector4i(int32 inX, int32 inY, int32 inZ, int32 inW);
   
-    giVector4i(giVector4i& inVect);
+    Vector4i(Vector4i& inVect);
   
-    ~giVector4i();
-  
-    int32
-    getX() {
-      return x;
-    }
-  
-    int32
-    getY() {
-      return y;
-    }
-  
-    int32
-    getZ() {
-      return z;
-    }
-  
-    int32
-    getW() {
-      return w;
-    }
-  
-    void
-    setX(int32 inVal) {
-      x = inVal;
-    }
-  
-    void
-    setY(int32 inVal) {
-      y = inVal;
-    }
-  
-    void
-    setZ(int32 inVal) {
-      z = inVal;
-    }
-  
-    void
-    setW(int32 inVal) {
-      w = inVal;
-    }
-  
-  
-    giVector4i
-    operator+(const giVector4i& otherVect);
+    ~Vector4i();
+
+    Vector4i
+    operator+(const Vector4i& otherVect);
     
-    giVector4i
-    operator-(const giVector4i& otherVect);
+    Vector4i
+    operator-(const Vector4i& otherVect);
     
-    giVector4i
-    operator*(const giVector4i& otherVect);
+    Vector4i
+    operator*(const Vector4i& otherVect);
     
-    giVector4i
-    operator/(const giVector4i& otherVect);
+    Vector4i
+    operator/(const Vector4i& otherVect);
     
-    
-    giVector4i
+    Vector4i
     operator+(const int32& otherVal);
     
-    giVector4i
+    Vector4i
     operator-(const int32& otherVal);
   
-    giVector4i
+    Vector4i
     operator*(const int32& otherVal);
     
-    giVector4i
+    Vector4i
     operator/(const int32& otherVal);
     
-    
+    bool
+    operator>=(const Vector4i& otherVect);
     
     bool
-    operator>=(const giVector4i& otherVect);
+    operator<=(const Vector4i& otherVect);
     
     bool
-    operator<=(const giVector4i& otherVect);
+    operator==(const Vector4i& otherVect);
     
     bool
-    operator==(const giVector4i& otherVect);
+    operator<(const Vector4i& otherVect);
     
     bool
-    operator<(const giVector4i& otherVect);
-    
-    bool
-    operator>(const giVector4i& otherVect);
+    operator>(const Vector4i& otherVect);
     
     bool
     operator>=(const int32& otherVal);
@@ -117,10 +90,10 @@ namespace giEngineSDK {
     operator>(const int32& otherVal);
    
     int32
-    dotProd(const giVector4i& inVect);
+    dotProd(const Vector4i& inVect);
     
     int32
-    crossProd(const giVector4i& inVect);
+    crossProd(const Vector4i& inVect);
     
     void
     normalize();
@@ -129,11 +102,10 @@ namespace giEngineSDK {
     magnitude();
   
   
-   private:
-     int32 x;
-     int32 y;
-     int32 z;
-     int32 w;
+    int32 x;
+    int32 y;
+    int32 z;
+    int32 w;
   
   };
 }

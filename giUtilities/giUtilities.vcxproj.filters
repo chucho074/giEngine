@@ -8,15 +8,15 @@
     <Filter Include="Source Files\Prerequisites">
       <UniqueIdentifier>{f04aa545-2dad-4cb4-b50c-66aa1ee74589}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Matrix">
+      <UniqueIdentifier>{6f325675-855a-4f93-99c7-b12ac309c93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vector">
+      <UniqueIdentifier>{266c0806-d74c-4535-8dce-d2331a32a291}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\deleteMe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giPlatformMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\giVector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\giRadians.cpp">
@@ -25,23 +25,26 @@
     <ClCompile Include="src\giDegrees.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giVector2.cpp">
+      <Filter>Source Files\Vector</Filter>
+    </ClCompile>
     <ClCompile Include="src\giVector2i.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="src\giVector3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="src\giVector3i.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="src\giVector4.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="src\giVector4i.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="src\giMatrix4.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Matrix</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,28 +60,7 @@
     <ClInclude Include="include\giRadians.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giVector2.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giDegrees.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector2i.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector3.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector3i.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector4.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector4i.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giMatrix4.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giPrerequisitesUtilities.h">
@@ -92,6 +74,30 @@
     </ClInclude>
     <ClInclude Include="include\giMath.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giModule.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector2.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector2i.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector3.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector3i.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector4.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector4i.h">
+      <Filter>Source Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giMatrix4.h">
+      <Filter>Source Files\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

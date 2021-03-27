@@ -1,107 +1,79 @@
+/**
+ * @file    giVector4.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    26/03/2021
+ * @brief   A basic Vector 4.
+ * @bug     No known Bugs.
+ */
+ 
+/**
+ * @include
+ */
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
-#include "giPlatformMath.h"
 
 namespace giEngineSDK {
 
-  class GI_UTILITY_EXPORT giVector4
+  class GI_UTILITY_EXPORT Vector4
   {
    public:
   
-    giVector4() = default;
+    Vector4() = default;
   
-    giVector4(float inX, float inY, float inZ, float inW);
+    Vector4(float inX, float inY, float inZ, float inW);
   
-    giVector4(giVector4& inVect);
+    Vector4(Vector4& inVect);
   
-    ~giVector4();
+    ~Vector4();
   
-    float
-    getX() const {
-    return x;
-  }
-  
-    float
-    getY() const {
-    return y;
-  }
-  
-    float
-    getZ() const {
-    return z;
-  }
-  
-    float
-    getW() const {
-    return w;
-  }
-  
-    void
-    setX(float inVal) {
-    x = inVal;
-  }
-  
-    void
-    setY(float inVal) {
-    y = inVal;
-  }
-  
-    void
-    setZ(float inVal) {
-    z = inVal;
-  }
-  
-    void
-    setW(float inVal) {
-    w = inVal;
-  }
-  
-  
-    giVector4
-    operator+(const giVector4& otherVect) const;
     
-    giVector4
-    operator-(const giVector4& otherVect) const;
+  
+    Vector4
+    operator+(const Vector4& otherVect) const;
     
-    giVector4
-    operator*(const giVector4& otherVect) const;
+    Vector4
+    operator-(const Vector4& otherVect) const;
     
-    giVector4
-    operator/(const giVector4& otherVect) const;
+    Vector4
+    operator*(const Vector4& otherVect) const;
+    
+    Vector4
+    operator/(const Vector4& otherVect) const;
     
     
-    giVector4
+    Vector4
     operator+(const float& otherVal);
     
-    giVector4
+    Vector4
     operator-(const float& otherVal);
   
-    giVector4
+    Vector4
     operator*(const float& otherVal);
     
-    giVector4
+    Vector4
     operator/(const float& otherVal);
     
     
     
     bool
-    operator>=(const giVector4& otherVect) const;
+    operator>=(const Vector4& otherVect) const;
     
     bool
-    operator<=(const giVector4& otherVect) const;
+    operator<=(const Vector4& otherVect) const;
     
     bool
-    operator==(const giVector4& otherVect) const;
+    operator==(const Vector4& otherVect) const;
     
     bool
-    operator!=(const giVector4& otherVect) const;
+    operator!=(const Vector4& otherVect) const;
     
     bool
-    operator<(const giVector4& otherVect) const;
+    operator<(const Vector4& otherVect) const;
     
     bool
-    operator>(const giVector4& otherVect) const;
+    operator>(const Vector4& otherVect) const;
     
     bool
     operator>=(const float& otherVal);
@@ -119,10 +91,10 @@ namespace giEngineSDK {
     operator>(const float& otherVal);
    
     float
-    dotProd(const giVector4& inVect);
+    dotProd(const Vector4& inVect);
     
     float
-    crossProd(const giVector4& inVect);
+    crossProd(const Vector4& inVect);
     
     void
     normalize();
@@ -130,8 +102,6 @@ namespace giEngineSDK {
     float
     magnitude();
   
-  
-   private:
     float x;
     float y;
     float z;

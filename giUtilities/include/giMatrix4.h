@@ -7,6 +7,9 @@
  * @bug     No known Bugs.
  */
 
+/**
+ * @include
+ */
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
@@ -20,10 +23,10 @@ namespace giEngineSDK {
     //Default constructor
     giMatrix4() = default;
     
-    giMatrix4(giVector4 inColumX,
-              giVector4 inColumY,
-              giVector4 inColumZ,
-              giVector4 inColumW) {
+    giMatrix4(Vector4 inColumX,
+              Vector4 inColumY,
+              Vector4 inColumZ,
+              Vector4 inColumW) {
     
       m_xColumn = inColumX;
       m_yColumn = inColumY;
@@ -164,18 +167,19 @@ namespace giEngineSDK {
     giMatrix4
     transpose() const;
 
+    
     void 
     swap();
 
 
 
 
-    giVector4 m_xColumn;
+    Vector4 m_xColumn;
 
-    giVector4 m_yColumn;
+    Vector4 m_yColumn;
 
-    giVector4 m_zColumn;
+    Vector4 m_zColumn;
 
-    giVector4 m_wColumn;
+    Vector4 m_wColumn;
   };
 }

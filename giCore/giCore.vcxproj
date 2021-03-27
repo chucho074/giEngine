@@ -157,9 +157,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseApp.h" />
     <ClInclude Include="include\giBaseGraphicsAPI.h" />
     <ClInclude Include="include\giBaseShader.h" />
     <ClInclude Include="include\giBuffer.h" />

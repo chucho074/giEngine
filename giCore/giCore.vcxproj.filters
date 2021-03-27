@@ -13,9 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="BaseApp">
+      <UniqueIdentifier>{6880c1e1-8178-4136-9981-e58b107d11e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giBaseApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="include\giBaseShader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseApp.h">
+      <Filter>BaseApp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

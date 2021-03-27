@@ -1,3 +1,15 @@
+/**
+ * @file    giBaseShader.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    02/02/2021
+ * @brief   A basic shader class.
+ * @bug     No known Bugs.
+ */
+
+ /**
+   * @include
+   */
 #pragma once
 #include "giPrerequisitesCore.h"
 

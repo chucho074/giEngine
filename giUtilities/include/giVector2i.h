@@ -1,85 +1,72 @@
+/**
+ * @file    giVector2i.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    26/03/2021
+ * @brief   A basic Vector 2 dor ints.
+ * @bug     No known Bugs.
+ */
+ 
+/**
+ * @include
+ */
 #pragma once
-
 
 #include "giPrerequisitesUtilities.h"
 
 
 namespace giEngineSDK {
   
-  class GI_UTILITY_EXPORT giVector2i
+  class GI_UTILITY_EXPORT Vector2i
   {
    public:
 
-    giVector2i() = default;
+    Vector2i() = default;
 
-    giVector2i(int32 inX, int32 inY);
+    Vector2i(int32 inX, int32 inY);
 
-    giVector2i(giVector2i& inVect);
+    Vector2i(Vector2i& inVect);
 
-    ~giVector2i();
+    ~Vector2i();
 
-    int32
-    getX() {
-      return x;
-    }
-
-    int32
-    getY() {
-      return y;
-    }
-
-    void
-    setX(int32 inVal) {
-      x = inVal;
-    }
-
-    void
-    setY(int32 inVal) {
-      y = inVal;
-    }
-
-
-    giVector2i
-    operator+(const giVector2i& otherVect);
+    Vector2i
+    operator+(const Vector2i& otherVect);
   
-    giVector2i
-    operator-(const giVector2i& otherVect);
+    Vector2i
+    operator-(const Vector2i& otherVect);
   
-    giVector2i
-    operator*(const giVector2i& otherVect);
+    Vector2i
+    operator*(const Vector2i& otherVect);
   
-    giVector2i
-    operator/(const giVector2i& otherVect);
+    Vector2i
+    operator/(const Vector2i& otherVect);
   
-  
-    giVector2i
+    Vector2i
     operator+(const int32& otherVal);
   
-    giVector2i
+    Vector2i
     operator-(const int32& otherVal);
   
-    giVector2i
+    Vector2i
     operator*(const int32& otherVal);
   
-    giVector2i
+    Vector2i
     operator/(const int32& otherVal);
   
-  
+    bool
+    operator>=(const Vector2i& otherVect);
   
     bool
-    operator>=(const giVector2i& otherVect);
+    operator<=(const Vector2i& otherVect);
   
     bool
-    operator<=(const giVector2i& otherVect);
+    operator==(const Vector2i& otherVect);
   
     bool
-    operator==(const giVector2i& otherVect);
+    operator<(const Vector2i& otherVect);
   
     bool
-    operator<(const giVector2i& otherVect);
-  
-    bool
-    operator>(const giVector2i& otherVect);
+    operator>(const Vector2i& otherVect);
   
     bool
     operator>=(const int32& otherVal);
@@ -97,10 +84,10 @@ namespace giEngineSDK {
     operator>(const int32& otherVal);
   
     int32
-    dotProd(const giVector2i& inVect);
+    dotProd(const Vector2i& inVect);
   
     int32
-    crossProd(const giVector2i& inVect);
+    crossProd(const Vector2i& inVect);
   
     void
     normalize();
@@ -108,8 +95,7 @@ namespace giEngineSDK {
     int32
     magnitude();
   
-  
-  private:
+
     int32 x;
     int32 y;
   
