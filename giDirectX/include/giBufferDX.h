@@ -1,10 +1,10 @@
 /**
-* @file		CBufferDX.h
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		05/03/2021
-* @brief	Everything about buffers for DX.
-* @bug		No known Bugs.
+* @file    CBufferDX.h
+* @author  Jesús Alberto Del Moral Cupil
+* @e      idv18c.jmoral@uartesdigitales.edu.mx
+* @date    05/03/2021
+* @brief  Everything about buffers for DX.
+* @bug    No known Bugs.
 **/
 
 /**

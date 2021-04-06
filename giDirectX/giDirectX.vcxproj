@@ -165,9 +165,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\deleteMe.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="include\giBufferDX.h" />
     <ClInclude Include="include\giGraphicsDX.h" />
     <ClInclude Include="include\giPrerequisitesDX.h" />

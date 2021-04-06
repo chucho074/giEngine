@@ -1,10 +1,10 @@
 /**
-* @file		CTexture2DDX.h
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		05/03/2021
-* @brief	Management of the Textures for DX.
-* @bug		No known Bugs.
+* @file    CTexture2DDX.h
+* @author  Jesús Alberto Del Moral Cupil
+* @e      idv18c.jmoral@uartesdigitales.edu.mx
+* @date    05/03/2021
+* @brief  Management of the Textures for DX.
+* @bug    No known Bugs.
 **/
 
 /**
@@ -26,20 +26,20 @@ namespace giEngineSDK {
   {
    public:
     /**
-    * @brief	: Constructor.
-    * @bug		: No Bugs known.
+    * @brief  : Constructor.
+    * @bug    : No Bugs known.
     **/
     CTexture2DDX();
   
     /**
-    * @brief	: Destructor.
-    * @bug		: No Bugs known.
+    * @brief  : Destructor.
+    * @bug    : No Bugs known.
     **/
     ~CTexture2DDX();
   
     /**
-    * @brief	: Object for direct management of the texture.
-    * @bug		: No Bugs known.
+    * @brief  : Object for direct management of the texture.
+    * @bug    : No Bugs known.
     **/
     ID3D11ShaderResourceView* 
     getSRV() { return m_SRV; }

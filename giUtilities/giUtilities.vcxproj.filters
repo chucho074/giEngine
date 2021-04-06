@@ -14,11 +14,11 @@
     <Filter Include="Source Files\Vector">
       <UniqueIdentifier>{266c0806-d74c-4535-8dce-d2331a32a291}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{3ecd141e-4bc6-4fb9-8f90-3f8ada5e8d91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\giPlatformMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giRadians.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +46,9 @@
     <ClCompile Include="src\giMatrix4.cpp">
       <Filter>Source Files\Matrix</Filter>
     </ClCompile>
+    <ClCompile Include="src\giPlatformMath.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -53,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="include\giPlatformTypes.h">
       <Filter>Source Files\Prerequisites</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giPlatformMath.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giRadians.h">
       <Filter>Source Files</Filter>
@@ -67,12 +67,6 @@
       <Filter>Source Files\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="include\giStdHeaders.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giWindowsMath.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giMath.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giModule.h">
@@ -98,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="include\giMatrix4.h">
       <Filter>Source Files\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giMath.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPlatformMath.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giWindowsMath.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

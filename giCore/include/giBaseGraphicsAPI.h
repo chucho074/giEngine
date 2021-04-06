@@ -12,9 +12,12 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
-//#include "Module.h"
+#include <giModule.h>
 #include <vector>
 #include <string>
+
+#include <windows.h>
+
 
 
 ///Forward declarations
@@ -39,7 +42,7 @@ struct SamplerDesc;
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CBaseGraphicsAPI /*: public Module<CBaseGraphicsAPI> */{
+  class CBaseGraphicsAPI : public Module<CBaseGraphicsAPI> {
    public:
   
      ///Default Constructor.
@@ -49,21 +52,21 @@ namespace giEngineSDK {
      ~CBaseGraphicsAPI() = default;
      
      /**
-      * @brief	  Prepare the Module.
+      * @brief    Prepare the Module.
       * @bug      No known Bugs.
       */
-     /*void 
-     onPrepare() override {};
+     void 
+     onStartUp() override {};
      
      /**
-      * @brief	  Clear the Module.
+      * @brief    Clear the Module.
       * @bug      No known Bugs.
       */
-     /*void 
+     void 
      onShutDown() override {};
      
      /**
-      * @brief	  In charge of the creation of the device & SwapChain
+      * @brief    In charge of the creation of the device & SwapChain
       * @bug      No known Bugs.
       */
      virtual void 
@@ -72,16 +75,16 @@ namespace giEngineSDK {
      /***/int inHeight) = 0;
      
      /**
-      * @brief	  In Charge to create the device and the swap chain.
+      * @brief    In Charge to create the device and the swap chain.
       * @bug      No known Bugs.
       */
-     virtual HRESULT 
+     virtual bool 
      createDeviceAndSwpaChain(void * inWindow, 
      /***********************/int inWidth, 
      /***********************/int inHeight) = 0;
      
      /**
-      * @brief	  Creates the texture in the Device.
+      * @brief    Creates the texture in the Device.
       * @bug      No known Bugs.
       */
      virtual void * 
@@ -92,7 +95,7 @@ namespace giEngineSDK {
      /**********/int inBindFlags) = 0;
      
      /**
-      * @brief	  Creates the View Port in the Device.
+      * @brief    Creates the View Port in the Device.
       * @bug      No known Bugs.
       */
      virtual void * 
@@ -100,14 +103,14 @@ namespace giEngineSDK {
      /*******/int inHeight) = 0;
      
      /**
-      * @brief	  Sets the View Port in the DeviceContext.
+      * @brief    Sets the View Port in the DeviceContext.
       * @bug      No known Bugs.
       */
      virtual void 
      setVP(CViewPort &inVP) = 0;
      
      /**
-      * @brief	  Create the Vertex Shader.
+      * @brief    Create the Vertex Shader.
       * @bug      No known Bugs.
       */
      virtual void * 
@@ -116,7 +119,7 @@ namespace giEngineSDK {
      /*******/LPCSTR inShaderModel) = 0;
      
      /**
-      * @brief	  Create the Pixel Shader
+      * @brief    Create the Pixel Shader
       * @bug      No known Bugs.
       */
      virtual void * 
@@ -173,7 +176,7 @@ namespace giEngineSDK {
      /*************/DXGI_FORMAT inFormat) = 0;
      
      /**
-      * @brieft	  Set PrimitiveTopology.
+      * @brieft    Set PrimitiveTopology.
       * @bug      No known Bugs.
       */
      virtual void 
@@ -213,14 +216,14 @@ namespace giEngineSDK {
      clearDSV(CTexture2D* inDSV) = 0;
      
      /**
-      * @brief	  Vertex Shader Set Shader.
+      * @brief    Vertex Shader Set Shader.
       * @bug      No known Bugs.
       */
      virtual void 
      vsSetShader(CVertexShader * inVShader = nullptr) = 0;
      
      /**
-      * @brief	  Vertex Shader Set Constant Buffer.
+      * @brief    Vertex Shader Set Constant Buffer.
       * @bug      No known Bugs.
       */
      virtual void 
@@ -298,5 +301,6 @@ namespace giEngineSDK {
   
   };
   
-  //static CBaseGraphicsAPI& g_GraphicsAPI();
+  static CBaseGraphicsAPI& 
+  g_GraphicsAPI();
 }

@@ -22,7 +22,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\giBaseApp.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BaseApp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

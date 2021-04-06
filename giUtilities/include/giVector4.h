@@ -42,6 +42,18 @@ namespace giEngineSDK {
     Vector4
     operator/(const Vector4& otherVect) const;
     
+    void
+    operator+=(const Vector4& otherVect);
+    
+    void
+    operator-=(const Vector4& otherVect);
+    
+    void
+    operator*=(const Vector4& otherVect);
+    
+    void
+    operator/=(const Vector4& otherVect);
+    
     
     Vector4
     operator+(const float& otherVal);
@@ -103,8 +115,11 @@ namespace giEngineSDK {
     magnitude();
   
     float x;
+
     float y;
+    
     float z;
+    
     float w;
   
   };

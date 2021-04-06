@@ -13,7 +13,7 @@ namespace giEngineSDK {
 
   const float PlatformMath::BIG_NUMBER = static_cast<float>(3.4e+38f);
 
-  const float PlatformMath::EULER_NUMBER = 2.718;
+  const float PlatformMath::EULER_NUMBER = 2.718f;
 
   const float PlatformMath::DELTA = 1.e-5f;
 }

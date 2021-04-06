@@ -1,13 +1,7 @@
 #pragma once
 #include <cmath>
 #include "giPrerequisitesUtilities.h"
-#include"giPlatformTypes.h"
-
-//using std::sqrt;
-//using std::sqrtf;
-//using std::atan;
-//using std::pow;
-//using std::powf;
+#include "giPlatformTypes.h"
 
 namespace giEngineSDK {
   class GI_UTILITY_EXPORT PlatformMath
@@ -21,6 +15,7 @@ namespace giEngineSDK {
     static const float BIG_NUMBER;
     static const float EULER_NUMBER;
     static const float DELTA;
+
     //Invert Sqrt
     template<typename Type>
     static Type

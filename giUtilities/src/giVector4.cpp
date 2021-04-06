@@ -32,6 +32,38 @@ namespace giEngineSDK {
 
   }
   
+  void
+  Vector4::operator+=(const Vector4& otherVect) {
+    x += otherVect.x;
+    y += otherVect.y;
+    z += otherVect.z;
+    w += otherVect.w;
+  }
+  
+  void
+  Vector4::operator-=(const Vector4& otherVect) {
+    x -= otherVect.x;
+    y -= otherVect.y;
+    z -= otherVect.z;
+    w -= otherVect.w;
+  }
+  
+  void
+  Vector4::operator*=(const Vector4& otherVect) {
+    x *= otherVect.x;
+    y *= otherVect.y;
+    z *= otherVect.z;
+    w *= otherVect.w;
+  }
+  
+  void
+  Vector4::operator/=(const Vector4& otherVect) {
+    x /= otherVect.x;
+    y /= otherVect.y;
+    z /= otherVect.z;
+    w /= otherVect.w;
+  }
+  
   Vector4
   Vector4::operator+(const Vector4& otherVect) const {
     return Vector4(x + otherVect.x, 

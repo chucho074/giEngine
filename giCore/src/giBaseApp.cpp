@@ -1,23 +1,25 @@
 /**
-* @file		BaseApp.cpp
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		27/08/2020
-* @brief	A class for the basics functions of the apps.
-* @bug		No known Bugs.
-**/
+ * @file    giBaseApp.cpp
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    27/08/2020
+ * @brief   A class for the basics functions of the apps.
+ * @bug     No known Bugs.
+ */
 
 /**
-* @include
-**/
+ * @include
+ */
 #include "giBaseApp.h"
+#include "giBaseGraphicsAPI.h"
 
 
 BaseApp::~BaseApp() {
 
 }
 
-int BaseApp::run() {
+int 
+BaseApp::run() {
   //Initialize every system
   initSystems();
 
@@ -62,72 +64,44 @@ int BaseApp::run() {
   return 0;
 }
 
-bool BaseApp::createWindow() {
-  //Create the instance for the window
-  auto hInstance = reinterpret_cast<HINSTANCE>(GetModuleHandle(nullptr));
-
-  // Register class
-  WNDCLASSEX wcex;
-  wcex.cbSize = sizeof(WNDCLASSEX);
-  wcex.style = CS_HREDRAW | CS_VREDRAW;
-  wcex.lpfnWndProc = handleWindowEvent;
-  wcex.cbClsExtra = 0;
-  wcex.cbWndExtra = 0;
-  wcex.hInstance = hInstance;
-  wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION);
-  wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-  wcex.lpszMenuName = nullptr;
-  wcex.lpszClassName = L"TutorialWindowClass";
-  wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_APPLICATION);
-  if (!RegisterClassEx(&wcex)) {
-    return E_FAIL;
+void 
+BaseApp::createWindow() {
+  
+  if (m_window.isOpen()) {
+    return;
   }
+  
+  m_window.create(VideoMode(m_width, m_height),
+  /**************/"Default Title",
+  /**************/sf::Style::Default);
 
-  RECT rc = { 0, 0, m_Width, m_Height };
-  AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+  m_window.setPosition({ 0,0 });
 
-  HWND hWd;
-  hWd = CreateWindow(L"TutorialWindowClass",
-    L"Tutorial07",
-    WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT,
-    CW_USEDEFAULT,
-    rc.right - rc.left,
-    rc.bottom - rc.top,
-    nullptr,
-    nullptr,
-    hInstance,
-    nullptr);
-
-  //Check if the window was created correctly
-  if (!hWd) {
-    return false;
-  }
-
-  RECT clientRect;
-  GetClientRect(hWd, &clientRect);
-  m_Width = clientRect.right - clientRect.left;
-  m_Height = clientRect.bottom - clientRect.top;
-  m_window = reinterpret_cast<void*>(hWd);
-  ShowWindow(hWd, 10);
-
-  return true;
+  //Focus
+  //m_windowHasFocus = m_window.hasFocus();
 }
 
-void BaseApp::update(float inDeltaTime) {
+void 
+BaseApp::update(float inDeltaTime) {
   onUpdate(inDeltaTime);
 }
 
-void BaseApp::render() {
+void 
+BaseApp::render() {
   onRender();
 }
 
-void BaseApp::initSystems() {
-  CGraphicsAPI::Prepare();
+void 
+BaseApp::initSystems() {
+
+  //Get the window handle
+  WindowHandle handle = m_window.getSystemHandle();
+
+
+  CBaseGraphicsAPI::startUp();
 
   //Initialize the Graphics API
-  g_GraphicsAPI().init(m_window, m_Width, m_Height);
+  g_GraphicsAPI().init(handle, m_width, m_height);
 
   //Activate the console only on Debug
 #ifdef DEBUG
@@ -135,11 +109,13 @@ void BaseApp::initSystems() {
 #endif
 }
 
-void BaseApp::destroySystems() {
-  CGraphicsAPI::ShutDown();
+void 
+BaseApp::destroySystems() {
+  CBaseGraphicsAPI::shutDown();
 }
 
-void BaseApp::activateConsole() {
+void 
+BaseApp::activateConsole() {
 
   AllocConsole();
 
@@ -169,7 +145,8 @@ void BaseApp::activateConsole() {
   std::cin.clear();
 }
 
-LRESULT BaseApp::handleWindowEvent(HWND inHw, UINT inMsg, WPARAM inwParam, LPARAM inlParam) {
+LRESULT 
+BaseApp::handleWindowEvent(HWND inHw, UINT inMsg, WPARAM inwParam, LPARAM inlParam) {
 
   PAINTSTRUCT ps;
   HDC hdc;
@@ -195,6 +172,9 @@ LRESULT BaseApp::handleWindowEvent(HWND inHw, UINT inMsg, WPARAM inwParam, LPARA
 
 }
 
-CGraphicsAPI& g_GraphicsAPI() {
-  return CGraphicsAPI::getSingleton();
+namespace giEngineSDK {
+  CBaseGraphicsAPI&
+  g_GraphicsAPI() {
+    return CBaseGraphicsAPI::instance();
+  }
 }

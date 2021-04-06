@@ -17,25 +17,25 @@
 
 namespace giEngineSDK {
 
-  class GI_UTILITY_EXPORT giMatrix4
+  class GI_UTILITY_EXPORT Matrix4
   {
    public:
     //Default constructor
-    giMatrix4() = default;
+    Matrix4() = default;
     
-    giMatrix4(Vector4 inColumX,
-              Vector4 inColumY,
-              Vector4 inColumZ,
-              Vector4 inColumW) {
+    Matrix4(Vector4 inColumX,
+            Vector4 inColumY,
+            Vector4 inColumZ,
+            Vector4 inColumW) {
     
       m_xColumn = inColumX;
       m_yColumn = inColumY;
-      m_zColumn = inColumW;
-      m_wColumn = inColumZ;
+      m_zColumn = inColumZ;
+      m_wColumn = inColumW;
     }
 
     //Destructor
-    ~giMatrix4() = default;
+    ~Matrix4() = default;
 
     /**
      * @brief    Info of the function.
@@ -43,8 +43,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      * @return   Returns .
      */
-    giMatrix4
-    operator+(const giMatrix4& inMatrix) const;
+    Matrix4
+    operator+(const Matrix4& inMatrix) const;
 
     /**
      * @brief    Info of the function.
@@ -52,8 +52,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      * @return   Returns .
      */
-    giMatrix4
-    operator-(const giMatrix4& inMatrix) const;
+    Matrix4
+    operator-(const Matrix4& inMatrix) const;
 
     /**
      * @brief    Info of the function.
@@ -61,8 +61,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      * @return   Returns .
      */
-    giMatrix4
-    operator*(const giMatrix4& inMatrix) const;
+    Matrix4
+    operator*(const Matrix4& inMatrix) const;
 
     /**
      * @brief    Info of the function.
@@ -71,7 +71,7 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     void
-    operator*=(const giMatrix4& inMatrix) {
+    operator*=(const Matrix4& inMatrix) {
       auto tmpMatrix = *this * inMatrix;
 
       m_xColumn = tmpMatrix.m_xColumn;
@@ -88,7 +88,7 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     void
-    operator+=(const giMatrix4& inMatrix) {
+    operator+=(const Matrix4& inMatrix) {
       auto tmpMatrix = *this + inMatrix;
 
       m_xColumn = tmpMatrix.m_xColumn;
@@ -104,7 +104,7 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     void
-    operator-=(const giMatrix4& inMatrix) {
+    operator-=(const Matrix4& inMatrix) {
       auto tmpMatrix = *this - inMatrix;
 
       m_xColumn = tmpMatrix.m_xColumn;
@@ -129,7 +129,7 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     bool
-    operator==(const giMatrix4& inMatrix) const;
+    operator==(const Matrix4& inMatrix) const;
 
     /**
      * @brief    Info of the function.
@@ -138,7 +138,7 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     bool
-    operator!=(const giMatrix4& inMatrix) const;
+    operator!=(const Matrix4& inMatrix) const;
 
     /**
      * @brief    Info of the function.
@@ -146,7 +146,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      * @return   Returns .
      */
-    giMatrix4
+    Matrix4
     inverse() const;
 
     /**
@@ -164,7 +164,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      * @return   Returns .
      */
-    giMatrix4
+    Matrix4
     transpose() const;
 
     
@@ -181,5 +181,7 @@ namespace giEngineSDK {
     Vector4 m_zColumn;
 
     Vector4 m_wColumn;
+
+    static const Matrix4 IDENTITY;
   };
 }
