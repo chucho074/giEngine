@@ -11,15 +11,16 @@
  * @include
  */
 #pragma once
-#include <giPrerequisitesDX.h>
+#include "giPrerequisitesDX.h"
 #include <giBaseGraphicsAPI.h>
 
-/**
- * @class    CGraphicsDX.
- * @brief    Manage the graphics of DirectX.
- * @bug      No known Bugs.
- */
+
 namespace giEngineSDK {
+  /**
+   * @class    CGraphicsDX.
+   * @brief    Manage the graphics of DirectX.
+   * @bug      No known Bugs.
+   */
   class CGraphicsDX final : public CBaseGraphicsAPI
   {
    public:
@@ -28,23 +29,11 @@ namespace giEngineSDK {
     
     ///Destructor.
     ~CGraphicsDX() = default;
-    
-    /**
-     * @brief    Prepare the Module.
-     * @bug      No known Bugs.
-     */
-    //void onPrepare() override {};
-  
-    /**
-     * @brief    Clear the Module.
-     * @bug      No known Bugs.
-     */
-    //void onShutDown() override {};
-  
+      
     /**
      * @brief    In charge of the creation of the device & SwapChain
      * @bug      No known Bugs.
-     **/
+     */
     void 
     init(void * inWindow, 
     /***/int inWidth, 
@@ -53,8 +42,9 @@ namespace giEngineSDK {
     /**
      * @brief    In Charge to create the device and the swap chain.
      * @bug      No known Bugs.
+     * @return   Returns .
      */
-    HRESULT 
+    bool 
     createDeviceAndSwpaChain(void * inWindow, 
     /***********************/int inWidth, 
     /***********************/int inHeight);
@@ -67,7 +57,7 @@ namespace giEngineSDK {
     createTex2D(int inWidth,
     /**********/int inHeigh,
     /**********/int inMipLevels,
-    /**********/DXGI_FORMAT inFormat,
+    /**********/GI_FORMAT::E inFormat,
     /**********/int inBindFlags);
     
     /**
@@ -108,8 +98,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void * 
-    createIL(std::vector<InputLayoutDesc> & inDesc, 
-    /*******/CVertexShader * inShader) override;
+    createIL(Vector<InputLayoutDesc> & inDesc, 
+    /*******/CVertexShader * inShader);
   
     /**
      * @brief    Creates a buffer.
@@ -147,14 +137,14 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setIndexBuffer(CBuffer * inBuffer, DXGI_FORMAT inFormat);
+    setIndexBuffer(CBuffer * inBuffer, GI_FORMAT::E inFormat);
   
     /**
      * @brieft    Set PrimitiveTopology.
      * @bug      No known Bugs.
      */
     void 
-    setTopology(D3D_PRIMITIVE_TOPOLOGY inTopotology);
+    setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology);
   
     /**
      * @brief    Update Subresource.
@@ -243,7 +233,7 @@ namespace giEngineSDK {
     /** 
      * @brief    OM Set Render Targets.
      * @bug      No known Bugs.
-    */
+     */
     void 
     omSetRenderTarget(CTexture2D * inRT = nullptr, 
     /****************/CTexture2D * inDS = nullptr);

@@ -226,9 +226,9 @@ TEST(MatrixTest, MatixTest) {
   Matrix4 A(vec1, vec2, vec3, vec4);
 
   Matrix4 B({16, 12, 8, 4}, 
-            {15, 11, 7, 3}, 
-            {14, 10, 6, 2}, 
-            {13, 9, 5, 1});
+  /********/{15, 11, 7, 3}, 
+  /********/{14, 10, 6, 2}, 
+  /********/{13, 9, 5, 1});
 
   //Matrix increment test
   Matrix4 result = A + B;
@@ -248,12 +248,20 @@ TEST(MatrixTest, MatixTest) {
   //Matrix determinant test
   EXPECT_EQ(A.determinant(), 0);
 
+  Matrix4 C({ 5, 5, 5, 3 },    //1, -1, -1, 1
+  /********/{ 5, 3, 5, 3 },    //0.5, -0.5, 0, 0 
+  /********/{ 2, 5, 8, 3 },    //0.666, -1, -0.666, 1
+  /********/{ 3, 3, 8, 3 });   //-3.277, 4.166, 2.777, -3.333
+  
+  //Matrix inverse test
+  EXPECT_FLOAT_EQ(C.inverse().m_xColumn.w, -3.27777798f);
+  EXPECT_FLOAT_EQ(C.inverse().m_zColumn.w, 2.77777778f);
 }
 
 /**
  * Std types
  */
 TEST(STDTest, STDTest) {
-
+  String str;
 
 }

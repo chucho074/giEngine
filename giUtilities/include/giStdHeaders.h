@@ -11,10 +11,6 @@
  * @include
  */
 #pragma once
-
-/**
- * Conteiners
- */
 #include <vector>
 #include <stack>
 #include <queue>

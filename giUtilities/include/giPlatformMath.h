@@ -15,6 +15,8 @@ namespace giEngineSDK {
     static const float BIG_NUMBER;
     static const float EULER_NUMBER;
     static const float DELTA;
+    static const uint32 SELECT0;
+    static const uint32 SELECT1;
 
     //Invert Sqrt
     template<typename Type>

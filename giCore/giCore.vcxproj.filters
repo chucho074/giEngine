@@ -24,6 +24,12 @@
     <ClCompile Include="src\giBaseApp.cpp">
       <Filter>BaseApp</Filter>
     </ClCompile>
+    <ClCompile Include="src\giBaseShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giTexture2D.h">
@@ -47,11 +53,17 @@
     <ClInclude Include="include\giBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giBaseApp.h">
+      <Filter>BaseApp</Filter>
+    </ClInclude>
     <ClInclude Include="include\giBaseShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giBaseApp.h">
-      <Filter>BaseApp</Filter>
+    <ClInclude Include="include\giCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giDepthStencilView.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

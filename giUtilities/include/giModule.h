@@ -30,13 +30,13 @@ namespace giEngineSDK {
     static T&
     instance() {
       if (!isStartedUp()) {
-        GE_EXCEPT(InternalErrorException,
-                  "Trying to access a module but it hasn't been started.");
+        //GI_EXCEPT(InternalErrorException,
+        //          "Trying to access a module but it hasn't been started.");
       }
 
       if (isDestroyed()) {
-        GE_EXCEPT(InternalErrorException,
-                  "Trying to access a destroyed module.");
+        //GE_EXCEPT(InternalErrorException,
+        //          "Trying to access a destroyed module.");
       }
 
       return *_instance();
@@ -49,13 +49,13 @@ namespace giEngineSDK {
     static T*
     instancePtr() {
       if (!isStartedUp()) {
-        GE_EXCEPT(InternalErrorException,
-                  "Trying to access a module but it hasn't been started.");
+        //GE_EXCEPT(InternalErrorException,
+        //          "Trying to access a module but it hasn't been started.");
       }
 
       if (isDestroyed()) {
-        GE_EXCEPT(InternalErrorException,
-                  "Trying to access a destroyed module.");
+        //GE_EXCEPT(InternalErrorException,
+        //          "Trying to access a destroyed module.");
       }
 
       return _instance();
@@ -68,11 +68,11 @@ namespace giEngineSDK {
     static void
     startUp(Args&& ...args) {
       if (isStartedUp()) {
-        GE_EXCEPT(InternalErrorException,
-                  "Trying to start an already started module.");
+        //GE_EXCEPT(InternalErrorException,
+        //          "Trying to start an already started module.");
       }
 
-      _instance() = new<T>(std::forward<Args>(args)...);
+      _instance() = new T(std::forward<Args>(args)...);
       isStartedUp() = true;
 
       static_cast<Module*>(_instance())->onStartUp();
@@ -92,7 +92,7 @@ namespace giEngineSDK {
         //Except  "Trying to start an already started module."
       }
 
-      _instance() = new<SubType>(std::forward<Args>(args)...);
+      _instance() = new SubType (std::forward<Args>(args)...);
       isStartedUp() = true;
 
       static_cast<Module*>(_instance())->onStartUp();

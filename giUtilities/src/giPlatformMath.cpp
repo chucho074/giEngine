@@ -16,4 +16,5 @@ namespace giEngineSDK {
   const float PlatformMath::EULER_NUMBER = 2.718f;
 
   const float PlatformMath::DELTA = 1.e-5f;
+
 }

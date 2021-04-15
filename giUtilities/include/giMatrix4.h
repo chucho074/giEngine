@@ -15,7 +15,7 @@
 #include "giPrerequisitesUtilities.h"
 #include "giVector4.h"
 
-namespace giEngineSDK {
+namespace giEngineSDK { 
 
   class GI_UTILITY_EXPORT Matrix4
   {
@@ -24,9 +24,9 @@ namespace giEngineSDK {
     Matrix4() = default;
     
     Matrix4(Vector4 inColumX,
-            Vector4 inColumY,
-            Vector4 inColumZ,
-            Vector4 inColumW) {
+    /******/Vector4 inColumY,
+    /******/Vector4 inColumZ,
+    /******/Vector4 inColumW) {
     
       m_xColumn = inColumX;
       m_yColumn = inColumY;
@@ -72,6 +72,7 @@ namespace giEngineSDK {
      */
     void
     operator*=(const Matrix4& inMatrix) {
+      
       auto tmpMatrix = *this * inMatrix;
 
       m_xColumn = tmpMatrix.m_xColumn;
@@ -167,13 +168,20 @@ namespace giEngineSDK {
     Matrix4
     transpose() const;
 
-    
+    /**
+     * @brief    Intercambiar valores de 2 matrices
+     * @bug      No known Bugs.
+     */
     void 
     swap();
-
-
-
-
+    
+    /**
+     * @brief 
+     * @bug      No known Bugs.
+     */
+    void 
+    negateMatrix();
+    
     Vector4 m_xColumn;
 
     Vector4 m_yColumn;
@@ -182,6 +190,25 @@ namespace giEngineSDK {
 
     Vector4 m_wColumn;
 
-    static const Matrix4 IDENTITY;
+    static const Matrix4 
+    IDENTITY;
+    
+  };
+
+  class lookToLH : public Matrix4
+  {
+   public:
+     lookToLH(Vector4 inEyePos,
+     /*******/Vector4 inEyeDirection,
+     /*******/Vector4 inUpDirection);
+  };
+
+  class perspectiveFovLH : public Matrix4
+  {
+   public:
+     perspectiveFovLH(float inFov,
+     /***************/float inAR,
+     /***************/float inNear,
+     /***************/float inFar);
   };
 }

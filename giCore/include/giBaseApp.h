@@ -51,9 +51,9 @@ class BaseApp
 
  protected:
   /**
-  * @brief    Virtual Method in charge of creating a virtual method.
-  * @bug      No known Bugs.
-  **/
+   * @brief    Virtual Method in charge of creating a virtual method.
+   * @bug      No known Bugs.
+   */
   virtual void 
   onCreate() = 0;
 
@@ -81,12 +81,11 @@ class BaseApp
 
   /**
    * @brief    Method in charge of get the events of the window
-   * @param    inMsg      The message
-   * @param    inwParam    The parameter
+   * @param    
    * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(uint32 inMsg, WPARAM inwParam)  = 0;
+  onEvent(Event inEvent)  = 0;
 
  private:
   /**
@@ -143,7 +142,7 @@ class BaseApp
    * @bug      No known Bugs.
    * @return   Returns the result of the handle event.
    */
-  static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
+  //static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
 
   ///The Width of the window with a default size
   int m_width = 640;

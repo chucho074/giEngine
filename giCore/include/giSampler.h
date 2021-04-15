@@ -13,12 +13,12 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 
-/**
- * @struct   SamplerDesc.
- * @brief    Manage the information for the Sampler.
- * @bug      No known Bugs.
- */
 namespace giEngineSDK {
+  /**
+   * @struct   SamplerDesc.
+   * @brief    Manage the information for the Sampler.
+   * @bug      No known Bugs.
+   */
   struct SamplerDesc {
     unsigned int filter;
     unsigned int addressU;
@@ -41,6 +41,7 @@ namespace giEngineSDK {
   
      ~CSampler() {}
   
-     virtual void init(SamplerDesc inDesc) {}
+     virtual void 
+     init(SamplerDesc inDesc) {};
   };
 }

@@ -29,32 +29,35 @@ BaseApp::run() {
   //Send message to device
   onCreate();
 
-  //Main Loop
-  MSG msg = { 0 };
-  while (WM_QUIT != msg.message) {
-    if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
-      //Eventos propios
-      onEvent(msg.message, msg.wParam);
-    }
-    else {
-
-      //Update Time
-      static float t = 0.0f;
-      static int dwTimeStart = 0;
-      int dwTimeCur = GetTickCount();
-      if (dwTimeStart == 0) {
-        dwTimeStart = dwTimeCur;
+  //App Loop
+  while (m_window.isOpen()) {
+    Event eventsWnd;
+    while (m_window.pollEvent(eventsWnd)) {
+      if (eventsWnd.type == Event::Closed) {
+        m_window.close();
+        break;
       }
-      t = (dwTimeCur - dwTimeStart) / 1000.0f;
-
-      //Update Game Logic
-      update(t);
-
-      //Render Frame
-      render();
+      
+      //Eventos propios
+      onEvent(eventsWnd);
     }
+
+
+    //Update Time
+    /*static float t = 0.0f;
+    static int dwTimeStart = 0;
+    int dwTimeCur = getGetTickCount();
+    if (dwTimeStart == 0) {
+      dwTimeStart = dwTimeCur;
+    }
+    t = (dwTimeCur - dwTimeStart) / 1000.0f;*/
+    
+    //Update Game Logic
+    update(/*t*/0);
+    
+    //Render Frame
+    render();
+    
   }
 
   //Destroy the resources
@@ -101,7 +104,9 @@ BaseApp::initSystems() {
   CBaseGraphicsAPI::startUp();
 
   //Initialize the Graphics API
-  g_GraphicsAPI().init(handle, m_width, m_height);
+  g_GraphicsAPI().init(reinterpret_cast<void*>(handle), 
+  /*******************/m_width, 
+  /*******************/m_height);
 
   //Activate the console only on Debug
 #ifdef DEBUG
@@ -111,65 +116,39 @@ BaseApp::initSystems() {
 
 void 
 BaseApp::destroySystems() {
+  m_window.close();
   CBaseGraphicsAPI::shutDown();
 }
 
 void 
 BaseApp::activateConsole() {
 
-  AllocConsole();
+  //AllocConsole();
 
-  HANDLE ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-  int SystemOutput = _open_osfhandle(intptr_t(ConsoleOutput), _O_TEXT);
-  FILE* COutputHandle = _fdopen(SystemOutput, "w");
+  //HANDLE ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+  //int SystemOutput = _open_osfhandle(intptr_t(ConsoleOutput), _O_TEXT);
+  //FILE* COutputHandle = _fdopen(SystemOutput, "w");
 
-  HANDLE ConsoleError = GetStdHandle(STD_ERROR_HANDLE);
-  int SystemError = _open_osfhandle(intptr_t(ConsoleError), _O_TEXT);
-  FILE* CErrorHandle = _fdopen(SystemError, "w");
+  //HANDLE ConsoleError = GetStdHandle(STD_ERROR_HANDLE);
+  //int SystemError = _open_osfhandle(intptr_t(ConsoleError), _O_TEXT);
+  //FILE* CErrorHandle = _fdopen(SystemError, "w");
 
-  HANDLE ConsoleInput = GetStdHandle(STD_INPUT_HANDLE);
-  int SystemInput = _open_osfhandle(intptr_t(ConsoleInput), _O_TEXT);
-  FILE* CInputHandle = _fdopen(SystemInput, "r");
+  //HANDLE ConsoleInput = GetStdHandle(STD_INPUT_HANDLE);
+  //int SystemInput = _open_osfhandle(intptr_t(ConsoleInput), _O_TEXT);
+  //FILE* CInputHandle = _fdopen(SystemInput, "r");
 
-  std::ios::sync_with_stdio(true);
+  //std::ios::sync_with_stdio(true);
 
-  freopen_s(&CInputHandle, "CONIN$", "r", stdin);
-  freopen_s(&COutputHandle, "CONOUT$", "w", stdout);
-  freopen_s(&CErrorHandle, "CONOUT$", "w", stderr);
+  //freopen_s(&CInputHandle, "CONIN$", "r", stdin);
+  //freopen_s(&COutputHandle, "CONOUT$", "w", stdout);
+  //freopen_s(&CErrorHandle, "CONOUT$", "w", stderr);
 
-  std::wcout.clear();
-  std::cout.clear();
-  std::wcerr.clear();
-  std::cerr.clear();
-  std::wcin.clear();
-  std::cin.clear();
-}
-
-LRESULT 
-BaseApp::handleWindowEvent(HWND inHw, UINT inMsg, WPARAM inwParam, LPARAM inlParam) {
-
-  PAINTSTRUCT ps;
-  HDC hdc;
-  switch (inMsg) {
-  case WM_PAINT: {
-    hdc = BeginPaint(inHw, &ps);
-    EndPaint(inHw, &ps);
-    break;
-  }
-  case WM_DESTROY: {
-    PostQuitMessage(0);
-    break;
-  }
-
-
-  default: {
-
-    return DefWindowProc(inHw, inMsg, inwParam, inlParam);
-    break;
-  }
-  }
-
-
+  //std::wcout.clear();
+  //std::cout.clear();
+  //std::wcerr.clear();
+  //std::cerr.clear();
+  //std::wcin.clear();
+  //std::cin.clear();
 }
 
 namespace giEngineSDK {

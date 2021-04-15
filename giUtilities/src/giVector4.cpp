@@ -11,6 +11,7 @@
  * @include
  */
 #include "giVector4.h"
+#include "giVector4i.h"
 
 namespace giEngineSDK {
   
@@ -19,6 +20,13 @@ namespace giEngineSDK {
     y = inY;
     z = inZ;
     w = inW;
+  }
+
+  Vector4::Vector4(Vector4i inVect) {
+    x = float(inVect.x);
+    y = float(inVect.y);
+    z = float(inVect.w);
+    w = float(inVect.z);
   }
   
   Vector4::Vector4(Vector4& inVect) {
@@ -94,6 +102,14 @@ namespace giEngineSDK {
                      y / otherVect.y, 
                      z / otherVect.z, 
                      w / otherVect.w);
+  }
+
+  void
+  Vector4::operator=(const Vector4& otherVect) {
+    x = otherVect.x;
+    y = otherVect.y;
+    z = otherVect.z;
+    w = otherVect.w;
   }
   
   Vector4
@@ -219,23 +235,16 @@ namespace giEngineSDK {
   }
   
   float
-  Vector4::dotProd(const Vector4& inVect) {
-    return ((x * inVect.x) + 
-            (y * inVect.y) + 
-            (z * inVect.z) + 
-            (w * inVect.w));
+  Vector4::dotProd(const Vector4& inVectA) {
+    return ((x * inVectA.x) + 
+            (y * inVectA.y) + 
+            (z * inVectA.z) + 
+            (w * inVectA.w));
   }
-  
-  float
-  Vector4::crossProd(const Vector4& inVect) {
-    return (((y * inVect.z) - (z * inVect.y)),
-            ((z * inVect.x) - (x * inVect.z)),
-            ((x * inVect.y) - (y * inVect.z)),
-            0.f);
-  }
-  
+   
   void
   Vector4::normalize() {
+
     float mag = magnitude();
     if (mag > 0) {
       float tmp = 1.0f / mag;
@@ -250,11 +259,22 @@ namespace giEngineSDK {
       z = 0.0f;
       w = 0.0f;
     }
+    
   }
   
   float
   Vector4::magnitude() {
-    return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2) + powf(w, 2));
+    return sqrtf(powf(x, 2) 
+    /***********/+ powf(y, 2) 
+    /***********/+ powf(z, 2) 
+    /***********/+ powf(w, 2));
   }
-  
+ 
+  crossProduct::crossProduct(const Vector4& inVectA, const Vector4& inVectB) {
+    x = ((inVectA.y * inVectB.z) - (inVectA.z * inVectB.y));
+    y = ((inVectA.z * inVectB.x) - (inVectA.x * inVectB.z));
+    z = ((inVectA.x * inVectB.y) - (inVectA.y * inVectB.z));
+    w = 0.f;
+  }
+
 }

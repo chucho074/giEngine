@@ -7,22 +7,37 @@
  * @bug     No known Bugs.
  */
 
- /**
-   * @include
-   */
+/**
+ * @include
+ */
 #pragma once
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-  class CShader {
+  class BaseShader 
+  {
    public:
-    CShader() = default;
-    ~CShader() = default;
+     BaseShader() = default;
 
-    virtual void
-    init(WCHAR* inFileName,
-    /***/LPCSTR inEntryPoint,
-    /***/LPCSTR inShaderModel) = 0;
+    virtual 
+    ~BaseShader() = 0;
+
+    bool
+    loadFromfile(char * file);
+
+    void 
+    setSourceCode(String inCode);
+
+    virtual bool 
+    compile() = 0;
+
+    void 
+    link();
+
+    void 
+    setShader();
+
+    
 
     /*bool 
     CompileShaderFromFile(WCHAR* szFileName,

@@ -14,7 +14,9 @@
 
 #include "giPrerequisitesUtilities.h"
 
+
 namespace giEngineSDK {
+  class Vector4i;
 
   class GI_UTILITY_EXPORT Vector4
   {
@@ -23,12 +25,12 @@ namespace giEngineSDK {
     Vector4() = default;
   
     Vector4(float inX, float inY, float inZ, float inW);
+
+    Vector4(Vector4i inVect);
   
     Vector4(Vector4& inVect);
   
     ~Vector4();
-  
-    
   
     Vector4
     operator+(const Vector4& otherVect) const;
@@ -41,6 +43,9 @@ namespace giEngineSDK {
     
     Vector4
     operator/(const Vector4& otherVect) const;
+    
+    void
+    operator=(const Vector4& otherVect);
     
     void
     operator+=(const Vector4& otherVect);
@@ -102,18 +107,21 @@ namespace giEngineSDK {
     bool
     operator>(const float& otherVal);
    
+    /**
+     * @brief   Dot product in a float.
+     * @param   inVectA .
+     * @param   inVectB .
+     * @return  Returns the dot product between two vectors.
+     */
     float
-    dotProd(const Vector4& inVect);
-    
-    float
-    crossProd(const Vector4& inVect);
+    dotProd(const Vector4& inVectA);
     
     void
     normalize();
     
     float
     magnitude();
-  
+
     float x;
 
     float y;
@@ -122,6 +130,12 @@ namespace giEngineSDK {
     
     float w;
   
+  };
+
+  class crossProduct : public Vector4
+  {
+   public:
+     crossProduct(const Vector4& inVectA, const Vector4& inVectB);
   };
 
 }

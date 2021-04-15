@@ -50,6 +50,7 @@ namespace giEngineSDK {
       * @param    inLayout   The layout information in a vector.
       * @bug      No known Bugs.
       */
-     virtual void init(const std::vector<InputLayoutDesc>& inLayout) = 0;
+     virtual void 
+     init(const std::vector<InputLayoutDesc>& inLayout) = 0;
   };
 }

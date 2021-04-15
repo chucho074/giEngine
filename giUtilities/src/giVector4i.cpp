@@ -11,14 +11,23 @@
  * @include
  */
 #include "giVector4i.h"
+#include "giVector4.h"
+
 
 namespace giEngineSDK {
-
+  
   Vector4i::Vector4i(int32 inX, int32 inY, int32 inZ, int32 inW)  {
     x = inX;
     y = inY;
     z = inZ;
     w = inW;
+  }
+
+  Vector4i::Vector4i(Vector4 inVect) {
+    x = int32(inVect.x);
+    y = int32(inVect.y);
+    z = int32(inVect.z);
+    w = int32(inVect.w);
   }
   
   Vector4i::Vector4i(Vector4i& inVect) {
@@ -62,6 +71,14 @@ namespace giEngineSDK {
                       y / otherVect.y, 
                       z / otherVect.z, 
                       w / otherVect.w);
+  }
+
+  void 
+  Vector4i::operator=(const Vector4i& otherVect) {
+    x = otherVect.x;
+    y = otherVect.y;
+    z = otherVect.z;
+    w = otherVect.w;
   }
   
   Vector4i
@@ -184,19 +201,20 @@ namespace giEngineSDK {
             (w * inVect.w));
   }
   
-  int32
-  Vector4i::crossProd(const Vector4i& inVect) {
-    return (((y * inVect.z) - (z * inVect.y)),
-            ((z * inVect.x) - (x * inVect.z)),
-            ((x * inVect.y) - (y * inVect.z)),
-            0);
+  Vector4i
+  Vector4i::crossProd(const Vector4i& inVectA, const Vector4i& inVectB) {
+    return Vector4i(((inVectA.y * inVectB.z) - (inVectA.z * inVectB.y)),
+    /**************/((inVectA.z * inVectB.x) - (inVectA.x * inVectB.z)),
+    /**************/((inVectA.x * inVectB.y) - (inVectA.y * inVectB.z)),
+    /**************/0);
   }
   
   void
-  Vector4i::normalize() {
-    int32 mag = magnitude();
+  Vector4i::normalize(Vector4i inVector) {
+
+    float mag = magnitude();
     if (mag > 0) {
-      int32 tmp = 1 / mag;
+      float tmp = 1.0f / mag;
       x *= tmp;
       y *= tmp;
       z *= tmp;
@@ -212,6 +230,10 @@ namespace giEngineSDK {
   
   int32
   Vector4i::magnitude() {
-    return int32(sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2)));
+    return sqrt(pow(x, 2) 
+    /***********/+ pow(y, 2) 
+    /***********/+ pow(z, 2) 
+    /***********/+ pow(w, 2));
   }
+
 }

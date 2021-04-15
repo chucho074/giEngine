@@ -291,6 +291,7 @@
     <ClInclude Include="include\giPrerequisitesUtilities.h" />
     <ClInclude Include="include\giRadians.h" />
     <ClInclude Include="include\giStdHeaders.h" />
+    <ClInclude Include="include\giTime.h" />
     <ClInclude Include="include\giVector2.h" />
     <ClInclude Include="include\giVector2i.h" />
     <ClInclude Include="include\giVector3.h" />

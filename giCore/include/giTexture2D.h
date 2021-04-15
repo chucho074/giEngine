@@ -31,8 +31,8 @@ namespace giEngineSDK {
     unsigned int flags;
     unsigned int cpuAccessFlags;
     unsigned int miscFlags;
-  };
-  
+  };  
+
   /**
    * @class   CTexutre2D.
    * @brief   Management for textures2D.
@@ -56,7 +56,5 @@ namespace giEngineSDK {
    protected:
      friend class CGraphicsAPI;
   
-  
-   private:
   };
 }

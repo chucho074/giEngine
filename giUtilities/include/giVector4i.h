@@ -14,7 +14,7 @@
 
 #include "giPrerequisitesUtilities.h"
 
-using::giEngineSDK::int32;
+using giEngineSDK::int32;
 
 /**
  * @class    Vector4i.
@@ -22,6 +22,7 @@ using::giEngineSDK::int32;
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
+  class Vector4;
 
   class GI_UTILITY_EXPORT Vector4i
   {
@@ -30,6 +31,8 @@ namespace giEngineSDK {
     Vector4i() = default;
   
     Vector4i(int32 inX, int32 inY, int32 inZ, int32 inW);
+
+    Vector4i(Vector4 inVect);
   
     Vector4i(Vector4i& inVect);
   
@@ -46,6 +49,9 @@ namespace giEngineSDK {
     
     Vector4i
     operator/(const Vector4i& otherVect);
+    
+    void
+    operator=(const Vector4i& otherVect);
     
     Vector4i
     operator+(const int32& otherVal);
@@ -92,19 +98,22 @@ namespace giEngineSDK {
     int32
     dotProd(const Vector4i& inVect);
     
-    int32
-    crossProd(const Vector4i& inVect);
+    static Vector4i
+    crossProd(const Vector4i& inVectA, const Vector4i& inVectB);
     
     void
-    normalize();
+    normalize(Vector4i inVector);
     
     int32
     magnitude();
-  
+
   
     int32 x;
+
     int32 y;
+
     int32 z;
+
     int32 w;
   
   };
