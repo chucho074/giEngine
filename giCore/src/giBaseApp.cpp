@@ -80,8 +80,7 @@ BaseApp::createWindow() {
 
   m_window.setPosition({ 0,0 });
 
-  //Focus
-  //m_windowHasFocus = m_window.hasFocus();
+  
 }
 
 void 

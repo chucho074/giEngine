@@ -76,12 +76,16 @@
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
     <LibraryPath>$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -89,12 +93,16 @@
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
     <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Platform)/$(Configuration)/</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -173,16 +181,19 @@
     <ClInclude Include="include\giDepthStencilViewDX.h" />
     <ClInclude Include="include\giGraphicsDX.h" />
     <ClInclude Include="include\giInputLayoutDX.h" />
+    <ClInclude Include="include\giPixelShaderDX.h" />
     <ClInclude Include="include\giPrerequisitesDX.h" />
     <ClInclude Include="include\giRenderTargetViewDX.h" />
     <ClInclude Include="include\giSamplerDX.h" />
     <ClInclude Include="include\giTexture2DDX.h" />
-    <ClInclude Include="include\giVertexShader.h" />
+    <ClInclude Include="include\giVertexShaderDX.h" />
     <ClInclude Include="include\giViewPortDX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp" />
     <ClCompile Include="src\giInputLayoutDX.cpp" />
+    <ClCompile Include="src\giPixelShaderDX.cpp" />
+    <ClCompile Include="src\giVertexShaderDX.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

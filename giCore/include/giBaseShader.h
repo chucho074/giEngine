@@ -17,33 +17,57 @@ namespace giEngineSDK {
   class BaseShader 
   {
    public:
+     //Constructor
      BaseShader() = default;
 
+     //Destructor
     virtual 
     ~BaseShader() = 0;
 
-    bool
-    loadFromfile(char * file);
+    ///**
+    // * @brief 
+    // * @param    inFile 
+    // * @return 
+    // */
+    //bool
+    //loadFromfile(char * inFile);
 
-    void 
-    setSourceCode(String inCode);
+    ///**
+    // * @brief 
+    // * @param inCode 
+    //*/
+    //void 
+    //setSourceCode(String inCode);
+
+    ///**
+    // * @brief 
+    // * @return 
+    // */
+    //virtual bool 
+    //compile() = 0;
+
+    ///**
+    // * @brief 
+    // * @return
+    // */
+    //virtual bool 
+    //link() = 0;
+
+    ///**
+    // * @brief 
+    // */
+    //void 
+    //setShader();
 
     virtual bool 
-    compile() = 0;
-
-    void 
-    link();
-
-    void 
-    setShader();
+    init(wchar* inFileName,
+    /***/lpcstr inEntryPoint,
+    /***/lpcstr inShaderModel) = 0;
 
     
 
-    /*bool 
-    CompileShaderFromFile(WCHAR* szFileName,
-      LPCSTR szEntryPoint,
-      LPCSTR szShaderModel,
-      ID3DBlob** ppBlobOut);*/
+
+    //String m_code;
 
   };
 }

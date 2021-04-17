@@ -8,6 +8,9 @@
 
 namespace giEngineSDK {
   
+  using lpcstr = const char*;
+  using wchar = wchar_t;
+
   namespace GI_FORMAT {
     enum E 
     {

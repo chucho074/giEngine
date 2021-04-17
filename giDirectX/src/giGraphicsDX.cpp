@@ -21,10 +21,8 @@
 #include "giViewPortDX.h"
 #include "giSamplerDX.h"
 #include "giRenderTargetViewDX.h"
-
-//Cambiar por las de DX
-#include "CVertexShader.h"
-#include "CPixelShader.h"
+#include "giVertexShaderDX.h"
+#include "giPixelShaderDX.h"
 
 
 namespace giEngineSDK {
@@ -227,11 +225,11 @@ namespace giEngineSDK {
 
 
   void* 
-  CGraphicsDX::createVS(WCHAR* inFileName,
-  /********************/LPCSTR inEntryPoint,
-  /********************/LPCSTR inShaderModel) {
+  CGraphicsDX::createVS(wchar* inFileName,
+  /********************/lpcstr inEntryPoint,
+  /********************/lpcstr inShaderModel) {
 
-    CVertexShader* tempVS = new CVertexShader();
+    VertexShaderDX* tempVS = new VertexShaderDX();
     tempVS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_Device->CreateVertexShader(tempVS->m_CompiledVShader->GetBufferPointer(),
       tempVS->m_CompiledVShader->GetBufferSize(),
@@ -248,10 +246,10 @@ namespace giEngineSDK {
 
 
   void* 
-  CGraphicsDX::createPS(WCHAR* inFileName,
-  /********************/LPCSTR inEntryPoint,
-  /********************/LPCSTR inShaderModel) {
-    CPixelShader* tempPS = new CPixelShader();
+  CGraphicsDX::createPS(wchar* inFileName,
+  /********************/lpcstr inEntryPoint,
+  /********************/lpcstr inShaderModel) {
+    PixelShaderDX* tempPS = new PixelShaderDX();
     tempPS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_Device->CreatePixelShader(tempPS->m_CompiledPShader->GetBufferPointer(),
       tempPS->m_CompiledPShader->GetBufferSize(),
@@ -268,14 +266,15 @@ namespace giEngineSDK {
 
   void* 
   CGraphicsDX::createIL(Vector<InputLayoutDesc>& inDesc,
-  /********************/CVertexShader* inShader) {
+  /********************/BaseShader* inShader) {
 
     CInputLayoutDX* tempIL = new CInputLayoutDX();
     tempIL->init(inDesc);
+    auto tmpVS = static_cast<VertexShaderDX*>(inShader);
     if (FAILED(m_Device->CreateInputLayout(tempIL->m_Descriptors.data(),
     /*************************************/inDesc.size(),
-    /*************************************/inShader->m_CompiledVShader->GetBufferPointer(),
-    /*************************************/inShader->m_CompiledVShader->GetBufferSize(),
+    /*************************************/tmpVS->m_CompiledVShader->GetBufferPointer(),
+    /*************************************/tmpVS->m_CompiledVShader->GetBufferSize(),
     /*************************************/&tempIL->m_InputLayout))) {
       __debugbreak();
       return nullptr;
@@ -350,7 +349,8 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology) {
-    m_DevContext->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(inTopotology));
+    auto tmpTopology = static_cast<D3D_PRIMITIVE_TOPOLOGY>(inTopotology);
+    m_DevContext->IASetPrimitiveTopology(tmpTopology);
   }
 
 
@@ -359,7 +359,8 @@ namespace giEngineSDK {
   /*****************************/void* inData,
   /*****************************/unsigned int inPitch) {
 
-    m_DevContext->UpdateSubresource(static_cast<CBufferDX*>(inBuffer)->m_Buffer, 
+    auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
+    m_DevContext->UpdateSubresource(tmpBuffer->m_Buffer, 
     /******************************/0, 
     /******************************/NULL, 
     /******************************/inData, 
@@ -400,11 +401,13 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::vsSetShader(CVertexShader* inVShader) {
+  CGraphicsDX::vsSetShader(BaseShader* inVShader) {
+    
+    auto tmpShader = static_cast<VertexShaderDX*>(inVShader);
 
     ID3D11VertexShader* tmpVShader = nullptr;
-    if (nullptr != inVShader) {
-      tmpVShader = inVShader->m_VS;
+    if (nullptr != tmpShader) {
+      tmpVShader = tmpShader->m_VS;
     }
     m_DevContext->VSSetShader(tmpVShader, NULL, 0);
   }
@@ -414,20 +417,24 @@ namespace giEngineSDK {
   CGraphicsDX::vsSetConstantBuffer(unsigned int inSlot,
   /*******************************/CBuffer* inBuffer) {
 
-    ID3D11Buffer* tmpBuffer = nullptr;
+    auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
+
+    ID3D11Buffer* Buffer = nullptr;
     if (nullptr != inBuffer) {
-      tmpBuffer = static_cast<CBufferDX*>(inBuffer)->m_Buffer;
+      Buffer = tmpBuffer->m_Buffer;
     }
-    m_DevContext->VSSetConstantBuffers(inSlot, 1, &tmpBuffer);
+    m_DevContext->VSSetConstantBuffers(inSlot, 1, &Buffer);
   }
 
 
   void 
-  CGraphicsDX::psSetShader(CPixelShader* inPShader) {
+  CGraphicsDX::psSetShader(BaseShader* inPShader) {
+
+    auto tmpShader = static_cast<PixelShaderDX*>(inPShader);
 
     ID3D11PixelShader* tmpPShader = nullptr;
-    if (nullptr != inPShader) {
-      tmpPShader = inPShader->m_PS;
+    if (nullptr != tmpShader) {
+      tmpPShader = tmpShader->m_PS;
     }
 
     m_DevContext->PSSetShader(tmpPShader, NULL, 0);

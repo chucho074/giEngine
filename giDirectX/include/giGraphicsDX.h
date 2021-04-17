@@ -1,10 +1,10 @@
 /**
  * @file    CGraphicsDX.h
  * @author  Jesús Alberto Del Moral Cupil
- * @e      idv18c.jmoral@uartesdigitales.edu.mx
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
- * @brief  Management of the graphics APIs.
- * @bug    No known Bugs.
+ * @brief   Management of the graphics APIs.
+ * @bug     No known Bugs.
  */
 
 /**
@@ -41,8 +41,8 @@ namespace giEngineSDK {
   
     /**
      * @brief    In Charge to create the device and the swap chain.
-     * @bug      No known Bugs.
      * @return   Returns .
+     * @bug      No known Bugs.
      */
     bool 
     createDeviceAndSwpaChain(void * inWindow, 
@@ -80,26 +80,25 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void * 
-    createVS(WCHAR* inFileName,
-    /*******/LPCSTR inEntryPoint,
-    /*******/LPCSTR inShaderModel);
+    createVS(wchar* inFileName,
+    /*******/lpcstr inEntryPoint,
+    /*******/lpcstr inShaderModel);
   
     /**
      * @brief    Create the Pixel Shader
      * @bug      No known Bugs.
      */
     void * 
-    createPS(WCHAR* inFileName,
-    /*******/LPCSTR inEntryPoint,
-    /*******/LPCSTR inShaderModel);
+    createPS(wchar* inFileName,
+    /*******/lpcstr inEntryPoint,
+    /*******/lpcstr inShaderModel);
   
     /**
      * @brief    Creates the Input Layout.
      * @bug      No known Bugs.
      */
     void * 
-    createIL(Vector<InputLayoutDesc> & inDesc, 
-    /*******/CVertexShader * inShader);
+    createIL(Vector<InputLayoutDesc> & inDesc, BaseShader * inShader);
   
     /**
      * @brief    Creates a buffer.
@@ -166,14 +165,14 @@ namespace giEngineSDK {
     /************/unsigned int inDepthPitch);
   
     /**
-     * @brief    Clear Render Target View.
+     * @brief    Clear the Render Target View.
      * @bug      No known Bugs.
      */
     void 
     clearRTV(CTexture2D* inRTV, float inColor[4]);
   
     /**
-     * @brief    Clear Depth Stencil View.
+     * @brief    Clear the Depth Stencil View.
      * @bug      No known Bugs.
      */
     void 
@@ -184,7 +183,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    vsSetShader(CVertexShader * inVShader = nullptr);
+    vsSetShader(BaseShader * inVShader = nullptr);
   
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -198,7 +197,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetShader(CPixelShader * inPShader = nullptr);
+    psSetShader(BaseShader * inPShader = nullptr);
   
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -247,14 +246,16 @@ namespace giEngineSDK {
     
     /**
      * @brief    Gets the default Render Target.
-     * @return  Returns the back Buffer texture.
+     * @return   Returns the back Buffer texture.
+     * @bug      No known Bugs.
      */
     void * 
     getDefaultRenderTarget() { return m_backBuffer; }
   
     /**
      * @brief    Gets the default Depth Stencil.
-     * @return  Returns the Depth Stencil View texutre;
+     * @return   Returns the Depth Stencil View texutre.
+     * @bug      No known Bugs.
      */
     void * 
     getDefaultDephtStencil() { return m_defaultDSV; }

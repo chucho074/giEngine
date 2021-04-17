@@ -27,9 +27,6 @@
     <ClInclude Include="include\giBufferDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giVertexShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giInputLayoutDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +42,12 @@
     <ClInclude Include="include\giRenderTargetViewDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giVertexShaderDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPixelShaderDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Source.cpp">
@@ -54,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\giInputLayoutDX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giVertexShaderDX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giPixelShaderDX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
