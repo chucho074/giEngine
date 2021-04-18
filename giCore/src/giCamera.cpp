@@ -11,6 +11,7 @@
  * @include
  */
 #include "giCamera.h"
+
 namespace giEngineSDK {
   CCamera::CCamera() {
     m_Front = (m_At - m_Eye);

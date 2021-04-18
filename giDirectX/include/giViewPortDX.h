@@ -15,19 +15,19 @@
 #include <giViewPort.h>
 
 namespace giEngineSDK {
-  class CViewPort : public CViewPort
+  class CViewPortDX : public CViewPort
   {
    public:
     /**
      * @brief  Constructor.
      * @bug    No Bugs known.
      */
-    CViewPort() = default;
+    CViewPortDX() = default;
     /**
      * @brief    Constructor.
      * @bug      No Bugs known.
      */
-    ~CViewPort() = default;
+    ~CViewPortDX() = default;
 
 
     D3D11_VIEWPORT m_VP;

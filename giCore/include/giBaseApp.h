@@ -14,6 +14,9 @@
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
 #include <SFML/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
+#include "giLibraryLoader.h"
+
 
 #include <iostream>         //Delete this
 #include <io.h>             //Delete this
@@ -21,9 +24,10 @@
 
 using namespace giEngineSDK;
 
+using sf::VideoMode;
+using sf::Window;
 using sf::WindowBase;
 using sf::WindowHandle;
-using sf::VideoMode;
 using sf::Event;
 
 /**
@@ -153,5 +157,9 @@ class BaseApp
   ///The reference of the window
   WindowBase m_window;
 
+  //
+  LibraryLoader m_loader;
+
+  CBaseGraphicsAPI* m_GAPI = nullptr;
 };
 

@@ -29,6 +29,15 @@ namespace giEngineSDK {
     //Destructor.
     ~Time();
     
+    /**
+     * @brief    Gets the time elapsed since application start.
+     * @return   Returns .
+     */
+    float
+    getTime() const {
+      return m_timeSinceStart;
+    }
+
    protected:
     
    

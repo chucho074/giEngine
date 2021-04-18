@@ -14,6 +14,19 @@
 #include "giPrerequisitesDX.h"
 #include <giBaseGraphicsAPI.h>
 
+namespace giEngineSDK {
+  class CTexture2DDX;
+  class CViewPortDX;
+  class BaseShader;
+  class CBufferDX;
+  class CInputLayoutDX;
+  class CSamplerDX;
+
+  class CImageLoader;
+
+}
+
+
 
 namespace giEngineSDK {
   /**
@@ -28,7 +41,7 @@ namespace giEngineSDK {
     CGraphicsDX();
     
     ///Destructor.
-    ~CGraphicsDX() = default;
+    ~CGraphicsDX();
       
     /**
      * @brief    In charge of the creation of the device & SwapChain

@@ -27,7 +27,11 @@ namespace giEngineSDK {
   VertexShaderDX::init(wchar* inFileName, 
   /*******************/lpcstr inEntryPoint, 
   /*******************/lpcstr inShaderModel) {
-    CompileShaderFromFile(inFileName, inEntryPoint, inShaderModel, &m_CompiledVShader);
+
+    return CompileShaderFromFile(inFileName, 
+    /***************************/inEntryPoint, 
+    /***************************/inShaderModel, 
+    /***************************/&m_CompiledVShader);
   }
 
   bool 

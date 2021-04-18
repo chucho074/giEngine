@@ -24,7 +24,9 @@ namespace giEngineSDK {
   {
    public:
     ///Specific constructor
-    CBufferDX() = default;
+    CBufferDX() {
+    
+    };
   
     ///Destructor
     ~CBufferDX() {

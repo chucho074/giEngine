@@ -132,7 +132,7 @@ namespace giEngineSDK {
   
   };
 
-  class crossProduct : public Vector4
+  class GI_UTILITY_EXPORT crossProduct : public Vector4
   {
    public:
      crossProduct(const Vector4& inVectA, const Vector4& inVectB);

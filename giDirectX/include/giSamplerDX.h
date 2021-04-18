@@ -16,14 +16,14 @@
 
 namespace giEngineSDK {
   
-  class CSampler 
+  class CSamplerDX : public CSampler
   {
    public:
     //Constructor
-    CSampler();
+    CSamplerDX();
 
     //Destructor
-    ~CSampler();
+    ~CSamplerDX();
     
     /**
      * @brief 

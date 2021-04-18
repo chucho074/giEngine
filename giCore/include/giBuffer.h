@@ -1,24 +1,24 @@
 /**
-* @file    giBuffer.h
-* @author  Jesús Alberto Del Moral Cupil
-* @e      idv18c.jmoral@uartesdigitales.edu.mx
-* @date    18/03/2021
-* @brief  Everything about buffers.
-* @bug    No known Bugs.
-**/
+ * @file    giBuffer.h
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    18/03/2021
+ * @brief   Everything about buffers.
+ * @bug     No known Bugs.
+ */
 
 /**
-* @include
-**/
+ * @include
+ */
 #pragma once
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
   /**
-  * @struct   BufferDesc.
-  * @brief    For the buffer information.
-  * @bug      No known Bugs.
-  **/
+   * @struct   BufferDesc.
+   * @brief    For the buffer information.
+   * @bug      No known Bugs.
+   */
   struct BufferDesc {
     unsigned int byteWidth = 0;
     unsigned short usage = 0;
@@ -34,17 +34,17 @@ namespace giEngineSDK {
   };
   
   /**
-  * @class    CBuffer.
-  * @brief    A buffer interface for own buffers.
-  * @bug      No known Bugs.
-  **/
+   * @class    CBuffer.
+   * @brief    A buffer interface for own buffers.
+   * @bug      No known Bugs.
+   */
   class CBuffer {
   public:
     ///Specific constructor
     CBuffer() = default;
   
     ///Destructor
-    virtual ~CBuffer() = 0;
+    ~CBuffer() = default;
   
   };
 }

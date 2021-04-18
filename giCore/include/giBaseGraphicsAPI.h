@@ -19,8 +19,7 @@
 namespace giEngineSDK {
   class CTexture2D;
   class CViewPort;
-  class CVertexShader;
-  class CPixelShader;
+  class BaseShader;
   class CBuffer;
   class CInputLayout;
   class CSampler;
@@ -124,20 +123,20 @@ namespace giEngineSDK {
      /**
       * @brief    Create the Vertex Shader.
       * @bug      No known Bugs.
-      *
+      */
      virtual void * 
-     createVS(WCHAR* inFileName,
-     /*******LPCSTR inEntryPoint,
-     /*******LPCSTR inShaderModel) = 0;
+     createVS(wchar* inFileName,
+     /*******/lpcstr inEntryPoint,
+     /*******/lpcstr inShaderModel) { return nullptr;};
      
      /**
       * @brief    Create the Pixel Shader
       * @bug      No known Bugs.
-      *
+      */
      virtual void * 
-     createPS(WCHAR* inFileName,
-     /*******LPCSTR inEntryPoint,
-     /*******LPCSTR inShaderModel) = 0;
+     createPS(wchar* inFileName,
+     /*******/lpcstr inEntryPoint,
+     /*******/lpcstr inShaderModel){ return nullptr; };
 
      /**
       * @brief    Creates the Input Layout.
@@ -148,7 +147,7 @@ namespace giEngineSDK {
       */
      virtual void * 
      createIL(Vector<InputLayoutDesc> & inDesc, 
-     /*******/CVertexShader * inShader) { return nullptr; };
+     /*******/BaseShader * inShader) { return nullptr; };
 
      /**
       * @brief    Creates a buffer.
@@ -257,7 +256,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     vsSetShader(CVertexShader * inVShader = nullptr) {};
+     vsSetShader(BaseShader * inVShader = nullptr) {};
      
      /**
       * @brief    Vertex Shader Set Constant Buffer.
@@ -275,7 +274,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetShader(CPixelShader * inPShader = nullptr) {};
+     psSetShader(BaseShader * inPShader = nullptr) {};
      
      /**
       * @brief    Pixel Shader Set Constant Buffer.
@@ -351,8 +350,19 @@ namespace giEngineSDK {
      virtual void * 
      getDefaultDephtStencil() { return nullptr; };
   
+     /**
+      * @brief 
+      * @param inAPI 
+      */
+     void
+     setObject(CBaseGraphicsAPI * inAPI) {
+       CBaseGraphicsAPI::_instance() = inAPI;
+     }
   };
   
-  static CBaseGraphicsAPI& 
+  GI_CORE_EXPORT CBaseGraphicsAPI& 
   g_GraphicsAPI();
+
+  //For load the DLL
+  using funCreateGraphicsAPI = CBaseGraphicsAPI * (*)();
 }

@@ -22,7 +22,7 @@ namespace giEngineSDK {
    * @bug     No known Bugs.
    */
   struct InputLayoutDesc {
-    std::string semanticName;
+    String semanticName;
     unsigned int semanticIndex;
     unsigned int format;
     unsigned int inputSlot;

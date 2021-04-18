@@ -22,7 +22,7 @@ namespace giEngineSDK {
 
      //Destructor
     virtual 
-    ~BaseShader() = 0;
+    ~BaseShader() {};
 
     ///**
     // * @brief 

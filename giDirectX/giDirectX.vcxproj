@@ -193,6 +193,7 @@
     <ClCompile Include="src\giGraphicsDX.cpp" />
     <ClCompile Include="src\giInputLayoutDX.cpp" />
     <ClCompile Include="src\giPixelShaderDX.cpp" />
+    <ClCompile Include="src\giSamplerDX.cpp" />
     <ClCompile Include="src\giVertexShaderDX.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>

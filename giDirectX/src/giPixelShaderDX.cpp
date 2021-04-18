@@ -27,7 +27,11 @@ namespace giEngineSDK {
   PixelShaderDX::init(wchar* inFileName, 
   /******************/lpcstr inEntryPoint, 
   /******************/lpcstr inShaderModel) {
-    CompileShaderFromFile(inFileName, inEntryPoint, inShaderModel, &m_CompiledPShader);
+
+     return CompileShaderFromFile(inFileName, 
+     /***************************/inEntryPoint, 
+     /***************************/inShaderModel, 
+     /***************************/&m_CompiledPShader);
   }
 
   bool 

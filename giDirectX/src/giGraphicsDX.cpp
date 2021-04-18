@@ -55,17 +55,17 @@ namespace giEngineSDK {
     unsigned int createDeviceFlags = 0;
 
 #ifdef _DEBUG
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    createDeviceFlags |= GI_DEVICE_FLAG::E::kCREATE_DEVICE_DEBUG;
 #endif 
-    Vector<D3D_DRIVER_TYPE> driverTypes = {
-      D3D_DRIVER_TYPE_HARDWARE,
-      D3D_DRIVER_TYPE_WARP,
-      D3D_DRIVER_TYPE_REFERENCE,
+    Vector<GI_DRIVER_TYPE::E> driverTypes = {
+      GI_DRIVER_TYPE::kDRIVER_TYPE_HARDWARE,
+      GI_DRIVER_TYPE::kDRIVER_TYPE_WARP,
+      GI_DRIVER_TYPE::kDRIVER_TYPE_REFERENCE
     };
-    Vector<D3D_FEATURE_LEVEL> featureLvl = {
-      D3D_FEATURE_LEVEL_11_0,
-      D3D_FEATURE_LEVEL_10_1,
-      D3D_FEATURE_LEVEL_10_0,
+    Vector<GI_FEATURE_LEVEL::E> featureLvl = {
+      GI_FEATURE_LEVEL::kFEATURE_LEVEL_11_0,
+      GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_1,
+      GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_0
     };
 
     DXGI_SWAP_CHAIN_DESC sd;
@@ -73,7 +73,7 @@ namespace giEngineSDK {
     sd.BufferCount = 1;
     sd.BufferDesc.Width = inWidth;
     sd.BufferDesc.Height = inHeight;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    sd.BufferDesc.Format = static_cast<DXGI_FORMAT>(GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM);
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -82,21 +82,21 @@ namespace giEngineSDK {
     sd.SampleDesc.Quality = 0;
     sd.Windowed = TRUE;
 
-    D3D_FEATURE_LEVEL selectFeatureLvl;
+    GI_FEATURE_LEVEL::E selectFeatureLvl;
 
     for (auto& driverType : driverTypes) {
       hr = D3D11CreateDeviceAndSwapChain(nullptr,
-        driverType,
-        nullptr,
-        (UINT)createDeviceFlags,
-        featureLvl.data(),
-        (UINT)featureLvl.size(),
-        (UINT)D3D11_SDK_VERSION,
-        &sd,
-        &m_SwapChain,
-        &m_Device,
-        &selectFeatureLvl,
-        &m_DevContext);
+      /*********************************/static_cast<D3D_DRIVER_TYPE>(driverType),
+      /*********************************/nullptr,
+      /*********************************/(UINT)createDeviceFlags,
+      /*********************************/reinterpret_cast<const D3D_FEATURE_LEVEL*>(featureLvl.data()),
+      /*********************************/(UINT)featureLvl.size(),
+      /*********************************/(UINT)D3D11_SDK_VERSION,
+      /*********************************/&sd,
+      /*********************************/&m_SwapChain,
+      /*********************************/&m_Device,
+      /*********************************/reinterpret_cast<D3D_FEATURE_LEVEL*>(&selectFeatureLvl),
+      /*********************************/&m_DevContext);
       if (FAILED(hr)) {
         return hr;
       }
@@ -121,7 +121,7 @@ namespace giEngineSDK {
     /****************************************************/inHeight,
     /****************************************************/1,
     /****************************************************/GI_FORMAT::E::kFORMAT_D24_UNORM_S8_UINT,
-    /****************************************************/D3D11_BIND_DEPTH_STENCIL));
+    /****************************************************/GI_BIND_FLAG::E::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
     m_defaultVP = static_cast<CViewPort*>(createVP(inWidth, inHeight));
@@ -189,9 +189,10 @@ namespace giEngineSDK {
       D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
       memset(&srvDesc, 0, sizeof(srvDesc));
       srvDesc.Format = tempDesc.Format;
-      srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+      srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
       srvDesc.Texture2D.MipLevels = 0;
       srvDesc.Texture2D.MostDetailedMip = 0;
+
       if (FAILED(m_Device->CreateShaderResourceView(temp->m_Texture, nullptr, &temp->m_SRV))) {
         __debugbreak();
         return nullptr;
@@ -205,7 +206,7 @@ namespace giEngineSDK {
 
   void* 
   CGraphicsDX::createVP(int inWidth, int inHeight) {
-    CViewPort* temp = new CViewPort();
+    CViewPortDX* temp = new CViewPortDX();
     temp->m_VP.Width = (float)inWidth;
     temp->m_VP.Height = (float)inHeight;
     temp->m_VP.MinDepth = 0.0f;
@@ -220,7 +221,8 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::setVP(CViewPort& inVP) {
-    m_DevContext->RSSetViewports(1, &inVP.m_VP);
+    auto tmpVP = static_cast<CViewPortDX&>(inVP);
+    m_DevContext->RSSetViewports(1, &tmpVP.m_VP);
   }
 
 
@@ -232,9 +234,9 @@ namespace giEngineSDK {
     VertexShaderDX* tempVS = new VertexShaderDX();
     tempVS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_Device->CreateVertexShader(tempVS->m_CompiledVShader->GetBufferPointer(),
-      tempVS->m_CompiledVShader->GetBufferSize(),
-      nullptr,
-      &tempVS->m_VS))) {
+    /**************************************/tempVS->m_CompiledVShader->GetBufferSize(),
+    /**************************************/nullptr,
+    /**************************************/&tempVS->m_VS))) {
 
       __debugbreak();
       return nullptr;
@@ -252,9 +254,9 @@ namespace giEngineSDK {
     PixelShaderDX* tempPS = new PixelShaderDX();
     tempPS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_Device->CreatePixelShader(tempPS->m_CompiledPShader->GetBufferPointer(),
-      tempPS->m_CompiledPShader->GetBufferSize(),
-      nullptr,
-      &tempPS->m_PS))) {
+    /*************************************/tempPS->m_CompiledPShader->GetBufferSize(),
+    /*************************************/nullptr,
+    /*************************************/&tempPS->m_PS))) {
 
       __debugbreak();
       return nullptr;
@@ -310,9 +312,10 @@ namespace giEngineSDK {
 
   void* 
   CGraphicsDX::createSampler(SamplerDesc inDesc) {
-    CSampler* tmpSampler = new CSampler();
+    CSamplerDX* tmpSampler = new CSamplerDX();
     tmpSampler->init(inDesc);
-    if (FAILED(m_Device->CreateSamplerState(&tmpSampler->m_Desc, &tmpSampler->m_Sampler))) {
+    if (FAILED(m_Device->CreateSamplerState(&tmpSampler->m_Desc, 
+    /**************************************/&tmpSampler->m_Sampler))) {
       __debugbreak();
       return nullptr;
     }
@@ -376,27 +379,27 @@ namespace giEngineSDK {
   /*************************/unsigned int inDepthPitch) {
 
     m_DevContext->UpdateSubresource(static_cast<CTexture2DDX*>(inTexture)->m_Texture,
-      0,
-      NULL,
-      inData,
-      inPitch,
-      inDepthPitch);
+    /******************************/0,
+    /******************************/NULL,
+    /******************************/inData,
+    /******************************/inPitch,
+    /******************************/inDepthPitch);
   }
 
 
   void 
   CGraphicsDX::clearRTV(CTexture2D* inRTV, float inColor[4]) {
     m_DevContext->ClearRenderTargetView(static_cast<CTexture2DDX*>(inRTV)->m_RTV,
-      inColor);
+    /**********************************/inColor);
   }
 
 
   void 
   CGraphicsDX::clearDSV(CTexture2D* inDSV) {
     m_DevContext->ClearDepthStencilView(static_cast<CTexture2DDX*>(inDSV)->m_DSV,
-      D3D11_CLEAR_DEPTH,
-      1.0f,
-      0);
+    /**********************************/static_cast<D3D11_CLEAR_FLAG>(GI_CLEAR_FLAG::kCLEAR_DEPTH),
+    /**********************************/1.0f,
+    /**********************************/0);
   }
 
 
@@ -469,7 +472,9 @@ namespace giEngineSDK {
   /************************/unsigned int inNumSamplers,
   /************************/CSampler* inSampler) {
 
-    m_DevContext->PSSetSamplers(inSlot, inNumSamplers, &inSampler->m_Sampler);
+    auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
+
+    m_DevContext->PSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_Sampler);
   }
 
 

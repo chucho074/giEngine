@@ -195,7 +195,7 @@ namespace giEngineSDK {
     
   };
 
-  class lookToLH : public Matrix4
+  class GI_UTILITY_EXPORT lookToLH : public Matrix4
   {
    public:
      lookToLH(Vector4 inEyePos,
@@ -203,7 +203,7 @@ namespace giEngineSDK {
      /*******/Vector4 inUpDirection);
   };
 
-  class perspectiveFovLH : public Matrix4
+  class GI_UTILITY_EXPORT perspectiveFovLH : public Matrix4
   {
    public:
      perspectiveFovLH(float inFov,

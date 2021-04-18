@@ -74,8 +74,10 @@ BaseApp::createWindow() {
     return;
   }
   
+  String tmpTitle = "Default Title";
+
   m_window.create(VideoMode(m_width, m_height),
-  /**************/"Default Title",
+  /**************/tmpTitle.c_str(),
   /**************/sf::Style::Default);
 
   m_window.setPosition({ 0,0 });
@@ -99,13 +101,21 @@ BaseApp::initSystems() {
   //Get the window handle
   WindowHandle handle = m_window.getSystemHandle();
 
+  if (m_loader.loadPlugin("giDirectX_d.dll")) {
+    auto createGAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGAPI"));
 
-  CBaseGraphicsAPI::startUp();
+    CBaseGraphicsAPI::startUp();
+    CBaseGraphicsAPI* GAPI = createGAPI();
+    g_GraphicsAPI().setObject(GAPI);
+    m_GAPI = &g_GraphicsAPI();
+    //Initialize the Graphics API
+    m_GAPI->init(reinterpret_cast<void*>(handle), 
+    /***********/m_width, 
+    /***********/m_height);
+  }
 
-  //Initialize the Graphics API
-  g_GraphicsAPI().init(reinterpret_cast<void*>(handle), 
-  /*******************/m_width, 
-  /*******************/m_height);
+
+  
 
   //Activate the console only on Debug
 #ifdef DEBUG
