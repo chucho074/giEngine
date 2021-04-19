@@ -14,6 +14,7 @@
 #include "giPrerequisitesDX.h"
 #include <giBaseGraphicsAPI.h>
 
+
 namespace giEngineSDK {
   class CTexture2DDX;
   class CViewPortDX;
@@ -25,8 +26,6 @@ namespace giEngineSDK {
   class CImageLoader;
 
 }
-
-
 
 namespace giEngineSDK {
   /**

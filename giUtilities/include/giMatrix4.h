@@ -17,12 +17,24 @@
 
 namespace giEngineSDK { 
 
+  /**
+   * @class    Matrix4.
+   * @brief    Basic Matrix 4.
+   * @bug      No known Bugs.
+   */
   class GI_UTILITY_EXPORT Matrix4
   {
    public:
     //Default constructor
     Matrix4() = default;
     
+    /**
+     * @brief    Constructor with Vectors as parameters.
+     * @param    inColumX   Vector for the column x.
+     * @param    inColumY   Vector for the column y.
+     * @param    inColumZ   Vector for the column z.
+     * @param    inColumW   Vector for the column w.
+     */
     Matrix4(Vector4 inColumX,
     /******/Vector4 inColumY,
     /******/Vector4 inColumZ,
@@ -38,37 +50,32 @@ namespace giEngineSDK {
     ~Matrix4() = default;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Increment.
+     * @param    inMatrix   The matrix for make the increment.
+     * @return   Returns the result of the increment.
      */
     Matrix4
     operator+(const Matrix4& inMatrix) const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Decrement.
+     * @param    inMatrix   The matrix for make the decrement.
+     * @return   Returns the result of the decrement.
      */
     Matrix4
     operator-(const Matrix4& inMatrix) const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Multiply.
+     * @param    inMatrix    The matrix for make the multiply.
+     * @return   Returns the result of the multiply.
      */
     Matrix4
     operator*(const Matrix4& inMatrix) const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Multiply and assign.
+     * @param    inMatrix    The matrix for make the multiply.
      */
     void
     operator*=(const Matrix4& inMatrix) {
@@ -83,10 +90,8 @@ namespace giEngineSDK {
     }
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Increment and assing.
+     * @param    inMatrix    The matrix for make the increment.
      */
     void
     operator+=(const Matrix4& inMatrix) {
@@ -99,10 +104,8 @@ namespace giEngineSDK {
     }
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Decrement and assign.
+     * @param    inMatrix    The matrix for make the decrement.
      */
     void
     operator-=(const Matrix4& inMatrix) {
@@ -115,55 +118,45 @@ namespace giEngineSDK {
     }
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Multiply by a constant.
+     * @param    inValue    The value for make the multiply.
      */
     void
     operator*=(float inValue);
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Equal.
+     * @param    inMatrix    The matrix.
+     * @return   Returns true if is equal.
      */
     bool
     operator==(const Matrix4& inMatrix) const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Not equal.
+     * @param    inMatrix    The matrix.
+     * @return   Returns true if is not equal.
      */
     bool
     operator!=(const Matrix4& inMatrix) const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Inverse matrix.
+     * @return   Returns the inverse matrix.
      */
     Matrix4
     inverse() const;
 
     /**
-     * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @brief    Determinant of a matrix.
+     * @return   Returns the determinant.
      */
     float
     determinant() const;
 
     /**
      * @brief    Info of the function.
-     * @param    _param1 parameter one.
-     * @bug      No known Bugs.
-     * @return   Returns .
+     * @return   Returns the transpose of the matrix.
      */
     Matrix4
     transpose() const;
@@ -176,7 +169,7 @@ namespace giEngineSDK {
     swap();
     
     /**
-     * @brief 
+     * @brief    Negate every value of the matrix.
      * @bug      No known Bugs.
      */
     void 
@@ -195,6 +188,10 @@ namespace giEngineSDK {
     
   };
 
+  /**
+   * @class    lookToLH.
+   * @brief    For generate the lookAt Matrix in LH.
+   */
   class GI_UTILITY_EXPORT lookToLH : public Matrix4
   {
    public:
@@ -203,6 +200,10 @@ namespace giEngineSDK {
      /*******/Vector4 inUpDirection);
   };
 
+  /**
+   * @class    perspectiveFovLH.
+   * @brief    For generate the perspective matrix.
+   */
   class GI_UTILITY_EXPORT perspectiveFovLH : public Matrix4
   {
    public:

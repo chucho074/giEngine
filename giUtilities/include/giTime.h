@@ -42,7 +42,7 @@ namespace giEngineSDK {
     
    
    private:
-   
+     float m_timeSinceStart;
   };
   
   
