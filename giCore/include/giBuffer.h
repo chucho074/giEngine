@@ -38,7 +38,7 @@ namespace giEngineSDK {
    * @brief    A buffer interface for own buffers.
    * @bug      No known Bugs.
    */
-  class CBuffer {
+  class GI_CORE_EXPORT CBuffer {
   public:
     ///Specific constructor
     CBuffer() = default;

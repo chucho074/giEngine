@@ -105,5 +105,8 @@
     <ClInclude Include="include\giTime.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giLibraryLoader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -183,7 +183,7 @@ namespace giEngineSDK {
 
     Vector4 m_wColumn;
 
-    static const Matrix4 
+    static const Matrix4
     IDENTITY;
     
   };
@@ -212,4 +212,5 @@ namespace giEngineSDK {
      /***************/float inNear,
      /***************/float inFar);
   };
+
 }

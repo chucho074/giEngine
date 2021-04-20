@@ -33,7 +33,7 @@ namespace giEngineSDK {
    * @brief    Manage the graphics of DirectX.
    * @bug      No known Bugs.
    */
-  class CGraphicsDX final : public CBaseGraphicsAPI
+  class CGraphicsDX : public CBaseGraphicsAPI
   {
    public:
     //Default Constructor.
@@ -91,8 +91,8 @@ namespace giEngineSDK {
      * @brief    Create the Vertex Shader.
      * @bug      No known Bugs.
      */
-    CBaseShader * 
-    createVS(wchar* inFileName,
+    BaseVertexShader * 
+    createVS(lpcstr inFileName,
     /*******/lpcstr inEntryPoint,
     /*******/lpcstr inShaderModel);
   
@@ -100,8 +100,8 @@ namespace giEngineSDK {
      * @brief    Create the Pixel Shader
      * @bug      No known Bugs.
      */
-    CBaseShader * 
-    createPS(wchar* inFileName,
+    BasePixelShader * 
+    createPS(lpcstr inFileName,
     /*******/lpcstr inEntryPoint,
     /*******/lpcstr inShaderModel);
   
@@ -261,7 +261,7 @@ namespace giEngineSDK {
      * @return   Returns the back Buffer texture.
      * @bug      No known Bugs.
      */
-    CTexture2D * 
+    void * 
     getDefaultRenderTarget() { return m_backBuffer; }
   
     /**
@@ -269,7 +269,7 @@ namespace giEngineSDK {
      * @return   Returns the Depth Stencil View texutre.
      * @bug      No known Bugs.
      */
-    CTexture2D * 
+    void * 
     getDefaultDephtStencil() { return m_defaultDSV; }
   
   
@@ -293,5 +293,12 @@ namespace giEngineSDK {
     ///Reference to the default View Port
     CViewPort * m_defaultVP = nullptr;
   
+
   };
+
+  extern "C" GI_PLUGIN_EXPORT CGraphicsDX *
+  createGraphicsAPI() {
+    auto DX = new CGraphicsDX();
+    return DX;
+  }
 }

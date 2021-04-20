@@ -34,7 +34,7 @@ namespace giEngineSDK {
    * @brief    Manage the Sampler State.
    * @bug      No known Bugs.
    */
-  class CSampler {
+  class GI_CORE_EXPORT CSampler {
    public:
   
      CSampler() {}

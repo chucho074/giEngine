@@ -12,10 +12,10 @@
  */
 #pragma once
 #include "giPrerequisitesDX.h"
-#include <giBaseShader.h>
+#include <giBaseVertexShader.h>
 
 namespace giEngineSDK {
-  class VertexShaderDX final : public BaseShader
+  class VertexShaderDX final : public BaseVertexShader
   {
    public:
      //Constructor
@@ -32,7 +32,7 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    init(wchar* inFileName,
+    init(lpcstr inFileName,
     /***/lpcstr inEntryPoint,
     /***/lpcstr inShaderModel) override;
 
@@ -45,7 +45,7 @@ namespace giEngineSDK {
      * @return   .
      */
     bool 
-    CompileShaderFromFile(wchar* szFileName,
+    CompileShaderFromFile(lpcstr szFileName,
     /********************/lpcstr szEntryPoint,
     /********************/lpcstr szShaderModel,
     /********************/ID3DBlob** ppBlobOut);

@@ -24,7 +24,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  VertexShaderDX::init(wchar* inFileName, 
+  VertexShaderDX::init(lpcstr inFileName, 
   /*******************/lpcstr inEntryPoint, 
   /*******************/lpcstr inShaderModel) {
 
@@ -35,7 +35,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  VertexShaderDX::CompileShaderFromFile(wchar* szFileName, 
+  VertexShaderDX::CompileShaderFromFile(lpcstr szFileName, 
   /************************************/lpcstr szEntryPoint, 
   /************************************/lpcstr szShaderModel, 
   /************************************/ID3DBlob** ppBlobOut) {
@@ -52,7 +52,7 @@ namespace giEngineSDK {
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DX11CompileFromFile(szFileName,
+    hr = D3DX11CompileFromFileA(szFileName,
     /*************************/NULL,
     /*************************/NULL,
     /*************************/szEntryPoint,

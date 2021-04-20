@@ -189,23 +189,22 @@ namespace giEngineSDK {
       }
       m_FacesList.push_back(tmpArrayData);
 
-      SimpleVertex tmpVertex;
+      SimpleVertex *tmpVertex = nullptr;
 
       auto tmpActualMesh = (m_Meshes.find(m_ActualName));
 
-      tmpVertex.Pos = Vector3(m_VertexList[a - 1][0], m_VertexList[a - 1][1], m_VertexList[a - 1][2]);
-      tmpVertex.Tex = Vector2(m_TextureCoordsList[A1 - 1][0], m_TextureCoordsList[A1 - 1][1]);
-      tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
-      tmpActualMesh->second->;
-      //m_VertexBuffer.push_back(tmpVertex);
-
-      tmpVertex.Pos = Vector3(m_VertexList[b - 1][0], m_VertexList[b - 1][1], m_VertexList[b - 1][2]);
-      tmpVertex.Tex = Vector2(m_TextureCoordsList[B1 - 1][0], m_TextureCoordsList[B1 - 1][1]);
+      tmpVertex->Pos = Vector3(m_VertexList[a - 1][0], m_VertexList[a - 1][1], m_VertexList[a - 1][2]);
+      tmpVertex->Tex = Vector2(m_TextureCoordsList[A1 - 1][0], m_TextureCoordsList[A1 - 1][1]);
       tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
       //m_VertexBuffer.push_back(tmpVertex);
 
-      tmpVertex.Pos = Vector3(m_VertexList[c - 1][0], m_VertexList[c - 1][1], m_VertexList[c - 1][2]);
-      tmpVertex.Tex = Vector2(m_TextureCoordsList[C1 - 1][0], m_TextureCoordsList[C1 - 1][1]);
+      tmpVertex->Pos = Vector3(m_VertexList[b - 1][0], m_VertexList[b - 1][1], m_VertexList[b - 1][2]);
+      tmpVertex->Tex = Vector2(m_TextureCoordsList[B1 - 1][0], m_TextureCoordsList[B1 - 1][1]);
+      tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
+      //m_VertexBuffer.push_back(tmpVertex);
+
+      tmpVertex->Pos = Vector3(m_VertexList[c - 1][0], m_VertexList[c - 1][1], m_VertexList[c - 1][2]);
+      tmpVertex->Tex = Vector2(m_TextureCoordsList[C1 - 1][0], m_TextureCoordsList[C1 - 1][1]);
       tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
       //m_VertexBuffer.push_back(tmpVertex);
 

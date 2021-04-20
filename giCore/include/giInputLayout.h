@@ -36,7 +36,7 @@ namespace giEngineSDK {
    * @brief    Manage the Input Layout information.
    * @bug      No known Bugs.
    */
-  class CInputLayout {
+  class GI_CORE_EXPORT CInputLayout {
    public:
   
      ///Constructor

@@ -38,7 +38,7 @@ namespace giEngineSDK {
    * @brief   Management for textures2D.
    * @bug     No known Bugs.
    */
-  class CTexture2D {
+  class GI_CORE_EXPORT CTexture2D {
    public:
      /**
       * @brief  Constructor.

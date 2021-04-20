@@ -14,7 +14,12 @@
 #include "giMesh.h"
 #include <fstream>
 
+#include <iostream>
+#include <stdio.h>
+
 namespace giEngineSDK {
+
+  class CMesh;
   
   struct SimpleVertex {
     Vector3 Pos;
@@ -27,7 +32,7 @@ namespace giEngineSDK {
   * @brief    This class read info from a .obj file.
   * @bug      No known Bugs.
   **/
-  class CObjectLoader {
+  class GI_CORE_EXPORT CObjectLoader {
    public:
     CObjectLoader();
     ~CObjectLoader();

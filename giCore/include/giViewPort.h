@@ -14,7 +14,7 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-  class CViewPort {
+  class GI_CORE_EXPORT CViewPort {
    public:
      CViewPort() {}
      ~CViewPort() {}

@@ -18,18 +18,21 @@
 #include <giVector4.h>
 #include <giVector3.h>
 #include <giVector2.h>
-#include <giTexture2DDX.h>
+#include <giTexture2D.h>
 #include <giDepthStencilView.h>
 #include <giRenderTargetView.h>
 #include <giViewPort.h>
 #include <giVertexShaderDX.h>
 #include <giPixelShaderDX.h>
-#include <giBufferDX.h>
-#include <giInputLayoutDX.h>
-#include <giSamplerDX.h>
+#include <giBuffer.h>
+#include <giInputLayout.h>
+#include <giSampler.h>
 #include <giImageLoader.h>
 #include <giObjectLoader.h>
 #include <giMesh.h>
+#include <giModel.h>
+#include <SFML/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
 
 
 using namespace giEngineSDK;
@@ -38,7 +41,7 @@ using namespace giEngineSDK;
  * @struct   CBNeverChanges.
  * @brief    The Never changes constant buffer.
  * @bug      No known Bugs.
- **/
+ **/ 
 struct CBNeverChanges {
   Matrix4 mView;
 };
@@ -124,28 +127,28 @@ private:
   CSampler * m_Sampler = nullptr;
 
   //The Vertex Buffer
-  CBuffer * m_VertexBuffer = nullptr;
+  giEngineSDK::CBuffer * m_VertexBuffer = nullptr;
 
   //The Index Buffer 
-  CBuffer * m_IndexBuffer = nullptr;
+  giEngineSDK::CBuffer * m_IndexBuffer = nullptr;
 
   //The Constant Buffer (Never Change)
-  CBuffer * m_ConstantBuffer_NC = nullptr;	
+  giEngineSDK::CBuffer * m_ConstantBuffer_NC = nullptr;
 
   //The Constant Buffer (Change on Resize)
-  CBuffer * m_ConstantBuffer_COR = nullptr;	
+  giEngineSDK::CBuffer * m_ConstantBuffer_COR = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  CBuffer * m_ConstantBuffer_CEF = nullptr;
+  giEngineSDK::CBuffer * m_ConstantBuffer_CEF = nullptr;
 
   //The Vertex shader
-  VertexShader * m_VertexShader = nullptr;
+  BaseVertexShader * m_VertexShader = nullptr;
 
   //The Pixel Shader
-  PixelShaderDX * m_PixelShader = nullptr;
+  BasePixelShader * m_PixelShader = nullptr;
 
   //The World Matrix
-  Matrix4 m_World = Matrix4::IDENTITY;
+  Matrix4 m_World;
 
   //The color For the mesh
   Vector4 m_MeshColor{ 0.f, 0.f, 0.f, 0.f };

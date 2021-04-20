@@ -12,10 +12,11 @@
 #include "giBaseGraphicsAPI.h"
 #include "giBuffer.h"
 
+namespace giEngineSDK {
 
-class CBuffer;
-class CObjectLoader;
-struct SimpleVertex;
+  class CBuffer;
+  class CObjectLoader;
+  struct SimpleVertex;
 
 
 /**
@@ -23,8 +24,7 @@ struct SimpleVertex;
 * @brief    This class have the funtionality for load models.
 * @bug      No known Bugs.
 **/
-namespace giEngineSDK {
-  class CMesh {
+  class GI_CORE_EXPORT CMesh {
    public:
     ///Default constructor
     CMesh() = default;
@@ -50,13 +50,13 @@ namespace giEngineSDK {
    protected:
 
     //The vertex buffer for the mesh
-    CBuffer* m_VertexBuffer;
+    CBuffer* m_VertexBuffer = nullptr;
 
     //A vertex data Vector
-    Vector<SimpleVertex> m_VertexVector;
+    Vector<SimpleVertex*> m_VertexVector;
 
     //The index buffer for the mesh
-    CBuffer* m_IndexBuffer;
+    CBuffer* m_IndexBuffer = nullptr;
 
     //The list of Faces
     Vector<Vector<unsigned short>> m_FacesList;
@@ -64,7 +64,7 @@ namespace giEngineSDK {
     //The number of index in the mesh
     int m_IndexNum = 0;
 
-
+   public:
     //The model loader
     friend class CObjectLoader;
   };

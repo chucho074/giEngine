@@ -15,7 +15,7 @@
 #include "giBaseGraphicsAPI.h"
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
-#include "giLibraryLoader.h"
+#include <giLibraryLoader.h>
 
 
 #include <iostream>         //Delete this
@@ -35,7 +35,7 @@ using sf::Event;
  * @brief    A class for the basics functions of the apps.
  * @bug      No known Bugs.
  */
-class BaseApp 
+class GI_CORE_EXPORT BaseApp
 {
  public:
 
@@ -53,20 +53,19 @@ class BaseApp
   int 
   run();
 
- protected:
   /**
    * @brief    Virtual Method in charge of creating a virtual method.
    * @bug      No known Bugs.
    */
   virtual void 
-  onCreate() = 0;
+  onCreate() {};
 
   /**
    * @brief    Virtual Method in charge of destroying the settings and members.
    * @bug      No known Bugs.
    */
   virtual void 
-  onDestroy() = 0;
+  onDestroy() {};
 
   /**
    * @brief    Virtual method in charge to updating the logical information.
@@ -81,7 +80,7 @@ class BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onRender() = 0;
+  onRender() {};
 
   /**
    * @brief    Method in charge of get the events of the window
@@ -89,7 +88,7 @@ class BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(Event inEvent)  = 0;
+  onEvent(Event inEvent) {};
 
  private:
   /**

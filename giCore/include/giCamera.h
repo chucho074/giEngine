@@ -16,7 +16,7 @@
 #include <giMatrix4.h>
 
 namespace giEngineSDK {
-  class CCamera
+  class GI_CORE_EXPORT CCamera
   {
    public:
     ///Default Constructor

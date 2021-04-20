@@ -17,6 +17,7 @@ DirectXApp::DirectXApp() {
   //Set the window size
   m_width = 1280;
   m_height = 720;
+  m_World = Matrix4::IDENTITY;
 }
 
 
@@ -204,7 +205,7 @@ void DirectXApp::onCreate() {
   m_Sampler = GAPI.createSampler(sampDesc);
 
   //Initialize world matrix
-  m_World = Matrix4::IDENTITY();
+  m_World = Matrix4::IDENTITY;
 
   //Initialize Camera
   m_MainCamera.init(70, (m_width/m_height), 0.01f, 100.0f);
@@ -239,17 +240,19 @@ void DirectXApp::onRender() {
   auto& GAPI = g_GraphicsAPI();
 
   //Set Render Target & Depth Stencil
-  GAPI.omSetRenderTarget(GAPI.getDefaultRenderTarget(), GAPI.getDefaultDephtStencil());
+  GAPI.omSetRenderTarget(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()), 
+  /*********************/static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
 
   //Set Input Layout
   GAPI.aiSetInputLayout(m_InputLayout);
 
   //Clear the back buffer
   float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-  GAPI.clearRTV(GAPI.getDefaultRenderTarget(), ClearColor);
+  GAPI.clearRTV(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()), 
+  /************/ClearColor);
 
   //Clear the depth buffer to 1.0 (max depth)
-  GAPI.clearDSV(GAPI.getDefaultDephtStencil());
+  GAPI.clearDSV(static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
 
   //Update variables that change once per frame
   CBChangesEveryFrame cb;
@@ -278,17 +281,18 @@ void DirectXApp::onRender() {
   GAPI.draw(36, 0);
 
   //Sets the render target and depth Stencil
-  GAPI.omSetRenderTarget(GAPI.getDefaultRenderTarget(), GAPI.getDefaultDephtStencil());
+  GAPI.omSetRenderTarget(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()),
+  /*********************/static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
 
   //Apply a rotation
   static float tmpRotation = 3.1415f / 550.0f;
   tmpRotation += 3.1415f / 550.0f;
 
   //Sets values to the world
-  m_World = XMMatrixIdentity();
-  m_World = XMMatrixRotationY(tmpRotation);
-  m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-  m_World *= XMMatrixTranslation(0.f, 0.0f, 20.f);
+  //m_World = XMMatrixIdentity();
+  //m_World = XMMatrixRotationY(tmpRotation);
+  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  //m_World *= XMMatrixTranslation(0.f, 0.0f, 20.f);
 
   cb.mWorld = m_World.transpose();
   cb.vMeshColor = m_MeshColor;
@@ -302,10 +306,10 @@ void DirectXApp::onRender() {
   m_Yoshi.drawModel();
 
   //Sets values to the world
-  m_World = XMMatrixIdentity();
-  m_World = XMMatrixRotationY(tmpRotation);
-  m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-  m_World *= XMMatrixTranslation(0.f, 1.5f, 0.f);
+  //m_World = XMMatrixIdentity();
+  //m_World = XMMatrixRotationY(tmpRotation);
+  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  //m_World *= XMMatrixTranslation(0.f, 1.5f, 0.f);
 
   cb.mWorld = m_World.transpose();
   cb.vMeshColor = m_MeshColor;
@@ -332,48 +336,6 @@ DirectXApp::onEvent(Event inEvent) {
   //Graphics API Reference
   auto& GAPI = g_GraphicsAPI();
 
-  //Read the message
-  switch (inMsg) {
-  //Key is pressed
-  case WM_KEYDOWN: {
-    //Move to the front
-    if ((inwParam == VK_UP) || (inwParam == 'W' || inwParam == 'w')) {
-      XMVECTOR tmpVect = { 0.f, 0.f, 0.1f };
-      m_MainCamera.move(tmpVect);
-    }
-    //Move backwards
-    else if ((inwParam == VK_DOWN) || (inwParam == 'S' || inwParam == 's')) {
-      XMVECTOR tmpVect = { 0.f, 0.f, -0.1f };
-      m_MainCamera.move(tmpVect);
-    }
-    //Move to the left
-    if ((inwParam == VK_LEFT) || (inwParam == 'A' || inwParam == 'a')) {
-      XMVECTOR tmpVect = { -0.1f, 0.f, 0.f };
-      m_MainCamera.move(tmpVect);
-    }
-    //Move to the right
-    else if ((inwParam == VK_RIGHT) || (inwParam == 'D' || inwParam == 'd')) {
-      XMVECTOR tmpVect = { 0.1f, 0.f, 0.f };
-      m_MainCamera.move(tmpVect);
-    }
-    //Move to up
-    if (inwParam == 'E' || inwParam == 'e') {
-      XMVECTOR tmpVect = { 0.f, 0.1f, 0.f };
-      m_MainCamera.move(tmpVect);
-    }
-    //Move to down
-    else if (inwParam == 'Q' || inwParam == 'q') {
-      XMVECTOR tmpVect = { 0.f, -0.1f, 0.f };
-      m_MainCamera.move(tmpVect);
-    }
-
-    //Update the view of the camera
-    CBNeverChanges tmpNC;
-    tmpNC.mView = m_MainCamera.getViewMatrix();
-    GAPI.updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
-  }
-  default:
-    break;
-  }
+  
   
 }

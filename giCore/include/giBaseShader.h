@@ -14,7 +14,7 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-  class BaseShader 
+  class GI_CORE_EXPORT BaseShader
   {
    public:
      //Constructor
@@ -60,7 +60,7 @@ namespace giEngineSDK {
     //setShader();
 
     virtual bool 
-    init(wchar* inFileName,
+    init(lpcstr inFileName,
     /***/lpcstr inEntryPoint,
     /***/lpcstr inShaderModel) = 0;
 

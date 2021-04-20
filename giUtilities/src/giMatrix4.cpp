@@ -11,11 +11,12 @@
 #include "giVector4.h"
 
 namespace giEngineSDK {
+  
   const Matrix4 
-  Matrix4::IDENTITY({ 1, 0, 0, 0 },
-  /****************/{ 0, 1, 0, 0 },
-  /****************/{ 0, 0, 1, 0 },
-  /****************/{ 0, 0, 0, 1 });
+  Matrix4::IDENTITY = Matrix4({ 1, 0, 0, 0 },
+  /**************************/{ 0, 1, 0, 0 },
+  /**************************/{ 0, 0, 1, 0 },
+  /**************************/{ 0, 0, 0, 1 });
 
   Matrix4
   Matrix4::operator+(const Matrix4& inMatrix) const {
@@ -359,4 +360,6 @@ namespace giEngineSDK {
     m_wColumn = { 0, 0, -viewRange * inNear, 0 };
 
   }
+
+  
 }

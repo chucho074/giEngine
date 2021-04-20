@@ -19,6 +19,8 @@
 namespace giEngineSDK {
   class CTexture2D;
   class CBaseShader;
+  class BaseVertexShader;
+  class BasePixelShader;
   class CViewPort;
   class BaseShader;
   class CBuffer;
@@ -38,12 +40,12 @@ namespace giEngineSDK {
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CBaseGraphicsAPI : public Module<CBaseGraphicsAPI> 
+  class GI_CORE_EXPORT CBaseGraphicsAPI : public Module<CBaseGraphicsAPI>
   {
    public:
   
      ///Default Constructor.
-     CBaseGraphicsAPI() = default;
+     CBaseGraphicsAPI() {};
      
      ///Destructor.
      ~CBaseGraphicsAPI() = default;
@@ -125,7 +127,7 @@ namespace giEngineSDK {
       * @brief    Create the Vertex Shader.
       * @bug      No known Bugs.
       */
-     virtual CBaseShader * 
+     virtual BaseVertexShader * 
      createVS(wString inFileName,
      /*******/lpcstr inEntryPoint,
      /*******/lpcstr inShaderModel) { return nullptr;};
@@ -134,7 +136,7 @@ namespace giEngineSDK {
       * @brief    Create the Pixel Shader
       * @bug      No known Bugs.
       */
-     virtual CBaseShader * 
+     virtual BasePixelShader * 
      createPS(wString inFileName,
      /*******/lpcstr inEntryPoint,
      /*******/lpcstr inShaderModel){ return nullptr; };
@@ -341,14 +343,14 @@ namespace giEngineSDK {
       * @brief    Gets the default Render Target.
       * @return   Returns the back Buffer texture.
       */
-     virtual CTexture2D * 
+     virtual void * 
      getDefaultRenderTarget() { return nullptr; };
      
      /**
       * @brief    Gets the default Depth Stencil.
       * @return   Returns the Depth Stencil View texutre;
       */
-     virtual CTexture2D * 
+     virtual void * 
      getDefaultDephtStencil() { return nullptr; };
   
      /**

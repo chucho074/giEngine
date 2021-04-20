@@ -27,7 +27,7 @@ namespace giEngineSDK {
    * @brief  Abstraction for DepthStencilView.
    * @bug    No Bugs Known.
    */
-  class CDepthStencilView {
+  class GI_CORE_EXPORT CDepthStencilView {
    public:
 
     ///Default constructor

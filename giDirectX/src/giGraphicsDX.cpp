@@ -226,8 +226,8 @@ namespace giEngineSDK {
   }
 
 
-  CBaseShader* 
-  CGraphicsDX::createVS(wchar* inFileName,
+  BaseVertexShader* 
+  CGraphicsDX::createVS(lpcstr inFileName,
   /********************/lpcstr inEntryPoint,
   /********************/lpcstr inShaderModel) {
 
@@ -247,8 +247,8 @@ namespace giEngineSDK {
   }
 
 
-  CBaseShader* 
-  CGraphicsDX::createPS(wchar* inFileName,
+  BasePixelShader* 
+  CGraphicsDX::createPS(lpcstr inFileName,
   /********************/lpcstr inEntryPoint,
   /********************/lpcstr inShaderModel) {
     PixelShaderDX* tempPS = new PixelShaderDX();

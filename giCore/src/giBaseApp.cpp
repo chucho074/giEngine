@@ -102,10 +102,10 @@ BaseApp::initSystems() {
   WindowHandle handle = m_window.getSystemHandle();
 
   if (m_loader.loadPlugin("giDirectX_d.dll")) {
-    auto createGAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGAPI"));
+    auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGraphicsAPI"));
 
     CBaseGraphicsAPI::startUp();
-    CBaseGraphicsAPI* GAPI = createGAPI();
+    CBaseGraphicsAPI* GAPI = createGraphicsAPI();
     g_GraphicsAPI().setObject(GAPI);
     m_GAPI = &g_GraphicsAPI();
     //Initialize the Graphics API
@@ -160,9 +160,3 @@ BaseApp::activateConsole() {
   //std::cin.clear();
 }
 
-namespace giEngineSDK {
-  CBaseGraphicsAPI&
-  g_GraphicsAPI() {
-    return CBaseGraphicsAPI::instance();
-  }
-}

@@ -24,7 +24,7 @@ namespace giEngineSDK {
   }
 
   bool
-  PixelShaderDX::init(wchar* inFileName, 
+  PixelShaderDX::init(lpcstr inFileName, 
   /******************/lpcstr inEntryPoint, 
   /******************/lpcstr inShaderModel) {
 
@@ -35,7 +35,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  PixelShaderDX::CompileShaderFromFile(wchar* szFileName, 
+  PixelShaderDX::CompileShaderFromFile(lpcstr szFileName, 
   /***********************************/lpcstr szEntryPoint, 
   /***********************************/lpcstr szShaderModel, 
   /***********************************/ID3DBlob** ppBlobOut) {
