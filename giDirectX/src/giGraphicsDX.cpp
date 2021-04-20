@@ -131,7 +131,7 @@ namespace giEngineSDK {
   }
 
 
-  void*
+  CTexture2D*
   CGraphicsDX::createTex2D(int inWidth,
   /***********************/int inHeigh,
   /***********************/int inMipLevels,
@@ -204,7 +204,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CViewPort* 
   CGraphicsDX::createVP(int inWidth, int inHeight) {
     CViewPortDX* temp = new CViewPortDX();
     temp->m_VP.Width = (float)inWidth;
@@ -226,7 +226,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CBaseShader* 
   CGraphicsDX::createVS(wchar* inFileName,
   /********************/lpcstr inEntryPoint,
   /********************/lpcstr inShaderModel) {
@@ -247,7 +247,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CBaseShader* 
   CGraphicsDX::createPS(wchar* inFileName,
   /********************/lpcstr inEntryPoint,
   /********************/lpcstr inShaderModel) {
@@ -266,7 +266,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CInputLayout* 
   CGraphicsDX::createIL(Vector<InputLayoutDesc>& inDesc,
   /********************/BaseShader* inShader) {
 
@@ -285,7 +285,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CBuffer* 
   CGraphicsDX::createBuffer(unsigned int inByteWidth,
   /************************/unsigned int inBindFlags,
   /************************/unsigned int inOffset,
@@ -310,7 +310,7 @@ namespace giEngineSDK {
   }
 
 
-  void* 
+  CSampler* 
   CGraphicsDX::createSampler(SamplerDesc inDesc) {
     CSamplerDX* tmpSampler = new CSamplerDX();
     tmpSampler->init(inDesc);

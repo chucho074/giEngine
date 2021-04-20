@@ -65,7 +65,7 @@ namespace giEngineSDK {
      * @brief    Creates the texture in the Device.
      * @bug      No known Bugs.
      */
-    void * 
+    CTexture2D * 
     createTex2D(int inWidth,
     /**********/int inHeigh,
     /**********/int inMipLevels,
@@ -76,7 +76,7 @@ namespace giEngineSDK {
      * @brief    Creates the View Port in the Device.
      * @bug      No known Bugs.
      */
-    void * 
+    CViewPort * 
     createVP(int inWidth, 
     /*******/int inHeight);
   
@@ -91,7 +91,7 @@ namespace giEngineSDK {
      * @brief    Create the Vertex Shader.
      * @bug      No known Bugs.
      */
-    void * 
+    CBaseShader * 
     createVS(wchar* inFileName,
     /*******/lpcstr inEntryPoint,
     /*******/lpcstr inShaderModel);
@@ -100,7 +100,7 @@ namespace giEngineSDK {
      * @brief    Create the Pixel Shader
      * @bug      No known Bugs.
      */
-    void * 
+    CBaseShader * 
     createPS(wchar* inFileName,
     /*******/lpcstr inEntryPoint,
     /*******/lpcstr inShaderModel);
@@ -109,14 +109,14 @@ namespace giEngineSDK {
      * @brief    Creates the Input Layout.
      * @bug      No known Bugs.
      */
-    void * 
+    CInputLayout * 
     createIL(Vector<InputLayoutDesc> & inDesc, BaseShader * inShader);
   
     /**
      * @brief    Creates a buffer.
      * @bug      No known Bugs.
      */
-    void *
+    CBuffer *
     createBuffer(unsigned int inByteWidth, 
     /***********/unsigned int inBindFlags, 
     /***********/unsigned int inOffset, 
@@ -126,7 +126,7 @@ namespace giEngineSDK {
      * @brief    Creates a Sampler.
      * @bug      No known Bugs.
      */
-    void * 
+    CSampler * 
     createSampler(SamplerDesc inDesc);
   
     /**
@@ -261,7 +261,7 @@ namespace giEngineSDK {
      * @return   Returns the back Buffer texture.
      * @bug      No known Bugs.
      */
-    void * 
+    CTexture2D * 
     getDefaultRenderTarget() { return m_backBuffer; }
   
     /**
@@ -269,7 +269,7 @@ namespace giEngineSDK {
      * @return   Returns the Depth Stencil View texutre.
      * @bug      No known Bugs.
      */
-    void * 
+    CTexture2D * 
     getDefaultDephtStencil() { return m_defaultDSV; }
   
   

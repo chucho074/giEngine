@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\giDXApp.cpp" />
+    <ClCompile Include="src\Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\giDXApp.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -111,7 +118,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;./inlcude;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,7 +136,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;./inlcude;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +154,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +172,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;./inlcude;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

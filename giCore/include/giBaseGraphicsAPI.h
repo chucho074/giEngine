@@ -18,6 +18,7 @@
 ///Forward declarations
 namespace giEngineSDK {
   class CTexture2D;
+  class CBaseShader;
   class CViewPort;
   class BaseShader;
   class CBuffer;
@@ -94,7 +95,7 @@ namespace giEngineSDK {
       * @param    inBindFlags    The bind flags of the texture.
       * @bug      No known Bugs.
       */
-     virtual void * 
+     virtual CTexture2D * 
      createTex2D(int inWidth,
      /**********/int inHeigh,
      /**********/int inMipLevels,
@@ -108,7 +109,7 @@ namespace giEngineSDK {
       * @return   Returns .
       * @bug      No known Bugs.
       */
-     virtual void * 
+     virtual CViewPort * 
      createVP(int inWidth, 
      /*******/int inHeight){ return nullptr; };
      
@@ -124,8 +125,8 @@ namespace giEngineSDK {
       * @brief    Create the Vertex Shader.
       * @bug      No known Bugs.
       */
-     virtual void * 
-     createVS(wchar* inFileName,
+     virtual CBaseShader * 
+     createVS(wString inFileName,
      /*******/lpcstr inEntryPoint,
      /*******/lpcstr inShaderModel) { return nullptr;};
      
@@ -133,8 +134,8 @@ namespace giEngineSDK {
       * @brief    Create the Pixel Shader
       * @bug      No known Bugs.
       */
-     virtual void * 
-     createPS(wchar* inFileName,
+     virtual CBaseShader * 
+     createPS(wString inFileName,
      /*******/lpcstr inEntryPoint,
      /*******/lpcstr inShaderModel){ return nullptr; };
 
@@ -145,7 +146,7 @@ namespace giEngineSDK {
       * @return   Returns the Input layout.
       * @bug      No known Bugs.
       */
-     virtual void * 
+     virtual CInputLayout * 
      createIL(Vector<InputLayoutDesc> & inDesc, 
      /*******/BaseShader * inShader) { return nullptr; };
 
@@ -158,7 +159,7 @@ namespace giEngineSDK {
       * @return   Returns the buffer.
       * @bug      No known Bugs.
       */
-     virtual void * 
+     virtual CBuffer * 
      createBuffer(unsigned int inByteWidth, 
      /***********/unsigned int inBindFlags, 
      /***********/unsigned int inOffset, 
@@ -169,7 +170,7 @@ namespace giEngineSDK {
       * @param    inDesc   The descriptor of the sampler.
       * @bug      No known Bugs.
       */
-     virtual void * 
+     virtual CSampler * 
      createSampler(SamplerDesc inDesc) { return nullptr; };
      
      /**
@@ -340,14 +341,14 @@ namespace giEngineSDK {
       * @brief    Gets the default Render Target.
       * @return   Returns the back Buffer texture.
       */
-     virtual void * 
+     virtual CTexture2D * 
      getDefaultRenderTarget() { return nullptr; };
      
      /**
       * @brief    Gets the default Depth Stencil.
       * @return   Returns the Depth Stencil View texutre;
       */
-     virtual void * 
+     virtual CTexture2D * 
      getDefaultDephtStencil() { return nullptr; };
   
      /**

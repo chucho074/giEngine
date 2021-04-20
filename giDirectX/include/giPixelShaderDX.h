@@ -15,7 +15,7 @@
 #include <giBaseShader.h>
 
 namespace giEngineSDK {
-  class PixelShaderDX final : public BaseShader
+  class PixelShaderDX : public BaseShader
   {
   public:
     //Constructor
@@ -32,9 +32,9 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    init(WCHAR* inFileName,
-    /***/LPCSTR inEntryPoint,
-    /***/LPCSTR inShaderModel) override;
+    init(wchar* inFileName,
+    /***/lpcstr inEntryPoint,
+    /***/lpcstr inShaderModel) override;
 
     /**
      * @brief    .
@@ -45,9 +45,9 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    CompileShaderFromFile(WCHAR* szFileName,
-    /********************/LPCSTR szEntryPoint,
-    /********************/LPCSTR szShaderModel,
+    CompileShaderFromFile(wchar* szFileName,
+    /********************/lpcstr szEntryPoint,
+    /********************/lpcstr szShaderModel,
     /********************/ID3DBlob** ppBlobOut);
 
 

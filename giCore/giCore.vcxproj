@@ -168,7 +168,10 @@
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseShader.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
+    <ClCompile Include="src\giImageLoader.cpp" />
     <ClCompile Include="src\giLibraryLoader.cpp" />
+    <ClCompile Include="src\giMesh.cpp" />
+    <ClCompile Include="src\giObjectLoader.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,8 +181,11 @@
     <ClInclude Include="include\giBuffer.h" />
     <ClInclude Include="include\giCamera.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
+    <ClInclude Include="include\giImageLoader.h" />
     <ClInclude Include="include\giInputLayout.h" />
     <ClInclude Include="include\giLibraryLoader.h" />
+    <ClInclude Include="include\giMesh.h" />
+    <ClInclude Include="include\giObjectLoader.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
     <ClInclude Include="include\giSampler.h" />
     <ClInclude Include="include\giTexture2D.h" />
