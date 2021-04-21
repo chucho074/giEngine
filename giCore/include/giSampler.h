@@ -20,11 +20,11 @@ namespace giEngineSDK {
    * @bug      No known Bugs.
    */
   struct SamplerDesc {
-    unsigned int filter;
-    unsigned int addressU;
-    unsigned int addressV;
-    unsigned int addressW;
-    unsigned int comparisonFunc;
+    uint32 filter;
+    uint32 addressU;
+    uint32 addressV;
+    uint32 addressW;
+    uint32 comparisonFunc;
     float minLOD;
     float maxLOD;
   };
@@ -34,12 +34,13 @@ namespace giEngineSDK {
    * @brief    Manage the Sampler State.
    * @bug      No known Bugs.
    */
-  class GI_CORE_EXPORT CSampler {
+  class CSampler {
    public:
   
-     CSampler() {}
+     CSampler() = default;
   
-     ~CSampler() {}
+     virtual
+     ~CSampler() = default;
   
      virtual void 
      init(SamplerDesc inDesc) {};

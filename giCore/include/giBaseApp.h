@@ -35,7 +35,7 @@ using sf::Event;
  * @brief    A class for the basics functions of the apps.
  * @bug      No known Bugs.
  */
-class GI_CORE_EXPORT BaseApp
+class BaseApp
 {
  public:
 
@@ -43,7 +43,8 @@ class GI_CORE_EXPORT BaseApp
   BaseApp() = default;
 
   ///Destructor
-  ~BaseApp();
+  virtual
+  ~BaseApp() = default;
 
   /**
    * @brief    Runs the app.

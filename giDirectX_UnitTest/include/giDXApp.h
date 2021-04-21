@@ -21,7 +21,7 @@
 #include <giTexture2D.h>
 #include <giDepthStencilView.h>
 #include <giRenderTargetView.h>
-#include <giViewPort.h>
+//#include <giViewPort.h>
 #include <giVertexShaderDX.h>
 #include <giPixelShaderDX.h>
 #include <giBuffer.h>
@@ -76,7 +76,7 @@ public:
   DirectXApp();
 
   ///Destructor
-  ~DirectXApp();
+  ~DirectXApp() = default;
 
   /**
   * @brief	Create the information for DirectX App.

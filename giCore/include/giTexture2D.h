@@ -20,17 +20,17 @@ namespace giEngineSDK {
    * @bug     No known Bugs.
    */
   struct TextureDesc {
-    unsigned int W;
-    unsigned int H;
-    unsigned int mipLevels;
-    unsigned int arraySize;
-    unsigned int format;
-    unsigned int sampleDescCount;
-    unsigned int sampleDescQuality;
-    unsigned int usage;
-    unsigned int flags;
-    unsigned int cpuAccessFlags;
-    unsigned int miscFlags;
+    uint32 W;
+    uint32 H;
+    uint32 mipLevels;
+    uint32 arraySize;
+    uint32 format;
+    uint32 sampleDescCount;
+    uint32 sampleDescQuality;
+    uint32 usage;
+    uint32 flags;
+    uint32 cpuAccessFlags;
+    uint32 miscFlags;
   };  
 
   /**
@@ -38,19 +38,20 @@ namespace giEngineSDK {
    * @brief   Management for textures2D.
    * @bug     No known Bugs.
    */
-  class GI_CORE_EXPORT CTexture2D {
+  class CTexture2D {
    public:
      /**
       * @brief  Constructor.
       * @bug    No Bugs known.
       */
-     CTexture2D() {};
+     CTexture2D() = default;
      
      /**
       * @brief    Destructor.
       * @bug      No Bugs known.
       */
-     ~CTexture2D() {};
+     virtual
+     ~CTexture2D() = default;
      
      
    protected:

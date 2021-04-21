@@ -32,7 +32,7 @@ namespace giEngineSDK {
   * @brief    This class read info from a .obj file.
   * @bug      No known Bugs.
   **/
-  class GI_CORE_EXPORT CObjectLoader {
+  class CObjectLoader {
    public:
     CObjectLoader();
     ~CObjectLoader();

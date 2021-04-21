@@ -195,7 +195,6 @@
     <ClInclude Include="include\giSamplerDX.h" />
     <ClInclude Include="include\giTexture2DDX.h" />
     <ClInclude Include="include\giVertexShaderDX.h" />
-    <ClInclude Include="include\giViewPortDX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp" />

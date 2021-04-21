@@ -16,14 +16,14 @@
 #include <giMatrix4.h>
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT CCamera
+  class CCamera
   {
    public:
     ///Default Constructor
     CCamera();
 
     ///Destructor
-    ~CCamera();
+    ~CCamera() = default;
 
     /**
      * @brief   Initialize the information of the camera.

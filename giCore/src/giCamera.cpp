@@ -24,10 +24,6 @@ namespace giEngineSDK {
     m_Up2.normalize();
   }
   
-  CCamera::~CCamera() {
-  
-  }
-  
   void 
   CCamera::init(float inAngle, float inAR, float inNear, float inFar) {
     m_Angle = inAngle;

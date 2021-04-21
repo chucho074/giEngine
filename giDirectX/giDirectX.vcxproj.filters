@@ -33,9 +33,6 @@
     <ClInclude Include="include\giDepthStencilViewDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giViewPortDX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giSamplerDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>

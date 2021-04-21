@@ -40,7 +40,7 @@ namespace giEngineSDK {
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class GI_CORE_EXPORT CBaseGraphicsAPI : public Module<CBaseGraphicsAPI>
+  class CBaseGraphicsAPI : public Module<CBaseGraphicsAPI>
   {
    public:
   
@@ -162,9 +162,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual CBuffer * 
-     createBuffer(unsigned int inByteWidth, 
-     /***********/unsigned int inBindFlags, 
-     /***********/unsigned int inOffset, 
+     createBuffer(uint32 inByteWidth, 
+     /***********/uint32 inBindFlags, 
+     /***********/uint32 inOffset, 
      /***********/void * inBufferData) { return nullptr; };
      
      /**
@@ -190,7 +190,7 @@ namespace giEngineSDK {
       */
      virtual void 
      setVertexBuffer(CBuffer * inBuffer, 
-     /**************/unsigned int inStride) {};
+     /**************/uint32 inStride) {};
      
      /**
       * @brief    Set IndexBuffer.
@@ -220,7 +220,7 @@ namespace giEngineSDK {
      virtual void 
      updateSubresource(CBuffer * inBuffer, 
      /****************/void * inData, 
-     /****************/unsigned int inPitch) {};
+     /****************/uint32 inPitch) {};
      
      /**
       * @brief    Update Texture.
@@ -233,8 +233,8 @@ namespace giEngineSDK {
      virtual void 
      updateTexture(CTexture2D * inTexture, 
      /************/const void * inData, 
-     /************/unsigned int inPitch, 
-     /************/unsigned int inDepthPitch) {};
+     /************/uint32 inPitch, 
+     /************/uint32 inDepthPitch) {};
      
      /**
       * @brief    Clear Render Target View.
@@ -268,7 +268,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     vsSetConstantBuffer(unsigned int inSlot, 
+     vsSetConstantBuffer(uint32 inSlot, 
      /******************/CBuffer * inBuffer = nullptr) {};
      
      /**
@@ -286,7 +286,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetConstantBuffer(unsigned int inSlot, 
+     psSetConstantBuffer(uint32 inSlot, 
      /******************/CBuffer * inBuffer) {};
      
      /**
@@ -296,7 +296,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetShaderResource(unsigned int inSlot, 
+     psSetShaderResource(uint32 inSlot, 
      /******************/CTexture2D * inTexture = nullptr) {};
      
      /**
@@ -307,8 +307,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetSampler(unsigned int inSlot, 
-     /***********/unsigned int inNumSamplers, 
+     psSetSampler(uint32 inSlot, 
+     /***********/uint32 inNumSamplers, 
      /***********/CSampler * inSampler) {};
      
      /** 
@@ -336,8 +336,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     draw(unsigned int inNumIndexes, 
-     /***/unsigned int inStartLocation) {};
+     draw(uint32 inNumIndexes, 
+     /***/uint32 inStartLocation) {};
      
      /**
       * @brief    Gets the default Render Target.

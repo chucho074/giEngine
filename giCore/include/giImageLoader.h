@@ -22,7 +22,7 @@ namespace giEngineSDK {
   * @brief    Read image files.
   * @bug      No known Bugs.
   **/
-  class GI_CORE_EXPORT CImageLoader {
+  class CImageLoader {
   public:
 
     ///Default constructor

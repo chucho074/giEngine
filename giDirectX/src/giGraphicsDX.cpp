@@ -18,7 +18,6 @@
 #include "giInputLayoutDX.h"
 #include "giBufferDX.h"
 #include "giDepthStencilViewDX.h"
-#include "giViewPortDX.h"
 #include "giSamplerDX.h"
 #include "giRenderTargetViewDX.h"
 #include "giVertexShaderDX.h"
@@ -52,7 +51,7 @@ namespace giEngineSDK {
   /************************************/int inWidth,
   /************************************/int inHeight) {
     HRESULT hr = S_OK;
-    unsigned int createDeviceFlags = 0;
+    uint32 createDeviceFlags = 0;
 
 #ifdef _DEBUG
     createDeviceFlags |= GI_DEVICE_FLAG::E::kCREATE_DEVICE_DEBUG;
@@ -124,8 +123,7 @@ namespace giEngineSDK {
     /****************************************************/GI_BIND_FLAG::E::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
-    m_defaultVP = static_cast<CViewPort*>(createVP(inWidth, inHeight));
-
+    createVP(1, inWidth, inHeight, 0, 0);
 
     return hr;
   }
@@ -204,25 +202,17 @@ namespace giEngineSDK {
   }
 
 
-  CViewPort* 
-  CGraphicsDX::createVP(int inWidth, int inHeight) {
-    CViewPortDX* temp = new CViewPortDX();
-    temp->m_VP.Width = (float)inWidth;
-    temp->m_VP.Height = (float)inHeight;
-    temp->m_VP.MinDepth = 0.0f;
-    temp->m_VP.MaxDepth = 1.0f;
-    temp->m_VP.TopLeftX = 0;
-    temp->m_VP.TopLeftY = 0;
-    m_DevContext->RSSetViewports(1, &temp->m_VP);
-    return temp;
+  void
+  CGraphicsDX::createVP(uint32 inNumVP, 
+  /********************/int inWidth, 
+  /********************/int inHeight, 
+  /********************/int inTopX, 
+  /********************/int inTopY) {
 
-  }
+    CD3D11_VIEWPORT VP(inTopX, inTopY, inWidth, inHeight);
 
+    m_DevContext->RSSetViewports(inNumVP, &VP);
 
-  void 
-  CGraphicsDX::setVP(CViewPort& inVP) {
-    auto tmpVP = static_cast<CViewPortDX&>(inVP);
-    m_DevContext->RSSetViewports(1, &tmpVP.m_VP);
   }
 
 
@@ -286,9 +276,9 @@ namespace giEngineSDK {
 
 
   CBuffer* 
-  CGraphicsDX::createBuffer(unsigned int inByteWidth,
-  /************************/unsigned int inBindFlags,
-  /************************/unsigned int inOffset,
+  CGraphicsDX::createBuffer(uint32 inByteWidth,
+  /************************/uint32 inBindFlags,
+  /************************/uint32 inOffset,
   /************************/void* inBufferData) {
 
     CBufferDX* tmpBuffer = new CBufferDX();
@@ -331,7 +321,7 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::setVertexBuffer(CBuffer* inBuffer,
-  /***************************/unsigned int inStride) {
+  /***************************/uint32 inStride) {
     UINT offset = 0;
     m_DevContext->IASetVertexBuffers(0, 
     /*******************************/1, 
@@ -360,7 +350,7 @@ namespace giEngineSDK {
   void 
   CGraphicsDX::updateSubresource(CBuffer* inBuffer,
   /*****************************/void* inData,
-  /*****************************/unsigned int inPitch) {
+  /*****************************/uint32 inPitch) {
 
     auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
     m_DevContext->UpdateSubresource(tmpBuffer->m_Buffer, 
@@ -375,8 +365,8 @@ namespace giEngineSDK {
   void 
   CGraphicsDX::updateTexture(CTexture2D* inTexture,
   /*************************/const void* inData,
-  /*************************/unsigned int inPitch,
-  /*************************/unsigned int inDepthPitch) {
+  /*************************/uint32 inPitch,
+  /*************************/uint32 inDepthPitch) {
 
     m_DevContext->UpdateSubresource(static_cast<CTexture2DDX*>(inTexture)->m_Texture,
     /******************************/0,
@@ -417,7 +407,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::vsSetConstantBuffer(unsigned int inSlot,
+  CGraphicsDX::vsSetConstantBuffer(uint32 inSlot,
   /*******************************/CBuffer* inBuffer) {
 
     auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
@@ -445,7 +435,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetConstantBuffer(unsigned int inSlot,
+  CGraphicsDX::psSetConstantBuffer(uint32 inSlot,
   /*******************************/CBuffer* inBuffer) {
 
     m_DevContext->PSSetConstantBuffers(inSlot, 
@@ -455,7 +445,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetShaderResource(unsigned int inSlot,
+  CGraphicsDX::psSetShaderResource(uint32 inSlot,
   /*******************************/CTexture2D* inTexture) {
 
     ID3D11ShaderResourceView* tmpSRV = nullptr;
@@ -468,8 +458,8 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetSampler(unsigned int inSlot,
-  /************************/unsigned int inNumSamplers,
+  CGraphicsDX::psSetSampler(uint32 inSlot,
+  /************************/uint32 inNumSamplers,
   /************************/CSampler* inSampler) {
 
     auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
@@ -517,8 +507,8 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::draw(unsigned int inNumIndexes,
-  /****************/unsigned int inStartLocation) {
+  CGraphicsDX::draw(uint32 inNumIndexes,
+  /****************/uint32 inStartLocation) {
     m_DevContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
   }
 }

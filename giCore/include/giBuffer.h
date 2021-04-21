@@ -20,17 +20,17 @@ namespace giEngineSDK {
    * @bug      No known Bugs.
    */
   struct BufferDesc {
-    unsigned int byteWidth = 0;
+    uint32 byteWidth = 0;
     unsigned short usage = 0;
-    unsigned int bindFlags = 0;
-    unsigned int startSlot = 0;
-    unsigned int numBuffers = 0;
-    unsigned int CPUAccessFlags = 0;
-    unsigned int stride = 0;
-    unsigned int offset = 0;
+    uint32 bindFlags = 0;
+    uint32 startSlot = 0;
+    uint32 numBuffers = 0;
+    uint32 CPUAccessFlags = 0;
+    uint32 stride = 0;
+    uint32 offset = 0;
     void* SRD = nullptr;
-    unsigned int memPitch = 0;
-    unsigned int memSlicePitch = 0;
+    uint32 memPitch = 0;
+    uint32 memSlicePitch = 0;
   };
   
   /**
@@ -38,13 +38,13 @@ namespace giEngineSDK {
    * @brief    A buffer interface for own buffers.
    * @bug      No known Bugs.
    */
-  class GI_CORE_EXPORT CBuffer {
+  class CBuffer {
   public:
     ///Specific constructor
     CBuffer() = default;
   
     ///Destructor
-    ~CBuffer() = default;
+    virtual ~CBuffer() = default;
   
   };
 }

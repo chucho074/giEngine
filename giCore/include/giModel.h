@@ -18,7 +18,7 @@
 #include "giBaseGraphicsAPI.h"
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT CModel {
+  class CModel {
    public:
 
     ///Default constructor

@@ -1,46 +1,33 @@
 /**
- * @file    CGraphicsDX.h
+ * @file    giGraphicsOGL.h
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
- * @date    05/03/2021
- * @brief   Management of the graphics APIs.
+ * @date    20/04/2021
+ * @brief   A basic description of the what do the doc.
  * @bug     No known Bugs.
  */
-
+ 
 /**
  * @include
  */
 #pragma once
-#include "giPrerequisitesDX.h"
+#include "giPrerequisitesOGL.h"
 #include <giBaseGraphicsAPI.h>
-
-
-namespace giEngineSDK {
-  class CTexture2DDX;
-  class BaseShader;
-  class CBufferDX;
-  class CInputLayoutDX;
-  class CSamplerDX;
-
-  class CImageLoader;
-
-}
 
 namespace giEngineSDK {
   /**
-   * @class    CGraphicsDX.
-   * @brief    Manage the graphics of DirectX.
+   * @class    GraphicsOGL.
+   * @brief    .
    * @bug      No known Bugs.
    */
-  class CGraphicsDX : public CBaseGraphicsAPI
+  class GraphicsOGL : public CBaseGraphicsAPI
   {
-   public:
+  public:
     //Default Constructor.
-    CGraphicsDX();
-    
-    ///Destructor.
-    ~CGraphicsDX();
-      
+    GraphicsOGL();
+    //Destructor.
+    ~GraphicsOGL();
+
     /**
      * @brief    In charge of the creation of the device & SwapChain
      * @bug      No known Bugs.
@@ -81,7 +68,6 @@ namespace giEngineSDK {
     /*******/int inHeight,
     /*******/int inTopX,
     /*******/int inTopY);
-  
   
     /**
      * @brief    Create the Vertex Shader.
@@ -258,7 +244,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void * 
-    getDefaultRenderTarget() { return m_backBuffer; }
+    getDefaultRenderTarget() { return nullptr/*m_backBuffer*/; }
   
     /**
      * @brief    Gets the default Depth Stencil.
@@ -266,32 +252,27 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void * 
-    getDefaultDephtStencil() { return m_defaultDSV; }
+    getDefaultDephtStencil() { return nullptr/*m_defaultDSV*/; }
   
-  
-   private:
-  
-    ///Reference to the device
-    ID3D11Device* m_Device;
-  
-    ///Reference to the device Context
-    ID3D11DeviceContext* m_DevContext;
-  
-    ///Reference to the Swap Chain
-    IDXGISwapChain* m_SwapChain;
-  
-    ///Reference to the defautl Render Target
-    CTexture2DDX  * m_backBuffer = nullptr;
-  
-    ///Reference to the default Depth Stencil
-    CTexture2DDX  * m_defaultDSV = nullptr;
-   
+   protected:
+
+     /*///Reference to the device
+     ID3D11Device* m_Device;
+
+     ///Reference to the device Context
+     ID3D11DeviceContext* m_DevContext;
+
+     ///Reference to the Swap Chain
+     IDXGISwapChain* m_SwapChain;
+
+     ///Reference to the defautl Render Target
+     CTexture2DDX* m_backBuffer = nullptr;
+
+     ///Reference to the default Depth Stencil
+     CTexture2DDX* m_defaultDSV = nullptr;
+
+     ///Reference to the default View Port
+     CViewPort* m_defaultVP = nullptr;*/
 
   };
-
-  extern "C" GI_PLUGIN_EXPORT CGraphicsDX *
-  createGraphicsAPI() {
-    auto DX = new CGraphicsDX();
-    return DX;
-  }
 }

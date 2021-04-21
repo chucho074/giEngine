@@ -18,22 +18,23 @@ namespace giEngineSDK {
    * @bug    No Bugs Known.
    */
   struct DepthStencilViewDesc {
-    unsigned int format;
-    unsigned int viewDimension;
-    unsigned int mipSlice;
+    uint32 format;
+    uint32 viewDimension;
+    uint32 mipSlice;
   };
 
   /**
    * @brief  Abstraction for DepthStencilView.
    * @bug    No Bugs Known.
    */
-  class GI_CORE_EXPORT CDepthStencilView {
+  class CDepthStencilView {
    public:
 
     ///Default constructor
     CDepthStencilView() = default;
 
     ///Destructor
+    virtual 
     ~CDepthStencilView() = default;
 
 

@@ -15,7 +15,7 @@
 #include "giBaseShader.h"
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT BasePixelShader : public BaseShader
+  class BasePixelShader : public BaseShader
   {
   public:
     //Constructor

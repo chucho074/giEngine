@@ -21,17 +21,11 @@ DirectXApp::DirectXApp() {
 }
 
 
-DirectXApp::~DirectXApp() {
-
-}
-
-
-void DirectXApp::onCreate() {
-
-  auto& GAPI = g_GraphicsAPI();
+void 
+DirectXApp::onCreate() {
 
   //Create Vertex Shader 
-  m_VertexShader = GAPI.createVS(L"Tutorial07.fx", "VS", "vs_4_0");
+  m_VertexShader = m_GAPI->createVS(L"Tutorial07.fx", "VS", "vs_4_0");
 
   //Create Input Layout
   Vector<InputLayoutDesc> layoutDesc;
@@ -68,10 +62,10 @@ void DirectXApp::onCreate() {
   layoutDesc[2].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   layoutDesc[2].instanceDataStepRate = 0;
 
-  m_InputLayout = GAPI.createIL(layoutDesc, m_VertexShader);
+  m_InputLayout = m_GAPI->createIL(layoutDesc, m_VertexShader);
 
   //Create Pixel Shader
-  m_PixelShader = GAPI.createPS(L"Tutorial07.fx", "PS", "ps_4_0");
+  m_PixelShader = m_GAPI->createPS(L"Tutorial07.fx", "PS", "ps_4_0");
 
   //Create vertex for the cube 
   giEngineSDK::SimpleVertex vertices[] = {
@@ -107,7 +101,7 @@ void DirectXApp::onCreate() {
   };
 
   //Create VertexBuffer
-  m_VertexBuffer = GAPI.createBuffer(sizeof(giEngineSDK::SimpleVertex) * 24, 0x1L, 0, vertices);
+  m_VertexBuffer = m_GAPI->createBuffer(sizeof(giEngineSDK::SimpleVertex) * 24, 0x1L, 0, vertices);
 
   //Create index for the cube
   WORD indices[] = {
@@ -131,7 +125,7 @@ void DirectXApp::onCreate() {
   };
 
   //Create Index Buffer
-  m_IndexBuffer = GAPI.createBuffer(sizeof(WORD) * 36, 0x2L, 0, indices);
+  m_IndexBuffer = m_GAPI->createBuffer(sizeof(WORD) * 36, 0x2L, 0, indices);
 
           //Load Models
 
@@ -145,26 +139,26 @@ void DirectXApp::onCreate() {
   }
 
   //Set Topology
-  GAPI.setTopology(GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  m_GAPI->setTopology(GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
-  m_ConstantBuffer_NC = GAPI.createBuffer(sizeof(CBNeverChanges), 0x4L, 0, nullptr);
+  m_ConstantBuffer_NC = m_GAPI->createBuffer(sizeof(CBNeverChanges), 0x4L, 0, nullptr);
 
   //Create Constant Buffer for Change on Resize
-  m_ConstantBuffer_COR = GAPI.createBuffer(sizeof(CBChangeOnResize), 0x4L, 0, nullptr);
+  m_ConstantBuffer_COR = m_GAPI->createBuffer(sizeof(CBChangeOnResize), 0x4L, 0, nullptr);
 
   //Create Constant Buffer for Change Every Frame
-  m_ConstantBuffer_CEF = GAPI.createBuffer(sizeof(CBChangesEveryFrame), 0x4L, 0, nullptr);
+  m_ConstantBuffer_CEF = m_GAPI->createBuffer(sizeof(CBChangesEveryFrame), 0x4L, 0, nullptr);
 
   //Create the texture
-  m_ColorTexture = GAPI.createTex2D(imgLoader.getWidth(),
+  m_ColorTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
   /********************************/imgLoader.getHeight(),
   /********************************/0,
   /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
   /********************************/D3D11_BIND_SHADER_RESOURCE); //0xaabbggrr
 
   //Update the texture
-  GAPI.updateTexture(m_ColorTexture, 
+  m_GAPI->updateTexture(m_ColorTexture, 
   /*****************/imgLoader.getImgData(), 
   /*****************/imgLoader.getPitch(), 
   /*****************/imgLoader.getImgSize());
@@ -181,14 +175,14 @@ void DirectXApp::onCreate() {
   }
 
   //Create the texture
-  m_PeachTexture = GAPI.createTex2D(imgLoader.getWidth(),
+  m_PeachTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
   /********************************/imgLoader.getHeight(),
   /********************************/0,
   /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
   /********************************/D3D11_BIND_SHADER_RESOURCE); //0xaabbggrr
 
   //Update the texture
-  GAPI.updateTexture(m_PeachTexture,
+  m_GAPI->updateTexture(m_PeachTexture,
   /*****************/imgLoader.getImgData(), 
   /*****************/imgLoader.getPitch(), 
   /*****************/imgLoader.getImgSize());
@@ -202,7 +196,7 @@ void DirectXApp::onCreate() {
   sampDesc.comparisonFunc = 1;
   sampDesc.minLOD = 0;
   sampDesc.maxLOD = 3.402823466e+38f;
-  m_Sampler = GAPI.createSampler(sampDesc);
+  m_Sampler = m_GAPI->createSampler(sampDesc);
 
   //Initialize world matrix
   m_World = Matrix4::IDENTITY;
@@ -213,76 +207,76 @@ void DirectXApp::onCreate() {
   //Sets the view matrix
   CBNeverChanges tmpNC;
   tmpNC.mView = m_MainCamera.getViewMatrix();
-  GAPI.updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+  m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
 
   //Sets the projection matrix
   CBChangeOnResize tmpCOR;
   tmpCOR.mProjection = m_MainCamera.getProyectionMatrix();
-  GAPI.updateSubresource(m_ConstantBuffer_COR, &tmpCOR, sizeof(tmpCOR));
+  m_GAPI->updateSubresource(m_ConstantBuffer_COR, &tmpCOR, sizeof(tmpCOR));
   
 }
 
 
-void DirectXApp::onDestroy() {
+void 
+DirectXApp::onDestroy() {
 
 }
 
 
-void DirectXApp::onUpdate(float inDeltaTime) {
+void 
+DirectXApp::onUpdate(float inDeltaTime) {
   //World rotation
   //m_World = XMMatrixRotationY(inDeltaTime);
 }
 
 
-void DirectXApp::onRender() {
-
-  //GraphicsAPI Reference
-  auto& GAPI = g_GraphicsAPI();
+void 
+DirectXApp::onRender() {
 
   //Set Render Target & Depth Stencil
-  GAPI.omSetRenderTarget(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()), 
-  /*********************/static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
+  m_GAPI->omSetRenderTarget(static_cast<CTexture2D*>(m_GAPI->getDefaultRenderTarget()), 
+  /*********************/static_cast<CTexture2D*>(m_GAPI->getDefaultDephtStencil()));
 
   //Set Input Layout
-  GAPI.aiSetInputLayout(m_InputLayout);
+  m_GAPI->aiSetInputLayout(m_InputLayout);
 
   //Clear the back buffer
   float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-  GAPI.clearRTV(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()), 
+  m_GAPI->clearRTV(static_cast<CTexture2D*>(m_GAPI->getDefaultRenderTarget()), 
   /************/ClearColor);
 
   //Clear the depth buffer to 1.0 (max depth)
-  GAPI.clearDSV(static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
+  m_GAPI->clearDSV(static_cast<CTexture2D*>(m_GAPI->getDefaultDephtStencil()));
 
   //Update variables that change once per frame
   CBChangesEveryFrame cb;
   cb.mWorld = m_World.transpose();
   cb.vMeshColor = m_MeshColor;
-  GAPI.updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  GAPI.vsSetShader(m_VertexShader);
-  GAPI.vsSetConstantBuffer(0, m_ConstantBuffer_NC);
-  GAPI.vsSetConstantBuffer(1, m_ConstantBuffer_COR);
-  GAPI.vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  GAPI.psSetShader(m_PixelShader);
-  GAPI.psSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  GAPI.psSetShaderResource(0, m_ColorTexture);
-  GAPI.psSetSampler(0, 1, m_Sampler);
+  m_GAPI->vsSetShader(m_VertexShader);
+  m_GAPI->vsSetConstantBuffer(0, m_ConstantBuffer_NC);
+  m_GAPI->vsSetConstantBuffer(1, m_ConstantBuffer_COR);
+  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetShader(m_PixelShader);
+  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetShaderResource(0, m_ColorTexture);
+  m_GAPI->psSetSampler(0, 1, m_Sampler);
   
   //Set Vertex Buffer
   UINT stride = sizeof(giEngineSDK::SimpleVertex);
-  GAPI.setVertexBuffer(m_VertexBuffer, stride);
+  m_GAPI->setVertexBuffer(m_VertexBuffer, stride);
 
   //Set Index Buffer
-  GAPI.setIndexBuffer(m_IndexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
+  m_GAPI->setIndexBuffer(m_IndexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
 
   //Draw the cube
-  GAPI.draw(36, 0);
+  m_GAPI->draw(36, 0);
 
   //Sets the render target and depth Stencil
-  GAPI.omSetRenderTarget(static_cast<CTexture2D*>(GAPI.getDefaultRenderTarget()),
-  /*********************/static_cast<CTexture2D*>(GAPI.getDefaultDephtStencil()));
+  m_GAPI->omSetRenderTarget(static_cast<CTexture2D*>(m_GAPI->getDefaultRenderTarget()),
+  /*********************/static_cast<CTexture2D*>(m_GAPI->getDefaultDephtStencil()));
 
   //Apply a rotation
   static float tmpRotation = 3.1415f / 550.0f;
@@ -298,9 +292,9 @@ void DirectXApp::onRender() {
   cb.vMeshColor = m_MeshColor;
 
   //Update the Change Every Frame Buffer
-  GAPI.updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
-  GAPI.vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  GAPI.psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
 
   //Draw the Yoshi model
   m_Yoshi.drawModel();
@@ -315,27 +309,23 @@ void DirectXApp::onRender() {
   cb.vMeshColor = m_MeshColor;
   
   //Update the Change Every Frame Buffer
-  GAPI.updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
-  GAPI.vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  GAPI.psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
   
   //Sets the texture
-  GAPI.psSetShaderResource(0, m_PeachTexture);
+  m_GAPI->psSetShaderResource(0, m_PeachTexture);
 
   //Draw the model
   m_Peach.drawModel();
   
   //Make it show
-  GAPI.show();
+  m_GAPI->show();
 }
 
 
 void 
 DirectXApp::onEvent(Event inEvent) {
-
-  //Graphics API Reference
-  auto& GAPI = g_GraphicsAPI();
-
   
   
 }

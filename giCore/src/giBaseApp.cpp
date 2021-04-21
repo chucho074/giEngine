@@ -14,10 +14,6 @@
 #include "giBaseGraphicsAPI.h"
 
 
-BaseApp::~BaseApp() {
-
-}
-
 int 
 BaseApp::run() {
   //Initialize every system
@@ -80,7 +76,7 @@ BaseApp::createWindow() {
   /**************/tmpTitle.c_str(),
   /**************/sf::Style::Default);
 
-  m_window.setPosition({ 0,0 });
+  m_window.setPosition({ 0, 0 });
 
   
 }
@@ -159,4 +155,3 @@ BaseApp::activateConsole() {
   //std::wcin.clear();
   //std::cin.clear();
 }
-
