@@ -24,7 +24,7 @@ namespace giEngineSDK {
 * @brief    This class have the funtionality for load models.
 * @bug      No known Bugs.
 **/
-  class CMesh {
+  class GI_CORE_EXPORT CMesh {
    public:
     ///Default constructor
     CMesh() = default;

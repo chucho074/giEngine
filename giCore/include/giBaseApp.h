@@ -35,7 +35,7 @@ using sf::Event;
  * @brief    A class for the basics functions of the apps.
  * @bug      No known Bugs.
  */
-class BaseApp
+class GI_CORE_EXPORT BaseApp
 {
  public:
 
