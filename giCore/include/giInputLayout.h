@@ -23,27 +23,27 @@ namespace giEngineSDK {
    */
   struct InputLayoutDesc {
     String semanticName;
-    uint32 semanticIndex;
-    uint32 format;
-    uint32 inputSlot;
-    uint32 alignedByteOffset;
-    uint32 inputSlotClass;
-    uint32 instanceDataStepRate;
+    uint32 semanticIndex = 0;
+    uint32 format = 0;
+    uint32 inputSlot = 0;
+    uint32 alignedByteOffset = 0;
+    uint32 inputSlotClass = 0;
+    uint32 instanceDataStepRate = 0;
   };
   
   /**
-   * @class    CInputLayout.
+   * @class    InputLayout.
    * @brief    Manage the Input Layout information.
    * @bug      No known Bugs.
    */
-  class CInputLayout {
+  class InputLayout {
    public:
   
      ///Constructor
-     CInputLayout() {}
+     InputLayout() {}
   
      ///Destructor
-     ~CInputLayout() = default;
+     ~InputLayout() = default;
   
      /**
       * @brief    Initializer.

@@ -19,10 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBufferOGL.h" />
     <ClInclude Include="include\giGraphicsOGL.h" />
+    <ClInclude Include="include\giInputLayoutOGL.h" />
     <ClInclude Include="include\giPrerequisitesOGL.h" />
+    <ClInclude Include="include\giTexture2DOGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\glad.c" />
     <ClCompile Include="src\giGraphicsOGL.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -110,7 +114,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;$(DEVLIBS)/glad/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,12 +145,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;$(DEVLIBS)/glad/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;./include/;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

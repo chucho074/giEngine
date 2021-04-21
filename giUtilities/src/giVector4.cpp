@@ -143,6 +143,12 @@ namespace giEngineSDK {
                      z / otherVal, 
                      w / otherVal);
   }
+
+  Vector4 
+  Vector4::operator-() const {
+    Vector4 tmpVect(-x,-y,-z,-w);
+    return tmpVect;
+  }
   
   bool
   Vector4::operator>=(const Vector4& otherVect) const {
@@ -241,6 +247,23 @@ namespace giEngineSDK {
             (z * inVectA.z) + 
             (w * inVectA.w));
   }
+
+  Vector4 
+  Vector4::cross(Vector4 inVector) {
+    Vector4 tmpVect;
+    tmpVect.x = 0.f;
+    tmpVect.y = 0.f;
+    tmpVect.z = 0.f;
+    tmpVect.w = 0.f;
+
+
+    tmpVect.x = ((y * inVector.z) - (z * inVector.y));
+    tmpVect.y = ((z * inVector.x) - (x * inVector.z));
+    tmpVect.z = ((x * inVector.y) - (y * inVector.x));
+    tmpVect.w = 0.f;
+
+    return tmpVect;
+  }
    
   void
   Vector4::normalize() {
@@ -270,11 +293,4 @@ namespace giEngineSDK {
     /***********/+ powf(w, 2));
   }
  
-  crossProduct::crossProduct(const Vector4& inVectA, const Vector4& inVectB) {
-    x = ((inVectA.y * inVectB.z) - (inVectA.z * inVectB.y));
-    y = ((inVectA.z * inVectB.x) - (inVectA.x * inVectB.z));
-    z = ((inVectA.x * inVectB.y) - (inVectA.y * inVectB.z));
-    w = 0.f;
-  }
-
 }

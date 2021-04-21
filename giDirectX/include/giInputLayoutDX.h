@@ -23,7 +23,7 @@ namespace giEngineSDK {
    * @brief    Manage the Input Layout information.
    * @bug      No known Bugs.
    */
-  class CInputLayoutDX : public CInputLayout
+  class CInputLayoutDX : public InputLayout
   {
    public:
     ///Constructor

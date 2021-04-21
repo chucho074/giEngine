@@ -1,25 +1,26 @@
 /**
-* @file		CObjectLoader.cpp
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		11/11/2020
-* @brief	This class read info from a .obj file.
-* @bug		No known Bugs.
+* @file    ObjectLoader.cpp
+* @author  Jesús Alberto Del Moral Cupil
+* @e      idv18c.jmoral@uartesdigitales.edu.mx
+* @date    11/11/2020
+* @brief  This class read info from a .obj file.
+* @bug    No known Bugs.
 **/
 #include "giObjectLoader.h"
 #include <sstream>
 
 namespace giEngineSDK {
 
-  CObjectLoader::CObjectLoader() {
+  ObjectLoader::ObjectLoader() {
 
   }
 
-  CObjectLoader::~CObjectLoader() {
+  ObjectLoader::~ObjectLoader() {
 
   }
 
-  bool CObjectLoader::loadObject(String inFileName) {
+  bool 
+  ObjectLoader::loadObject(String inFileName) {
     bool tmpIsReaded = true;
     int tmpLineIter = 0;
     std::ifstream FS;
@@ -59,7 +60,8 @@ namespace giEngineSDK {
     return tmpIsReaded;
   }
 
-  bool CObjectLoader::readLineObj(String inLine) {
+  bool 
+  ObjectLoader::readLineObj(String inLine) {
 
     //Comentary & spaces
     if ("#" == inLine.substr(0, 1)
@@ -83,8 +85,8 @@ namespace giEngineSDK {
       m_ActualName = inLine.substr(7);
 
       //Verify if that mesh exist in map
-      auto comp_func = m_Meshes.key_comp();
-      for (auto iter : m_Meshes) {
+      auto comp_func = m_meshes.key_comp();
+      for (auto iter : m_meshes) {
         if (comp_func(m_ActualName, iter.first)
           && comp_func(iter.first, m_ActualName)) {
 
@@ -92,8 +94,8 @@ namespace giEngineSDK {
       }
 
       //Add a new Mesh to the map
-      auto tmpMesh = new CMesh();
-      m_Meshes.insert({ inLine.substr(7), tmpMesh });
+      auto tmpMesh = new Mesh();
+      m_meshes.insert({ inLine.substr(7), tmpMesh });
       return true;
     }
 
@@ -156,7 +158,7 @@ namespace giEngineSDK {
     Vector<Vector<float>> tmpTexCordsList = m_TextureCoordsList;
     if ("f " == inLine.substr(0, 2)) {
       Vector<unsigned short> tmpArrayData;
-      int tmpData;
+      //int tmpData;
 
       int a, b, c;
       int A1, B1, C1;
@@ -187,31 +189,31 @@ namespace giEngineSDK {
         tmpArrayData.push_back(C1 - 1);
         tmpArrayData.push_back(C2 - 1);
       }
-      m_FacesList.push_back(tmpArrayData);
+      m_facesList.push_back(tmpArrayData);
 
-      SimpleVertex *tmpVertex = nullptr;
+      SimpleVertex tmpVertex;
 
-      auto tmpActualMesh = (m_Meshes.find(m_ActualName));
+      auto tmpActualMesh = (m_meshes.find(m_ActualName));
 
-      tmpVertex->Pos = Vector3(m_VertexList[a - 1][0], m_VertexList[a - 1][1], m_VertexList[a - 1][2]);
-      tmpVertex->Tex = Vector2(m_TextureCoordsList[A1 - 1][0], m_TextureCoordsList[A1 - 1][1]);
-      tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
-      //m_VertexBuffer.push_back(tmpVertex);
+      tmpVertex.Pos = Vector3(m_VertexList[a - 1][0], m_VertexList[a - 1][1], m_VertexList[a - 1][2]);
+      tmpVertex.Tex = Vector2(m_TextureCoordsList[A1 - 1][0], m_TextureCoordsList[A1 - 1][1]);
+      tmpActualMesh->second->m_vertexVector.push_back(tmpVertex);
+      //m_vertexBuffer.push_back(tmpVertex);
 
-      tmpVertex->Pos = Vector3(m_VertexList[b - 1][0], m_VertexList[b - 1][1], m_VertexList[b - 1][2]);
-      tmpVertex->Tex = Vector2(m_TextureCoordsList[B1 - 1][0], m_TextureCoordsList[B1 - 1][1]);
-      tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
-      //m_VertexBuffer.push_back(tmpVertex);
+      tmpVertex.Pos = Vector3(m_VertexList[b - 1][0], m_VertexList[b - 1][1], m_VertexList[b - 1][2]);
+      tmpVertex.Tex = Vector2(m_TextureCoordsList[B1 - 1][0], m_TextureCoordsList[B1 - 1][1]);
+      tmpActualMesh->second->m_vertexVector.push_back(tmpVertex);
+      //m_vertexBuffer.push_back(tmpVertex);
 
-      tmpVertex->Pos = Vector3(m_VertexList[c - 1][0], m_VertexList[c - 1][1], m_VertexList[c - 1][2]);
-      tmpVertex->Tex = Vector2(m_TextureCoordsList[C1 - 1][0], m_TextureCoordsList[C1 - 1][1]);
-      tmpActualMesh->second->m_VertexVector.push_back(tmpVertex);
-      //m_VertexBuffer.push_back(tmpVertex);
+      tmpVertex.Pos = Vector3(m_VertexList[c - 1][0], m_VertexList[c - 1][1], m_VertexList[c - 1][2]);
+      tmpVertex.Tex = Vector2(m_TextureCoordsList[C1 - 1][0], m_TextureCoordsList[C1 - 1][1]);
+      tmpActualMesh->second->m_vertexVector.push_back(tmpVertex);
+      //m_vertexBuffer.push_back(tmpVertex);
 
       //se le daria valor a Actual mesh cuando se encuentre el usemtl
       //Por cada usemtl mandar buffer al mesh que corresponda con el nombre
       //Mandar al actualMesh el buffer
-      tmpActualMesh->second->m_FacesList.push_back(tmpArrayData);
+      tmpActualMesh->second->m_facesList.push_back(tmpArrayData);
       return true;
     }
 
@@ -221,7 +223,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  CObjectLoader::readLineMtl(String inLine) {
+  ObjectLoader::readLineMtl(String inLine) {
     //map_Kd
     if ("\t" == inLine.substr(0, 1)) {
       inLine.erase(inLine.begin());
@@ -245,7 +247,7 @@ namespace giEngineSDK {
       std::stringstream tmpBuffer(inLine.substr(7));
       tmpString = tmpBuffer.str();
       //Check if the name exist
-      int tmpSize = m_TextureFiles.size();
+      int tmpSize = static_cast<int32>(m_TextureFiles.size());
       if (0 != tmpSize) {
         for (int i = 0; i < tmpSize; i++) {
           if (tmpString == m_TextureFiles[i]) {

@@ -1,32 +1,32 @@
 /**
-* @file		CImageLoader.cpp
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		14/10/2020
-* @brief	Read Image Files.
-* @bug		No known Bugs.
-**/
+ * @file    ImageLoader.cpp
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e      idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    14/10/2020
+ * @brief  Read Image Files.
+ * @bug    No known Bugs.
+ */
 
 /**
-* @include
-**/
+ * @include
+ */
 #include "giImageLoader.h"
 
 namespace giEngineSDK {
 
-  CImageLoader::CImageLoader() {
+  ImageLoader::ImageLoader() {
 
   }
 
 
-  CImageLoader::~CImageLoader() {
+  ImageLoader::~ImageLoader() {
 
 
   }
 
 
   void 
-  CImageLoader::loadBMP(String inFileName) {
+  ImageLoader::loadBMP(String inFileName) {
 
     //Clear the variables to use it
     clearData();
@@ -43,28 +43,28 @@ namespace giEngineSDK {
     FS.read((char*)&infoHeader, sizeof(infoHeader));
 
     //Save height and width
-    m_Width = infoHeader.biWidth;
-    m_Height = infoHeader.biHeight;
+    m_width = infoHeader.biWidth;
+    m_height = infoHeader.biHeight;
     m_BPP = infoHeader.biBitCount / 8;
 
     //Resize to data vector
-    m_Img.resize(infoHeader.biSizeImage);
+    m_img.resize(infoHeader.biSizeImage);
 
     //Read image from file
-    FS.read(m_Img.data(), m_Img.size());
+    FS.read(m_img.data(), m_img.size());
 
     char temp = 0;
     for (int i = infoHeader.biSizeImage - 1 - m_BPP; i >= 0; i -= m_BPP) {
       //0xbbggrraa
       //0xaarrggbb
-      temp = m_Img[i + 1];
-      m_Img[i + 1] = m_Img[i + 3];
-      m_Img[i + 3] = temp;
+      temp = m_img[i + 1];
+      m_img[i + 1] = m_img[i + 3];
+      m_img[i + 3] = temp;
 
 
-      /*std::cout << "R: " << int(m_Img[i] & 0xff) <<
-             " G: " << int(m_Img[i + 1] & 0xff) <<
-             " B: " << int(m_Img[i + 2] & 0xff) << std::endl;*/
+      /*std::cout << "R: " << int(m_img[i] & 0xff) <<
+             " G: " << int(m_img[i + 1] & 0xff) <<
+             " B: " << int(m_img[i + 2] & 0xff) << std::endl;*/
     }
 
     //Close File
@@ -73,10 +73,10 @@ namespace giEngineSDK {
 
 
   void 
-  CImageLoader::clearData() {
-    m_Width = 0;
-    m_Height = 0;
+  ImageLoader::clearData() {
+    m_width = 0;
+    m_height = 0;
     m_BPP = 0;
-    m_Img.clear();
+    m_img.clear();
   }
 }

@@ -24,7 +24,7 @@ namespace giEngineSDK {
     
     Vector3(float inX, float inY, float inZ);
     
-    Vector3(Vector3 & inVect);
+    //Vector3(const Vector3 & inVect);
     
     ~Vector3();
    

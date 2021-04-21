@@ -20,7 +20,7 @@
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CBufferDX final : public CBuffer
+  class CBufferDX final : public Buffer
   {
    public:
     ///Specific constructor

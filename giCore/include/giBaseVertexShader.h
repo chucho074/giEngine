@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   A basic Vertex Shader.
  * @bug     No known Bugs.
  */
 
@@ -15,6 +15,10 @@
 #include "giBaseShader.h"
 
 namespace giEngineSDK {
+  /**
+   * @class    BaseVertexShader.
+   * @brief    A base for the Vertex Shaders.
+   */
   class BaseVertexShader : public BaseShader
   {
    public:
@@ -23,9 +27,7 @@ namespace giEngineSDK {
 
     //Destructor
     virtual
-      ~BaseVertexShader() {};
-
-
+    ~BaseVertexShader() {};
 
 
   };

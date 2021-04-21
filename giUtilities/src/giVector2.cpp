@@ -7,10 +7,10 @@ namespace giEngineSDK {
     y = inY;
   }
   
-  Vector2::Vector2(Vector2& inVect) {
+  /*Vector2::Vector2(const Vector2& inVect) {
     x = inVect.x;
     y = inVect.y;
-  }
+  }*/
   
   Vector2::~Vector2() {
 

@@ -20,29 +20,34 @@ namespace giEngineSDK {
    * @bug      No known Bugs.
    */
   struct SamplerDesc {
-    uint32 filter;
-    uint32 addressU;
-    uint32 addressV;
-    uint32 addressW;
-    uint32 comparisonFunc;
-    float minLOD;
-    float maxLOD;
+    uint32 filter = 0;
+    uint32 addressU = 0;
+    uint32 addressV = 0;
+    uint32 addressW = 0;
+    uint32 comparisonFunc = 0;
+    float minLOD = 0.f;
+    float maxLOD = 0.f;
   };
   
   /**
-   * @class    CSampler.
+   * @class    Sampler.
    * @brief    Manage the Sampler State.
    * @bug      No known Bugs.
    */
-  class CSampler {
+  class Sampler {
    public:
-  
-     CSampler() = default;
-  
+     //Constructor
+     Sampler() = default;
+
+     //Destructor  
      virtual
-     ~CSampler() = default;
+     ~Sampler() = default;
   
+     /**
+      * @brief     Initialize the sampler.
+      * @param     inDesc    The description of the sampler.
+     */
      virtual void 
-     init(SamplerDesc inDesc) {};
+     init(SamplerDesc) {};
   };
 }

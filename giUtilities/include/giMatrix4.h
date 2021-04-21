@@ -212,5 +212,17 @@ namespace giEngineSDK {
      /***************/float inNear,
      /***************/float inFar);
   };
+  /**
+   * @class    matrixRotationY.
+   * @brief    For generate the perspective matrix.
+   */
+  class GI_UTILITY_EXPORT matrixRotationY : public Matrix4
+  {
+   public:
+     matrixRotationY(float inFov,
+     /***************/float inAR,
+     /***************/float inNear,
+     /***************/float inFar);
+  };
 
 }

@@ -21,9 +21,6 @@
     <ClCompile Include="src\giBaseApp.cpp">
       <Filter>BaseApp</Filter>
     </ClCompile>
-    <ClCompile Include="src\giBaseShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -14,60 +14,28 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT BaseShader
+  class BaseShader
   {
    public:
-     //Constructor
-     BaseShader() = default;
+    //Constructor
+    BaseShader() = default;
 
-     //Destructor
+    //Destructor
     virtual 
     ~BaseShader() {};
 
-    ///**
-    // * @brief 
-    // * @param    inFile 
-    // * @return 
-    // */
-    //bool
-    //loadFromfile(char * inFile);
-
-    ///**
-    // * @brief 
-    // * @param inCode 
-    //*/
-    //void 
-    //setSourceCode(String inCode);
-
-    ///**
-    // * @brief 
-    // * @return 
-    // */
-    //virtual bool 
-    //compile() = 0;
-
-    ///**
-    // * @brief 
-    // * @return
-    // */
-    //virtual bool 
-    //link() = 0;
-
-    ///**
-    // * @brief 
-    // */
-    //void 
-    //setShader();
-
+    
+    /**
+     * @brief     Init the shader.
+     * @param     inFileName      The shader file name.
+     * @param     inEntryPoint    The point of entry.
+     * @param     inShaderModel   The model of the shader.
+     * @return    Returns if it can be readed.
+     */
     virtual bool 
     init(lpcstr inFileName,
     /***/lpcstr inEntryPoint,
     /***/lpcstr inShaderModel) = 0;
-
-    
-
-
-    //String m_code;
 
   };
 }

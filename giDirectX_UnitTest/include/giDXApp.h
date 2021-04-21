@@ -38,38 +38,38 @@
 using namespace giEngineSDK;
 
  /**
- * @struct   CBNeverChanges.
- * @brief    The Never changes constant buffer.
- * @bug      No known Bugs.
- **/ 
+  * @struct   CBNeverChanges.
+  * @brief    The Never changes constant buffer.
+  * @bug      No known Bugs.
+  */ 
 struct CBNeverChanges {
   Matrix4 mView;
 };
 
 /**
-* @struct   CBChangeOnResize.
-* @brief    The change on Resize Constant buffer.
-* @bug      No known Bugs.
-**/
+ * @struct   CBChangeOnResize.
+ * @brief    The change on Resize Constant buffer.
+ * @bug      No known Bugs.
+ */
 struct CBChangeOnResize {
   Matrix4 mProjection;
 };
 
 /**
-* @struct   CBChangesEveryFrame.
-* @brief    The Changes Every Frames Constant Buffer.
-* @bug      No known Bugs.
-**/
+ * @struct   CBChangesEveryFrame.
+ * @brief    The Changes Every Frames Constant Buffer.
+ * @bug      No known Bugs.
+ */
 struct CBChangesEveryFrame {
   Matrix4 mWorld;
   Vector4 vMeshColor;
 };
 
 /**
-* @class    DirectXApp.
-* @brief	  App for DirectX API
-* @bug      No known Bugs.
-**/
+ * @class    DirectXApp.
+ * @brief    App for DirectX API
+ * @bug      No known Bugs.
+ */
 class DirectXApp : public BaseApp {
 public:
   ///Default constructor
@@ -79,38 +79,38 @@ public:
   ~DirectXApp() = default;
 
   /**
-  * @brief	Create the information for DirectX App.
-  * @bug		No known Bugs.
-  */
+   * @brief  Create the information for DirectX App.
+   * @bug    No known Bugs.
+   */
   void 
   onCreate() override;
 
   /**
-  * @brief	Destroy the information useless.
-  * @bug		No known Bugs.
-  **/
+   * @brief  Destroy the information useless.
+   * @bug    No known Bugs.
+   */
   void 
   onDestroy() override;
 
   /**
-  * @brief	Update the Directx API information.
-  * @param	inDeltaTime		The delta time.
-  **/
+   * @brief  Update the Directx API information.
+   * @param  inDeltaTime     The delta time.
+   */
   void 
   onUpdate(float inDeltaTime = 0) override;
 
   /**
-  * @brief	Render the 3D information for DirectX API.
-  * @bug		No known Bugs.
-  **/
+   * @brief  Render the 3D information for DirectX API.
+   * @bug    No known Bugs.
+   */
   void 
   onRender() override;
 
   /**
-  * @brief	Update the events 
-  * @param	inMsg		The message
-  * @param	inwParam	The W parameter
-  * @bug		No known Bugs.
+  * @brief  Update the events
+  * @param  inMsg    The message
+  * @param  inwParam  The W parameter
+  * @bug    No known Bugs.
   */
   void 
   onEvent(Event inEvent) override;
@@ -118,28 +118,28 @@ public:
 private:
 
   //The main camera 
-  CCamera m_MainCamera;
+  Camera m_MainCamera;
 
   //The input Layout
-  CInputLayout * m_InputLayout = nullptr;
+  InputLayout * m_InputLayout = nullptr;
 
   //The Sampler
-  CSampler * m_Sampler = nullptr;
+  Sampler * m_Sampler = nullptr;
 
   //The Vertex Buffer
-  giEngineSDK::CBuffer * m_VertexBuffer = nullptr;
+  giEngineSDK::Buffer * m_vertexBuffer = nullptr;
 
   //The Index Buffer 
-  giEngineSDK::CBuffer * m_IndexBuffer = nullptr;
+  giEngineSDK::Buffer * m_indexBuffer = nullptr;
 
   //The Constant Buffer (Never Change)
-  giEngineSDK::CBuffer * m_ConstantBuffer_NC = nullptr;
+  giEngineSDK::Buffer * m_ConstantBuffer_NC = nullptr;
 
   //The Constant Buffer (Change on Resize)
-  giEngineSDK::CBuffer * m_ConstantBuffer_COR = nullptr;
+  giEngineSDK::Buffer * m_ConstantBuffer_COR = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  giEngineSDK::CBuffer * m_ConstantBuffer_CEF = nullptr;
+  giEngineSDK::Buffer * m_ConstantBuffer_CEF = nullptr;
 
   //The Vertex shader
   BaseVertexShader * m_VertexShader = nullptr;
@@ -157,14 +157,14 @@ private:
           //MODELS
 
   //Yoshi Model
-  CModel m_Yoshi;
+  Model m_Yoshi;
 
   //Yoshi Textures
-  CTexture2D * m_ColorTexture = nullptr;
+  Texture2D * m_ColorTexture = nullptr;
 
   //Peach Model
-  CModel m_Peach;
+  Model m_Peach;
 
   //Peach Textures
-  CTexture2D * m_PeachTexture = nullptr;
+  Texture2D * m_PeachTexture = nullptr;
 };

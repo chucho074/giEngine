@@ -72,6 +72,8 @@ namespace giEngineSDK {
     Vector4
     operator/(const float& otherVal);
     
+    Vector4
+    operator-()const;
     
     
     bool
@@ -115,6 +117,9 @@ namespace giEngineSDK {
      */
     float
     dotProd(const Vector4& inVectA);
+
+    Vector4
+    cross(Vector4 inVector);
     
     void
     normalize();
@@ -130,12 +135,6 @@ namespace giEngineSDK {
     
     float w;
   
-  };
-
-  class GI_UTILITY_EXPORT crossProduct : public Vector4
-  {
-   public:
-     crossProduct(const Vector4& inVectA, const Vector4& inVectB);
   };
 
 }

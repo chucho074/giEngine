@@ -11,18 +11,54 @@
  * @include
  */
 #include "giGraphicsOGL.h"
+#include "giBufferOGL.h"
+#include "giTexture2DOGL.h"
+#include "giInputLayoutOGL.h"
+
 
 namespace giEngineSDK {
   GraphicsOGL::GraphicsOGL() {
+
   }
 
   GraphicsOGL::~GraphicsOGL() {
-
+    wglDeleteContext(oglRenderContext);
   }
 
   void 
   GraphicsOGL::init(void* inWindow, int inWidth, int inHeight) {
+    PIXELFORMATDESCRIPTOR desc = {
+      sizeof(PIXELFORMATDESCRIPTOR),
+      1,
+      PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+      PFD_TYPE_RGBA,
+      32,
+      0, 0, 0, 0, 0, 0,
+      0,
+      0,
+      0,
+      0, 0, 0, 0,
+      24,
+      8,
+      0,
+      PFD_MAIN_PLANE,
+      0,
+      0, 0, 0
+    };
 
+    auto window = static_cast<WindowBase*>(inWindow);
+    m_handle = GetDC(window->getSystemHandle());
+
+    int32 pxlFormat = ChoosePixelFormat(m_handle, &desc);
+
+    SetPixelFormat(m_handle, pxlFormat, &desc);
+
+    oglRenderContext = wglCreateContext(m_handle);
+
+
+    if (!gladLoadGL()) {
+      //Error boi
+    }
   }
   
   bool 
@@ -30,13 +66,56 @@ namespace giEngineSDK {
     return false;
   }
 
-  CTexture2D* 
+  Texture2D* 
   GraphicsOGL::createTex2D(int inWidth, 
   /***********************/int inHeigh, 
   /***********************/int inMipLevels, 
   /***********************/GI_FORMAT::E inFormat, 
   /***********************/int inBindFlags) {
-    return nullptr;
+
+    Texture2DOGL* tmpTexture = new Texture2DOGL();
+    
+    
+    if (GI_BIND_FLAG::E::kBIND_DEPTH_STENCIL & inBindFlags) {
+      //Generate the render buffer object
+      glGenRenderbuffers(1, &tmpTexture->m_texture);
+      //Bind the render buffer
+      glBindRenderbuffer(GL_RENDERBUFFER, tmpTexture->m_texture);
+      //Storage the render buffer
+      glRenderbufferStorage(GL_RENDERBUFFER, getFormat(inFormat), inWidth, inHeigh);
+    } 
+    else {
+      //Generate the texture
+      glGenTextures(1, &tmpTexture->m_texture);
+      //Bind the texture
+      glBindTexture(GL_TEXTURE_2D, tmpTexture->m_texture);
+      //Create the image
+      glTexImage2D(GL_TEXTURE_2D,
+      /***********/0,
+      /***********/getFormat(inFormat),
+      /***********/inWidth,
+      /***********/inHeigh,
+      /***********/0,
+      /***********/getImgFormat(inFormat),
+      /***********/GL_UNSIGNED_BYTE,
+      /***********/NULL);
+    }
+    if (GI_BIND_FLAG::E::kBIND_RENDER_TARGET & inBindFlags) {
+      //Generate the Frame buffer
+      glGenFramebuffers(1, &tmpTexture->m_bufferFrame);
+      //Bind the texture
+      glBindFramebuffer(GL_FRAMEBUFFER, tmpTexture->m_bufferFrame);
+      //Fill the decription of the texture
+      //Filters
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      //Wraps
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+
+
+    return tmpTexture;
   }
   
   void
@@ -46,7 +125,7 @@ namespace giEngineSDK {
   /********************/int inTopX, 
   /********************/int inTopY) {
 
-    //glViewport(inTopX, inTopY, inWidth, inHeight);
+    glViewport(inTopX, inTopY, inWidth, inHeight);
 
   }
 
@@ -61,65 +140,155 @@ namespace giEngineSDK {
     return nullptr;
   }
   
-  CInputLayout*
+  InputLayout*
   GraphicsOGL::createIL(Vector<InputLayoutDesc>& inDesc, BaseShader* inShader) {
-    return nullptr;
+    InputLayoutOGL* tmpLayout = new InputLayoutOGL();
+    glGenVertexArrays(1, &tmpLayout->m_vao);
+    glBindVertexArray(tmpLayout->m_vao);
+    
+    return tmpLayout;
   }
   
-  CBuffer* 
+  Buffer* 
   GraphicsOGL::createBuffer(uint32 inByteWidth, 
   /************************/uint32 inBindFlags, 
   /************************/uint32 inOffset, 
   /************************/void* inBufferData) {
+    //Create the buffer
+    BufferOGL* tmpBuffer = new BufferOGL();
+    //Create in OGL
+    glGenBuffers(1, &tmpBuffer->m_buffer);
+    
+    if (0 != inByteWidth) {
+      //Set the size
+      tmpBuffer->m_size = inByteWidth;
+      if (GI_BIND_FLAG::E::kBIND_VERTEX_BUFFER ==  inBindFlags) {
+        tmpBuffer->m_buffer = GL_ARRAY_BUFFER;
+      }
+      if (GI_BIND_FLAG::E::kBIND_INDEX_BUFFER ==  inBindFlags) {
+        tmpBuffer->m_buffer = GL_ELEMENT_ARRAY_BUFFER;
+      }
+      if (GI_BIND_FLAG::E::kBIND_CONSTANT_BUFFER ==  inBindFlags) {
+        tmpBuffer->m_buffer = GL_UNIFORM_BUFFER;
+      }
+
+      //Set the bind to the buffer
+      glBindBuffer(tmpBuffer->m_type, tmpBuffer->m_buffer);
+
+      //Set the data in the buffer
+      glBufferData(tmpBuffer->m_type, tmpBuffer->m_size, inBufferData, GL_STATIC_DRAW);
+      
+      //UnBind the buffer for not errors
+      glBindBuffer(tmpBuffer->m_type, 0);
+      //Return the info
+      return tmpBuffer;
+    }
+    //Error in size
     return nullptr;
+
   }
   
-  CSampler* 
+  Sampler* 
   GraphicsOGL::createSampler(SamplerDesc inDesc) {
     return nullptr;
   }
   
   void 
   GraphicsOGL::show() {
+    SwapBuffers(m_handle);
+  }
+  
+  void 
+  GraphicsOGL::setVertexBuffer(Buffer* inBuffer, uint32 inStride) {
 
   }
   
   void 
-  GraphicsOGL::setVertexBuffer(CBuffer* inBuffer, uint32 inStride) {
-
-  }
-  
-  void 
-  GraphicsOGL::setIndexBuffer(CBuffer* inBuffer, GI_FORMAT::E inFormat) {
+  GraphicsOGL::setIndexBuffer(Buffer* inBuffer, GI_FORMAT::E inFormat) {
   
   }
   
   void 
   GraphicsOGL::setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology) {
-
+    switch (inTopotology) {
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_POINTLIST: {
+      m_topology = GL_POINTS;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_LINELIST: {
+      m_topology = GL_LINES;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_LINESTRIP: {
+      m_topology = GL_LINE_STRIP;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST: {
+      m_topology = GL_TRIANGLES;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLESTRIP: {
+      m_topology = GL_TRIANGLE_STRIP;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_LINELIST_ADJ: {
+      m_topology = GL_LINES_ADJACENCY;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_LINESTRIP_ADJ: {
+      m_topology = GL_LINE_STRIP_ADJACENCY;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ: {
+      m_topology = GL_TRIANGLES_ADJACENCY;
+      break;
+    }
+    case giEngineSDK::GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ: {
+      m_topology = GL_TRIANGLE_STRIP_ADJACENCY;
+      break;
+    }
+    default:
+      m_topology = GL_INVALID_ENUM;
+      break;
+    }
   }
   
   void 
-  GraphicsOGL::updateSubresource(CBuffer* inBuffer, void* inData, uint32 inPitch) {
+  GraphicsOGL::updateSubresource(Buffer* inBuffer, void* inData, uint32 inPitch) {
 
+    auto tmpBuffer = static_cast<BufferOGL*>(inBuffer);
+
+    //Set the bind to the buffer
+    glBindBuffer(tmpBuffer->m_type, tmpBuffer->m_buffer);
+
+    //Set the data in the buffer
+    glBufferSubData(tmpBuffer->m_type, 0, tmpBuffer->m_size, inData);
+
+    //UnBind the buffer for not errors
+    glBindBuffer(tmpBuffer->m_type, 0);
   }
   
   void 
-  GraphicsOGL::updateTexture(CTexture2D* inTexture, 
+  GraphicsOGL::updateTexture(Texture2D* inTexture, 
   /*************************/const void* inData, 
   /*************************/uint32 inPitch, 
   /*************************/uint32 inDepthPitch) {
 
   }
+
+  void 
+  GraphicsOGL::clearBackTexture(float inColor[4]) {
+    glClearColor(inColor[0],inColor[1],inColor[2],inColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
   
   void 
-  GraphicsOGL::clearRTV(CTexture2D* inRTV, float inColor[4]) {
+  GraphicsOGL::clearRTV(Texture2D* inRTV, float inColor[4]) {
   
   }
   
   void 
-  GraphicsOGL::clearDSV(CTexture2D* inDSV) {
-  
+  GraphicsOGL::clearDSV(Texture2D* inDSV) {
   }
   
   void 
@@ -128,7 +297,7 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::vsSetConstantBuffer(uint32 inSlot, CBuffer* inBuffer) {
+  GraphicsOGL::vsSetConstantBuffer(uint32 inSlot, Buffer* inBuffer) {
   
   }
   
@@ -138,32 +307,99 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::psSetConstantBuffer(uint32 inSlot, CBuffer* inBuffer) {
+  GraphicsOGL::psSetConstantBuffer(uint32 inSlot, Buffer* inBuffer) {
   
   }
   
   void 
-  GraphicsOGL::psSetShaderResource(uint32 inSlot, CTexture2D* inTexture) {
+  GraphicsOGL::psSetShaderResource(uint32 inSlot, Texture2D* inTexture) {
   
   }
   
   void 
-  GraphicsOGL::psSetSampler(uint32 inSlot, uint32 inNumSamplers, CSampler* inSampler) {
+  GraphicsOGL::psSetSampler(uint32 inSlot, uint32 inNumSamplers, Sampler* inSampler) {
   
   }
   
   void 
-  GraphicsOGL::aiSetInputLayout(CInputLayout* inInputLayout) {
+  GraphicsOGL::aiSetInputLayout(InputLayout* inInputLayout) {
+    glBindVertexArray(static_cast<InputLayoutOGL*>(inInputLayout)->m_vao);
+  }
+  
+  void 
+  GraphicsOGL::omSetRenderTarget(Texture2D* inRT, Texture2D* inDS) {
   
   }
   
   void 
-  GraphicsOGL::omSetRenderTarget(CTexture2D* inRT, CTexture2D* inDS) {
-  
+  GraphicsOGL::drawIndexed(uint32 inNumIndexes, uint32 inStartLocation) {
+    glDrawElements(m_topology, inNumIndexes, GL_UNSIGNED_INT, 0);
   }
   
-  void 
-  GraphicsOGL::draw(uint32 inNumIndexes, uint32 inStartLocation) {
-  
+  int32 
+  GraphicsOGL::getFormat(GI_FORMAT::E inFormat) {
+    
+
+    //derecha es este formato
+    if(GI_FORMAT::E::kFORMAT_R8_SNORM   == inFormat ) {
+      return GL_RED;
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_SNORM  == inFormat ) {
+      return GL_RED;
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_FLOAT  == inFormat ) {
+      return GL_RED;
+    }
+    if(GI_FORMAT::E::kFORMAT_R32_FLOAT  == inFormat ) {
+      return GL_RED;
+    }
+    if(GI_FORMAT::E::kFORMAT_R8_UINT    == inFormat ) {
+      return GL_RED_INTEGER;
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_UINT   == inFormat ) {
+      return GL_RED_INTEGER;
+    }
+    if(GI_FORMAT::E::kFORMAT_R32_UINT   == inFormat ) {
+      return GL_RED_INTEGER;
+    }
+    if(GI_FORMAT::E::kFORMAT_R8_UNORM   == inFormat ) {
+      return GL_RED;
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_UNORM  == inFormat ) {
+      return GL_RED;
+    }
+
+  }
+
+  int32 
+  GraphicsOGL::getImgFormat(GI_FORMAT::E inFormat) {
+    
+    if(GI_FORMAT::E::kFORMAT_R8_SNORM   == inFormat) { 
+      return GL_R8_SNORM;  
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_SNORM  == inFormat) { 
+      return GL_R16_SNORM; 
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_FLOAT  == inFormat) { 
+      return GL_R16F;      
+    }
+    if(GI_FORMAT::E::kFORMAT_R32_FLOAT  == inFormat) { 
+      return GL_R32F;      
+    }
+    if(GI_FORMAT::E::kFORMAT_R8_UINT    == inFormat) { 
+      return GL_R8UI;      
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_UINT   == inFormat) { 
+      return GL_R16UI;     
+    }
+    if(GI_FORMAT::E::kFORMAT_R32_UINT   == inFormat) { 
+      return GL_R32UI;     
+    }
+    if(GI_FORMAT::E::kFORMAT_R8_UNORM   == inFormat) { 
+      return GL_R8;        
+    }
+    if(GI_FORMAT::E::kFORMAT_R16_UNORM  == inFormat) { 
+      return GL_R16;       
+    }
   }
 }

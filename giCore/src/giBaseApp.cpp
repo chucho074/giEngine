@@ -16,11 +16,12 @@
 
 int 
 BaseApp::run() {
-  //Initialize every system
-  initSystems();
 
   //Create the main window
   createWindow();
+
+  //Initialize every system
+  initSystems();
 
   //Send message to device
   onCreate();
@@ -70,7 +71,7 @@ BaseApp::createWindow() {
     return;
   }
   
-  String tmpTitle = "Default Title";
+  String tmpTitle = "Changos wapos";
 
   m_window.create(VideoMode(m_width, m_height),
   /**************/tmpTitle.c_str(),
@@ -100,8 +101,8 @@ BaseApp::initSystems() {
   if (m_loader.loadPlugin("giDirectX_d.dll")) {
     auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGraphicsAPI"));
 
-    CBaseGraphicsAPI::startUp();
-    CBaseGraphicsAPI* GAPI = createGraphicsAPI();
+    GraphicsAPI::startUp();
+    GraphicsAPI* GAPI = createGraphicsAPI();
     g_GraphicsAPI().setObject(GAPI);
     m_GAPI = &g_GraphicsAPI();
     //Initialize the Graphics API
@@ -122,7 +123,7 @@ BaseApp::initSystems() {
 void 
 BaseApp::destroySystems() {
   m_window.close();
-  CBaseGraphicsAPI::shutDown();
+  GraphicsAPI::shutDown();
 }
 
 void 

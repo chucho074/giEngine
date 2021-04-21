@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   For load models.
  * @bug     No known Bugs.
  */
  
@@ -14,26 +14,29 @@
 
 namespace giEngineSDK {
 
-  CModel::CModel()
-  {
+  Model::Model() {
+    m_indexNum = 0;
+    m_indexBuffer = nullptr;
+    m_vertexNum = 0;
+    m_vertexBuffer = nullptr;
   }
 
 
-  CModel::~CModel()
-  {
+  Model::~Model() {
+
   }
 
 
   void 
-  CModel::loadModel(String inFileName) {
+  Model::loadModel(String inFileName) {
 
-    auto& GAPI = g_GraphicsAPI();
+    //auto& GAPI = g_GraphicsAPI();
 
-    CObjectLoader tmpObjectLoader;
+    ObjectLoader tmpObjectLoader;
     tmpObjectLoader.loadObject(inFileName);
 
     //Texture name
-    m_TexturesNames = tmpObjectLoader.getTextureName();
+    m_texturesNames = tmpObjectLoader.getTextureName();
 
 
     auto numVertex = tmpObjectLoader.getNumVertex();
@@ -41,28 +44,28 @@ namespace giEngineSDK {
     auto numIndices = faces.size() * 3;
 
 
-    m_Meshes = tmpObjectLoader.getMapMesh();
+    m_meshes = tmpObjectLoader.getMapMesh();
 
     //Load every mesh into the map
-    for (auto iter : m_Meshes) {
+    for (auto iter : m_meshes) {
       iter.second->loadMesh();
     }
 
 
-    m_VertexNum = numVertex;
-    m_IndexNum = numIndices;
+    m_vertexNum = numVertex;
+    m_indexNum = static_cast<int32>(numIndices);
 
 
   }
 
 
   void 
-  CModel::drawModel() {
+  Model::drawModel() {
 
-    auto& GAPI = g_GraphicsAPI();
+    //auto& GAPI = g_GraphicsAPI();
 
     //Draw every mesh into the map
-    for (auto iter : m_Meshes) {
+    for (auto iter : m_meshes) {
       iter.second->drawMesh();
     }
   }

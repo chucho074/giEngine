@@ -19,10 +19,10 @@ namespace giEngineSDK {
   {
    public:
      //Constructor
-  	VertexShaderDX();
+    VertexShaderDX();
 
     //Destructor
-  	~VertexShaderDX();
+    ~VertexShaderDX();
 
     /**
      * @brief    .

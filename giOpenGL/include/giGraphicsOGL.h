@@ -13,6 +13,11 @@
 #pragma once
 #include "giPrerequisitesOGL.h"
 #include <giBaseGraphicsAPI.h>
+#include <SFML/Window/WindowBase.hpp>
+
+
+using sf::WindowBase;
+
 
 namespace giEngineSDK {
   /**
@@ -20,7 +25,7 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class GraphicsOGL : public CBaseGraphicsAPI
+  class GraphicsOGL : public GraphicsAPI
   {
   public:
     //Default Constructor.
@@ -51,7 +56,7 @@ namespace giEngineSDK {
      * @brief    Creates the texture in the Device.
      * @bug      No known Bugs.
      */
-    CTexture2D * 
+    Texture2D * 
     createTex2D(int inWidth,
     /**********/int inHeigh,
     /**********/int inMipLevels,
@@ -91,14 +96,14 @@ namespace giEngineSDK {
      * @brief    Creates the Input Layout.
      * @bug      No known Bugs.
      */
-    CInputLayout * 
+    InputLayout * 
     createIL(Vector<InputLayoutDesc> & inDesc, BaseShader * inShader);
   
     /**
      * @brief    Creates a buffer.
      * @bug      No known Bugs.
      */
-    CBuffer *
+    Buffer *
     createBuffer(uint32 inByteWidth, 
     /***********/uint32 inBindFlags, 
     /***********/uint32 inOffset, 
@@ -108,7 +113,7 @@ namespace giEngineSDK {
      * @brief    Creates a Sampler.
      * @bug      No known Bugs.
      */
-    CSampler * 
+    Sampler * 
     createSampler(SamplerDesc inDesc);
   
     /**
@@ -123,14 +128,14 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setVertexBuffer(CBuffer * inBuffer, uint32 inStride);
+    setVertexBuffer(Buffer * inBuffer, uint32 inStride);
   
     /**
      * @brief    Set IndexBuffer.
      * @bug      No known Bugs.
      */
     void 
-    setIndexBuffer(CBuffer * inBuffer, GI_FORMAT::E inFormat);
+    setIndexBuffer(Buffer * inBuffer, GI_FORMAT::E inFormat);
   
     /**
      * @brieft    Set PrimitiveTopology.
@@ -144,7 +149,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    updateSubresource(CBuffer * inBuffer, 
+    updateSubresource(Buffer * inBuffer, 
     /****************/void * inData, 
     /****************/uint32 inPitch);
   
@@ -153,24 +158,31 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    updateTexture(CTexture2D * inTexture, 
+    updateTexture(Texture2D * inTexture, 
     /************/const void * inData, 
     /************/uint32 inPitch, 
     /************/uint32 inDepthPitch);
   
     /**
+     * @brief 
+     * @param inColor 
+     */
+    void
+    clearBackTexture(float inColor[4]) override;
+
+    /**
      * @brief    Clear the Render Target View.
      * @bug      No known Bugs.
      */
     void 
-    clearRTV(CTexture2D* inRTV, float inColor[4]);
+    clearRTV(Texture2D* inRTV, float inColor[4]);
   
     /**
      * @brief    Clear the Depth Stencil View.
      * @bug      No known Bugs.
      */
     void 
-    clearDSV(CTexture2D* inDSV);
+    clearDSV(Texture2D* inDSV);
   
     /**
      * @brief    Vertex Shader Set Shader.
@@ -184,7 +196,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    vsSetConstantBuffer(uint32 inSlot, CBuffer * inBuffer = nullptr);
+    vsSetConstantBuffer(uint32 inSlot, Buffer * inBuffer = nullptr);
   
     /**
      * @brief    Pixel Shader Set Shader.
@@ -198,14 +210,14 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetConstantBuffer(uint32 inSlot, CBuffer * inBuffer);
+    psSetConstantBuffer(uint32 inSlot, Buffer * inBuffer);
   
     /**
      * @brief    Pixel Shadder Set Shader Resource.
      * @bug      No known Bugs.
      */
     void 
-    psSetShaderResource(uint32 inSlot, CTexture2D * inTexture = nullptr);
+    psSetShaderResource(uint32 inSlot, Texture2D * inTexture = nullptr);
   
     /**
      * @brief    Pixel Shader Set Samplers.
@@ -214,29 +226,29 @@ namespace giEngineSDK {
     void 
     psSetSampler(uint32 inSlot, 
     /***********/uint32 inNumSamplers, 
-    /***********/CSampler * inSampler);
+    /***********/Sampler * inSampler);
   
     /** 
      * @brief    IA Set Input Layout.
      * @bug      No known Bugs.
      */
     void 
-    aiSetInputLayout(CInputLayout * inInputLayout);
+    aiSetInputLayout(InputLayout * inInputLayout);
   
     /** 
      * @brief    OM Set Render Targets.
      * @bug      No known Bugs.
      */
     void 
-    omSetRenderTarget(CTexture2D * inRT = nullptr, 
-    /****************/CTexture2D * inDS = nullptr);
+    omSetRenderTarget(Texture2D * inRT = nullptr, 
+    /****************/Texture2D * inDS = nullptr);
   
     /** 
      * @brief    Draw Index.
      * @bug      No known Bugs.
      */
     void 
-    draw(uint32 inNumIndexes, uint32 inStartLocation);
+    drawIndexed(uint32 inNumIndexes, uint32 inStartLocation);
     
     /**
      * @brief    Gets the default Render Target.
@@ -254,7 +266,28 @@ namespace giEngineSDK {
     void * 
     getDefaultDephtStencil() { return nullptr/*m_defaultDSV*/; }
   
+    /**
+     * @brief     For the format of OGL.
+     * @param     inFormat 
+     * @return    Returns the format.
+     */
+    int32
+    getFormat(GI_FORMAT::E inFormat);
+    
+    /**
+     * @brief     For the format of OGL.
+     * @param     inFormat 
+     * @return    Returns the format.
+     */
+    int32
+    getImgFormat(GI_FORMAT::E inFormat);//izquierda
    protected:
+
+     HDC m_handle = 0;
+
+     HGLRC oglRenderContext = 0;
+
+     uint32 m_topology;
 
      /*///Reference to the device
      ID3D11Device* m_Device;

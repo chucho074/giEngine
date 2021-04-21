@@ -1,48 +1,53 @@
 /**
-* @file		CMesh.cpp
-* @author	Jesús Alberto Del Moral Cupil
-* @e	    idv18c.jmoral@uartesdigitales.edu.mx
-* @date		28/11/2020
-* @brief	This class have the funtionality for load models.
-* @bug		No known Bugs.
-**/
+ * @file    Mesh.cpp
+ * @author  Jesús Alberto Del Moral Cupil
+ * @e       idv18c.jmoral@uartesdigitales.edu.mx
+ * @date    28/11/2020
+ * @brief   This class have the funtionality for load models.
+ * @bug     No known Bugs.
+ */
 
+/**
+ * @include
+ */
 #pragma once
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
+
 #include "giBuffer.h"
 
 namespace giEngineSDK {
 
-  class CBuffer;
-  class CObjectLoader;
+  class Buffer;
+  class ObjectLoader;
   struct SimpleVertex;
 
+  
 
-/**
-* @class    CMesh.
-* @brief    This class have the funtionality for load models.
-* @bug      No known Bugs.
-**/
-  class GI_CORE_EXPORT CMesh {
+  /**
+   * @class    Mesh.
+   * @brief    This class have the funtionality for load models.
+   * @bug      No known Bugs.
+   */
+  class GI_CORE_EXPORT Mesh {
    public:
     ///Default constructor
-    CMesh() = default;
+    Mesh() = default;
 
     ///Destructor
-    ~CMesh();
+    ~Mesh();
 
     /**
-    * @brief    Load a mesh data.
-    * @bug      No known Bugs.
-    **/
+     * @brief    Load a mesh data.
+     * @bug      No known Bugs.
+     */
     void 
     loadMesh();
 
     /**
-    * @brief    Draw the mesh data.
-    * @bug      No known Bugs.
-    **/
+     * @brief    Draw the mesh data.
+     * @bug      No known Bugs.
+     */
     void 
     drawMesh();
 
@@ -50,22 +55,22 @@ namespace giEngineSDK {
    protected:
 
     //The vertex buffer for the mesh
-    CBuffer* m_VertexBuffer = nullptr;
+    Buffer* m_vertexBuffer = nullptr;
 
     //A vertex data Vector
-    Vector<SimpleVertex*> m_VertexVector;
+    Vector<SimpleVertex> m_vertexVector;
 
     //The index buffer for the mesh
-    CBuffer* m_IndexBuffer = nullptr;
+    Buffer* m_indexBuffer = nullptr;
 
     //The list of Faces
-    Vector<Vector<unsigned short>> m_FacesList;
+    Vector<Vector<unsigned short>> m_facesList;
 
     //The number of index in the mesh
-    int m_IndexNum = 0;
+    int m_indexNum = 0;
 
    public:
     //The model loader
-    friend class CObjectLoader;
+    friend class ObjectLoader;
   };
 }

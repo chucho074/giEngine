@@ -16,7 +16,7 @@
 
 namespace giEngineSDK {
   
-  class CSamplerDX : public CSampler
+  class CSamplerDX : public Sampler
   {
    public:
     //Constructor

@@ -29,8 +29,8 @@ namespace giEngineSDK {
     CRenderTargetViewDX();
 
     /**
-    * @brief	: Destructor.
-    * @bug		: No Bugs known.
+    * @brief  : Destructor.
+    * @bug    : No Bugs known.
     **/
     ~CRenderTargetViewDX();
 

@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   A Depth Stencil View object.
  * @bug     No known Bugs.
  */
  
@@ -14,8 +14,9 @@
 
 namespace giEngineSDK {
   /**
-   * @brief  DepthStencilViewDesc.
-   * @bug    No Bugs Known.
+   * @struct  DepthStencilViewDesc.
+   * @brief   Basics for the Depth stencil.
+   * @bug     No Bugs Known.
    */
   struct DepthStencilViewDesc {
     uint32 format;
@@ -24,18 +25,19 @@ namespace giEngineSDK {
   };
 
   /**
+   * @class  DepthStencilView 
    * @brief  Abstraction for DepthStencilView.
    * @bug    No Bugs Known.
    */
-  class CDepthStencilView {
+  class DepthStencilView {
    public:
 
     ///Default constructor
-    CDepthStencilView() = default;
+    DepthStencilView() = default;
 
     ///Destructor
     virtual 
-    ~CDepthStencilView() = default;
+    ~DepthStencilView() = default;
 
 
   };

@@ -13,8 +13,8 @@
 #include "giBaseGraphicsAPI.h"
 
 namespace giEngineSDK {
-  CBaseGraphicsAPI&
+  GraphicsAPI&
     g_GraphicsAPI() {
-    return CBaseGraphicsAPI::instance();
+    return GraphicsAPI::instance();
   }
 }

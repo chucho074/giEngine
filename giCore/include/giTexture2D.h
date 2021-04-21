@@ -38,20 +38,20 @@ namespace giEngineSDK {
    * @brief   Management for textures2D.
    * @bug     No known Bugs.
    */
-  class CTexture2D {
+  class Texture2D {
    public:
      /**
       * @brief  Constructor.
       * @bug    No Bugs known.
       */
-     CTexture2D() = default;
+     Texture2D() = default;
      
      /**
       * @brief    Destructor.
       * @bug      No Bugs known.
       */
      virtual
-     ~CTexture2D() = default;
+     ~Texture2D() = default;
      
      
    protected:

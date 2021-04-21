@@ -20,7 +20,7 @@ namespace giEngineSDK {
    * @brief    Manage the graphics of DirectX.
    * @bug      No known Bugs.
    */
-  class CDepthStencilViewDX final : public CDepthStencilView
+  class CDepthStencilViewDX final : public DepthStencilView
   {
    public:
     ///Default constructor

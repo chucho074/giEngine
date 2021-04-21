@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   A basic camera.
  * @bug     No known Bugs.
  */
  
@@ -16,14 +16,18 @@
 #include <giMatrix4.h>
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT CCamera
+  /**
+   * @class   Camera. 
+   * @brief   A basic uses for the camera.
+   */
+  class GI_CORE_EXPORT Camera
   {
    public:
     ///Default Constructor
-    CCamera();
+    Camera();
 
     ///Destructor
-    ~CCamera() = default;
+    ~Camera() = default;
 
     /**
      * @brief   Initialize the information of the camera.
@@ -73,13 +77,13 @@ namespace giEngineSDK {
     float m_AspectRatio = 0;
     float m_Near = 0;
     float m_Far = 0;
-    Vector4 m_Eye = { 0.0f, 3.0f, -6.0f, 1.0f };	//En posicion del mundo
-    Vector4 m_At = { 0.0f, 1.0f, 0.0f, 1.0f };	//En posicion del mundo
-    Vector4 m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };	//Up del mundo
+    Vector4 m_Eye = { 0.0f, 3.0f, -6.0f, 1.0f };  //En posicion del mundo
+    Vector4 m_At = { 0.0f, 1.0f, 0.0f, 1.0f };  //En posicion del mundo
+    Vector4 m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };  //Up del mundo
     Matrix4 m_VM;
     Matrix4 m_PM;
     Vector4 m_Right;
-    Vector4 m_Up2;		//Up de la camara
+    Vector4 m_Up2;    //Up de la camara
     Vector4 m_Front;
 
   };

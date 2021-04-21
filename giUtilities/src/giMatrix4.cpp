@@ -197,7 +197,7 @@ namespace giEngineSDK {
       /***********/tmpMat.m_wColumn.y + m_zColumn.y * tmpMat.m_wColumn.z;
     
       float Determinant = m_xColumn.x * Det0 - m_yColumn.x * Det1 + m_zColumn.x * Det2 - m_wColumn.x * Det3;
-      float	RDet = 1.0f / Determinant;
+      float  RDet = 1.0f / Determinant;
     
       //x
       Result.m_xColumn.x =  RDet * Det0;
@@ -333,9 +333,9 @@ namespace giEngineSDK {
     Vector4 y;
     y = crossProduct(z, x);
 
-    x.w = -x.dotProd(inEyePos);
-    y.w = -y.dotProd(inEyePos);
-    z.w = -z.dotProd(inEyePos);
+    x.w = x.dotProd(-inEyePos);
+    y.w = y.dotProd(-inEyePos);
+    z.w = z.dotProd(-inEyePos);
 
     m_xColumn = x; 
     m_yColumn = y; 
@@ -357,7 +357,7 @@ namespace giEngineSDK {
     m_xColumn = { w, 0, 0, 0 };
     m_yColumn = { 0, h, 0, 0 };
     m_zColumn = { 0, 0, viewRange, 1 };
-    m_wColumn = { 0, 0, -viewRange * inNear, 0 };
+    m_wColumn = { 0, 0, -inNear * viewRange, 0 };
 
   }
 

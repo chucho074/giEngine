@@ -22,7 +22,7 @@ struct TextureDesc;
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CTexture2DDX : public CTexture2D 
+  class CTexture2DDX : public Texture2D 
   {
    public:
     /**

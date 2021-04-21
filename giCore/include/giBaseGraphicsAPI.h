@@ -17,16 +17,15 @@
 
 ///Forward declarations
 namespace giEngineSDK {
-  class CTexture2D;
-  class CBaseShader;
+  class Texture2D;
+  class BaseShader;
   class BaseVertexShader;
   class BasePixelShader;
-  class CViewPort;
   class BaseShader;
-  class CBuffer;
-  class CInputLayout;
-  class CSampler;
-  class CImageLoader;
+  class Buffer;
+  class InputLayout;
+  class Sampler;
+  class ImageLoader;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -35,20 +34,20 @@ namespace giEngineSDK {
 }
 
 /**
- * @class    CBaseGraphicsAPI.
+ * @class    GraphicsAPI.
  * @brief    Manage the graphics APIs.
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CBaseGraphicsAPI : public Module<CBaseGraphicsAPI>
+  class GraphicsAPI : public Module<GraphicsAPI>
   {
    public:
   
      ///Default Constructor.
-     CBaseGraphicsAPI() {};
+     GraphicsAPI() {};
      
      ///Destructor.
-     ~CBaseGraphicsAPI() = default;
+     ~GraphicsAPI() = default;
      
      /**
       * @brief    Prepare the Module.
@@ -72,9 +71,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     init(void * inWindow, 
-     /***/int inWidth, 
-     /***/int inHeight) {};
+     init(void *, 
+     /***/int, 
+     /***/int) {};
      
      /**
       * @brief    In Charge to create the device and the swap chain.
@@ -84,9 +83,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual bool 
-     createDeviceAndSwpaChain(void * inWindow, 
-     /***********************/int inWidth, 
-     /***********************/int inHeight) { return false; };
+     createDeviceAndSwpaChain(void *, 
+     /***********************/int, 
+     /***********************/int) { return false; };
           
      /**
       * @brief    Creates the texture in the Device.
@@ -97,60 +96,63 @@ namespace giEngineSDK {
       * @param    inBindFlags    The bind flags of the texture.
       * @bug      No known Bugs.
       */
-     virtual CTexture2D * 
-     createTex2D(int inWidth,
-     /**********/int inHeigh,
-     /**********/int inMipLevels,
-     /**********/GI_FORMAT::E inFormat,
-     /**********/int inBindFlags) { return nullptr; };
+     virtual Texture2D * 
+     createTex2D(int,
+     /**********/int,
+     /**********/int,
+     /**********/GI_FORMAT::E,
+     /**********/int) { return nullptr; };
 
      /**
       * @brief    Creates the View Port in the Device.
       * @param    inWidth     The width of the viewport.
       * @param    inHeight    The height of the viewport.
+      * @param    inTopX      The position to set the left corner of the window in x.
+      * @param    inTopY      The position to set the left corner of the window in y.
       * @return   Returns .
       * @bug      No known Bugs.
       */
-     virtual CViewPort * 
-     createVP(int inWidth, 
-     /*******/int inHeight){ return nullptr; };
-     
-     /**
-      * @brief    Sets the View Port in the DeviceContext.
-      * @param    inVP   A reference of the viewport.
-      * @bug      No known Bugs.
-      */
      virtual void 
-     setVP(CViewPort &inVP){};
+     createVP(uint32,
+     /*******/int,
+     /*******/int,
+     /*******/int,
+     /*******/int) {};
      
      /**
       * @brief    Create the Vertex Shader.
+      * @param    inFileName    The name of the file.
+      * @param    inEntryPoint  The entry point in the shader.
+      * @param    inShaderModel The model in the shader.
       * @bug      No known Bugs.
       */
      virtual BaseVertexShader * 
-     createVS(wString inFileName,
-     /*******/lpcstr inEntryPoint,
-     /*******/lpcstr inShaderModel) { return nullptr;};
+     createVS(lpcstr,
+     /*******/lpcstr,
+     /*******/lpcstr) { return nullptr;};
      
      /**
-      * @brief    Create the Pixel Shader
+      * @brief    Create the Pixel Shader.
+      * @param    inFileName    The name of the file.
+      * @param    inEntryPoint  The entry point in the shader.
+      * @param    inShaderModel The model in the shader.
       * @bug      No known Bugs.
       */
      virtual BasePixelShader * 
-     createPS(wString inFileName,
-     /*******/lpcstr inEntryPoint,
-     /*******/lpcstr inShaderModel){ return nullptr; };
+     createPS(lpcstr,
+     /*******/lpcstr,
+     /*******/lpcstr){ return nullptr; };
 
      /**
       * @brief    Creates the Input Layout.
       * @param    inDesc    A vector with the inputLayout information.
       * @param    inShader  The vertex shader.
-      * @return   Returns the Input layout.
+      * @return   Returns   The Input layout.
       * @bug      No known Bugs.
       */
-     virtual CInputLayout * 
-     createIL(Vector<InputLayoutDesc> & inDesc, 
-     /*******/BaseShader * inShader) { return nullptr; };
+     virtual InputLayout * 
+     createIL(Vector<InputLayoutDesc> &, 
+     /*******/BaseShader *) { return nullptr; };
 
      /**
       * @brief    Creates a buffer.
@@ -161,19 +163,19 @@ namespace giEngineSDK {
       * @return   Returns the buffer.
       * @bug      No known Bugs.
       */
-     virtual CBuffer * 
-     createBuffer(uint32 inByteWidth, 
-     /***********/uint32 inBindFlags, 
-     /***********/uint32 inOffset, 
-     /***********/void * inBufferData) { return nullptr; };
+     virtual Buffer * 
+     createBuffer(uint32, 
+     /***********/uint32, 
+     /***********/uint32, 
+     /***********/void *) { return nullptr; };
      
      /**
       * @brief    Creates a Sampler.
       * @param    inDesc   The descriptor of the sampler.
       * @bug      No known Bugs.
       */
-     virtual CSampler * 
-     createSampler(SamplerDesc inDesc) { return nullptr; };
+     virtual Sampler * 
+     createSampler(SamplerDesc) { return nullptr; };
      
      /**
       * @brief    Present.
@@ -189,8 +191,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     setVertexBuffer(CBuffer * inBuffer, 
-     /**************/uint32 inStride) {};
+     setVertexBuffer(Buffer *, 
+     /**************/uint32 ) {};
      
      /**
       * @brief    Set IndexBuffer.
@@ -199,8 +201,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     setIndexBuffer(CBuffer * inBuffer, 
-     /*************/GI_FORMAT::E inFormat) {};
+     setIndexBuffer(Buffer *, 
+     /*************/GI_FORMAT::E) {};
      
      /**
       * @brief     Set PrimitiveTopology.
@@ -208,7 +210,7 @@ namespace giEngineSDK {
       * @bug       No known Bugs.
       */
      virtual void 
-     setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology) {};
+     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
      
      /**
       * @brief    Update Subresource.
@@ -218,9 +220,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     updateSubresource(CBuffer * inBuffer, 
-     /****************/void * inData, 
-     /****************/uint32 inPitch) {};
+     updateSubresource(Buffer *, 
+     /****************/void *, 
+     /****************/uint32) {};
      
      /**
       * @brief    Update Texture.
@@ -231,10 +233,18 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     updateTexture(CTexture2D * inTexture, 
-     /************/const void * inData, 
-     /************/uint32 inPitch, 
-     /************/uint32 inDepthPitch) {};
+     updateTexture(Texture2D *, 
+     /************/const void *, 
+     /************/uint32, 
+     /************/uint32) {};
+     
+     /**
+      * @brief    Clear the Back Buffer.
+      * @param    inColor    The color to set.
+      * @bug      No known Bugs.
+      */
+     virtual void 
+     clearBackTexture(float[4]) {};
      
      /**
       * @brief    Clear Render Target View.
@@ -243,7 +253,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     clearRTV(CTexture2D* inRTV, float inColor[4]) {};
+     clearRTV(Texture2D*, float [4]) {};
      
      /**
       * @brief    Clear Depth Stencil View.
@@ -251,7 +261,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     clearDSV(CTexture2D* inDSV) {};
+     clearDSV(Texture2D*) {};
      
      /**
       * @brief    Vertex Shader Set Shader.
@@ -259,7 +269,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     vsSetShader(BaseShader * inVShader = nullptr) {};
+     vsSetShader(BaseShader * = nullptr) {};
      
      /**
       * @brief    Vertex Shader Set Constant Buffer.
@@ -268,8 +278,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     vsSetConstantBuffer(uint32 inSlot, 
-     /******************/CBuffer * inBuffer = nullptr) {};
+     vsSetConstantBuffer(uint32, 
+     /******************/Buffer * = nullptr) {};
      
      /**
       * @brief    Pixel Shader Set Shader.
@@ -277,7 +287,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetShader(BaseShader * inPShader = nullptr) {};
+     psSetShader(BaseShader * = nullptr) {};
      
      /**
       * @brief    Pixel Shader Set Constant Buffer.
@@ -286,8 +296,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetConstantBuffer(uint32 inSlot, 
-     /******************/CBuffer * inBuffer) {};
+     psSetConstantBuffer(uint32, 
+     /******************/Buffer *) {};
      
      /**
       * @brief    Pixel Shadder Set Shader Resource.
@@ -296,8 +306,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetShaderResource(uint32 inSlot, 
-     /******************/CTexture2D * inTexture = nullptr) {};
+     psSetShaderResource(uint32, 
+     /******************/Texture2D * = nullptr) {};
      
      /**
       * @brief    Pixel Shader Set Samplers.
@@ -307,9 +317,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     psSetSampler(uint32 inSlot, 
-     /***********/uint32 inNumSamplers, 
-     /***********/CSampler * inSampler) {};
+     psSetSampler(uint32, 
+     /***********/uint32, 
+     /***********/Sampler *) {};
      
      /** 
       * @brief    IA Set Input Layout.
@@ -317,7 +327,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     aiSetInputLayout(CInputLayout * inInputLayout) {};
+     aiSetInputLayout(InputLayout *) {};
      
      /** 
       * @brief    OM Set Render Targets.
@@ -326,8 +336,8 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     omSetRenderTarget(CTexture2D * inRT = nullptr, 
-     /****************/CTexture2D * inDS = nullptr) {};
+     omSetRenderTarget(Texture2D * = nullptr, 
+     /****************/Texture2D * = nullptr) {};
      
      /** 
       * @brief    Draw Index.
@@ -336,9 +346,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     draw(uint32 inNumIndexes, 
-     /***/uint32 inStartLocation) {};
-     
+     drawIndexed(uint32, 
+     /**********/uint32) {};
+          
      /**
       * @brief    Gets the default Render Target.
       * @return   Returns the back Buffer texture.
@@ -354,18 +364,18 @@ namespace giEngineSDK {
      getDefaultDephtStencil() { return nullptr; };
   
      /**
-      * @brief 
-      * @param inAPI 
+      * @brief    Set the object of the Graphics API.
+      * @param    inAPI   The api to set.
       */
      void
-     setObject(CBaseGraphicsAPI * inAPI) {
-       CBaseGraphicsAPI::_instance() = inAPI;
+     setObject(GraphicsAPI * inAPI) {
+       GraphicsAPI::_instance() = inAPI;
      }
   };
   
-  GI_CORE_EXPORT CBaseGraphicsAPI& 
+  GI_CORE_EXPORT GraphicsAPI& 
   g_GraphicsAPI();
 
   //For load the DLL
-  using funCreateGraphicsAPI = CBaseGraphicsAPI * (*)();
+  using funCreateGraphicsAPI = GraphicsAPI * (*)();
 }

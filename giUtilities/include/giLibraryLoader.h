@@ -59,11 +59,13 @@ namespace giEngineSDK {
 
   inline bool
   LibraryLoader::loadPlugin(const String& inName) {
+    m_instance = LoadLibraryExA(inName.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
     if (!m_instance) {
-      DWORD err = GetLastError();
+      //DWORD err = GetLastError();
       destroy();
       return false;
     }
+    return true;
   }
 
   inline void* 

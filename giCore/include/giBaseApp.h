@@ -89,7 +89,7 @@ class GI_CORE_EXPORT BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(Event inEvent) {};
+  onEvent(Event) {};
 
  private:
   /**
@@ -160,6 +160,6 @@ class GI_CORE_EXPORT BaseApp
   //
   LibraryLoader m_loader;
 
-  CBaseGraphicsAPI* m_GAPI = nullptr;
+  GraphicsAPI* m_GAPI = nullptr;
 };
 

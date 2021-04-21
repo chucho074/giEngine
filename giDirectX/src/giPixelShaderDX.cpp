@@ -24,7 +24,7 @@ namespace giEngineSDK {
   }
 
   bool
-  PixelShaderDX::init(lpcstr inFileName, 
+  PixelShaderDX::init(lpcstr inFileName,
   /******************/lpcstr inEntryPoint, 
   /******************/lpcstr inShaderModel) {
 
@@ -35,7 +35,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  PixelShaderDX::CompileShaderFromFile(lpcstr szFileName, 
+  PixelShaderDX::CompileShaderFromFile(lpcstr szFileName,
   /***********************************/lpcstr szEntryPoint, 
   /***********************************/lpcstr szShaderModel, 
   /***********************************/ID3DBlob** ppBlobOut) {
@@ -71,7 +71,13 @@ namespace giEngineSDK {
         pErrorBlob->Release();
         return false;
       }
-      return hr;
+      
+      if (S_OK == hr) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
     if (pErrorBlob) {
       pErrorBlob->Release();

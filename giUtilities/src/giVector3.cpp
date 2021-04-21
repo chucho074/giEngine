@@ -20,189 +20,167 @@ namespace giEngineSDK {
     z = inZ;
   }
   
-  Vector3::Vector3(Vector3& inVect) {
+  /*Vector3::Vector3(const Vector3& inVect) {
     x = inVect.x;
     y = inVect.y;
     z = inVect.z;
-  }
+  }*/
   
   Vector3::~Vector3() {
   
   }
   
   Vector3
-  Vector3::operator+(const Vector3& otherVect)
-{
-  return Vector3(x + otherVect.x, y + otherVect.y, z + otherVect.z);
-}
-  
+  Vector3::operator+(const Vector3& otherVect) {
+    return Vector3(x + otherVect.x, y + otherVect.y, z + otherVect.z);
+  }
+    
   Vector3
-  Vector3::operator-(const Vector3& otherVect)
-{
-  return Vector3(x - otherVect.x, y - otherVect.y, z - otherVect.z);
-}
-  
+  Vector3::operator-(const Vector3& otherVect) {
+    return Vector3(x - otherVect.x, y - otherVect.y, z - otherVect.z);
+  }
+    
   Vector3
-  Vector3::operator*(const Vector3& otherVect)
-{
-  return Vector3(x * otherVect.x, y * otherVect.y, z * otherVect.z);
-}
-  
+  Vector3::operator*(const Vector3& otherVect) {
+    return Vector3(x * otherVect.x, y * otherVect.y, z * otherVect.z);
+  }
+    
   Vector3
-  Vector3::operator/(const Vector3& otherVect)
-{
-  return Vector3(x / otherVect.x, y / otherVect.y, z / otherVect.z);
-}
-  
+  Vector3::operator/(const Vector3& otherVect) {
+    return Vector3(x / otherVect.x, y / otherVect.y, z / otherVect.z);
+  }
+    
   Vector3
-  Vector3::operator+(const float& otherVal)
-{
-  return Vector3(x + otherVal, y + otherVal, z + otherVal);
-}
-  
+  Vector3::operator+(const float& otherVal) {
+    return Vector3(x + otherVal, y + otherVal, z + otherVal);
+  }
+    
   Vector3
-  Vector3::operator-(const float& otherVal)
-{
-  return Vector3(x - otherVal, y - otherVal, z - otherVal);
-}
-  
+  Vector3::operator-(const float& otherVal) {
+    return Vector3(x - otherVal, y - otherVal, z - otherVal);
+  }
+    
   Vector3
-  Vector3::operator*(const float& otherVal)
-{
-  return Vector3(x * otherVal, y * otherVal, z * otherVal);
-}
-  
+  Vector3::operator*(const float& otherVal) {
+    return Vector3(x * otherVal, y * otherVal, z * otherVal);
+  }
+    
   Vector3
-  Vector3::operator/(const float& otherVal)
-{
-  return Vector3(x / otherVal, y / otherVal, z / otherVal);
-}
+  Vector3::operator/(const float& otherVal) {
+    return Vector3(x / otherVal, y / otherVal, z / otherVal);
+  }
   
   bool
-  Vector3::operator>=(const Vector3& otherVect)
-{
-  if (otherVect.x <= x && otherVect.y <= y && otherVect.z <= z) {
-    return true;
+  Vector3::operator>=(const Vector3& otherVect) {
+    if (otherVect.x <= x && otherVect.y <= y && otherVect.z <= z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator<=(const Vector3& otherVect)
-{
-  if (otherVect.x >= x && otherVect.y >= y && otherVect.z >= z) {
-    return true;
+  Vector3::operator<=(const Vector3& otherVect) {
+    if (otherVect.x >= x && otherVect.y >= y && otherVect.z >= z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator==(const Vector3& otherVect)
-{
-  if (otherVect.x == x && otherVect.y == y && otherVect.z == z) {
-    return true;
+  Vector3::operator==(const Vector3& otherVect) {
+    if (otherVect.x == x && otherVect.y == y && otherVect.z == z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator<(const Vector3& otherVect)
-{
-  if (otherVect.x > x && otherVect.y > y && otherVect.z > z) {
-    return true;
+  Vector3::operator<(const Vector3& otherVect) {
+    if (otherVect.x > x && otherVect.y > y && otherVect.z > z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator>(const Vector3& otherVect)
-{
-  if (otherVect.x < x && otherVect.y < y && otherVect.z < z) {
-    return true;
+  Vector3::operator>(const Vector3& otherVect) {
+    if (otherVect.x < x && otherVect.y < y && otherVect.z < z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator>=(const float& otherVal)
-{
-  if (otherVal <= x && otherVal <= y && otherVal <= z) {
-    return true;
+  Vector3::operator>=(const float& otherVal) {
+    if (otherVal <= x && otherVal <= y && otherVal <= z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator<=(const float& otherVal)
-{
-  if (otherVal >= x && otherVal >= y && otherVal >= z) {
-    return true;
+  Vector3::operator<=(const float& otherVal) {
+    if (otherVal >= x && otherVal >= y && otherVal >= z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator==(const float& otherVal)
-{
-  if (otherVal == x && otherVal == y && otherVal == z) {
-    return true;
+  Vector3::operator==(const float& otherVal) {
+    if (otherVal == x && otherVal == y && otherVal == z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator<(const float& otherVal)
-{
-  if (otherVal > x && otherVal > y && otherVal > z) {
-    return true;
+  Vector3::operator<(const float& otherVal) {
+    if (otherVal > x && otherVal > y && otherVal > z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   bool
-  Vector3::operator>(const float& otherVal)
-{
-  if (otherVal < x && otherVal < y && otherVal < z) {
-    return true;
+  Vector3::operator>(const float& otherVal) {
+    if (otherVal < x && otherVal < y && otherVal < z) {
+      return true;
+    }
+    return false;
   }
-  return false;
-}
   
   float
-  Vector3::dotProd(const Vector3& inVect)
-{
-  return ((x * inVect.x) + (y * inVect.y)+ (z * inVect.z));
-}
+  Vector3::dotProd(const Vector3& inVect) {
+    return ((x * inVect.x) + (y * inVect.y)+ (z * inVect.z));
+  }
   
   float
-  Vector3::crossProd(const Vector3& inVect)
-{
-  return (((y * inVect.z) - (z * inVect.y)),
-          ((z * inVect.x) - (x * inVect.z)),
-          ((x * inVect.y) - (y * inVect.z)));
-}
+  Vector3::crossProd(const Vector3& inVect) {
+    return (((y * inVect.z) - (z * inVect.y)),
+            ((z * inVect.x) - (x * inVect.z)),
+            ((x * inVect.y) - (y * inVect.z)));
+  }
   
   void
-  Vector3::normalize()
-{
-  float mag = magnitude();
-  if (mag > 0) {
-    float tmp = 1.0f / mag;
-    x *= tmp;
-    y *= tmp;
-    z *= tmp;
+  Vector3::normalize() {
+    float mag = magnitude();
+    if (mag > 0) {
+      float tmp = 1.0f / mag;
+      x *= tmp;
+      y *= tmp;
+      z *= tmp;
+    }
+    else {
+      x = 0.0f;
+      y = 0.0f;
+      z = 0.0f;
+    }
   }
-  else {
-    x = 0.0f;
-    y = 0.0f;
-    z = 0.0f;
-  }
-}
   
   float
-  Vector3::magnitude()
-{
-  return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
-}
+  Vector3::magnitude() {
+    return sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2));
+  }
 
 }

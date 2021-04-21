@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   For load models.
  * @bug     No known Bugs.
  */
  
@@ -18,43 +18,62 @@
 #include "giBaseGraphicsAPI.h"
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT CModel {
+  /**
+   * @class   Model. 
+   * @brief   Basics models.
+   */
+  class GI_CORE_EXPORT Model {
    public:
 
     ///Default constructor
-    CModel();
+    Model();
 
     ///Destructor
-    ~CModel();
+    ~Model();
 
     /**
-    * @brief    Specific constructor.
-    * @param    _param1 parameter one.
-    * @bug      No known Bugs.
-    **/
+     * @brief    Load a model from file.
+     * @param    inFileName   File to read a model.
+     * @bug      No known Bugs.
+     */
     void 
     loadModel(String inFileName);
 
+    /**
+     * @brief    Draw the model.
+     */
     void 
     drawModel();
 
-
+    /**
+     * @brief     Get the num of textures.
+     * @return    Return the num of textures in a int.
+     */
     int 
-    getNumTextures() { return m_TexturesNames.size(); }
+    getNumTextures() { 
+      return static_cast<int32>(m_texturesNames.size());
+    }
 
-    Vector<String> getTextures() { return m_TexturesNames; }
+    /**
+     * @brief     Get the list of textures.
+     * @return    Return the list of the textures.
+     */
+    Vector<String> getTextures() { 
+      return m_texturesNames; 
+    }
+
    private:
-    int m_IndexNum;
+    int32 m_indexNum;
 
-    CBuffer* m_IndexBuffer;
+    Buffer* m_indexBuffer;
 
-    int m_VertexNum;
+    int32 m_vertexNum;
 
-    CBuffer* m_VertexBuffer;
+    Buffer* m_vertexBuffer;
 
     //Obtener los nombres de las texturas a cargar por el modelo
-    Vector<String> m_TexturesNames;
+    Vector<String> m_texturesNames;
 
-    Map<String, CMesh*> m_Meshes;
+    Map<String, Mesh*> m_meshes;
   };
 }

@@ -208,6 +208,7 @@ TEST(VectorTest, VectorTest) {
     tmpVectorRes = tmpVector2 * tmpVector;
     auto tmpMultiply4 = tmpVectorRes.z;
     EXPECT_FLOAT_EQ(tmpMultiply4, 6.f);
+
   }
 
 

@@ -34,17 +34,18 @@ namespace giEngineSDK {
   };
   
   /**
-   * @class    CBuffer.
+   * @class    Buffer.
    * @brief    A buffer interface for own buffers.
    * @bug      No known Bugs.
    */
-  class CBuffer {
+  class Buffer {
   public:
     ///Specific constructor
-    CBuffer() = default;
+    Buffer() = default;
   
     ///Destructor
-    virtual ~CBuffer() = default;
+    virtual 
+    ~Buffer() = default;
   
   };
 }
