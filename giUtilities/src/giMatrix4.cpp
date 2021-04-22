@@ -327,11 +327,11 @@ namespace giEngineSDK {
     z.normalize();
 
     Vector4 x;
-    x = crossProduct(inUpDirection, z);
+    x = inUpDirection.cross(z);
     x.normalize();
 
     Vector4 y;
-    y = crossProduct(z, x);
+    y = z.cross(x);
 
     x.w = x.dotProd(-inEyePos);
     y.w = y.dotProd(-inEyePos);
