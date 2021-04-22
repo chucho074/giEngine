@@ -90,6 +90,7 @@ BaseApp::update(float inDeltaTime) {
 void 
 BaseApp::render() {
   onRender();
+  m_GAPI->show();
 }
 
 void 

@@ -326,8 +326,6 @@ DirectXApp::onRender() {
   //Draw the model
   m_Peach.drawModel();
   
-  //Make it show
-  m_GAPI->show();
 }
 
 

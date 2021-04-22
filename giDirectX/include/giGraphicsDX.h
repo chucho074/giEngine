@@ -362,7 +362,10 @@ namespace giEngineSDK {
    
 
   };
-
+  
+  /**
+   * @brief   Create the gAPI with a dll.
+   */
   extern "C" GI_PLUGIN_EXPORT CGraphicsDX *
   createGraphicsAPI() {
     auto DX = new CGraphicsDX();
