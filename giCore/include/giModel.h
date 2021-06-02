@@ -65,11 +65,7 @@ namespace giEngineSDK {
    private:
     int32 m_indexNum;
 
-    Buffer* m_indexBuffer;
-
     int32 m_vertexNum;
-
-    Buffer* m_vertexBuffer;
 
     //Obtener los nombres de las texturas a cargar por el modelo
     Vector<String> m_texturesNames;

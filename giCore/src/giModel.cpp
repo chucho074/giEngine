@@ -16,9 +16,7 @@ namespace giEngineSDK {
 
   Model::Model() {
     m_indexNum = 0;
-    m_indexBuffer = nullptr;
     m_vertexNum = 0;
-    m_vertexBuffer = nullptr;
   }
 
 

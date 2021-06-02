@@ -333,9 +333,12 @@ namespace giEngineSDK {
     Vector4 y;
     y = z.cross(x);
 
-    x.w = x.dotProd(-inEyePos);
-    y.w = y.dotProd(-inEyePos);
-    z.w = z.dotProd(-inEyePos);
+    //x.w = x.dotProd(-inEyePos);
+    //y.w = y.dotProd(-inEyePos);
+    //z.w = z.dotProd(-inEyePos);
+    x.w = -inEyePos.x;
+    y.w = -inEyePos.y;
+    z.w = -inEyePos.z;
 
     m_xColumn = x; 
     m_yColumn = y; 
@@ -353,11 +356,21 @@ namespace giEngineSDK {
     float h = cosf(inFov) / sinf(inFov);
     float w = h / inAR;
     float viewRange = inFar / (inFar - inNear);
-
+    
     m_xColumn = { w, 0, 0, 0 };
     m_yColumn = { 0, h, 0, 0 };
     m_zColumn = { 0, 0, viewRange, 1 };
     m_wColumn = { 0, 0, -inNear * viewRange, 0 };
+
+    //float rad = inFov;
+    //float h = cosf(0.5f * rad) / sinf(0.5f * rad);
+    //auto w = h * inAR;
+    
+    //m_xColumn = { w, 0, 0, 0 };
+    //m_yColumn = { 0, h, 0, 0 };
+    //m_zColumn = { 0, 0, (inFar + inNear) / (inFar - inNear), 1 };
+    //m_wColumn = { 0, 0, -(2*inFar*inNear) / (inFar - inNear), 0 };
+
 
   }
 

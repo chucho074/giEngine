@@ -36,8 +36,8 @@ namespace giEngineSDK {
   void 
   Camera::update() {
     m_VM = lookToLH(m_Eye, m_At, m_Up);
-    m_VM = m_VM.transpose();
     updateVM();
+    m_VM = m_VM.transpose();
     
     m_PM = perspectiveFovLH(m_Angle, m_AspectRatio, m_Near, m_Far);
     m_PM = m_PM.transpose();
@@ -69,15 +69,15 @@ namespace giEngineSDK {
     m_Front.normalize();
 
     Matrix4 Axis({ m_Right.x,  m_Right.y,  m_Right.z,    0 },
-    /***********/{ m_Up2.x,  m_Up2.y,  m_Up2.z,    0 },
+    /***********/{ m_Up2.x,    m_Up2.y,    m_Up2.z,      0 },
     /***********/{ m_Front.x,  m_Front.y,  m_Front.z,    0 },
     /***********/{ 0,      0,      0,        1 });
     //Axis.transpose();
 
-    Matrix4 Pos({1,0,0,-m_Eye.x},
-    /**********/{0,1,0,-m_Eye.y},
-    /**********/{0,0,1,-m_Eye.z},
-    /**********/{0,0,0,1});
+    Matrix4 Pos({1, 0, 0, -m_Eye.x},
+    /**********/{0, 1, 0, -m_Eye.y},
+    /**********/{0, 0, 1, -m_Eye.z},
+    /**********/{0, 0, 0, 1});
     //Pos.transpose();
 
     Pos *= Axis;
