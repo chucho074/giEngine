@@ -49,6 +49,9 @@
     <ClCompile Include="src\giPlatformMath.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
+    <ClCompile Include="src\giCuaternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -106,6 +109,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giLibraryLoader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giCuaternion.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

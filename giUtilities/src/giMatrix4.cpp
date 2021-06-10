@@ -323,6 +323,7 @@ namespace giEngineSDK {
   lookToLH::lookToLH(Vector4 inEyePos, 
   /*****************/Vector4 inEyeDirection, 
   /*****************/Vector4 inUpDirection) {
+    
     Vector4 z = (inEyeDirection - inEyePos);
     z.normalize();
 
@@ -333,12 +334,9 @@ namespace giEngineSDK {
     Vector4 y;
     y = z.cross(x);
 
-    //x.w = x.dotProd(-inEyePos);
-    //y.w = y.dotProd(-inEyePos);
-    //z.w = z.dotProd(-inEyePos);
-    x.w = -inEyePos.x;
-    y.w = -inEyePos.y;
-    z.w = -inEyePos.z;
+    x.w = x.dotProd(-inEyePos);
+    y.w = y.dotProd(-inEyePos);
+    z.w = z.dotProd(-inEyePos);
 
     m_xColumn = x; 
     m_yColumn = y; 
@@ -353,23 +351,22 @@ namespace giEngineSDK {
   /*********************************/float inNear, 
   /*********************************/float inFar) {
 
-    float h = cosf(inFov) / sinf(inFov);
-    float w = h / inAR;
-    float viewRange = inFar / (inFar - inNear);
-    
-    m_xColumn = { w, 0, 0, 0 };
-    m_yColumn = { 0, h, 0, 0 };
-    m_zColumn = { 0, 0, viewRange, 1 };
-    m_wColumn = { 0, 0, -inNear * viewRange, 0 };
+    //float h = cosf(inFov) / sinf(inFov);
+    //float w = h / inAR;
+    //float viewRange = inFar / (inFar - inNear);
 
-    //float rad = inFov;
-    //float h = cosf(0.5f * rad) / sinf(0.5f * rad);
-    //auto w = h * inAR;
-    
-    //m_xColumn = { w, 0, 0, 0 };
-    //m_yColumn = { 0, h, 0, 0 };
-    //m_zColumn = { 0, 0, (inFar + inNear) / (inFar - inNear), 1 };
-    //m_wColumn = { 0, 0, -(2*inFar*inNear) / (inFar - inNear), 0 };
+    float    SinFov = sinf(0.5f * inFov);
+    float    CosFov = cosf(0.5f * inFov);
+
+    float Height = CosFov / SinFov;
+    float Width = Height / inAR;
+    float fRange = inFar / (inFar - inNear);
+
+
+    m_xColumn = { Width, 0, 0, 0 };
+    m_yColumn = { 0, Height, 0, 0 };
+    m_zColumn = { 0, 0, fRange, 1 };
+    m_wColumn = { 0, 0, -fRange * inNear, 0 };
 
 
   }

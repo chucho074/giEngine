@@ -12,5 +12,3 @@
 
 #include "giStdHeaders.h"
 
-
-//#include "giMath.h"

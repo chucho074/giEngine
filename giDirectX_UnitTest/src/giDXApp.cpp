@@ -12,6 +12,7 @@
  */
 #include "giDXApp.h"
 #include <giObjectLoader.h>
+#include <xnamath.h>
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -70,42 +71,39 @@ DirectXApp::onCreate() {
 
   //Create vertex for the cube 
   SimpleVertex vertices[] = {
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 0.0f),Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f) ,Vector3(0.f,0.f,0.f)},
+    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 0.0f),Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
+    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f) ,Vector3(0,0,0)},
   
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
+    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
+    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
+    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
   
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0.f,0.f,0.f)},
+    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0,0,0)},
+    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
+    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0,0,0)},
   
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0.f,0.f,0.f)},
+    { Vector3(1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0,0,0)},
+    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0,0,0)},
   
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
+    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
+    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
   
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f) ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0.f,0.f,0.f)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0.f,0.f,0.f)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0.f,0.f,0.f)},
+    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
+    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
+    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
+    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
   };
 
   //Create VertexBuffer
-  m_vertexBuffer = m_GAPI->createBuffer(sizeof(giEngineSDK::SimpleVertex) * 24, 
-  /************************************/0x1L, 
-  /************************************/0, 
-  /************************************/vertices);
+  m_vertexBuffer = m_GAPI->createBuffer(sizeof(giEngineSDK::SimpleVertex) * 24, 0x1L, 0, vertices);
 
   //Create index for the cube
   WORD indices[] = {
@@ -131,36 +129,21 @@ DirectXApp::onCreate() {
   //Create Index Buffer
   m_indexBuffer = m_GAPI->createBuffer(sizeof(WORD) * 36, 
   /***********************************/GI_BIND_FLAG::E::kBIND_INDEX_BUFFER, 
-  /***********************************/0,
+  /***********************************/0, 
   /***********************************/indices);
 
-
-  ImageLoader imgLoader;
-  imgLoader.clearData();
-
-           //Load Models
+          //Load Models
 
   //Load Yoshi model
   m_Yoshi.loadModel("yoshipirate.obj");
 
   //Load the Yoshi textures
+  ImageLoader imgLoader;
   for (int i = 0; i < m_Yoshi.getNumTextures(); i++) {
     imgLoader.loadBMP(m_Yoshi.getTextures()[i]);
   }
   imgLoader.clearData();
   imgLoader.loadBMP("Test.bmp");
-
-  m_ColorTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
-  /********************************/imgLoader.getHeight(),
-  /********************************/0,
-  /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
-  /********************************/GI_BIND_FLAG::E::kBIND_SHADER_RESOURCE);
-
-  m_GAPI->updateTexture(m_ColorTexture, 
-  /*****************/imgLoader.getImgData(), 
-  /*****************/imgLoader.getPitch(), 
-  /*****************/imgLoader.getImgSize());
-          
 
   //Set Topology
   m_GAPI->setTopology(GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -190,7 +173,26 @@ DirectXApp::onCreate() {
   //Clear the image loader
   imgLoader.clearData();
 
-  
+  //Load the peach model
+  m_Peach.loadModel("Pirate Peach.obj");
+
+  //Load the textures
+  for (int i = 0; i < m_Peach.getNumTextures(); i++) {
+    imgLoader.loadBMP(m_Peach.getTextures()[i]);
+  }
+
+  //Create the texture
+  m_PeachTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
+  /********************************/imgLoader.getHeight(),
+  /********************************/0,
+  /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
+  /********************************/GI_BIND_FLAG::E::kBIND_SHADER_RESOURCE); //0xaabbggrr
+
+  //Update the texture
+  m_GAPI->updateTexture(m_PeachTexture,
+  /*****************/imgLoader.getImgData(), 
+  /*****************/imgLoader.getPitch(), 
+  /*****************/imgLoader.getImgSize());
 
   //Create Sampler
   SamplerDesc sampDesc;
@@ -207,8 +209,8 @@ DirectXApp::onCreate() {
   m_World = Matrix4::IDENTITY;
 
   //Initialize Camera
-  m_MainCamera.init(180, static_cast<float>((m_width/m_height)), 0.0001f, 10000.0f);
-  
+  m_MainCamera.init(0.785398163f, static_cast<float>((m_width/m_height)), 0.01f, 1000.0f);
+
   //Sets the view matrix
   CBNeverChanges tmpNC;
   tmpNC.mView = m_MainCamera.getViewMatrix();
@@ -271,21 +273,60 @@ DirectXApp::onRender() {
   m_GAPI->psSetSampler(0, 1, m_Sampler);
   
   //Set Vertex Buffer
-  uint32 stride = sizeof(giEngineSDK::SimpleVertex);
+  UINT stride = sizeof(giEngineSDK::SimpleVertex);
   m_GAPI->setVertexBuffer(m_vertexBuffer, stride);
 
   //Set Index Buffer
   m_GAPI->setIndexBuffer(m_indexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
 
-
-  //Sets the render target and depth Stencil
-  //m_GAPI->omSetRenderTarget(static_cast<Texture2D*>(m_GAPI->getDefaultRenderTarget()),
-  //*********************/static_cast<Texture2D*>(m_GAPI->getDefaultDephtStencil()));
-
   //Draw the cube
   m_GAPI->drawIndexed(36, 0);
 
-    
+  //Sets the render target and depth Stencil
+  m_GAPI->omSetRenderTarget(static_cast<Texture2D*>(m_GAPI->getDefaultRenderTarget()),
+  /*********************/static_cast<Texture2D*>(m_GAPI->getDefaultDephtStencil()));
+
+  //Apply a rotation
+  static float tmpRotation = 3.1415f / 550.0f;
+  tmpRotation += 3.1415f / 550.0f;
+
+  //Sets values to the world
+  m_World = Matrix4::IDENTITY;
+  //m_World = XMMatrixRotationY(tmpRotation);
+  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  //m_World *= XMMatrixTranslation(0.f, 0.0f, 20.f);
+
+  cb.mWorld = m_World.transpose();
+  cb.vMeshColor = m_MeshColor;
+
+  //Update the Change Every Frame Buffer
+  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+
+  //Draw the Yoshi model
+  m_Yoshi.drawModel();
+
+  //Sets values to the world
+  m_World = Matrix4::IDENTITY;
+  //m_World = XMMatrixRotationY(tmpRotation);
+  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  //m_World *= XMMatrixTranslation(0.f, 1.5f, 0.f);
+
+  cb.mWorld = m_World.transpose();
+  cb.vMeshColor = m_MeshColor;
+  
+  //Update the Change Every Frame Buffer
+  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  
+  //Sets the texture
+  m_GAPI->psSetShaderResource(0, m_PeachTexture);
+
+  //Draw the model
+  m_Peach.drawModel();
+  
 }
 
 
@@ -339,8 +380,5 @@ DirectXApp::onEvent(Event inEvent) {
       tmpNC.mView = m_MainCamera.getViewMatrix();
       m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
     }
-    //CBNeverChanges tmpNC;
-    //tmpNC.mView = m_MainCamera.getViewMatrix();
-    //m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
   }
 }

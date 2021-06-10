@@ -12,6 +12,8 @@
  */
 #include "giCamera.h"
 
+//TODO: Meter las math de DX y probar las matrices
+
 namespace giEngineSDK {
   Camera::Camera() {
     m_Front = (m_At - m_Eye);
@@ -46,8 +48,14 @@ namespace giEngineSDK {
   void 
   Camera::updateVM() {
     m_Right = m_VM.m_xColumn;
+    m_Right.w = 0.f;
+
     m_Up2 = m_VM.m_yColumn;
+    m_Up2.w = 0.f;
+    
     m_Front = m_VM.m_zColumn;
+    m_Front.w = 0.f;
+    
     m_At = m_Front + m_Eye;
   }
   
@@ -72,13 +80,13 @@ namespace giEngineSDK {
     /***********/{ m_Up2.x,    m_Up2.y,    m_Up2.z,      0 },
     /***********/{ m_Front.x,  m_Front.y,  m_Front.z,    0 },
     /***********/{ 0,      0,      0,        1 });
-    //Axis.transpose();
+    Axis.transpose();
 
     Matrix4 Pos({1, 0, 0, -m_Eye.x},
     /**********/{0, 1, 0, -m_Eye.y},
     /**********/{0, 0, 1, -m_Eye.z},
     /**********/{0, 0, 0, 1});
-    //Pos.transpose();
+    Pos.transpose();
 
     Pos *= Axis;
     m_VM = Pos;
