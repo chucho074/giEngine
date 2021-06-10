@@ -13,8 +13,9 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
-
 #include "giBuffer.h"
+
+
 
 namespace giEngineSDK {
 
@@ -22,7 +23,12 @@ namespace giEngineSDK {
   class ObjectLoader;
   struct SimpleVertex;
 
-  
+  struct Texture {
+    unsigned int id;
+    String type;
+    Texture2D * texture;
+    Sampler * samplerState;
+  };
 
   /**
    * @class    Mesh.
@@ -32,7 +38,9 @@ namespace giEngineSDK {
   class GI_CORE_EXPORT Mesh {
    public:
     ///Default constructor
-    Mesh() = default;
+    Mesh(Vector<SimpleVertex> inVertex, 
+    /***/Vector<uint32> inIndex, 
+    /***/Vector<Texture> inTextures);
 
     ///Destructor
     ~Mesh();
@@ -64,13 +72,13 @@ namespace giEngineSDK {
     Buffer* m_indexBuffer = nullptr;
 
     //The list of Faces
-    Vector<Vector<unsigned short>> m_facesList;
+    Vector<uint32> m_facesList;
 
     //The number of index in the mesh
     int m_indexNum = 0;
 
-   public:
-    //The model loader
-    friend class ObjectLoader;
+    //Textures in the mesh
+    Vector<Texture> m_textures;
+
   };
 }

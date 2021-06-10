@@ -12,8 +12,18 @@
 #include "giBaseGraphicsAPI.h"
 
 namespace giEngineSDK {
-  Mesh::~Mesh() {
+  Mesh::Mesh(Vector<SimpleVertex> inVertex, 
+  /*********/Vector<unsigned int> inIndex, 
+  /*********/Vector<Texture> inTextures) {
+    this->m_vertexVector = inVertex;
+    this->m_facesList = inIndex;
+    this->m_textures = inTextures;
 
+    loadMesh();
+  }
+  
+  Mesh::~Mesh() {
+    
   }
 
   void 
@@ -27,31 +37,25 @@ namespace giEngineSDK {
     /*********************************/0,
     /*********************************/m_vertexVector.data());
 
-    auto numIndices = m_facesList.size() * 3;
-    Vector<unsigned short> tmpIndices;
-    tmpIndices.reserve(numIndices);
-    int tmpIndexCount = 0;
-    for (int i = 0; m_facesList.size() >= i; i++) {
-      tmpIndices.push_back(tmpIndexCount * 3 + 0);
-      tmpIndices.push_back(tmpIndexCount * 3 + 1);
-      tmpIndices.push_back(tmpIndexCount * 3 + 2);
-      ++tmpIndexCount;
-    }
+    
 
-    m_indexBuffer = GAPI.createBuffer(sizeof(unsigned short) * 
-    /*********************************/static_cast<int32>(tmpIndices.size()),
+    m_indexBuffer = GAPI.createBuffer(sizeof(uint32) * m_facesList.size(),
     /********************************/0x2L,
     /********************************/0,
-    /********************************/tmpIndices.data());
+    /********************************/m_facesList.data());
 
-
-    m_indexNum = static_cast<int32>(numIndices);
 
   }
 
   void 
   Mesh::drawMesh() {
     auto& GAPI = g_GraphicsAPI();
+
+    for(uint32 i = 0; i < m_textures.size(); i++) {
+      GAPI.psSetShaderResource(i, m_textures[i].texture);
+      GAPI.psSetSampler(i, 1, m_textures[i].samplerState);
+    }
+
 
     uint32 stride = sizeof(SimpleVertex);
 
