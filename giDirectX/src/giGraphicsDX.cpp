@@ -22,6 +22,7 @@
 #include "giRenderTargetViewDX.h"
 #include "giVertexShaderDX.h"
 #include "giPixelShaderDX.h"
+#include "stb_image.h"
 
 
 namespace giEngineSDK {
@@ -532,5 +533,25 @@ namespace giEngineSDK {
   CGraphicsDX::drawIndexed(uint32 inNumIndexes,
   /***********************/uint32 inStartLocation) {
     m_DevContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
+  }
+
+  Texture2D* 
+  CGraphicsDX::TextureFromFile(String inString, String inDirectory) {
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load(inDirectory.c_str(), &width, &height, &nrChannels, 0);
+
+    if (data) {
+      CTexture2DDX* texture = new CTexture2DDX();
+
+      texture = static_cast<CTexture2DDX*>(createTex2D(width, 
+      /***********************************/height, 
+      /***********************************/0,
+      /***********************************/GI_FORMAT::kFORMAT_R8G8B8A8_UNORM, 
+      /***********************************/GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+      stbi_image_free(data);
+      return texture;
+    }
+    return nullptr;
   }
 }

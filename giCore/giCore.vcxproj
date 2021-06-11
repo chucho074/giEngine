@@ -75,22 +75,26 @@
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -99,7 +103,7 @@
       <PreprocessorDefinitions>GI_CORE_EXPORTS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/Assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,7 +141,7 @@
       <PreprocessorDefinitions>GI_CORE_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +159,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -172,12 +176,12 @@
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
-    <ClCompile Include="src\giImageLoader.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
-    <ClCompile Include="src\giObjectLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giComponent.h" />
+    <ClInclude Include="include\giActor.h" />
     <ClInclude Include="include\giBaseApp.h" />
     <ClInclude Include="include\giBaseGraphicsAPI.h" />
     <ClInclude Include="include\giBasePixelShader.h" />
@@ -186,13 +190,14 @@
     <ClInclude Include="include\giBuffer.h" />
     <ClInclude Include="include\giCamera.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
-    <ClInclude Include="include\giImageLoader.h" />
     <ClInclude Include="include\giInputLayout.h" />
     <ClInclude Include="include\giMesh.h" />
     <ClInclude Include="include\giModel.h" />
-    <ClInclude Include="include\giObjectLoader.h" />
+    <ClInclude Include="include\giObject.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
     <ClInclude Include="include\giSampler.h" />
+    <ClInclude Include="include\giSceneGraph.h" />
+    <ClInclude Include="include\giSceneNode.h" />
     <ClInclude Include="include\giTexture2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -17,6 +17,9 @@
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{3ecd141e-4bc6-4fb9-8f90-3f8ada5e8d91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Time">
+      <UniqueIdentifier>{10cba688-259e-48c9-88d9-314b90dd2d14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giRadians.cpp">
@@ -49,7 +52,10 @@
     <ClCompile Include="src\giPlatformMath.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\giCuaternion.cpp">
+    <ClCompile Include="src\giTime.cpp">
+      <Filter>Source Files\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giQuaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,13 +111,16 @@
     <ClInclude Include="include\giWindowsMath.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\giTime.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giLibraryLoader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giCuaternion.h">
+    <ClInclude Include="include\giTime.h">
+      <Filter>Source Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giTransform.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giQuaternion.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

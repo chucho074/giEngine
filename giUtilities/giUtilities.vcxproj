@@ -175,11 +175,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\giCuaternion.cpp" />
+    <ClCompile Include="src\giQuaternion.cpp" />
     <ClCompile Include="src\giDegrees.cpp" />
     <ClCompile Include="src\giMatrix4.cpp" />
     <ClCompile Include="src\giPlatformMath.cpp" />
     <ClCompile Include="src\giRadians.cpp" />
+    <ClCompile Include="src\giTime.cpp" />
     <ClCompile Include="src\giVector2.cpp" />
     <ClCompile Include="src\giVector2i.cpp" />
     <ClCompile Include="src\giVector3.cpp" />
@@ -188,7 +189,7 @@
     <ClCompile Include="src\giVector4i.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\giCuaternion.h" />
+    <ClInclude Include="include\giQuaternion.h" />
     <ClInclude Include="include\giDegrees.h" />
     <ClInclude Include="include\giLibraryLoader.h" />
     <ClInclude Include="include\giMath.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="include\giRadians.h" />
     <ClInclude Include="include\giStdHeaders.h" />
     <ClInclude Include="include\giTime.h" />
+    <ClInclude Include="include\giTransform.h" />
     <ClInclude Include="include\giVector2.h" />
     <ClInclude Include="include\giVector2i.h" />
     <ClInclude Include="include\giVector3.h" />

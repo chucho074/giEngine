@@ -59,15 +59,15 @@ namespace giEngineSDK {
     Quaternion
     normalize();
 
-   float m_X;   
+    float m_X;   
+    
+    float m_Y;   
+    
+    float m_Z;   
+    
+    float m_W;  
 
-   float m_Y;   
-
-   float m_Z;   
-
-   float m_W;  
+    static const Quaternion IDENTITY;
   };
-
-
 
 }

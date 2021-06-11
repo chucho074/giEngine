@@ -14,18 +14,26 @@
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
 #include "giBuffer.h"
-
+#include "giVector2.h"
+#include "giVector3.h"
 
 
 namespace giEngineSDK {
 
-  class Buffer;
-  class ObjectLoader;
-  struct SimpleVertex;
+  /**
+   * @struct    SimpleVertex.
+   * @brief     Basic struc for my vertex.
+   */
+  struct SimpleVertex {
+    Vector3 Pos;
+    Vector2 Tex;
+    Vector3 Nor;
+  };
 
   struct Texture {
-    unsigned int id;
+    uint32 id;
     String type;
+    String path;
     Texture2D * texture;
     Sampler * samplerState;
   };

@@ -21,14 +21,11 @@
 #include <giTexture2D.h>
 #include <giDepthStencilView.h>
 #include <giRenderTargetView.h>
-//#include <giViewPort.h>
 #include <giVertexShaderDX.h>
 #include <giPixelShaderDX.h>
 #include <giBuffer.h>
 #include <giInputLayout.h>
 #include <giSampler.h>
-#include <giImageLoader.h>
-#include <giObjectLoader.h>
 #include <giMesh.h>
 #include <giModel.h>
 #include <SFML/Window.hpp>
@@ -71,7 +68,7 @@ struct CBChangesEveryFrame {
  * @bug      No known Bugs.
  */
 class DirectXApp : public BaseApp {
-public:
+ public:
   ///Default constructor
   DirectXApp();
 
@@ -115,7 +112,7 @@ public:
   void 
   onEvent(Event inEvent) override;
 
-private:
+ private:
 
   //The main camera 
   Camera m_MainCamera;
@@ -151,7 +148,7 @@ private:
   Matrix4 m_World;
 
   //The color For the mesh
-  Vector4 m_MeshColor{ 0.f, 0.f, 0.f, 0.f };
+  Vector4 m_MeshColor { 0.f, 0.f, 0.f, 0.f };
 
   
           //MODELS

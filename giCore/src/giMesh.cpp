@@ -8,7 +8,6 @@
 **/
 
 #include "giMesh.h"
-#include "giObjectLoader.h"
 #include "giBaseGraphicsAPI.h"
 
 namespace giEngineSDK {
@@ -66,6 +65,6 @@ namespace giEngineSDK {
     GAPI.setIndexBuffer(m_indexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
 
     //Draw
-    GAPI.drawIndexed(m_indexNum, 0);
+    GAPI.drawIndexed(m_facesList.size(), 0);
   }
 }

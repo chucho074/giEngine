@@ -18,7 +18,7 @@
 #include <string>
 #include <list>
 #include <map>
-
+#include <memory>
 
 namespace giEngineSDK {
   using String = std::string;
@@ -64,10 +64,27 @@ namespace giEngineSDK {
    * @tparam Alloc 
    */
   template<class Key,
-           class T,
-           class Compare = std::less<Key>,
-           class Alloc = std::allocator<std::pair<const Key, T>>> 
+  /*******/class T,
+  /*******/class Compare = std::less<Key>,
+  /*******/class Alloc = std::allocator<std::pair<const Key, T>>> 
   using Map = std::map<Key, T, Compare, Alloc>;
+  
+  /**
+   * @brief 
+   * @tparam T 
+   */
+  template <typename T>
+  using SharedPtr = std::shared_ptr<T>;
+
+  /**
+   * @brief 
+   * @tparam T 
+   */
+  template <typename T>
+  using WeakPtr = std::weak_ptr<T>;
+
+  template<typename T>
+  using UniquePtr = std::unique_ptr<T>;
 
 
 }

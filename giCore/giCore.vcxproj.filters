@@ -27,12 +27,6 @@
     <ClCompile Include="src\giMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\giObjectLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\giImageLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,13 +65,7 @@
     <ClInclude Include="include\giDepthStencilView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giObjectLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giModel.h">
@@ -87,6 +75,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giBaseVertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giSceneGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giSceneNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

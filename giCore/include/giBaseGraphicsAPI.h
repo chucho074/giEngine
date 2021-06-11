@@ -14,6 +14,7 @@
 #include "giPrerequisitesCore.h"
 #include <giModule.h>
 #include "giSampler.h"
+#include "stb_image.h"
 
 ///Forward declarations
 namespace giEngineSDK {
@@ -25,7 +26,6 @@ namespace giEngineSDK {
   class Buffer;
   class InputLayout;
   class Sampler;
-  class ImageLoader;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -358,10 +358,19 @@ namespace giEngineSDK {
      
      /**
       * @brief    Gets the default Depth Stencil.
-      * @return   Returns the Depth Stencil View texutre;
+      * @return   Returns the Depth Stencil View texutre.
       */
      virtual void * 
      getDefaultDephtStencil() { return nullptr; };
+
+     /**
+      * @brief    Reads a texture form a file.
+      * @param    inString     .
+      * @param    inDirectory  The directory of the texture to read.
+      * @return   Returns the texture readed from a file.
+      */
+     virtual Texture2D *
+     TextureFromFile(String inString, String inDirectory) { return nullptr; };
   
      /**
       * @brief    Set the object of the Graphics API.

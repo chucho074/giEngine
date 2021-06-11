@@ -14,10 +14,16 @@
 #include "giPrerequisitesCore.h"
 #include <giStdHeaders.h>
 #include "giMesh.h"
-#include "giObjectLoader.h"
 #include "giBaseGraphicsAPI.h"
+#include "giVector2.h"
+#include "giVector3.h"
+
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
 
 namespace giEngineSDK {
+
   /**
    * @class   Model. 
    * @brief   Basics models.
@@ -26,18 +32,12 @@ namespace giEngineSDK {
    public:
 
     ///Default constructor
-    Model();
+    Model() = default;
+
+    Model(String inFileName);
 
     ///Destructor
     ~Model();
-
-    /**
-     * @brief    Load a model from file.
-     * @param    inFileName   File to read a model.
-     * @bug      No known Bugs.
-     */
-    void 
-    loadModel(String inFileName);
 
     /**
      * @brief    Draw the model.
@@ -62,14 +62,51 @@ namespace giEngineSDK {
       return m_texturesNames; 
     }
 
-   private:
-    int32 m_indexNum;
+   //private:
+    /**
+     * @brief    Load a model from file.
+     * @param    inFileName   File to read a model.
+     * @bug      No known Bugs.
+     */
+    void 
+    loadModel(String inFileName);
 
-    int32 m_vertexNum;
+    /**
+     * @brief 
+     * @param node 
+     * @param scene 
+     */
+    void 
+    processNode(aiNode* node, const aiScene* scene);
+    
+    /**
+     * @brief 
+     * @param mesh 
+     * @param scene 
+     * @return 
+     */
+    Mesh 
+    processMesh(aiMesh* mesh, const aiScene* scene);
+    
+    /**
+     * @brief 
+     * @param mat 
+     * @param type 
+     * @param typeName 
+     * @return 
+     */
+    Vector<Texture> 
+    loadMaterialTextures(aiMaterial* mat, aiTextureType type, String typeName);
+
 
     //Obtener los nombres de las texturas a cargar por el modelo
     Vector<String> m_texturesNames;
 
-    Map<String, Mesh*> m_meshes;
+    //Meshes
+    Vector<Mesh> m_meshes;
+
+    String m_directory;
+
+    Vector<Texture> textures_loaded;
   };
 }

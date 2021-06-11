@@ -99,6 +99,16 @@ namespace giEngineSDK {
     float y;
     float z;
 
+    /**
+     * @brief A zero vector (0,0,0)
+     */
+    static const Vector3 ZERO;
+
+    /**
+     * @brief A unit vector (1,1,1)
+     */
+    static const Vector3 UNIT;
+
   };
   
 }

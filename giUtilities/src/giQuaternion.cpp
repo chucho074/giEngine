@@ -10,10 +10,12 @@
 /**
  * @include
  */
-#include "giCuaternion.h"
+#include "giQuaternion.h"
 #include "giVector3.h"
 
 namespace giEngineSDK {
+
+  const Quaternion Quaternion::IDENTITY = Quaternion(0.f, 0.f, 0.f, 1.f);
 
   Quaternion::Quaternion(const Vector3& inVector, const float inScalar) {
     m_X = inVector.x;

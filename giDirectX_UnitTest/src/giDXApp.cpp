@@ -11,8 +11,6 @@
  * @include
  */
 #include "giDXApp.h"
-#include <giObjectLoader.h>
-#include <xnamath.h>
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -135,15 +133,8 @@ DirectXApp::onCreate() {
           //Load Models
 
   //Load Yoshi model
-  m_Yoshi.loadModel("yoshipirate.obj");
+  m_Yoshi.loadModel("POD.obj");
 
-  //Load the Yoshi textures
-  ImageLoader imgLoader;
-  for (int i = 0; i < m_Yoshi.getNumTextures(); i++) {
-    imgLoader.loadBMP(m_Yoshi.getTextures()[i]);
-  }
-  imgLoader.clearData();
-  imgLoader.loadBMP("Test.bmp");
 
   //Set Topology
   m_GAPI->setTopology(GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -157,42 +148,17 @@ DirectXApp::onCreate() {
   //Create Constant Buffer for Change Every Frame
   m_ConstantBuffer_CEF = m_GAPI->createBuffer(sizeof(CBChangesEveryFrame), 0x4L, 0, nullptr);
 
-  //Create the texture
-  m_ColorTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
-  /********************************/imgLoader.getHeight(),
-  /********************************/0,
-  /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
-  /********************************/GI_BIND_FLAG::E::kBIND_SHADER_RESOURCE); //0xaabbggrr
+  ////Update the texture
+  //m_GAPI->updateTexture(m_ColorTexture, 
+  ///*****************/imgLoader.getImgData(), 
+  ///*****************/imgLoader.getPitch(), 
+  ///*****************/imgLoader.getImgSize());
 
-  //Update the texture
-  m_GAPI->updateTexture(m_ColorTexture, 
-  /*****************/imgLoader.getImgData(), 
-  /*****************/imgLoader.getPitch(), 
-  /*****************/imgLoader.getImgSize());
-
-  //Clear the image loader
-  imgLoader.clearData();
+  ////Clear the image loader
+  //imgLoader.clearData();
 
   //Load the peach model
-  m_Peach.loadModel("Pirate Peach.obj");
-
-  //Load the textures
-  for (int i = 0; i < m_Peach.getNumTextures(); i++) {
-    imgLoader.loadBMP(m_Peach.getTextures()[i]);
-  }
-
-  //Create the texture
-  m_PeachTexture = m_GAPI->createTex2D(imgLoader.getWidth(),
-  /********************************/imgLoader.getHeight(),
-  /********************************/0,
-  /********************************/GI_FORMAT::E::kFORMAT_R8G8B8A8_UNORM,
-  /********************************/GI_BIND_FLAG::E::kBIND_SHADER_RESOURCE); //0xaabbggrr
-
-  //Update the texture
-  m_GAPI->updateTexture(m_PeachTexture,
-  /*****************/imgLoader.getImgData(), 
-  /*****************/imgLoader.getPitch(), 
-  /*****************/imgLoader.getImgSize());
+  //m_Peach.loadModel("Pirate Peach.obj");
 
   //Create Sampler
   SamplerDesc sampDesc;

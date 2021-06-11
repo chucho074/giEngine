@@ -118,13 +118,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giUtilities_d.lib;assimp-vc140-mt_d.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,15 +136,15 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giCore.lib;giUtilities.lib;sfml-window.lib;sfml-system.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giCore.lib;giUtilities.lib;sfml-window.lib;sfml-system.lib;assimp-vc140-mt.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,13 +154,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giUtilities_d.lib;assimp-vc140-mt_d.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -172,15 +172,15 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giCore.lib;giUtilities.lib;sfml-window.lib;sfml-system.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giCore.lib;giUtilities.lib;sfml-window.lib;sfml-system.lib;assimp-vc140-mt.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
