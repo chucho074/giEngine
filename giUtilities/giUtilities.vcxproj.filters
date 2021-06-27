@@ -58,6 +58,9 @@
     <ClCompile Include="src\giQuaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giTimer.cpp">
+      <Filter>Source Files\Time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">
@@ -122,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="include\giQuaternion.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giTimer.h">
+      <Filter>Source Files\Time</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

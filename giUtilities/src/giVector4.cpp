@@ -288,9 +288,9 @@ namespace giEngineSDK {
   float
   Vector4::magnitude() {
     return sqrtf(powf(x, 2) 
-    /***********/+ powf(y, 2) 
-    /***********/+ powf(z, 2) 
-    /***********/+ powf(w, 2));
+                 + powf(y, 2) 
+                 + powf(z, 2) 
+                 + powf(w, 2));
   }
  
 }

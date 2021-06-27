@@ -33,9 +33,9 @@ namespace giEngineSDK {
      * @return    Returns if it can be readed.
      */
     virtual bool 
-    init(lpcstr inFileName,
-    /***/lpcstr inEntryPoint,
-    /***/lpcstr inShaderModel) = 0;
+    init(String inFileName,
+         String inEntryPoint,
+         String inShaderModel) = 0;
 
   };
 }

@@ -14,22 +14,22 @@
 
 namespace giEngineSDK {
   CSamplerDX::CSamplerDX() {
-    m_Sampler = nullptr;
-    memset(&m_Desc, 0, sizeof(m_Desc));
+    m_sampler = nullptr;
+    memset(&m_desc, 0, sizeof(m_desc));
   }
 
   CSamplerDX::~CSamplerDX() {
-    SAFE_RELEASE(m_Sampler);
+    SAFE_RELEASE(m_sampler);
   }
 
   void
   CSamplerDX::init(SamplerDesc inDesc) {
-    m_Desc.Filter = (D3D11_FILTER)inDesc.filter;
-    m_Desc.AddressU = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressU;
-    m_Desc.AddressV = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressV;
-    m_Desc.AddressW = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressW;
-    m_Desc.ComparisonFunc = (D3D11_COMPARISON_FUNC)inDesc.comparisonFunc;
-    m_Desc.MinLOD = inDesc.minLOD;
-    m_Desc.MaxLOD = inDesc.maxLOD;
+    m_desc.Filter = (D3D11_FILTER)inDesc.filter;
+    m_desc.AddressU = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressU;
+    m_desc.AddressV = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressV;
+    m_desc.AddressW = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressW;
+    m_desc.ComparisonFunc = (D3D11_COMPARISON_FUNC)inDesc.comparisonFunc;
+    m_desc.MinLOD = inDesc.minLOD;
+    m_desc.MaxLOD = inDesc.maxLOD;
   }
 }

@@ -14,7 +14,7 @@
 #include "giBaseGraphicsAPI.h"
 
 
-int 
+int32 
 BaseApp::run() {
 
   //Create the main window
@@ -42,8 +42,8 @@ BaseApp::run() {
 
     //Update Time
     /*static float t = 0.0f;
-    static int dwTimeStart = 0;
-    int dwTimeCur = getGetTickCount();
+    static int32 dwTimeStart = 0;
+    int32 dwTimeCur = getGetTickCount();
     if (dwTimeStart == 0) {
       dwTimeStart = dwTimeCur;
     }
@@ -74,8 +74,8 @@ BaseApp::createWindow() {
   String tmpTitle = "Changos wapos";
 
   m_window.create(VideoMode(m_width, m_height),
-  /**************/tmpTitle.c_str(),
-  /**************/sf::Style::Default);
+                  tmpTitle.c_str(),
+                  sf::Style::Default);
 
   m_window.setPosition({ 0, 0 });
 
@@ -90,7 +90,7 @@ BaseApp::update(float inDeltaTime) {
 void 
 BaseApp::render() {
   onRender();
-  m_GAPI->show();
+  m_gapi->show();
 }
 
 void 
@@ -105,11 +105,9 @@ BaseApp::initSystems() {
     GraphicsAPI::startUp();
     GraphicsAPI* GAPI = createGraphicsAPI();
     g_GraphicsAPI().setObject(GAPI);
-    m_GAPI = &g_GraphicsAPI();
+    m_gapi = &g_GraphicsAPI();
     //Initialize the Graphics API
-    m_GAPI->init(reinterpret_cast<void*>(handle), 
-    /***********/m_width, 
-    /***********/m_height);
+    m_gapi->init(reinterpret_cast<void*>(handle));
   }
 
 
@@ -125,35 +123,4 @@ void
 BaseApp::destroySystems() {
   m_window.close();
   GraphicsAPI::shutDown();
-}
-
-void 
-BaseApp::activateConsole() {
-
-  //AllocConsole();
-
-  //HANDLE ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-  //int SystemOutput = _open_osfhandle(intptr_t(ConsoleOutput), _O_TEXT);
-  //FILE* COutputHandle = _fdopen(SystemOutput, "w");
-
-  //HANDLE ConsoleError = GetStdHandle(STD_ERROR_HANDLE);
-  //int SystemError = _open_osfhandle(intptr_t(ConsoleError), _O_TEXT);
-  //FILE* CErrorHandle = _fdopen(SystemError, "w");
-
-  //HANDLE ConsoleInput = GetStdHandle(STD_INPUT_HANDLE);
-  //int SystemInput = _open_osfhandle(intptr_t(ConsoleInput), _O_TEXT);
-  //FILE* CInputHandle = _fdopen(SystemInput, "r");
-
-  //std::ios::sync_with_stdio(true);
-
-  //freopen_s(&CInputHandle, "CONIN$", "r", stdin);
-  //freopen_s(&COutputHandle, "CONOUT$", "w", stdout);
-  //freopen_s(&CErrorHandle, "CONOUT$", "w", stderr);
-
-  //std::wcout.clear();
-  //std::cout.clear();
-  //std::wcerr.clear();
-  //std::cerr.clear();
-  //std::wcin.clear();
-  //std::cin.clear();
 }

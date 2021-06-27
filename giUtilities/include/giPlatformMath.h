@@ -4,7 +4,7 @@
 #include "giPlatformTypes.h"
 
 namespace giEngineSDK {
-  class GI_UTILITY_EXPORT PlatformMath
+  class GI_UTILITY_EXPORT platformMath
   {
    public:
     static const float PI;

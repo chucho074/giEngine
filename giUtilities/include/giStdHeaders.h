@@ -64,9 +64,9 @@ namespace giEngineSDK {
    * @tparam Alloc 
    */
   template<class Key,
-  /*******/class T,
-  /*******/class Compare = std::less<Key>,
-  /*******/class Alloc = std::allocator<std::pair<const Key, T>>> 
+           class T,
+           class Compare = std::less<Key>,
+           class Alloc = std::allocator<std::pair<const Key, T>>> 
   using Map = std::map<Key, T, Compare, Alloc>;
   
   /**

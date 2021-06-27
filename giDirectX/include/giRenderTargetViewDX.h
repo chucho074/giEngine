@@ -35,7 +35,7 @@ namespace giEngineSDK {
     ~CRenderTargetViewDX();
 
 
-    ID3D11RenderTargetView* m_RTV;
+    ID3D11RenderTargetView* m_renderTargetView;
 
   };
 }

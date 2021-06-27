@@ -23,10 +23,10 @@
 
 namespace giEngineSDK {
 #if GI_PLATFORM == GI_PLATFORM_WIN32
-  using Math = WindowsMath;
+  using Math = windowsMath;
 #elif GI_PLATFORM == GI_PLATFORM_LINUX
-  using Math = LinuxMath;
+  using Math = linuxMath;
 #else
-  using Math = PlatformMath;
+  using Math = platformMath;
 #endif
 }

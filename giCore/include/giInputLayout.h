@@ -12,8 +12,6 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
-#include <string>
-#include <vector>
 
 namespace giEngineSDK {
   /**
@@ -51,6 +49,6 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
      virtual void 
-     init(const std::vector<InputLayoutDesc>& inLayout) = 0;
+     init(const Vector<InputLayoutDesc>& inLayout) = 0;
   };
 }

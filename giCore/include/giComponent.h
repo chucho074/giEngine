@@ -14,14 +14,6 @@
 #include "giObject.h"
 
 namespace giEngineSDK {
-  
-  namespace Component {
-    enum E {
-      
-    };
-  }
-
-
   /**
    * @class    Component.
    * @brief    .
@@ -33,7 +25,8 @@ namespace giEngineSDK {
     //Default Constructor.
     Component() = default;
     //Destructor.
-    virtual ~Component() = default;
+    virtual 
+    ~Component() = default;
     
    protected:
     

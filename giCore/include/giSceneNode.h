@@ -16,10 +16,10 @@
 
 namespace giEngineSDK {
   /**
-* @class    SceneNode.
-* @brief    .
-* @bug      No known Bugs.
-*/
+   * @class    SceneNode.
+   * @brief    .
+   * @bug      No known Bugs.
+   */
   class SceneNode
   {
   public:

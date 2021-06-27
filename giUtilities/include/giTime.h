@@ -13,12 +13,9 @@
 #pragma once
 #include "giPrerequisitesUtilities.h"
 #include "giModule.h"
-#include <chrono>
 
 namespace giEngineSDK {
-  using std::chrono::time_point;
-  using std::chrono::high_resolution_clock;
-
+  
   /**
    * @class    Time.
    * @brief    .
@@ -49,8 +46,7 @@ namespace giEngineSDK {
     }
 
    protected:
-     high_resolution_clock m_clock;
-     time_point<high_resolution_clock> m_startTime;
+     
      float m_deltaTime;
    
    private:

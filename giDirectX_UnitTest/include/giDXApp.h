@@ -31,8 +31,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 
+using giEngineSDK::Buffer;
+using giEngineSDK::Vector4;
+using giEngineSDK::Matrix4;
 
-using namespace giEngineSDK;
 
  /**
   * @struct   CBNeverChanges.
@@ -115,53 +117,53 @@ class DirectXApp : public BaseApp {
  private:
 
   //The main camera 
-  Camera m_MainCamera;
+  Camera m_mainCamera;
 
   //The input Layout
-  InputLayout * m_InputLayout = nullptr;
+  InputLayout * m_inputLayout = nullptr;
 
   //The Sampler
-  Sampler * m_Sampler = nullptr;
+  Sampler * m_sampler = nullptr;
 
   //The Vertex Buffer
-  giEngineSDK::Buffer * m_vertexBuffer = nullptr;
+  Buffer * m_vertexBuffer = nullptr;
 
   //The Index Buffer 
-  giEngineSDK::Buffer * m_indexBuffer = nullptr;
+  Buffer * m_indexBuffer = nullptr;
 
   //The Constant Buffer (Never Change)
-  giEngineSDK::Buffer * m_ConstantBuffer_NC = nullptr;
+  Buffer * m_cBufferNeverChange = nullptr;
 
   //The Constant Buffer (Change on Resize)
-  giEngineSDK::Buffer * m_ConstantBuffer_COR = nullptr;
+  Buffer * m_cBufferChangeOnResize = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  giEngineSDK::Buffer * m_ConstantBuffer_CEF = nullptr;
+  Buffer * m_cBufferChangeEveryFrame = nullptr;
 
   //The Vertex shader
-  BaseVertexShader * m_VertexShader = nullptr;
+  BaseVertexShader * m_vertexShader = nullptr;
 
   //The Pixel Shader
-  BasePixelShader * m_PixelShader = nullptr;
+  BasePixelShader * m_pixelShader = nullptr;
 
   //The World Matrix
-  Matrix4 m_World;
+  Matrix4 m_world;
 
   //The color For the mesh
-  Vector4 m_MeshColor { 0.f, 0.f, 0.f, 0.f };
+  Vector4 m_meshColor { 0.f, 0.f, 0.f, 0.f };
 
   
           //MODELS
 
   //Yoshi Model
-  Model m_Yoshi;
+  Model m_yoshi;
 
   //Yoshi Textures
-  Texture2D * m_ColorTexture = nullptr;
+  Texture2D * m_colorTexture = nullptr;
 
   //Peach Model
-  Model m_Peach;
+  Model m_peach;
 
   //Peach Textures
-  Texture2D * m_PeachTexture = nullptr;
+  Texture2D * m_peachTexture = nullptr;
 };

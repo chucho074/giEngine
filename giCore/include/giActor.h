@@ -35,18 +35,17 @@ namespace giEngineSDK {
     ~Actor() = default;
 
     bool
-    addComponent(Component inComponent);
+    addComponent(SharedPtr<Component> inComponent);
 
 
     Transform m_transform;
 
     Map<String, SharedPtr<Component>> m_components;
+
    protected:
 
 
    private:
 
   };
-
-
 }

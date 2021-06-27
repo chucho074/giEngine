@@ -12,8 +12,8 @@
 
 namespace giEngineSDK {
   Mesh::Mesh(Vector<SimpleVertex> inVertex, 
-  /*********/Vector<unsigned int> inIndex, 
-  /*********/Vector<Texture> inTextures) {
+             Vector<uint32> inIndex, 
+             Vector<Texture> inTextures) {
     this->m_vertexVector = inVertex;
     this->m_facesList = inIndex;
     this->m_textures = inTextures;
@@ -31,17 +31,17 @@ namespace giEngineSDK {
     auto& GAPI = g_GraphicsAPI();
 
     m_vertexBuffer = GAPI.createBuffer(sizeof(SimpleVertex) * 
-    /**********************************/static_cast<int32>(m_vertexVector.size()),
-    /*********************************/0x1L,
-    /*********************************/0,
-    /*********************************/m_vertexVector.data());
+                                       static_cast<int32>(m_vertexVector.size()),
+                                       0x1L,
+                                       0,
+                                       m_vertexVector.data());
 
     
 
     m_indexBuffer = GAPI.createBuffer(sizeof(uint32) * m_facesList.size(),
-    /********************************/0x2L,
-    /********************************/0,
-    /********************************/m_facesList.data());
+                                      0x2L,
+                                      0,
+                                      m_facesList.data());
 
 
   }
@@ -52,7 +52,7 @@ namespace giEngineSDK {
 
     for(uint32 i = 0; i < m_textures.size(); i++) {
       GAPI.psSetShaderResource(i, m_textures[i].texture);
-      GAPI.psSetSampler(i, 1, m_textures[i].samplerState);
+      //GAPI.psSetSampler(i, 1, m_textures[i].samplerState);
     }
 
 
@@ -62,7 +62,7 @@ namespace giEngineSDK {
     GAPI.setVertexBuffer(m_vertexBuffer, stride);
 
     //Set IB
-    GAPI.setIndexBuffer(m_indexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
+    GAPI.setIndexBuffer(m_indexBuffer, GI_FORMAT::kFORMAT_R32_UINT);
 
     //Draw
     GAPI.drawIndexed(m_facesList.size(), 0);

@@ -32,9 +32,9 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    init(lpcstr inFileName,
-    /***/lpcstr inEntryPoint,
-    /***/lpcstr inShaderModel) override;
+    init(String inFileName,
+         String inEntryPoint,
+         String inShaderModel) override;
 
     /**
      * @brief    .
@@ -45,14 +45,14 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    CompileShaderFromFile(lpcstr szFileName,
-    /********************/lpcstr szEntryPoint,
-    /********************/lpcstr szShaderModel,
-    /********************/ID3DBlob** ppBlobOut);
+    CompileShaderFromFile(String szFileName,
+                          String szEntryPoint,
+                          String szShaderModel,
+                          ID3DBlob** ppBlobOut);
 
 
-    ID3D11PixelShader* m_PS;
+    ID3D11PixelShader* m_pixelShader;
 
-    ID3DBlob* m_CompiledPShader;
+    ID3DBlob* m_compiledPShader;
   };
 }

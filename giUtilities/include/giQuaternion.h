@@ -34,12 +34,12 @@ namespace giEngineSDK {
     
     //Constructor from 4 floats
     Quaternion(const float inX, 
-    /*********/const float inY, 
-    /*********/const float inZ, 
-    /*********/const float inW) : m_X(inX), 
-    /****************************/m_Y(inY), 
-    /****************************/m_Z(inZ), 
-    /****************************/m_W(inW) { };
+               const float inY, 
+               const float inZ, 
+               const float inW) : x(inX), 
+                                  y(inY), 
+                                  z(inZ), 
+                                  w(inW) { };
 
     //Destructor.
     ~Quaternion() = default;
@@ -59,13 +59,13 @@ namespace giEngineSDK {
     Quaternion
     normalize();
 
-    float m_X;   
+    float x;   
     
-    float m_Y;   
+    float y;   
     
-    float m_Z;   
+    float z;   
     
-    float m_W;  
+    float w;  
 
     static const Quaternion IDENTITY;
   };

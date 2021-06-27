@@ -46,7 +46,7 @@ namespace giEngineSDK {
      /**
       * @brief     Initialize the sampler.
       * @param     inDesc    The description of the sampler.
-     */
+      */
      virtual void 
      init(SamplerDesc) {};
   };

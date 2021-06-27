@@ -62,21 +62,23 @@ namespace giEngineSDK {
   }
   
   bool 
-  GraphicsOGL::createDeviceAndSwpaChain(void* inWindow, int inWidth, int inHeight) {
+  GraphicsOGL::createDeviceAndSwpaChain(void* inWindow, 
+                                        int32 inWidth, 
+                                        int32 inHeight) {
     return false;
   }
 
   Texture2D* 
-  GraphicsOGL::createTex2D(int inWidth, 
-  /***********************/int inHeigh, 
-  /***********************/int inMipLevels, 
-  /***********************/GI_FORMAT::E inFormat, 
-  /***********************/int inBindFlags) {
+  GraphicsOGL::createTex2D(int32 inWidth, 
+                           int32 inHeigh, 
+                           int32 inMipLevels, 
+                           GI_FORMAT::E inFormat, 
+                           int32 inBindFlags) {
 
     Texture2DOGL* tmpTexture = new Texture2DOGL();
     
     
-    if (GI_BIND_FLAG::E::kBIND_DEPTH_STENCIL & inBindFlags) {
+    if (GI_BIND_FLAG::kBIND_DEPTH_STENCIL & inBindFlags) {
       //Generate the render buffer object
       glGenRenderbuffers(1, &tmpTexture->m_texture);
       //Bind the render buffer
@@ -91,16 +93,16 @@ namespace giEngineSDK {
       glBindTexture(GL_TEXTURE_2D, tmpTexture->m_texture);
       //Create the image
       glTexImage2D(GL_TEXTURE_2D,
-      /***********/0,
-      /***********/getFormat(inFormat),
-      /***********/inWidth,
-      /***********/inHeigh,
-      /***********/0,
-      /***********/getImgFormat(inFormat),
-      /***********/GL_UNSIGNED_BYTE,
-      /***********/NULL);
+                   0,
+                   getFormat(inFormat),
+                   inWidth,
+                   inHeigh,
+                   0,
+                   getImgFormat(inFormat),
+                   GL_UNSIGNED_BYTE,
+                   NULL);
     }
-    if (GI_BIND_FLAG::E::kBIND_RENDER_TARGET & inBindFlags) {
+    if (GI_BIND_FLAG::kBIND_RENDER_TARGET & inBindFlags) {
       //Generate the Frame buffer
       glGenFramebuffers(1, &tmpTexture->m_bufferFrame);
       //Bind the texture
@@ -120,10 +122,10 @@ namespace giEngineSDK {
   
   void
   GraphicsOGL::createVP(uint32 inNumVP, 
-  /********************/int inWidth, 
-  /********************/int inHeight, 
-  /********************/int inTopX, 
-  /********************/int inTopY) {
+                        int32 inWidth, 
+                        int32 inHeight, 
+                        int32 inTopX, 
+                        int32 inTopY) {
 
     glViewport(inTopX, inTopY, inWidth, inHeight);
 
@@ -131,12 +133,16 @@ namespace giEngineSDK {
 
   
   BaseVertexShader* 
-  GraphicsOGL::createVS(lpcstr inFileName, lpcstr inEntryPoint, lpcstr inShaderModel) {
+  GraphicsOGL::createVS(String inFileName, 
+                        String inEntryPoint, 
+                        String inShaderModel) {
     return nullptr;
   }
   
   BasePixelShader* 
-  GraphicsOGL::createPS(lpcstr inFileName, lpcstr inEntryPoint, lpcstr inShaderModel) {
+  GraphicsOGL::createPS(String inFileName, 
+                        String inEntryPoint, 
+                        String inShaderModel) {
     return nullptr;
   }
   
@@ -151,9 +157,9 @@ namespace giEngineSDK {
   
   Buffer* 
   GraphicsOGL::createBuffer(uint32 inByteWidth, 
-  /************************/uint32 inBindFlags, 
-  /************************/uint32 inOffset, 
-  /************************/void* inBufferData) {
+                            uint32 inBindFlags, 
+                            uint32 inOffset, 
+                            void* inBufferData) {
     //Create the buffer
     BufferOGL* tmpBuffer = new BufferOGL();
     //Create in OGL
@@ -162,13 +168,13 @@ namespace giEngineSDK {
     if (0 != inByteWidth) {
       //Set the size
       tmpBuffer->m_size = inByteWidth;
-      if (GI_BIND_FLAG::E::kBIND_VERTEX_BUFFER ==  inBindFlags) {
+      if (GI_BIND_FLAG::kBIND_VERTEX_BUFFER ==  inBindFlags) {
         tmpBuffer->m_buffer = GL_ARRAY_BUFFER;
       }
-      if (GI_BIND_FLAG::E::kBIND_INDEX_BUFFER ==  inBindFlags) {
+      if (GI_BIND_FLAG::kBIND_INDEX_BUFFER ==  inBindFlags) {
         tmpBuffer->m_buffer = GL_ELEMENT_ARRAY_BUFFER;
       }
-      if (GI_BIND_FLAG::E::kBIND_CONSTANT_BUFFER ==  inBindFlags) {
+      if (GI_BIND_FLAG::kBIND_CONSTANT_BUFFER ==  inBindFlags) {
         tmpBuffer->m_buffer = GL_UNIFORM_BUFFER;
       }
 
@@ -270,9 +276,9 @@ namespace giEngineSDK {
   
   void 
   GraphicsOGL::updateTexture(Texture2D* inTexture, 
-  /*************************/const void* inData, 
-  /*************************/uint32 inPitch, 
-  /*************************/uint32 inDepthPitch) {
+                             const void* inData, 
+                             uint32 inPitch, 
+                             uint32 inDepthPitch) {
 
   }
 
@@ -317,7 +323,9 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::psSetSampler(uint32 inSlot, uint32 inNumSamplers, Sampler* inSampler) {
+  GraphicsOGL::psSetSampler(uint32 inSlot, 
+                            uint32 inNumSamplers, 
+                            Sampler* inSampler) {
   
   }
   
@@ -341,31 +349,31 @@ namespace giEngineSDK {
     
 
     //derecha es este formato
-    if(GI_FORMAT::E::kFORMAT_R8_SNORM   == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R8_SNORM   == inFormat ) {
       return GL_RED;
     }
-    if(GI_FORMAT::E::kFORMAT_R16_SNORM  == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R16_SNORM  == inFormat ) {
       return GL_RED;
     }
-    if(GI_FORMAT::E::kFORMAT_R16_FLOAT  == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R16_FLOAT  == inFormat ) {
       return GL_RED;
     }
-    if(GI_FORMAT::E::kFORMAT_R32_FLOAT  == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R32_FLOAT  == inFormat ) {
       return GL_RED;
     }
-    if(GI_FORMAT::E::kFORMAT_R8_UINT    == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R8_UINT    == inFormat ) {
       return GL_RED_INTEGER;
     }
-    if(GI_FORMAT::E::kFORMAT_R16_UINT   == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R16_UINT   == inFormat ) {
       return GL_RED_INTEGER;
     }
-    if(GI_FORMAT::E::kFORMAT_R32_UINT   == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R32_UINT   == inFormat ) {
       return GL_RED_INTEGER;
     }
-    if(GI_FORMAT::E::kFORMAT_R8_UNORM   == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R8_UNORM   == inFormat ) {
       return GL_RED;
     }
-    if(GI_FORMAT::E::kFORMAT_R16_UNORM  == inFormat ) {
+    if(GI_FORMAT::kFORMAT_R16_UNORM  == inFormat ) {
       return GL_RED;
     }
 
@@ -374,31 +382,31 @@ namespace giEngineSDK {
   int32 
   GraphicsOGL::getImgFormat(GI_FORMAT::E inFormat) {
     
-    if(GI_FORMAT::E::kFORMAT_R8_SNORM   == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R8_SNORM   == inFormat) { 
       return GL_R8_SNORM;  
     }
-    if(GI_FORMAT::E::kFORMAT_R16_SNORM  == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R16_SNORM  == inFormat) { 
       return GL_R16_SNORM; 
     }
-    if(GI_FORMAT::E::kFORMAT_R16_FLOAT  == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R16_FLOAT  == inFormat) { 
       return GL_R16F;      
     }
-    if(GI_FORMAT::E::kFORMAT_R32_FLOAT  == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R32_FLOAT  == inFormat) { 
       return GL_R32F;      
     }
-    if(GI_FORMAT::E::kFORMAT_R8_UINT    == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R8_UINT    == inFormat) { 
       return GL_R8UI;      
     }
-    if(GI_FORMAT::E::kFORMAT_R16_UINT   == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R16_UINT   == inFormat) { 
       return GL_R16UI;     
     }
-    if(GI_FORMAT::E::kFORMAT_R32_UINT   == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R32_UINT   == inFormat) { 
       return GL_R32UI;     
     }
-    if(GI_FORMAT::E::kFORMAT_R8_UNORM   == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R8_UNORM   == inFormat) { 
       return GL_R8;        
     }
-    if(GI_FORMAT::E::kFORMAT_R16_UNORM  == inFormat) { 
+    if(GI_FORMAT::kFORMAT_R16_UNORM  == inFormat) { 
       return GL_R16;       
     }
   }

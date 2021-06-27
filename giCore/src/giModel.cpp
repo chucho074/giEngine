@@ -34,10 +34,9 @@ namespace giEngineSDK {
     // Usually - if speed is not the most important aspect for you - you'll
     // probably to request more postprocessing than we do in this example.
     const aiScene* scene = importer.ReadFile(inFileName,
-    /***************************************/aiProcess_CalcTangentSpace |
-    /***************************************/aiProcess_Triangulate |
-    /***************************************/aiProcess_JoinIdenticalVertices |
-    /***************************************/aiProcess_SortByPType);
+                                             aiProcessPreset_TargetRealtime_MaxQuality |
+                                             aiProcess_ConvertToLeftHanded |
+                                             aiProcess_Triangulate);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
       return;
@@ -52,12 +51,12 @@ namespace giEngineSDK {
   void 
   Model::processNode(aiNode* node, const aiScene* scene) {
     // process all the node's meshes (if any)
-    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+    for (uint32 i = 0; i < node->mNumMeshes; i++) {
       aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
       m_meshes.push_back(processMesh(mesh, scene));
     }
     // then do the same for each of its children
-    for (unsigned int i = 0; i < node->mNumChildren; i++)  {
+    for (uint32 i = 0; i < node->mNumChildren; i++)  {
       processNode(node->mChildren[i], scene);
     }
 
@@ -67,10 +66,10 @@ namespace giEngineSDK {
   Mesh 
   Model::processMesh(aiMesh* mesh, const aiScene* scene) {
     Vector<SimpleVertex> vertices;
-    Vector<unsigned int> indices;
+    Vector<uint32> indices;
     Vector<Texture> textures;
 
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+    for(uint32 i = 0; i < mesh->mNumVertices; i++) {
       SimpleVertex vertex;
       // process vertex positions, normals and texture coordinates
       //Pos
@@ -78,9 +77,16 @@ namespace giEngineSDK {
       vertex.Pos.y = mesh->mVertices[i].y;
       vertex.Pos.z = mesh->mVertices[i].z;
       //Normals
-      vertex.Nor.x = mesh->mNormals[i].x;
-      vertex.Nor.y = mesh->mNormals[i].y;
-      vertex.Nor.z = mesh->mNormals[i].z;
+      if(mesh->mNormals) {
+        vertex.Nor.x = mesh->mNormals[i].x;
+        vertex.Nor.y = mesh->mNormals[i].y;
+        vertex.Nor.z = mesh->mNormals[i].z;
+      }
+      else {
+        vertex.Nor.x = 0.0f;
+        vertex.Nor.y = 0.0f;
+        vertex.Nor.z = 0.0f;
+      }
       //Texture
       if (mesh->mTextureCoords[0]) {
         vertex.Tex.x = mesh->mTextureCoords[0][i].x;
@@ -93,9 +99,9 @@ namespace giEngineSDK {
       vertices.push_back(vertex);
     }
     // process indices
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+    for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
       aiFace face = mesh->mFaces[i];
-      for (unsigned int j = 0; j < face.mNumIndices; j++) {
+      for (uint32 j = 0; j < face.mNumIndices; ++j) {
         indices.push_back(face.mIndices[j]);
       }
     }
@@ -105,14 +111,14 @@ namespace giEngineSDK {
       aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
       Vector<Texture> diffuseMaps = loadMaterialTextures(material,
-      /*************************************************/aiTextureType_DIFFUSE, 
-      /*************************************************/"texture_diffuse");
+                                                         aiTextureType_DIFFUSE, 
+                                                         "texture_diffuse");
 
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
       Vector<Texture> specularMaps = loadMaterialTextures(material,
-      /**************************************************/aiTextureType_SPECULAR, 
-      /**************************************************/"texture_specular");
+                                                          aiTextureType_SPECULAR, 
+                                                          "texture_specular");
 
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
@@ -121,10 +127,11 @@ namespace giEngineSDK {
     return Mesh(vertices, indices, textures);
   }
 
+
   Vector<Texture>
   Model::loadMaterialTextures(aiMaterial* mat, 
-  /**************************/aiTextureType type, 
-  /**************************/String typeName) {
+                              aiTextureType type, 
+                              String typeName) {
 
     auto& GAPI = g_GraphicsAPI();
     Vector<Texture> textures;
@@ -132,9 +139,9 @@ namespace giEngineSDK {
       aiString str;
       mat->GetTexture(type, i, &str);
       bool skip = false;
-      for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-        if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
-          textures.push_back(textures_loaded[j]);
+      for (unsigned int j = 0; j < m_texturesLoaded.size(); j++) {
+        if (std::strcmp(m_texturesLoaded[j].path.data(), str.C_Str()) == 0) {
+          textures.push_back(m_texturesLoaded[j]);
           skip = true;
           break;
         }
@@ -145,7 +152,7 @@ namespace giEngineSDK {
         texture.type = typeName;
         texture.path = str.C_Str();
         textures.push_back(texture);
-        textures_loaded.push_back(texture); // add to loaded textures
+        m_texturesLoaded.push_back(texture); // add to loaded textures
       }
     }
     return textures;
@@ -156,7 +163,7 @@ namespace giEngineSDK {
   Model::drawModel() {
 
     //Draw every mesh into the map
-    for (int i = 0; i < m_meshes.size(); i++) {
+    for (uint32 i = 0; i < m_meshes.size(); i++) {
       m_meshes[i].drawMesh();
     }
   }

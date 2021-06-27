@@ -17,24 +17,24 @@
 
 
 /**
- * @class    giRadians.
+ * @class    Radians.
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
 
-  class giDegrees;
+  class Degrees;
 
-  class GI_UTILITY_EXPORT giRadians 
+  class GI_UTILITY_EXPORT Radians 
   {
    public:
-    giRadians() = default;
+    Radians() = default;
     
-    giRadians(float inVal);
+    Radians(float inVal);
     
-    giRadians(const giDegrees& inDeg);
+    Radians(const Degrees& inDeg);
     
     
-    ~giRadians() = default;
+    ~Radians() = default;
     
     float 
     getRadians() const;
@@ -42,56 +42,56 @@ namespace giEngineSDK {
     float 
     getDegrees() const;
      
-    const giRadians&
+    const Radians&
     operator+() const;
     
-    giRadians
-    operator+(const giRadians& inRad) const;
+    Radians
+    operator+(const Radians& inRad) const;
     
-    giRadians&
-    operator+=(const giRadians& inRad);
+    Radians&
+    operator+=(const Radians& inRad);
     
-    giRadians
+    Radians
     operator-() const ;
     
-    giRadians
-    operator-(const giRadians& inRad) const;
+    Radians
+    operator-(const Radians& inRad) const;
     
-    giRadians&
-    operator-=(const giRadians& inRad);
+    Radians&
+    operator-=(const Radians& inRad);
     
-    giRadians
+    Radians
     operator*(float inVal) const ;
     
-    giRadians
-    operator*(const giRadians& inVal) const;
+    Radians
+    operator*(const Radians& inVal) const;
     
-    giRadians&
+    Radians&
     operator*=(float inVal);
     
-    giRadians
+    Radians
     operator/(float inVal) const;
     
-    giRadians&
+    Radians&
     operator/=(float inVal);
     
     bool
-    operator<(const giRadians& inRad) const;
+    operator<(const Radians& inRad) const;
     
     bool
-    operator<=(const giRadians& inRad) const;
+    operator<=(const Radians& inRad) const;
     
     bool
-    operator==(const giRadians& inRad) const;
+    operator==(const Radians& inRad) const;
     
     bool
-    operator!=(const giRadians& inRad) const;
+    operator!=(const Radians& inRad) const;
     
     bool
-    operator>=(const giRadians& inRad) const;
+    operator>=(const Radians& inRad) const;
     
     bool
-    operator>(const giRadians& inRad) const;
+    operator>(const Radians& inRad) const;
     
    private:
   

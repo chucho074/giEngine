@@ -47,8 +47,8 @@ namespace giEngineSDK {
    public:
     ///Default constructor
     Mesh(Vector<SimpleVertex> inVertex, 
-    /***/Vector<uint32> inIndex, 
-    /***/Vector<Texture> inTextures);
+         Vector<uint32> inIndex, 
+         Vector<Texture> inTextures);
 
     ///Destructor
     ~Mesh();
@@ -83,7 +83,7 @@ namespace giEngineSDK {
     Vector<uint32> m_facesList;
 
     //The number of index in the mesh
-    int m_indexNum = 0;
+    int32 m_indexNum = 0;
 
     //Textures in the mesh
     Vector<Texture> m_textures;

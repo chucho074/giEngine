@@ -15,11 +15,11 @@
 namespace giEngineSDK {
 
   CInputLayoutDX::CInputLayoutDX() {
-    m_InputLayout = nullptr;
+    m_inputLayout = nullptr;
   }
 
   CInputLayoutDX::~CInputLayoutDX() {
-    SAFE_RELEASE(m_InputLayout);
+    SAFE_RELEASE(m_inputLayout);
   }
 
   void 
@@ -33,7 +33,7 @@ namespace giEngineSDK {
       layout.AlignedByteOffset = inDesc[i].alignedByteOffset;
       layout.InputSlotClass = (D3D11_INPUT_CLASSIFICATION)inDesc[i].inputSlotClass;
       layout.InstanceDataStepRate = inDesc[i].instanceDataStepRate;
-      m_Descriptors.push_back(layout);
+      m_descriptors.push_back(layout);
     }
   }
 }

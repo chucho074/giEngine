@@ -15,8 +15,8 @@
 namespace giEngineSDK {
 
   PixelShaderDX::PixelShaderDX() {
-    m_PS = nullptr;
-    m_CompiledPShader = nullptr;
+    m_pixelShader = nullptr;
+    m_compiledPShader = nullptr;
   }
 
   PixelShaderDX::~PixelShaderDX() {
@@ -24,21 +24,21 @@ namespace giEngineSDK {
   }
 
   bool
-  PixelShaderDX::init(lpcstr inFileName,
-  /******************/lpcstr inEntryPoint, 
-  /******************/lpcstr inShaderModel) {
+  PixelShaderDX::init(String inFileName,
+                      String inEntryPoint,
+                      String inShaderModel) {
 
      return CompileShaderFromFile(inFileName, 
-     /***************************/inEntryPoint, 
-     /***************************/inShaderModel, 
-     /***************************/&m_CompiledPShader);
+                                  inEntryPoint, 
+                                  inShaderModel, 
+                                  &m_compiledPShader);
   }
 
   bool 
-  PixelShaderDX::CompileShaderFromFile(lpcstr szFileName,
-  /***********************************/lpcstr szEntryPoint, 
-  /***********************************/lpcstr szShaderModel, 
-  /***********************************/ID3DBlob** ppBlobOut) {
+  PixelShaderDX::CompileShaderFromFile(String szFileName,
+                                       String szEntryPoint, 
+                                       String szShaderModel, 
+                                       ID3DBlob** ppBlobOut) {
     HRESULT hr = S_OK;
 
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -51,17 +51,17 @@ namespace giEngineSDK {
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DX11CompileFromFile(szFileName,
-    /*************************/NULL,
-    /*************************/NULL,
-    /*************************/szEntryPoint,
-    /*************************/szShaderModel,
-    /*************************/dwShaderFlags,
-    /*************************/0,
-    /*************************/NULL,
-    /*************************/ppBlobOut,
-    /*************************/&pErrorBlob,
-    /*************************/NULL);
+    hr = D3DX11CompileFromFile(szFileName.c_str(),
+                               NULL,
+                               NULL,
+                               szEntryPoint.c_str(),
+                               szShaderModel.c_str(),
+                               dwShaderFlags,
+                               0,
+                               NULL,
+                               ppBlobOut,
+                               &pErrorBlob,
+                               NULL);
 
     if (FAILED(hr)) {
       if (pErrorBlob != NULL) {

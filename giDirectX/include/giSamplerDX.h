@@ -33,9 +33,9 @@ namespace giEngineSDK {
     init(SamplerDesc inDesc);
 
 
-    ID3D11SamplerState* m_Sampler;
+    ID3D11SamplerState* m_sampler;
 
-    D3D11_SAMPLER_DESC m_Desc;
+    D3D11_SAMPLER_DESC m_desc;
    
   };
 }

@@ -55,8 +55,6 @@ namespace giEngineSDK {
 #define ALIGN_ELEMENT (0xffffffff)
 #define SAFE_RELEASE(x) if(x != nullptr) x->Release(); x=nullptr;
 
-  using lpcstr = const char*;
-
   using wchar = wchar_t;
 
   namespace GI_FORMAT {

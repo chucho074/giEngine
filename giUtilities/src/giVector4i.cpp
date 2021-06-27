@@ -204,9 +204,9 @@ namespace giEngineSDK {
   Vector4i
   Vector4i::crossProd(const Vector4i& inVectA, const Vector4i& inVectB) {
     return Vector4i(((inVectA.y * inVectB.z) - (inVectA.z * inVectB.y)),
-    /**************/((inVectA.z * inVectB.x) - (inVectA.x * inVectB.z)),
-    /**************/((inVectA.x * inVectB.y) - (inVectA.y * inVectB.z)),
-    /**************/0);
+                    ((inVectA.z * inVectB.x) - (inVectA.x * inVectB.z)),
+                    ((inVectA.x * inVectB.y) - (inVectA.y * inVectB.z)),
+                    0);
   }
   
   void
@@ -231,9 +231,9 @@ namespace giEngineSDK {
   int32
   Vector4i::magnitude() {
     return sqrt(pow(x, 2) 
-    /***********/+ pow(y, 2) 
-    /***********/+ pow(z, 2) 
-    /***********/+ pow(w, 2));
+                + pow(y, 2) 
+                + pow(z, 2) 
+                + pow(w, 2));
   }
 
 }

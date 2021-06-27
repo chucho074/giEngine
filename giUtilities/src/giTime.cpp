@@ -16,7 +16,7 @@ namespace giEngineSDK {
   using namespace std::chrono;
 
   Time::Time() {
-    restart();
+    
   }
 
 

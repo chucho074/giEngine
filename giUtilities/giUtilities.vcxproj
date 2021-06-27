@@ -181,6 +181,7 @@
     <ClCompile Include="src\giPlatformMath.cpp" />
     <ClCompile Include="src\giRadians.cpp" />
     <ClCompile Include="src\giTime.cpp" />
+    <ClCompile Include="src\giTimer.cpp" />
     <ClCompile Include="src\giVector2.cpp" />
     <ClCompile Include="src\giVector2i.cpp" />
     <ClCompile Include="src\giVector3.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="include\giVector4.h" />
     <ClInclude Include="include\giVector4i.h" />
     <ClInclude Include="include\giWindowsMath.h" />
+    <ClInclude Include="include\giTimer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

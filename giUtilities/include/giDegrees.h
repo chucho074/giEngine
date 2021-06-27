@@ -1,5 +1,5 @@
 /**
- * @file    giDegrees.h
+ * @file    Degrees.h
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    02/02/2021
@@ -16,23 +16,23 @@
 
 
 /**
- * @class    giDegrees.
+ * @class    Degrees.
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
   
-  class giRadians;
+  class Radians;
 
-  class GI_UTILITY_EXPORT giDegrees 
+  class GI_UTILITY_EXPORT Degrees 
   {
    public:
-    giDegrees() = default;
+    Degrees() = default;
     
-    giDegrees(float inVal);
+    Degrees(float inVal);
     
-    giDegrees(const giRadians& inRad);
+    Degrees(const Radians& inRad);
     
-    ~giDegrees() = default;
+    ~Degrees() = default;
     
     float 
     getRadians() const;
@@ -40,44 +40,44 @@ namespace giEngineSDK {
     float 
     getDegrees() const;
     
-    const giDegrees&
+    const Degrees&
     operator+() const;
     
-    giDegrees
-    operator+(const giDegrees& inDeg) const;
+    Degrees
+    operator+(const Degrees& inDeg) const;
     
-    giDegrees&
-    operator+=(const giDegrees& inDeg);
+    Degrees&
+    operator+=(const Degrees& inDeg);
     
-    giDegrees
+    Degrees
     operator-() const;
     
-    giDegrees
-    operator-(const giDegrees& inDeg) const;
+    Degrees
+    operator-(const Degrees& inDeg) const;
     
-    giDegrees&
-    operator-=(const giDegrees& inDeg);
+    Degrees&
+    operator-=(const Degrees& inDeg);
     
-    giDegrees
-    operator*(const giDegrees& inDeg) const;
-    
-    bool
-    operator<(const giDegrees& inDeg) const;
+    Degrees
+    operator*(const Degrees& inDeg) const;
     
     bool
-    operator<=(const giDegrees& inDeg) const;
+    operator<(const Degrees& inDeg) const;
     
     bool
-    operator==(const giDegrees& inDeg) const;
+    operator<=(const Degrees& inDeg) const;
     
     bool
-    operator!=(const giDegrees& inDeg) const;
+    operator==(const Degrees& inDeg) const;
     
     bool
-    operator>=(const giDegrees& inDeg) const;
+    operator!=(const Degrees& inDeg) const;
+    
+    bool
+    operator>=(const Degrees& inDeg) const;
     
     bool 
-    operator>(const giDegrees& inDeg) const;
+    operator>(const Degrees& inDeg) const;
      
    private:
      float m_degreesAngle;

@@ -107,6 +107,6 @@ namespace giEngineSDK {
 
     String m_directory;
 
-    Vector<Texture> textures_loaded;
+    Vector<Texture> m_texturesLoaded;
   };
 }

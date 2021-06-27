@@ -13,11 +13,11 @@
 #pragma once
 #include "giPrerequisitesDX.h"
 #include <giBaseGraphicsAPI.h>
+#include "giTexture2DDX.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
 namespace giEngineSDK {
-  class CTexture2DDX;
   class BaseShader;
   class CBufferDX;
   class CInputLayoutDX;
@@ -47,9 +47,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    init(void * inWindow, 
-    /***/int inWidth, 
-    /***/int inHeight) override;
+    init(void * inWindow) override;
     
     /**
      * @brief    In Charge to create the device and the swap chain.
@@ -59,9 +57,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     bool 
-    createDeviceAndSwpaChain(void * inWindow, 
-    /***********************/int inWidth, 
-    /***********************/int inHeight) override;
+    createDeviceAndSwpaChain(void * inWindow) override;
          
     /**
      * @brief    Creates the texture in the Device.
@@ -73,11 +69,11 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     Texture2D * 
-    createTex2D(int inWidth,
-    /**********/int inHeigh,
-    /**********/int inMipLevels,
-    /**********/GI_FORMAT::E inFormat,
-    /**********/int inBindFlags) override;
+    createTex2D(int32 inWidth,
+                int32 inHeigh,
+                int32 inMipLevels,
+                GI_FORMAT::E inFormat,
+                int32 inBindFlags) override;
 
     /**
      * @brief    Creates the View Port in the Device.
@@ -90,10 +86,10 @@ namespace giEngineSDK {
      */
     void 
     createVP(uint32 inNumVP,
-    /*******/int inWidth,
-    /*******/int inHeight,
-    /*******/int inTopX,
-    /*******/int inTopY) override;
+             int32 inWidth,
+             int32 inHeight,
+             int32 inTopX,
+             int32 inTopY) override;
     
     /**
      * @brief    Create the Vertex Shader.
@@ -103,9 +99,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseVertexShader * 
-    createVS(lpcstr inFileName,
-    /*******/lpcstr inEntryPoint,
-    /*******/lpcstr inShaderModel) override;
+    createVS(String inFileName,
+             String inEntryPoint,
+             String inShaderModel) override;
     
     /**
      * @brief    Create the Pixel Shader.
@@ -115,9 +111,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BasePixelShader * 
-    createPS(lpcstr inFileName,
-    /*******/lpcstr inEntryPoint,
-    /*******/lpcstr inShaderModel) override;
+    createPS(String inFileName,
+             String inEntryPoint,
+             String inShaderModel) override;
 
     /**
      * @brief    Creates the Input Layout.
@@ -128,7 +124,7 @@ namespace giEngineSDK {
      */
     InputLayout * 
     createIL(Vector<InputLayoutDesc> & inDesc, 
-    /*******/BaseShader * inShader) override;
+             BaseShader * inShader) override;
 
     /**
      * @brief    Creates a buffer.
@@ -141,9 +137,9 @@ namespace giEngineSDK {
      */
     Buffer * 
     createBuffer(uint32 inByteWidth, 
-    /***********/uint32 inBindFlags, 
-    /***********/uint32 inOffset, 
-    /***********/void * inBufferData) override;
+                 uint32 inBindFlags, 
+                 uint32 inOffset, 
+                 void * inBufferData) override;
     
     /**
      * @brief    Creates a Sampler.
@@ -168,7 +164,7 @@ namespace giEngineSDK {
      */
     void 
     setVertexBuffer(Buffer * inBuffer, 
-    /**************/uint32 inStride) override;
+                    uint32 inStride) override;
     
     /**
      * @brief    Set IndexBuffer.
@@ -178,7 +174,7 @@ namespace giEngineSDK {
      */
     void 
     setIndexBuffer(Buffer * inBuffer, 
-    /*************/GI_FORMAT::E inFormat) override;
+                   GI_FORMAT::E inFormat) override;
     
     /**
      * @brief     Set PrimitiveTopology.
@@ -197,8 +193,8 @@ namespace giEngineSDK {
      */
     void 
     updateSubresource(Buffer * inBuffer, 
-    /****************/void * inData, 
-    /****************/uint32 inPitch) override;
+                      void * inData, 
+                      uint32 inPitch) override;
     
     /**
      * @brief    Update Texture.
@@ -210,9 +206,9 @@ namespace giEngineSDK {
      */
     void 
     updateTexture(Texture2D * inTexture, 
-    /************/const void * inData, 
-    /************/uint32 inPitch, 
-    /************/uint32 inDepthPitch) override;
+                  const void * inData, 
+                  uint32 inPitch, 
+                  uint32 inDepthPitch) override;
     
     /**
      * @brief    Clear the Back Buffer.
@@ -255,7 +251,7 @@ namespace giEngineSDK {
      */
     void 
     vsSetConstantBuffer(uint32 inSlot, 
-    /******************/Buffer * inBuffer = nullptr) override;
+                        Buffer * inBuffer = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Shader.
@@ -273,7 +269,7 @@ namespace giEngineSDK {
      */
     void 
     psSetConstantBuffer(uint32 inSlot, 
-    /******************/Buffer * inBuffer) override;
+                        Buffer * inBuffer) override;
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
@@ -283,7 +279,7 @@ namespace giEngineSDK {
      */
     void 
     psSetShaderResource(uint32 inSlot, 
-    /******************/Texture2D * inTexture = nullptr) override;
+                        Texture2D * inTexture = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Samplers.
@@ -294,8 +290,8 @@ namespace giEngineSDK {
      */
     void 
     psSetSampler(uint32 inSlot, 
-    /***********/uint32 inNumSamplers, 
-    /***********/Sampler * inSampler) override;
+                 uint32 inNumSamplers, 
+                 Sampler * inSampler) override;
     
     /** 
      * @brief    IA Set Input Layout.
@@ -313,7 +309,7 @@ namespace giEngineSDK {
      */
     void 
     omSetRenderTarget(Texture2D * inRT = nullptr, 
-    /****************/Texture2D * inDS = nullptr) override;
+                      Texture2D * inDS = nullptr) override;
      
     /** 
      * @brief    Draw Index.
@@ -322,23 +318,28 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    drawIndexed(uint32 inNumIndexes, uint32 inStartLocation) override;
+    drawIndexed(uint32 inNumIndexes, 
+                uint32 inStartLocation) override;
     
     /**
      * @brief    Gets the default Render Target.
      * @return   Returns the back Buffer texture.
      * @bug      No known Bugs.
      */
-    void * 
-    getDefaultRenderTarget() { return m_backBuffer; }
+    Texture2D * 
+    getDefaultRenderTarget() { 
+      return m_backBuffer; 
+    }
   
     /**
      * @brief    Gets the default Depth Stencil.
      * @return   Returns the Depth Stencil View texutre.
      * @bug      No known Bugs.
      */
-    void * 
-    getDefaultDephtStencil() { return m_defaultDSV; }
+    Texture2D * 
+    getDefaultDephtStencil() { 
+      return m_defaultDSV;
+    }
     
     /**
      * @brief 
@@ -347,25 +348,26 @@ namespace giEngineSDK {
      * @return 
      */
      Texture2D *
-     TextureFromFile(String inString, String inDirectory);
+     TextureFromFile(String inString, 
+                     String inDirectory);
 
   
    private:
   
     ///Reference to the device
-    ID3D11Device* m_Device;
+    ID3D11Device * m_device;
   
     ///Reference to the device Context
-    ID3D11DeviceContext* m_DevContext;
+    ID3D11DeviceContext * m_devContext;
   
     ///Reference to the Swap Chain
-    IDXGISwapChain* m_SwapChain;
+    IDXGISwapChain * m_swapChain;
   
     ///Reference to the defautl Render Target
-    CTexture2DDX  * m_backBuffer = nullptr;
+    Texture2DDX * m_backBuffer = nullptr;
   
     ///Reference to the default Depth Stencil
-    CTexture2DDX  * m_defaultDSV = nullptr;
+    Texture2DDX * m_defaultDSV = nullptr;
    
 
   };

@@ -13,7 +13,9 @@
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
+#include "giVector3.h"
 #include "giVector4.h"
+#include "giMath.h"
 
 namespace giEngineSDK { 
 
@@ -36,9 +38,9 @@ namespace giEngineSDK {
      * @param    inColumW   Vector for the column w.
      */
     Matrix4(Vector4 inColumX,
-    /******/Vector4 inColumY,
-    /******/Vector4 inColumZ,
-    /******/Vector4 inColumW) {
+    Vector4 inColumY,
+    Vector4 inColumZ,
+    Vector4 inColumW) {
     
       m_xColumn = inColumX;
       m_yColumn = inColumY;
@@ -196,8 +198,8 @@ namespace giEngineSDK {
   {
    public:
      lookToLH(Vector4 inEyePos,
-     /*******/Vector4 inEyeDirection,
-     /*******/Vector4 inUpDirection);
+              Vector4 inEyeDirection,
+              Vector4 inUpDirection);
   };
 
   /**
@@ -208,21 +210,29 @@ namespace giEngineSDK {
   {
    public:
      perspectiveFovLH(float inFov,
-     /***************/float inAR,
-     /***************/float inNear,
-     /***************/float inFar);
+                      float inAR,
+                      float inNear,
+                      float inFar);
   };
+
   /**
    * @class    matrixRotationY.
-   * @brief    For generate the perspective matrix.
+   * @brief    For generate a rotation in a matrix.
    */
   class GI_UTILITY_EXPORT matrixRotationY : public Matrix4
   {
    public:
-     matrixRotationY(float inFov,
-     /***************/float inAR,
-     /***************/float inNear,
-     /***************/float inFar);
+     matrixRotationY(float inAngle);
+  };
+
+  /**
+   * @class    matrixTranslation.
+   * @brief    For generate translation in a matrix.
+   */
+  class GI_UTILITY_EXPORT matrixTranslation : public Matrix4
+  {
+   public:
+     matrixTranslation(Vector3 inVector);
   };
 
 }

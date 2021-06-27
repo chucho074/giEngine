@@ -46,10 +46,10 @@ namespace giEngineSDK {
     friend class CGraphicsDX;
 
     ///Reference to DirectX Input Layout
-    ID3D11InputLayout* m_InputLayout;
+    ID3D11InputLayout* m_inputLayout;
 
     ///Reference to a DirectX Input element desc List
-    Vector<D3D11_INPUT_ELEMENT_DESC> m_Descriptors;
+    Vector<D3D11_INPUT_ELEMENT_DESC> m_descriptors;
 
   };
 }

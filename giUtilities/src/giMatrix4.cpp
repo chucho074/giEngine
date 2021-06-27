@@ -14,9 +14,9 @@ namespace giEngineSDK {
   
   const Matrix4 
   Matrix4::IDENTITY = Matrix4({ 1, 0, 0, 0 },
-  /**************************/{ 0, 1, 0, 0 },
-  /**************************/{ 0, 0, 1, 0 },
-  /**************************/{ 0, 0, 0, 1 });
+                              { 0, 1, 0, 0 },
+                              { 0, 0, 1, 0 },
+                              { 0, 0, 0, 1 });
 
   Matrix4
   Matrix4::operator+(const Matrix4& inMatrix) const {
@@ -45,89 +45,89 @@ namespace giEngineSDK {
     
     //xColumn
     Result.m_xColumn.x = ((m_xColumn.x * inMatrix.m_xColumn.x)
-    /********************/+ (m_yColumn.x * inMatrix.m_xColumn.y)
-    /********************/+ (m_zColumn.x * inMatrix.m_xColumn.z)
-    /********************/+ (m_wColumn.x * inMatrix.m_xColumn.w));
+                          + (m_yColumn.x * inMatrix.m_xColumn.y)
+                          + (m_zColumn.x * inMatrix.m_xColumn.z)
+                          + (m_wColumn.x * inMatrix.m_xColumn.w));
 
     Result.m_xColumn.y = ((m_xColumn.y * inMatrix.m_xColumn.x)
-    /********************/+ (m_yColumn.y * inMatrix.m_xColumn.y)
-    /********************/+ (m_zColumn.y * inMatrix.m_xColumn.z)
-    /********************/+ (m_wColumn.y * inMatrix.m_xColumn.w));
+                          + (m_yColumn.y * inMatrix.m_xColumn.y)
+                          + (m_zColumn.y * inMatrix.m_xColumn.z)
+                          + (m_wColumn.y * inMatrix.m_xColumn.w));
 
     Result.m_xColumn.z = ((m_xColumn.z * inMatrix.m_xColumn.x)
-    /********************/+ (m_yColumn.z * inMatrix.m_xColumn.y)
-    /********************/+ (m_zColumn.z * inMatrix.m_xColumn.z)
-    /********************/+ (m_wColumn.z * inMatrix.m_xColumn.w));
+                          + (m_yColumn.z * inMatrix.m_xColumn.y)
+                          + (m_zColumn.z * inMatrix.m_xColumn.z)
+                          + (m_wColumn.z * inMatrix.m_xColumn.w));
 
     Result.m_xColumn.w = ((m_xColumn.w * inMatrix.m_xColumn.x)
-    /********************/+ (m_yColumn.w * inMatrix.m_xColumn.y)
-    /********************/+ (m_zColumn.w * inMatrix.m_xColumn.z)
-    /********************/+ (m_wColumn.w * inMatrix.m_xColumn.w));
+                          + (m_yColumn.w * inMatrix.m_xColumn.y)
+                          + (m_zColumn.w * inMatrix.m_xColumn.z)
+                          + (m_wColumn.w * inMatrix.m_xColumn.w));
 
     //yColumn
     Result.m_yColumn.x = ((m_xColumn.x * inMatrix.m_yColumn.x)
-    /********************/+ (m_yColumn.x * inMatrix.m_yColumn.y)
-    /********************/+ (m_zColumn.x * inMatrix.m_yColumn.z)
-    /********************/+ (m_wColumn.x * inMatrix.m_yColumn.w));
+                          + (m_yColumn.x * inMatrix.m_yColumn.y)
+                          + (m_zColumn.x * inMatrix.m_yColumn.z)
+                          + (m_wColumn.x * inMatrix.m_yColumn.w));
 
     Result.m_yColumn.y = ((m_xColumn.y * inMatrix.m_yColumn.x)
-    /********************/+ (m_yColumn.y * inMatrix.m_yColumn.y)
-    /********************/+ (m_zColumn.y * inMatrix.m_yColumn.z)
-    /********************/+ (m_wColumn.y * inMatrix.m_yColumn.w));
+                          + (m_yColumn.y * inMatrix.m_yColumn.y)
+                          + (m_zColumn.y * inMatrix.m_yColumn.z)
+                          + (m_wColumn.y * inMatrix.m_yColumn.w));
 
     Result.m_yColumn.z = ((m_xColumn.z * inMatrix.m_yColumn.x)
-    /********************/+ (m_yColumn.z * inMatrix.m_yColumn.y)
-    /********************/+ (m_zColumn.z * inMatrix.m_yColumn.z)
-    /********************/+ (m_wColumn.z * inMatrix.m_yColumn.w));
+                          + (m_yColumn.z * inMatrix.m_yColumn.y)
+                          + (m_zColumn.z * inMatrix.m_yColumn.z)
+                          + (m_wColumn.z * inMatrix.m_yColumn.w));
 
     Result.m_yColumn.w = ((m_xColumn.w * inMatrix.m_yColumn.x)
-    /********************/+ (m_yColumn.w * inMatrix.m_yColumn.y)
-    /********************/+ (m_zColumn.w * inMatrix.m_yColumn.z)
-    /********************/+ (m_wColumn.w * inMatrix.m_yColumn.w));
+                          + (m_yColumn.w * inMatrix.m_yColumn.y)
+                          + (m_zColumn.w * inMatrix.m_yColumn.z)
+                          + (m_wColumn.w * inMatrix.m_yColumn.w));
 
     //zColumn
     Result.m_zColumn.x = ((m_xColumn.x * inMatrix.m_zColumn.x)
-    /********************/+ (m_yColumn.x * inMatrix.m_zColumn.y)
-    /********************/+ (m_zColumn.x * inMatrix.m_zColumn.z)
-    /********************/+ (m_wColumn.x * inMatrix.m_zColumn.w));
+                          + (m_yColumn.x * inMatrix.m_zColumn.y)
+                          + (m_zColumn.x * inMatrix.m_zColumn.z)
+                          + (m_wColumn.x * inMatrix.m_zColumn.w));
 
     Result.m_zColumn.y = ((m_xColumn.y * inMatrix.m_zColumn.x)
-    /********************/+ (m_yColumn.y * inMatrix.m_zColumn.y)
-    /********************/+ (m_zColumn.y * inMatrix.m_zColumn.z)
-    /********************/+ (m_wColumn.y * inMatrix.m_zColumn.w));
+                          + (m_yColumn.y * inMatrix.m_zColumn.y)
+                          + (m_zColumn.y * inMatrix.m_zColumn.z)
+                          + (m_wColumn.y * inMatrix.m_zColumn.w));
 
     Result.m_zColumn.z = ((m_xColumn.z * inMatrix.m_zColumn.x)
-    /********************/+ (m_yColumn.z * inMatrix.m_zColumn.y)
-    /********************/+ (m_zColumn.z * inMatrix.m_zColumn.z)
-    /********************/+ (m_wColumn.z * inMatrix.m_zColumn.w));
+                          + (m_yColumn.z * inMatrix.m_zColumn.y)
+                          + (m_zColumn.z * inMatrix.m_zColumn.z)
+                          + (m_wColumn.z * inMatrix.m_zColumn.w));
 
     Result.m_zColumn.w = ((m_xColumn.w * inMatrix.m_zColumn.x)
-    /********************/+ (m_yColumn.w * inMatrix.m_zColumn.y)
-    /********************/+ (m_zColumn.w * inMatrix.m_zColumn.z)
-    /********************/+ (m_wColumn.w * inMatrix.m_zColumn.w));
+                          + (m_yColumn.w * inMatrix.m_zColumn.y)
+                          + (m_zColumn.w * inMatrix.m_zColumn.z)
+                          + (m_wColumn.w * inMatrix.m_zColumn.w));
 
     //wColumn
     Result.m_wColumn.x = ((m_xColumn.x * inMatrix.m_wColumn.x)
-    /********************/+ (m_yColumn.x * inMatrix.m_wColumn.y)
-    /********************/+ (m_zColumn.x * inMatrix.m_wColumn.z)
-    /********************/+ (m_wColumn.x * inMatrix.m_wColumn.w));
+                          + (m_yColumn.x * inMatrix.m_wColumn.y)
+                          + (m_zColumn.x * inMatrix.m_wColumn.z)
+                          + (m_wColumn.x * inMatrix.m_wColumn.w));
 
     Result.m_wColumn.y = ((m_xColumn.y * inMatrix.m_wColumn.x)
-    /********************/+ (m_yColumn.y * inMatrix.m_wColumn.y)
-    /********************/+ (m_zColumn.y * inMatrix.m_wColumn.z)
-    /********************/+ (m_wColumn.y * inMatrix.m_wColumn.w));
+                          + (m_yColumn.y * inMatrix.m_wColumn.y)
+                          + (m_zColumn.y * inMatrix.m_wColumn.z)
+                          + (m_wColumn.y * inMatrix.m_wColumn.w));
 
     Result.m_wColumn.z = ((m_xColumn.z * inMatrix.m_wColumn.x)
-    /********************/+ (m_yColumn.z * inMatrix.m_wColumn.y)
-    /********************/+ (m_zColumn.z * inMatrix.m_wColumn.z)
-    /********************/+ (m_wColumn.z * inMatrix.m_wColumn.w));
+                          + (m_yColumn.z * inMatrix.m_wColumn.y)
+                          + (m_zColumn.z * inMatrix.m_wColumn.z)
+                          + (m_wColumn.z * inMatrix.m_wColumn.w));
 
     Result.m_wColumn.w = ((m_xColumn.w * inMatrix.m_wColumn.x)
-    /********************/+ (m_yColumn.w * inMatrix.m_wColumn.y)
-    /********************/+ (m_zColumn.w * inMatrix.m_wColumn.z)
-    /********************/+ (m_wColumn.w * inMatrix.m_wColumn.w));
+                          + (m_yColumn.w * inMatrix.m_wColumn.y)
+                          + (m_zColumn.w * inMatrix.m_wColumn.z)
+                          + (m_wColumn.w * inMatrix.m_wColumn.w));
       
-    
+    Result.transpose();
     return Result;
   }
 
@@ -185,16 +185,16 @@ namespace giEngineSDK {
       tmpMat.m_wColumn.z = m_xColumn.z * m_yColumn.w - m_xColumn.w * m_yColumn.z;
     
       float Det0 = m_yColumn.y * tmpMat.m_xColumn.x - m_zColumn.y * 
-      /***********/tmpMat.m_xColumn.y + m_wColumn.y * tmpMat.m_xColumn.z;
+                   tmpMat.m_xColumn.y + m_wColumn.y * tmpMat.m_xColumn.z;
 
       float Det1 = m_xColumn.y * tmpMat.m_yColumn.x - m_zColumn.y * 
-      /***********/tmpMat.m_yColumn.y + m_wColumn.y * tmpMat.m_yColumn.z;
+                   tmpMat.m_yColumn.y + m_wColumn.y * tmpMat.m_yColumn.z;
 
       float Det2 = m_xColumn.y * tmpMat.m_zColumn.x - m_yColumn.y * 
-      /***********/tmpMat.m_zColumn.y + m_wColumn.y * tmpMat.m_zColumn.z;
+                   tmpMat.m_zColumn.y + m_wColumn.y * tmpMat.m_zColumn.z;
 
       float Det3 = m_xColumn.y * tmpMat.m_wColumn.x - m_yColumn.y * 
-      /***********/tmpMat.m_wColumn.y + m_zColumn.y * tmpMat.m_wColumn.z;
+                   tmpMat.m_wColumn.y + m_zColumn.y * tmpMat.m_wColumn.z;
     
       float Determinant = m_xColumn.x * Det0 - m_yColumn.x * Det1 + m_zColumn.x * Det2 - m_wColumn.x * Det3;
       float  RDet = 1.0f / Determinant;
@@ -252,21 +252,21 @@ namespace giEngineSDK {
   float
   Matrix4::determinant() const {
     return m_xColumn.x * (
-    /***********/m_yColumn.y * (m_zColumn.z * m_wColumn.w - m_zColumn.w * m_wColumn.z) -
-    /***********/m_zColumn.y * (m_yColumn.z * m_wColumn.w - m_yColumn.w * m_wColumn.z) +
-    /***********/m_wColumn.y * (m_yColumn.z * m_zColumn.w - m_yColumn.w * m_zColumn.z)
-    /***********/) - m_yColumn.x * (
-    /***********/m_xColumn.y * (m_zColumn.z * m_wColumn.w - m_zColumn.w * m_wColumn.z) -
-    /***********/m_zColumn.y * (m_xColumn.z * m_wColumn.w - m_xColumn.w * m_wColumn.z) +
-    /***********/m_wColumn.y * (m_xColumn.z * m_zColumn.w - m_xColumn.w * m_zColumn.z)
-    /***********/) + m_zColumn.x * (
-    /***********/m_xColumn.y * (m_yColumn.z * m_wColumn.w - m_yColumn.w * m_wColumn.z) -
-    /***********/m_yColumn.y * (m_xColumn.z * m_wColumn.w - m_xColumn.w * m_wColumn.z) +
-    /***********/m_wColumn.y * (m_xColumn.z * m_yColumn.w - m_xColumn.w * m_yColumn.z)
-    /***********/) - m_wColumn.x * (
-    /***********/m_xColumn.y * (m_yColumn.z * m_zColumn.w - m_yColumn.w * m_zColumn.z) -
-    /***********/m_yColumn.y * (m_xColumn.z * m_zColumn.w - m_xColumn.w * m_zColumn.z) +
-    /***********/m_zColumn.y * (m_xColumn.z * m_yColumn.w - m_xColumn.w * m_yColumn.z));
+             m_yColumn.y * (m_zColumn.z * m_wColumn.w - m_zColumn.w * m_wColumn.z) -
+             m_zColumn.y * (m_yColumn.z * m_wColumn.w - m_yColumn.w * m_wColumn.z) +
+             m_wColumn.y * (m_yColumn.z * m_zColumn.w - m_yColumn.w * m_zColumn.z)
+             ) - m_yColumn.x * (
+             m_xColumn.y * (m_zColumn.z * m_wColumn.w - m_zColumn.w * m_wColumn.z) -
+             m_zColumn.y * (m_xColumn.z * m_wColumn.w - m_xColumn.w * m_wColumn.z) +
+             m_wColumn.y * (m_xColumn.z * m_zColumn.w - m_xColumn.w * m_zColumn.z)
+             ) + m_zColumn.x * (
+             m_xColumn.y * (m_yColumn.z * m_wColumn.w - m_yColumn.w * m_wColumn.z) -
+             m_yColumn.y * (m_xColumn.z * m_wColumn.w - m_xColumn.w * m_wColumn.z) +
+             m_wColumn.y * (m_xColumn.z * m_yColumn.w - m_xColumn.w * m_yColumn.z)
+             ) - m_wColumn.x * (
+             m_xColumn.y * (m_yColumn.z * m_zColumn.w - m_yColumn.w * m_zColumn.z) -
+             m_yColumn.y * (m_xColumn.z * m_zColumn.w - m_xColumn.w * m_zColumn.z) +
+             m_zColumn.y * (m_xColumn.z * m_yColumn.w - m_xColumn.w * m_yColumn.z));
   }
   
   Matrix4 
@@ -321,8 +321,8 @@ namespace giEngineSDK {
   }
 
   lookToLH::lookToLH(Vector4 inEyePos, 
-  /*****************/Vector4 inEyeDirection, 
-  /*****************/Vector4 inUpDirection) {
+                     Vector4 inEyeDirection, 
+                     Vector4 inUpDirection) {
     
     Vector4 z = (inEyeDirection - inEyePos);
     z.normalize();
@@ -347,9 +347,9 @@ namespace giEngineSDK {
 
 
   perspectiveFovLH::perspectiveFovLH(float inFov, 
-  /*********************************/float inAR, 
-  /*********************************/float inNear, 
-  /*********************************/float inFar) {
+                                     float inAR, 
+                                     float inNear, 
+                                     float inFar) {
 
     //float h = cosf(inFov) / sinf(inFov);
     //float w = h / inAR;
@@ -372,4 +372,30 @@ namespace giEngineSDK {
   }
 
   
+  matrixRotationY::matrixRotationY(float inAngle) {
+    float    fSinAngle = Math::sin(inAngle);
+    float    fCosAngle = Math::cos(inAngle);
+
+    
+    m_xColumn = {fCosAngle, 0.0f, -fSinAngle, 0.0f};
+
+    m_yColumn = {0.0f, 1.0f, 0.0f, 0.0f};
+
+    m_zColumn = {fSinAngle, 0.0f, fCosAngle, 0.0f};
+
+    m_wColumn = {0.0f, 0.0f, 0.0f, 1.0f};
+  }
+
+  matrixTranslation::matrixTranslation(Vector3 inVector) {
+    
+    m_xColumn = {1.0f, 0.0f, 0.0f, 0.0f};
+
+    m_yColumn = {0.0f, 1.0f, 0.0f, 0.0f};
+
+    m_zColumn = {0.0f, 0.0f, 1.0f, 0.0f};
+
+    m_wColumn = {inVector.x, inVector.y, inVector.z, 1.0f};
+
+  }
+
 }

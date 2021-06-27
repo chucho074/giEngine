@@ -4,88 +4,88 @@
 
 namespace giEngineSDK {
 
-  giDegrees::giDegrees(float inVal) {
+  Degrees::Degrees(float inVal) {
     m_degreesAngle = inVal;
   }
 
-  giDegrees::giDegrees(const giRadians& inRad) {
+  Degrees::Degrees(const Radians& inRad) {
     m_degreesAngle = inRad.getRadians();
   }
 
   float
-  giDegrees::getRadians() const {
+  Degrees::getRadians() const {
     return getDegrees() * Math::DEG2RAD;
   }
 
   float
-  giDegrees::getDegrees() const {
+  Degrees::getDegrees() const {
     return m_degreesAngle;
   }
   
-  const giDegrees& 
-  giDegrees::operator+() const {
+  const Degrees& 
+  Degrees::operator+() const {
     return getDegrees();
   }
   
-  giDegrees 
-  giDegrees::operator+(const giDegrees& inDeg) const {
-    return giDegrees(getDegrees() + inDeg.getDegrees());
+  Degrees 
+  Degrees::operator+(const Degrees& inDeg) const {
+    return Degrees(getDegrees() + inDeg.getDegrees());
   }
   
-  giDegrees& 
-  giDegrees::operator+=(const giDegrees& inDeg) {
+  Degrees& 
+  Degrees::operator+=(const Degrees& inDeg) {
     m_degreesAngle += inDeg.m_degreesAngle;
     return *this;
   }
   
-  giDegrees 
-  giDegrees::operator-() const {
-    return giDegrees(-getDegrees());
+  Degrees 
+  Degrees::operator-() const {
+    return Degrees(-getDegrees());
   }
   
-  giDegrees 
-  giDegrees::operator-(const giDegrees& inDeg) const {
-    return giDegrees(getDegrees() - inDeg.getDegrees());
+  Degrees 
+  Degrees::operator-(const Degrees& inDeg) const {
+    return Degrees(getDegrees() - inDeg.getDegrees());
   }
   
-  giDegrees& 
-  giDegrees::operator-=(const giDegrees& inDeg) {
+  Degrees& 
+  Degrees::operator-=(const Degrees& inDeg) {
     m_degreesAngle -= inDeg.getDegrees();
     return *this;
   }
 
-  giDegrees 
-  giDegrees::operator*(const giDegrees& inFloat) const {
-    return giDegrees(getDegrees() * inFloat.getDegrees());
+  Degrees 
+  Degrees::operator*(const Degrees& inFloat) const {
+    return Degrees(getDegrees() * inFloat.getDegrees());
   }
   
   bool 
-  giDegrees::operator<(const giDegrees& inDeg) const {
+  Degrees::operator<(const Degrees& inDeg) const {
     return getDegrees() < inDeg.getDegrees();
   }
   
   bool 
-  giDegrees::operator<=(const giDegrees& inDeg) const {
+  Degrees::operator<=(const Degrees& inDeg) const {
     return getDegrees() <= inDeg.getDegrees();
   }
   
   bool 
-  giDegrees::operator==(const giDegrees& inDeg) const {
+  Degrees::operator==(const Degrees& inDeg) const {
     return getDegrees() == inDeg.getDegrees();
   }
   
   bool 
-  giDegrees::operator!=(const giDegrees& inDeg) const {
+  Degrees::operator!=(const Degrees& inDeg) const {
     return getDegrees() != inDeg.getDegrees();
   }
   
   bool 
-  giDegrees::operator>=(const giDegrees& inDeg) const {
+  Degrees::operator>=(const Degrees& inDeg) const {
     return getDegrees() >= inDeg.getDegrees();
   }
   
   bool 
-  giDegrees::operator>(const giDegrees& inDeg) const {
+  Degrees::operator>(const Degrees& inDeg) const {
     return getDegrees() > inDeg.getDegrees();
   }
   

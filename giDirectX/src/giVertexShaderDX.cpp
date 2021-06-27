@@ -15,8 +15,8 @@
 namespace giEngineSDK {
 
   VertexShaderDX::VertexShaderDX() {
-    m_VS = nullptr;
-    m_CompiledVShader = nullptr;
+    m_vertexShader = nullptr;
+    m_compiledVShader = nullptr;
   }
 
   VertexShaderDX::~VertexShaderDX() {
@@ -24,21 +24,21 @@ namespace giEngineSDK {
   }
 
   bool 
-  VertexShaderDX::init(lpcstr inFileName,
-  /*******************/lpcstr inEntryPoint, 
-  /*******************/lpcstr inShaderModel) {
+  VertexShaderDX::init(String inFileName,
+                       String inEntryPoint, 
+                       String inShaderModel) {
 
     return CompileShaderFromFile(inFileName, 
-    /***************************/inEntryPoint, 
-    /***************************/inShaderModel, 
-    /***************************/&m_CompiledVShader);
+                                 inEntryPoint, 
+                                 inShaderModel, 
+                                 &m_compiledVShader);
   }
 
   bool 
-  VertexShaderDX::CompileShaderFromFile(lpcstr szFileName,
-  /************************************/lpcstr szEntryPoint, 
-  /************************************/lpcstr szShaderModel, 
-  /************************************/ID3DBlob** ppBlobOut) {
+  VertexShaderDX::CompileShaderFromFile(String szFileName,
+                                        String szEntryPoint, 
+                                        String szShaderModel, 
+                                        ID3DBlob** ppBlobOut) {
 
     HRESULT hr = S_OK;
 
@@ -52,17 +52,17 @@ namespace giEngineSDK {
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DX11CompileFromFileA(szFileName,
-    /*************************/NULL,
-    /*************************/NULL,
-    /*************************/szEntryPoint,
-    /*************************/szShaderModel,
-    /*************************/dwShaderFlags,
-    /*************************/0,
-    /*************************/NULL,
-    /*************************/ppBlobOut,
-    /*************************/&pErrorBlob,
-    /*************************/NULL);
+    hr = D3DX11CompileFromFileA(szFileName.c_str(),
+                                NULL,
+                                NULL,
+                                szEntryPoint.c_str(),
+                                szShaderModel.c_str(),
+                                dwShaderFlags,
+                                0,
+                                NULL,
+                                ppBlobOut,
+                                &pErrorBlob,
+                                NULL);
 
     if (FAILED(hr)) {
       if (pErrorBlob != NULL) {

@@ -30,9 +30,9 @@ namespace giEngineSDK {
     ~CDepthStencilViewDX() = default;
 
     //Reference to DirectX Depth Stencil View
-    ID3D11DepthStencilView* m_DepthStencilView;
+    ID3D11DepthStencilView* m_depthStencilView;
 
     //Reference to Depth Stencil View Desc
-    DepthStencilViewDesc m_DescDepthStencilView;
+    DepthStencilViewDesc m_descDepthStencilView;
   };
 }

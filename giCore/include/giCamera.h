@@ -73,18 +73,18 @@ namespace giEngineSDK {
     getProyectionMatrix();
 
    //private:
-    float m_Angle = 0;
-    float m_AspectRatio = 0;
-    float m_Near = 0;
-    float m_Far = 0;
-    Vector4 m_Eye = { 0.0f, 3.0f, -6.0f, 1.0f };  //En posicion del mundo
-    Vector4 m_At = { 0.0f, 1.0f, 0.0f, 1.0f };  //En posicion del mundo
-    Vector4 m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };  //Up del mundo
-    Matrix4 m_VM;
-    Matrix4 m_PM;
-    Vector4 m_Right;
-    Vector4 m_Up2;    //Up de la camara
-    Vector4 m_Front;
+    float m_angle = 0;
+    float m_aspectRatio = 0;
+    float m_near = 0;
+    float m_far = 0;
+    Vector4 m_eye = { 0.0f, 3.0f, -6.0f, 1.0f };  //En posicion del mundo
+    Vector4 m_at = { 0.0f, 1.0f, 0.0f, 1.0f };  //En posicion del mundo
+    Vector4 m_up = { 0.0f, 1.0f, 0.0f, 0.0f };  //Up del mundo
+    Matrix4 m_viewMatrix;
+    Matrix4 m_projMatrix;
+    Vector4 m_right;
+    Vector4 m_up2;    //Up de la camara
+    Vector4 m_front;
 
   };
 }

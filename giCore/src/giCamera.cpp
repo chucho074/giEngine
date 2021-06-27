@@ -16,86 +16,86 @@
 
 namespace giEngineSDK {
   Camera::Camera() {
-    m_Front = (m_At - m_Eye);
-    m_Front.normalize();
+    m_front = (m_at - m_eye);
+    m_front.normalize();
 
-    m_Right = m_Up.cross(m_Front);
-    m_Right.normalize();
+    m_right = m_up.cross(m_front);
+    m_right.normalize();
     
-    m_Up2 = m_Front.cross(m_Right);
-    m_Up2.normalize();
+    m_up2 = m_front.cross(m_right);
+    m_up2.normalize();
   }
   
   void 
   Camera::init(float inAngle, float inAR, float inNear, float inFar) {
-    m_Angle = inAngle;
-    m_AspectRatio = inAR;
-    m_Near = inNear;
-    m_Far = inFar;
+    m_angle = inAngle;
+    m_aspectRatio = inAR;
+    m_near = inNear;
+    m_far = inFar;
     update();
   }
   
   void 
   Camera::update() {
-    m_VM = lookToLH(m_Eye, m_At, m_Up);
+    m_viewMatrix = lookToLH(m_eye, m_at, m_up);
     updateVM();
-    m_VM = m_VM.transpose();
+    m_viewMatrix = m_viewMatrix.transpose();
     
-    m_PM = perspectiveFovLH(m_Angle, m_AspectRatio, m_Near, m_Far);
-    m_PM = m_PM.transpose();
+    m_projMatrix = perspectiveFovLH(m_angle, m_aspectRatio, m_near, m_far);
+    m_projMatrix = m_projMatrix.transpose();
   }
   
   void 
   Camera::updateVM() {
-    m_Right = m_VM.m_xColumn;
-    m_Right.w = 0.f;
+    m_right = m_viewMatrix.m_xColumn;
+    m_right.w = 0.f;
 
-    m_Up2 = m_VM.m_yColumn;
-    m_Up2.w = 0.f;
+    m_up2 = m_viewMatrix.m_yColumn;
+    m_up2.w = 0.f;
     
-    m_Front = m_VM.m_zColumn;
-    m_Front.w = 0.f;
+    m_front = m_viewMatrix.m_zColumn;
+    m_front.w = 0.f;
     
-    m_At = m_Front + m_Eye;
+    m_at = m_front + m_eye;
   }
   
   void 
   Camera::move(Vector4 inVect) {
     
     if (inVect.x != 0.f) {
-      m_Eye += (m_Right * inVect.x);
+      m_eye += (m_right * inVect.x);
     }
     if (inVect.y != 0.f) {
-      m_Eye += (m_Up2 * inVect.y);
+      m_eye += (m_up2 * inVect.y);
     }
     if (inVect.z != 0.f) {
-      m_Eye += (m_Front * inVect.z);
+      m_eye += (m_front * inVect.z);
     }
 
-    m_Up2.normalize();
-    m_Right.normalize();
-    m_Front.normalize();
+    m_up2.normalize();
+    m_right.normalize();
+    m_front.normalize();
 
-    Matrix4 Axis({ m_Right.x,  m_Right.y,  m_Right.z,    0 },
-    /***********/{ m_Up2.x,    m_Up2.y,    m_Up2.z,      0 },
-    /***********/{ m_Front.x,  m_Front.y,  m_Front.z,    0 },
-    /***********/{ 0,      0,      0,        1 });
+    Matrix4 Axis({ m_right.x,  m_right.y,  m_right.z,    0 },
+                 { m_up2.x,    m_up2.y,    m_up2.z,      0 },
+                 { m_front.x,  m_front.y,  m_front.z,    0 },
+                 { 0,      0,      0,        1 });
     Axis.transpose();
 
-    Matrix4 Pos({1, 0, 0, -m_Eye.x},
-    /**********/{0, 1, 0, -m_Eye.y},
-    /**********/{0, 0, 1, -m_Eye.z},
-    /**********/{0, 0, 0, 1});
+    Matrix4 Pos({1, 0, 0, -m_eye.x},
+                {0, 1, 0, -m_eye.y},
+                {0, 0, 1, -m_eye.z},
+                {0, 0, 0, 1});
     Pos.transpose();
 
     Pos *= Axis;
-    m_VM = Pos;
+    m_viewMatrix = Pos;
   }
   
   Matrix4 
   Camera::getViewMatrix() {
     update();
-    return m_VM;
+    return m_viewMatrix;
   }
   
   Matrix4 
@@ -104,6 +104,6 @@ namespace giEngineSDK {
     update();
 
     //Returns the matrix
-    return m_PM;
+    return m_projMatrix;
   }
 }

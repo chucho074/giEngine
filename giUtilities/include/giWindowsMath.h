@@ -3,10 +3,10 @@
 #include "giPlatformMath.h"
 
 namespace giEngineSDK {
-  class GI_UTILITY_EXPORT WindowsMath : public PlatformMath 
+  class GI_UTILITY_EXPORT windowsMath : public platformMath 
   {
    public:
-     WindowsMath() = default;
-     ~WindowsMath() = default;
+     windowsMath() = default;
+     ~windowsMath() = default;
   };
 }

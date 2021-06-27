@@ -30,11 +30,11 @@ namespace giEngineSDK {
   
     ///Destructor
     ~CBufferDX() {
-      SAFE_RELEASE(m_Buffer);
+      SAFE_RELEASE(m_buffer);
     };
   
    
     //Access to the DirectX Buffers
-    ID3D11Buffer * m_Buffer = nullptr;
+    ID3D11Buffer * m_buffer = nullptr;
   };
 }

@@ -11,12 +11,13 @@
  * @include
  */
 #include "giDXApp.h"
+#include <giDegrees.h>
 
 DirectXApp::DirectXApp() {
   //Set the window size
   m_width = 1280;
   m_height = 720;
-  m_World = Matrix4::IDENTITY;
+  m_world = Matrix4::IDENTITY;
   
 }
 
@@ -25,7 +26,7 @@ void
 DirectXApp::onCreate() {
 
   //Create Vertex Shader 
-  m_VertexShader = m_GAPI->createVS("Resources/MyShader.fx", "VS", "vs_4_0");
+  m_vertexShader = m_gapi->createVS("Resources/MyShader.fx", "VS", "vs_4_0");
 
   //Create Input Layout
   Vector<InputLayoutDesc> layoutDesc;
@@ -62,10 +63,10 @@ DirectXApp::onCreate() {
   layoutDesc[2].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   layoutDesc[2].instanceDataStepRate = 0;
 
-  m_InputLayout = m_GAPI->createIL(layoutDesc, m_VertexShader);
+  m_inputLayout = m_gapi->createIL(layoutDesc, m_vertexShader);
 
   //Create Pixel Shader
-  m_PixelShader = m_GAPI->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
+  m_pixelShader = m_gapi->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
 
   //Create vertex for the cube 
   SimpleVertex vertices[] = {
@@ -101,7 +102,10 @@ DirectXApp::onCreate() {
   };
 
   //Create VertexBuffer
-  m_vertexBuffer = m_GAPI->createBuffer(sizeof(giEngineSDK::SimpleVertex) * 24, 0x1L, 0, vertices);
+  m_vertexBuffer = m_gapi->createBuffer(sizeof(SimpleVertex) * 24, 
+                                        0x1L, 
+                                        0, 
+                                        vertices);
 
   //Create index for the cube
   WORD indices[] = {
@@ -125,40 +129,49 @@ DirectXApp::onCreate() {
   };
 
   //Create Index Buffer
-  m_indexBuffer = m_GAPI->createBuffer(sizeof(WORD) * 36, 
-  /***********************************/GI_BIND_FLAG::E::kBIND_INDEX_BUFFER, 
-  /***********************************/0, 
-  /***********************************/indices);
+  m_indexBuffer = m_gapi->createBuffer(sizeof(WORD) * 36, 
+                                       GI_BIND_FLAG::kBIND_INDEX_BUFFER, 
+                                       0, 
+                                       indices);
 
           //Load Models
 
   //Load Yoshi model
-  m_Yoshi.loadModel("POD.obj");
+  m_yoshi.loadModel("Resources/Models/POD.obj");
 
 
   //Set Topology
-  m_GAPI->setTopology(GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
-  m_ConstantBuffer_NC = m_GAPI->createBuffer(sizeof(CBNeverChanges), 0x4L, 0, nullptr);
+  m_cBufferNeverChange = m_gapi->createBuffer(sizeof(CBNeverChanges), 
+                                             4, 
+                                             0, 
+                                             nullptr);
 
   //Create Constant Buffer for Change on Resize
-  m_ConstantBuffer_COR = m_GAPI->createBuffer(sizeof(CBChangeOnResize), 0x4L, 0, nullptr);
+  m_cBufferChangeOnResize = m_gapi->createBuffer(sizeof(CBChangeOnResize), 
+                                              4, 
+                                              0, 
+                                              nullptr);
 
   //Create Constant Buffer for Change Every Frame
-  m_ConstantBuffer_CEF = m_GAPI->createBuffer(sizeof(CBChangesEveryFrame), 0x4L, 0, nullptr);
+  m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
+                                              4, 
+                                              0, 
+                                              nullptr);
 
   ////Update the texture
-  //m_GAPI->updateTexture(m_ColorTexture, 
-  ///*****************/imgLoader.getImgData(), 
-  ///*****************/imgLoader.getPitch(), 
-  ///*****************/imgLoader.getImgSize());
+  //m_gapi->updateTexture(m_colorTexture, 
+  //                      imgLoader.getImgData(), 
+  //                      imgLoader.getPitch(), 
+  //                      imgLoader.getImgSize());
 
   ////Clear the image loader
   //imgLoader.clearData();
 
   //Load the peach model
-  //m_Peach.loadModel("Pirate Peach.obj");
+  //m_peach.loadModel("Pirate Peach.obj");
 
   //Create Sampler
   SamplerDesc sampDesc;
@@ -169,23 +182,26 @@ DirectXApp::onCreate() {
   sampDesc.comparisonFunc = 1;
   sampDesc.minLOD = 0;
   sampDesc.maxLOD = 3.402823466e+38f;
-  m_Sampler = m_GAPI->createSampler(sampDesc);
+  m_sampler = m_gapi->createSampler(sampDesc);
 
   //Initialize world matrix
-  m_World = Matrix4::IDENTITY;
+  m_world = Matrix4::IDENTITY;
 
   //Initialize Camera
-  m_MainCamera.init(0.785398163f, static_cast<float>((m_width/m_height)), 0.01f, 1000.0f);
+  m_mainCamera.init(Degrees(75.0f).getRadians(), 
+                    static_cast<float>((m_width/m_height)), 
+                    0.01f, 
+                    1000.0f);
 
   //Sets the view matrix
   CBNeverChanges tmpNC;
-  tmpNC.mView = m_MainCamera.getViewMatrix();
-  m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+  tmpNC.mView = m_mainCamera.getViewMatrix();
+  m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
 
   //Sets the projection matrix
   CBChangeOnResize tmpCOR;
-  tmpCOR.mProjection = m_MainCamera.getProyectionMatrix();
-  m_GAPI->updateSubresource(m_ConstantBuffer_COR, &tmpCOR, sizeof(tmpCOR));
+  tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
+  m_gapi->updateSubresource(m_cBufferChangeOnResize, &tmpCOR, sizeof(tmpCOR));
   
 }
 
@@ -200,7 +216,7 @@ void
 DirectXApp::onUpdate(float inDeltaTime) {
   GI_UNREFERENCED_PARAMETER(inDeltaTime);
   //World rotation
-  //m_World = XMMatrixRotationY(inDeltaTime);
+  //m_world = XMMatrixRotationY(inDeltaTime);
 }
 
 
@@ -208,90 +224,87 @@ void
 DirectXApp::onRender() {
 
   //Set Render Target & Depth Stencil
-  m_GAPI->omSetRenderTarget(static_cast<Texture2D*>(m_GAPI->getDefaultRenderTarget()), 
-  /*********************/static_cast<Texture2D*>(m_GAPI->getDefaultDephtStencil()));
+  m_gapi->omSetRenderTarget(m_gapi->getDefaultRenderTarget(), 
+                            m_gapi->getDefaultDephtStencil());
 
   //Set Input Layout
-  m_GAPI->aiSetInputLayout(m_InputLayout);
+  m_gapi->aiSetInputLayout(m_inputLayout);
 
   //Clear the back buffer
   float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-  m_GAPI->clearRTV(static_cast<Texture2D*>(m_GAPI->getDefaultRenderTarget()), 
-  /************/ClearColor);
+  m_gapi->clearRTV(m_gapi->getDefaultRenderTarget(), 
+                   ClearColor);
 
   //Clear the depth buffer to 1.0 (max depth)
-  m_GAPI->clearDSV(static_cast<Texture2D*>(m_GAPI->getDefaultDephtStencil()));
+  m_gapi->clearDSV(m_gapi->getDefaultDephtStencil());
 
   //Update variables that change once per frame
   CBChangesEveryFrame cb;
-  cb.mWorld = m_World.transpose();
-  cb.vMeshColor = m_MeshColor;
-  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
+  cb.mWorld = m_world.transpose();
+  cb.vMeshColor = m_meshColor;
+  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  m_GAPI->vsSetShader(m_VertexShader);
-  m_GAPI->vsSetConstantBuffer(0, m_ConstantBuffer_NC);
-  m_GAPI->vsSetConstantBuffer(1, m_ConstantBuffer_COR);
-  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  m_GAPI->psSetShader(m_PixelShader);
-  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  m_GAPI->psSetShaderResource(0, m_ColorTexture);
-  m_GAPI->psSetSampler(0, 1, m_Sampler);
+  m_gapi->vsSetShader(m_vertexShader);
+  m_gapi->vsSetConstantBuffer(0, m_cBufferNeverChange);
+  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeOnResize);
+  m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetShader(m_pixelShader);
+  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetShaderResource(0, m_colorTexture);
+  m_gapi->psSetSampler(0, 1, m_sampler);
   
   //Set Vertex Buffer
-  UINT stride = sizeof(giEngineSDK::SimpleVertex);
-  m_GAPI->setVertexBuffer(m_vertexBuffer, stride);
+  uint32 stride = sizeof(giEngineSDK::SimpleVertex);
+  m_gapi->setVertexBuffer(m_vertexBuffer, stride);
 
   //Set Index Buffer
-  m_GAPI->setIndexBuffer(m_indexBuffer, GI_FORMAT::E::kFORMAT_R16_UINT);
+  m_gapi->setIndexBuffer(m_indexBuffer, GI_FORMAT::kFORMAT_R32_UINT);
 
   //Draw the cube
-  m_GAPI->drawIndexed(36, 0);
-
-  //Sets the render target and depth Stencil
-  m_GAPI->omSetRenderTarget(static_cast<Texture2D*>(m_GAPI->getDefaultRenderTarget()),
-  /*********************/static_cast<Texture2D*>(m_GAPI->getDefaultDephtStencil()));
+  //m_gapi->drawIndexed(36, 0);
 
   //Apply a rotation
-  static float tmpRotation = 3.1415f / 550.0f;
-  tmpRotation += 3.1415f / 550.0f;
+  static float tmpRotation = Math::PI / 550.0f;
+  tmpRotation += Math::PI / 550.0f;
 
   //Sets values to the world
-  m_World = Matrix4::IDENTITY;
-  //m_World = XMMatrixRotationY(tmpRotation);
-  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-  //m_World *= XMMatrixTranslation(0.f, 0.0f, 20.f);
+  m_world = Matrix4::IDENTITY;
+  m_world *= matrixTranslation({0.f, 5.0f, 20.f});
+  //m_world *= matrixRotationY(90);
+  //m_world *= matrixRotationY(tmpRotation);
+  //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
 
-  cb.mWorld = m_World.transpose();
-  cb.vMeshColor = m_MeshColor;
+  cb.mWorld = m_world.transpose();
+  cb.vMeshColor = m_meshColor;
 
   //Update the Change Every Frame Buffer
-  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
-  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
 
   //Draw the Yoshi model
-  m_Yoshi.drawModel();
+  m_yoshi.drawModel();
 
   //Sets values to the world
-  m_World = Matrix4::IDENTITY;
-  //m_World = XMMatrixRotationY(tmpRotation);
-  //m_World *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-  //m_World *= XMMatrixTranslation(0.f, 1.5f, 0.f);
+  m_world = Matrix4::IDENTITY;
+  //m_world = XMMatrixRotationY(tmpRotation);
+  //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+  //m_world *= XMMatrixTranslation(0.f, 1.5f, 0.f);
 
-  cb.mWorld = m_World.transpose();
-  cb.vMeshColor = m_MeshColor;
+  cb.mWorld = m_world.transpose();
+  cb.vMeshColor = m_meshColor;
   
   //Update the Change Every Frame Buffer
-  m_GAPI->updateSubresource(m_ConstantBuffer_CEF, &cb, sizeof(cb));
-  m_GAPI->vsSetConstantBuffer(2, m_ConstantBuffer_CEF);
-  m_GAPI->psSetConstantBuffer(2, m_ConstantBuffer_CEF);
+  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
   
   //Sets the texture
-  m_GAPI->psSetShaderResource(0, m_PeachTexture);
+  m_gapi->psSetShaderResource(0, m_peachTexture);
 
   //Draw the model
-  m_Peach.drawModel();
+  m_peach.drawModel();
   
 }
 
@@ -299,52 +312,40 @@ DirectXApp::onRender() {
 void 
 DirectXApp::onEvent(Event inEvent) {
   
+  Vector4 tmpVect;
   if (inEvent.type == Event::KeyPressed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-    /**/sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-      Vector4 tmpVect = { 0.f, 0.f, 0.1f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+      tmpVect = { 0.f, 0.f, 0.1f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-    /**/sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-      Vector4 tmpVect = { 0.f, 0.f, -0.1f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+      tmpVect = { 0.f, 0.f, -0.1f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
-    /**/sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-      Vector4 tmpVect = { -0.1f, 0.f, 0.f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+      tmpVect = { -0.1f, 0.f, 0.f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
-    /**/sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-      Vector4 tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+      tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-      Vector4 tmpVect = { 0.f, 0.1f, 0.1f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+      tmpVect = { 0.f, 0.1f, 0.1f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-      Vector4 tmpVect = { 0.f, -0.1f, 0.1f, 0.0f };
-      m_MainCamera.move(tmpVect);
-      CBNeverChanges tmpNC;
-      tmpNC.mView = m_MainCamera.getViewMatrix();
-      m_GAPI->updateSubresource(m_ConstantBuffer_NC, &tmpNC, sizeof(tmpNC));
+      tmpVect = { 0.f, -0.1f, 0.1f, 0.0f };
     }
+    m_mainCamera.move(tmpVect);
+    CBNeverChanges tmpNC;
+    tmpNC.mView = m_mainCamera.getViewMatrix();
+    m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
+  }
+  if (inEvent.type == Event::Resized) {
+
+    
+    CBChangeOnResize tmpCOR;
+    tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
+    m_gapi->updateSubresource(m_cBufferChangeOnResize, &tmpCOR, sizeof(tmpCOR));
   }
 }

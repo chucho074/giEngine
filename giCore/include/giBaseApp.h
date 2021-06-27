@@ -51,7 +51,7 @@ class GI_CORE_EXPORT BaseApp
    * @bug      No known Bugs.
    * @return   Returns a 0 if its ok.
    */
-  int 
+  int32 
   run();
 
   /**
@@ -74,7 +74,9 @@ class GI_CORE_EXPORT BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onUpdate(float inDeltaTime = 0) { (void)inDeltaTime; };
+  onUpdate(float inDeltaTime = 0) { 
+    (void)inDeltaTime; 
+  };
 
   /**
    * @brief    Virtual method in charge of drawing on screen all the visual info.
@@ -128,13 +130,6 @@ class GI_CORE_EXPORT BaseApp
   void 
   destroySystems();
 
-  /**
-   * @brief    Method that actives the console.
-   * @bug      No known Bugs.
-   */
-  void 
-  activateConsole();
-
 
  public:
   /**
@@ -149,10 +144,10 @@ class GI_CORE_EXPORT BaseApp
   //static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
 
   ///The Width of the window with a default size
-  int m_width = 640;
+  uint32 m_width = 640;
   
   ///The Height of the window with a default size
-  int m_height = 480;
+  uint32 m_height = 480;
   
   ///The reference of the window
   WindowBase m_window;
@@ -160,6 +155,6 @@ class GI_CORE_EXPORT BaseApp
   //
   LibraryLoader m_loader;
 
-  GraphicsAPI* m_GAPI = nullptr;
+  GraphicsAPI* m_gapi = nullptr;
 };
 
