@@ -14,7 +14,7 @@
 
 namespace giEngineSDK {
   GraphicsAPI&
-    g_GraphicsAPI() {
+    g_graphicsAPI() {
     return GraphicsAPI::instance();
   }
 }

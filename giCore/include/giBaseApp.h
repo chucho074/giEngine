@@ -16,6 +16,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 #include <giLibraryLoader.h>
+#include <giTime.h>
 
 
 #include <iostream>         //Delete this
@@ -156,5 +157,7 @@ class GI_CORE_EXPORT BaseApp
   LibraryLoader m_loader;
 
   GraphicsAPI* m_gapi = nullptr;
+
+  Time * m_time;
 };
 

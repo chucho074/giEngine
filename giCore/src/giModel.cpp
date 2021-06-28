@@ -133,7 +133,7 @@ namespace giEngineSDK {
                               aiTextureType type, 
                               String typeName) {
 
-    auto& GAPI = g_GraphicsAPI();
+    auto& GAPI = g_graphicsAPI();
     Vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
       aiString str;

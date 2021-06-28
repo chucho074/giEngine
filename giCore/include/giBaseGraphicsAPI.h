@@ -127,9 +127,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
     virtual BaseVertexShader * 
-    createVS(lpcstr,
-             lpcstr,
-             lpcstr) { 
+    createVS(String,
+             String,
+             String) { 
 
       return nullptr;
     };
@@ -142,9 +142,9 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
     virtual BasePixelShader * 
-    createPS(lpcstr,
-             lpcstr,
-             lpcstr){ 
+    createPS(String,
+             String,
+             String){ 
       return nullptr; 
     };
 
@@ -400,7 +400,7 @@ namespace giEngineSDK {
   };
   
   GI_CORE_EXPORT GraphicsAPI& 
-  g_GraphicsAPI();
+  g_graphicsAPI();
 
   //For load the DLL
   using funCreateGraphicsAPI = GraphicsAPI * (*)();

@@ -41,16 +41,17 @@ namespace giEngineSDK {
 
   uint32 
   Timer::getTimeByType(TimeType::E inTimeType) {
-    switch (inTimeType) {
-    //Nano seconds case
-    case TimeType::kNanoSeconds:{
-      nanoseconds startTimeNs = m_startTime.time_since_epoch();
-      return duration_cast<milliseconds>(startTimeNs).count();
-    }
 
     auto newTime = m_clock.now();
     duration<double> dur = newTime - m_startTime;
-    
+
+    switch (inTimeType) {
+    //Nano seconds case
+    case TimeType::kNanoSeconds:{
+      //nanoseconds startTimeNs = m_startTime.time_since_epoch();
+      //return duration_cast<milliseconds>(startTimeNs).count();
+      return 0;
+    }
     case TimeType::kMicroSeconds: {
       return duration_cast<microseconds>(dur).count();
     }

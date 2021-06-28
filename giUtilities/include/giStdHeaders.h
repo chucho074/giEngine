@@ -83,8 +83,14 @@ namespace giEngineSDK {
   template <typename T>
   using WeakPtr = std::weak_ptr<T>;
 
+  /**
+   * @brief 
+   * @tparam T 
+   */
   template<typename T>
   using UniquePtr = std::unique_ptr<T>;
+
+  using std::make_unique; 
 
 
 }

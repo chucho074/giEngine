@@ -28,7 +28,7 @@ namespace giEngineSDK {
   void 
   Mesh::loadMesh() {
 
-    auto& GAPI = g_GraphicsAPI();
+    auto& GAPI = g_graphicsAPI();
 
     m_vertexBuffer = GAPI.createBuffer(sizeof(SimpleVertex) * 
                                        static_cast<int32>(m_vertexVector.size()),
@@ -48,7 +48,7 @@ namespace giEngineSDK {
 
   void 
   Mesh::drawMesh() {
-    auto& GAPI = g_GraphicsAPI();
+    auto& GAPI = g_graphicsAPI();
 
     for(uint32 i = 0; i < m_textures.size(); i++) {
       GAPI.psSetShaderResource(i, m_textures[i].texture);

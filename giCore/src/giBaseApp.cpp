@@ -41,16 +41,11 @@ BaseApp::run() {
 
 
     //Update Time
-    /*static float t = 0.0f;
-    static int32 dwTimeStart = 0;
-    int32 dwTimeCur = getGetTickCount();
-    if (dwTimeStart == 0) {
-      dwTimeStart = dwTimeCur;
-    }
-    t = (dwTimeCur - dwTimeStart) / 1000.0f;*/
-    
+    m_time->update();
+    float deltaTime = g_time().getTime();
+
     //Update Game Logic
-    update(/*t*/0);
+    update(deltaTime);
     
     //Render Frame
     render();
@@ -104,14 +99,14 @@ BaseApp::initSystems() {
 
     GraphicsAPI::startUp();
     GraphicsAPI* GAPI = createGraphicsAPI();
-    g_GraphicsAPI().setObject(GAPI);
-    m_gapi = &g_GraphicsAPI();
+    g_graphicsAPI().setObject(GAPI);
+    m_gapi = &g_graphicsAPI();
     //Initialize the Graphics API
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
 
-
-  
+  Time::startUp();
+  m_time = &g_time();
 
   //Activate the console only on Debug
 #ifdef DEBUG
@@ -123,4 +118,5 @@ void
 BaseApp::destroySystems() {
   m_window.close();
   GraphicsAPI::shutDown();
+  Time::shutDown();
 }

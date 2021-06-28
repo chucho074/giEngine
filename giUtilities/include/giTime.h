@@ -13,6 +13,7 @@
 #pragma once
 #include "giPrerequisitesUtilities.h"
 #include "giModule.h"
+#include "giTimer.h"
 
 namespace giEngineSDK {
   
@@ -30,9 +31,9 @@ namespace giEngineSDK {
     //Destructor.
     ~Time() = default;
     
-    void
-    restart();
-
+    /**
+     * @brief 
+     */
     void
     update();
 
@@ -41,17 +42,31 @@ namespace giEngineSDK {
      * @return   Returns .
      */
     float
-    getTime() const {
-      return m_deltaTime;
-    }
+    getTime() const;
 
-   protected:
-     
-     float m_deltaTime;
+    static const double MICRO_TO_SEC;
    
    private:
+
+    UniquePtr<Timer> m_timer;
+
+    float m_deltaTime;
+
+    uint64 m_lastFrameTime = 0u;
+
+    uint64 m_timeSinceStartMs = 0u;
+
+    bool m_firstFrame = true;
+
+    /**
+     * @brief    Time since start in seconds.
+     */
+    float m_timeSinceStart = 0.0f;
+
+
   };
   
-  
+  GI_UTILITY_EXPORT Time&
+  g_time();
   
 }
