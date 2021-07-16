@@ -11,6 +11,7 @@
  * @include
  */
 #pragma once
+#include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
   /**
@@ -18,14 +19,15 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class Object
+  class GI_CORE_EXPORT Object
   {
    public:
     //Default Constructor.
     Object() = default;
 
     //Destructor.
-    virtual ~Object() = default;
+    virtual 
+    ~Object() = 0;
     
    protected:
     

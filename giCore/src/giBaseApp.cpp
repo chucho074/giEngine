@@ -52,6 +52,10 @@ BaseApp::run() {
     
   }
 
+  //Write the logs
+  m_logger->SendToFile();
+
+
   //Destroy the resources
   onDestroy();
 
@@ -94,6 +98,7 @@ BaseApp::initSystems() {
   //Get the window handle
   WindowHandle handle = m_window.getSystemHandle();
 
+  //Start the Graphics
   if (m_loader.loadPlugin("giDirectX_d.dll")) {
     auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGraphicsAPI"));
 
@@ -105,8 +110,13 @@ BaseApp::initSystems() {
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
 
+  //Start the time
   Time::startUp();
   m_time = &g_time();
+
+  //Start the Logger
+  Logger::startUp();
+  m_logger = &g_logger();
 
   //Activate the console only on Debug
 #ifdef DEBUG
@@ -119,4 +129,5 @@ BaseApp::destroySystems() {
   m_window.close();
   GraphicsAPI::shutDown();
   Time::shutDown();
+  Logger::shutDown();
 }

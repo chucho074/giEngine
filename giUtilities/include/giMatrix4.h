@@ -30,6 +30,10 @@ namespace giEngineSDK {
     //Default constructor
     Matrix4() = default;
     
+    //Constructor from another matrix
+    Matrix4(Matrix4 & inMatrix);
+
+
     /**
      * @brief    Constructor with Vectors as parameters.
      * @param    inColumX   Vector for the column x.
@@ -73,7 +77,7 @@ namespace giEngineSDK {
      * @return   Returns the result of the multiply.
      */
     Matrix4
-    operator*(const Matrix4& inMatrix) const;
+    operator*(const Matrix4& inMatrix);
 
     /**
      * @brief    Multiply and assign.

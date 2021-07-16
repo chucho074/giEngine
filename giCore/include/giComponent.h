@@ -14,19 +14,35 @@
 #include "giObject.h"
 
 namespace giEngineSDK {
+
+  namespace COMPONENT_TYPE {
+    enum E {
+      kModel = 0,
+      k
+    };
+  }
+
   /**
    * @class    Component.
    * @brief    .
    * @bug      No known Bugs.
    */
-  class Component : public Object
+  class GI_CORE_EXPORT Component : public Object
   {
    public:
     //Default Constructor.
     Component() = default;
+
     //Destructor.
     virtual 
-    ~Component() = default;
+    ~Component() = 0;
+
+    virtual void 
+    update(float inDeltaTime) {};
+
+
+    virtual void 
+    render() {};
     
    protected:
     

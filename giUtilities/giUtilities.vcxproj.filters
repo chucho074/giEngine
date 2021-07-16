@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Time">
       <UniqueIdentifier>{10cba688-259e-48c9-88d9-314b90dd2d14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Logger">
+      <UniqueIdentifier>{4e6f450c-ae6c-483b-b4b9-7feb7d11b429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giRadians.cpp">
@@ -60,6 +63,12 @@
     </ClCompile>
     <ClCompile Include="src\giTimer.cpp">
       <Filter>Source Files\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giLogger.cpp">
+      <Filter>Source Files\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giTransform.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="include\giTimer.h">
       <Filter>Source Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giLogger.h">
+      <Filter>Source Files\Logger</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,14 +20,27 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class SceneNode
+  class GI_CORE_EXPORT SceneNode
   {
   public:
     //Default Constructor.
     SceneNode();
+
     //Destructor.
     ~SceneNode();
 
+    /**
+     * @brief    
+     * @param    inDeltaTime 
+     */
+    void
+    udpate(float inDeltaTime);
+
+    /**
+     * @brief    
+     */
+    void
+    render();
 
     WeakPtr<SceneNode> m_parent;
 

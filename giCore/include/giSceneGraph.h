@@ -21,29 +21,48 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class SceneGraph
+  class GI_CORE_EXPORT SceneGraph
   {
    public:
     //Default Constructor.
     SceneGraph();
+
     //Destructor.
     ~SceneGraph();
 
+    /**
+     * @brief    .
+     * @param    inActor 
+     */
     void
     addActor(const SharedPtr<Actor>& inActor);
 
+    /**
+     * @brief    Update every actor.
+     * @param    inDelta 
+     */
+    void
+    update(float inDelta);
 
+    /**
+     * @brief    Draw every actor.
+     */
+    void 
+    draw();
 
-    UniquePtr<SceneNode> m_root;
+    
 
    protected:
 
 
    private:
 
+    /**
+     * @brief    The root of the Scenex.
+     */
+    SharedPtr<SceneNode> m_root;
+
+
   };
 
 }
-
-
-//Se recorre en deep

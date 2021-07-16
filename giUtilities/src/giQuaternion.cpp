@@ -79,4 +79,27 @@ namespace giEngineSDK {
 
     return *this;
   }
+  
+  Matrix4 
+  Quaternion::getMatrix() {
+    Matrix4 rotMatrix;
+
+    //
+    rotMatrix.m_xColumn.x = 2 * (x * x + y * y) - 1;
+    rotMatrix.m_xColumn.y = 2 * (y * z - x * w);
+    rotMatrix.m_xColumn.z = 2 * (y * w - x * z);
+
+    //
+    rotMatrix.m_yColumn.x = 2 * (y * z - x * w);
+    rotMatrix.m_yColumn.y = 2 * (x * x + z * z) - 1;
+    rotMatrix.m_yColumn.z = 2 * (z * w + x * y);
+
+    //
+    rotMatrix.m_yColumn.x = 2 * (y * w + x * z);
+    rotMatrix.m_yColumn.y = 2 * (z * w - x * y);
+    rotMatrix.m_yColumn.z = 2 * (x * x + w * w) - 1;
+
+
+    return rotMatrix;
+  }
 }

@@ -12,11 +12,13 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
-#include <giStdHeaders.h>
-#include "giMesh.h"
 #include "giBaseGraphicsAPI.h"
-#include "giVector2.h"
-#include "giVector3.h"
+#include "giMesh.h"
+#include "giComponent.h"
+#include <giTransform.h>
+#include <giStdHeaders.h>
+#include <giVector2.h>
+#include <giVector3.h>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -28,7 +30,7 @@ namespace giEngineSDK {
    * @class   Model. 
    * @brief   Basics models.
    */
-  class GI_CORE_EXPORT Model {
+  class GI_CORE_EXPORT Model : public Component {
    public:
 
     ///Default constructor
@@ -62,7 +64,6 @@ namespace giEngineSDK {
       return m_texturesNames; 
     }
 
-   //private:
     /**
      * @brief    Load a model from file.
      * @param    inFileName   File to read a model.
@@ -70,6 +71,14 @@ namespace giEngineSDK {
      */
     void 
     loadModel(String inFileName);
+
+    /**
+     * @brief 
+     * @param    inDeltaTime 
+     * @param    inTransforms
+     */
+    void
+    update(float inDeltaTime, Vector<Matrix4>& inTransforms);
 
     /**
      * @brief 
@@ -108,5 +117,23 @@ namespace giEngineSDK {
     String m_directory;
 
     Vector<Texture> m_texturesLoaded;
+
+    aiScene* m_scene = nullptr;
+
+    Transform m_transform;
+
+    //For bones
+
+    Map<String, uint32> m_boneMapping;
+
+    uint32 m_numBones;
+
+    Vector<BoneInfo> m_boneInfo;
+
+    Vector<uint32> m_ids;
+
+    Vector<uint32> m_weights;
+
+    Matrix4 m_globalInverseTransform;
   };
 }

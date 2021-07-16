@@ -16,8 +16,6 @@
 #include "giTransform.h"
 #include "giComponent.h"
 
-
-
 namespace giEngineSDK {
 
   /**
@@ -25,27 +23,67 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class Actor : public Object
+  class GI_CORE_EXPORT Actor : public Object
   {
    public:
     //Default Constructor.
-    Actor() = default;
+    Actor();
+
     //Destructor.
     virtual 
-    ~Actor() = default;
+    ~Actor() = 0;
 
+    /**
+     * @brief    
+     * @param    inComponentType  .
+     * @return 
+     */
     bool
-    addComponent(SharedPtr<Component> inComponent);
+    addComponent(COMPONENT_TYPE::E inComponentType);
 
+    /**
+     * @brief 
+     * @param    inDeltaTime 
+     */
+    void
+    update(float inDeltaTime);
 
-    Transform m_transform;
+    /**
+     * @brief    .
+     */
+    void
+    render();
 
-    Map<String, SharedPtr<Component>> m_components;
+    /**
+     * @brief    Get a component from the actor by type.
+     * @param    inComponent 
+     * @return   Returns the component
+     */
+    SharedPtr<Component> &
+    getComponent(COMPONENT_TYPE::E inComponent);
 
    protected:
 
+    /**
+     * @brief    Components in the actor.
+     */
+    Map<COMPONENT_TYPE::E, SharedPtr<Component>> m_components;
 
-   private:
+   public:
 
+    /**
+     * @brief    The actor name.
+     */
+    String m_actorName = "Empty Actor";
+
+    /**
+     * @brief    The general id for the actor.
+     */
+    int32 m_actorId;
+    
+    /**
+     * @brief    Base Transform for the actor.
+     */
+    Transform m_transform;
   };
 }

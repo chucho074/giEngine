@@ -18,6 +18,13 @@ namespace giEngineSDK {
                               { 0, 0, 1, 0 },
                               { 0, 0, 0, 1 });
 
+  Matrix4::Matrix4(Matrix4& inMatrix) {
+    m_xColumn = inMatrix.m_xColumn;
+    m_yColumn = inMatrix.m_yColumn;
+    m_zColumn = inMatrix.m_zColumn;
+    m_wColumn = inMatrix.m_wColumn;
+  }
+
   Matrix4
   Matrix4::operator+(const Matrix4& inMatrix) const {
     Matrix4 tmpMat;
@@ -39,12 +46,34 @@ namespace giEngineSDK {
   }
 
   Matrix4
-  Matrix4::operator*(const Matrix4& inMatrix) const {
+  Matrix4::operator*(const Matrix4& inMatrix)  {
     
-    Matrix4 Result;
     
+    Matrix4 tmpMatrix = inMatrix.transpose();
+    Vector4 tmpX((m_xColumn.dotProd(tmpMatrix.m_xColumn)),
+                 (m_yColumn.dotProd(tmpMatrix.m_xColumn)),
+                 (m_zColumn.dotProd(tmpMatrix.m_xColumn)),
+                 (m_wColumn.dotProd(tmpMatrix.m_xColumn)));
+
+    Vector4 tmpY((m_xColumn.dotProd(tmpMatrix.m_yColumn)), 
+                 (m_yColumn.dotProd(tmpMatrix.m_yColumn)),
+                 (m_zColumn.dotProd(tmpMatrix.m_yColumn)),
+                 (m_wColumn.dotProd(tmpMatrix.m_yColumn)));
+    
+    Vector4 tmpZ((m_xColumn.dotProd(tmpMatrix.m_zColumn)),
+                 (m_yColumn.dotProd(tmpMatrix.m_zColumn)),
+                 (m_zColumn.dotProd(tmpMatrix.m_zColumn)),
+                 (m_wColumn.dotProd(tmpMatrix.m_zColumn)));
+    
+    Vector4 tmpW((m_xColumn.dotProd(tmpMatrix.m_wColumn)),
+                 (m_yColumn.dotProd(tmpMatrix.m_wColumn)),
+                 (m_zColumn.dotProd(tmpMatrix.m_wColumn)),
+                 (m_wColumn.dotProd(tmpMatrix.m_wColumn)));
+
+    Matrix4 Result(tmpX, tmpY, tmpZ, tmpW);
+
     //xColumn
-    Result.m_xColumn.x = ((m_xColumn.x * inMatrix.m_xColumn.x)
+    /*Result.m_xColumn.x = ((m_xColumn.x * inMatrix.m_xColumn.x)
                           + (m_yColumn.x * inMatrix.m_xColumn.y)
                           + (m_zColumn.x * inMatrix.m_xColumn.z)
                           + (m_wColumn.x * inMatrix.m_xColumn.w));
@@ -125,9 +154,9 @@ namespace giEngineSDK {
     Result.m_wColumn.w = ((m_xColumn.w * inMatrix.m_wColumn.x)
                           + (m_yColumn.w * inMatrix.m_wColumn.y)
                           + (m_zColumn.w * inMatrix.m_wColumn.z)
-                          + (m_wColumn.w * inMatrix.m_wColumn.w));
+                          + (m_wColumn.w * inMatrix.m_wColumn.w));*/
       
-    Result.transpose();
+    //Result.transpose();
     return Result;
   }
 
@@ -388,13 +417,21 @@ namespace giEngineSDK {
 
   matrixTranslation::matrixTranslation(Vector3 inVector) {
     
-    m_xColumn = {1.0f, 0.0f, 0.0f, 0.0f};
+   /* m_xColumn = {1.0f, 0.0f, 0.0f, 0.0f};
 
     m_yColumn = {0.0f, 1.0f, 0.0f, 0.0f};
 
     m_zColumn = {0.0f, 0.0f, 1.0f, 0.0f};
 
     m_wColumn = {inVector.x, inVector.y, inVector.z, 1.0f};
+    */
+    m_xColumn = {1.0f, 0.0f, 0.0f, inVector.x};
+
+    m_yColumn = {0.0f, 1.0f, 0.0f, inVector.y};
+
+    m_zColumn = {0.0f, 0.0f, 1.0f, inVector.z};
+
+    m_wColumn = {0, 0, 0, 1.0f};
 
   }
 

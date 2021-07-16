@@ -17,6 +17,7 @@
 #include <SFML/Window/WindowBase.hpp>
 #include <giLibraryLoader.h>
 #include <giTime.h>
+#include <giLogger.h>
 
 
 #include <iostream>         //Delete this
@@ -145,10 +146,10 @@ class GI_CORE_EXPORT BaseApp
   //static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
 
   ///The Width of the window with a default size
-  uint32 m_width = 640;
+  float m_width = 640.f;
   
   ///The Height of the window with a default size
-  uint32 m_height = 480;
+  float m_height = 480.f;
   
   ///The reference of the window
   WindowBase m_window;
@@ -159,5 +160,7 @@ class GI_CORE_EXPORT BaseApp
   GraphicsAPI* m_gapi = nullptr;
 
   Time * m_time;
+
+  Logger * m_logger;
 };
 

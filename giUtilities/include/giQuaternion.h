@@ -12,11 +12,12 @@
  */
 #pragma once
 #include "giPrerequisitesUtilities.h"
+#include "giMatrix4.h"
 
 
 namespace giEngineSDK {
-  class Vector3;
 
+  class Vector3;
 
   /**
    * @class    Quaternion.
@@ -59,13 +60,10 @@ namespace giEngineSDK {
     Quaternion
     normalize();
 
-    float x;   
-    
-    float y;   
-    
-    float z;   
-    
-    float w;  
+    Matrix4
+    getMatrix();
+
+    float x, y, z, w;  
 
     static const Quaternion IDENTITY;
   };

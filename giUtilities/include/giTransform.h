@@ -17,22 +17,32 @@
 
 namespace giEngineSDK {
   /**
-* @class    Transform.
-* @brief    .
-* @bug      No known Bugs.
-*/
+   * @class    Transform.
+   * @brief    .
+   * @bug      No known Bugs.
+   */
   class Transform
   {
    public:
     //Default Constructor.
     Transform();
+
     //Destructor.
-    ~Transform();
+    ~Transform() = default;
 
-   protected:
+    void
+    setScale(Vector3 inScale);
 
+    void
+    setRotation(Quaternion inRotation);
 
-   private:
+    void
+    setTranslation(Vector3 inTranslation);
+
+    Matrix4
+    getMatrix();
+
+   public:
     Quaternion m_rotation = Quaternion::IDENTITY;
     
     Vector3 m_translation = Vector3::ZERO;

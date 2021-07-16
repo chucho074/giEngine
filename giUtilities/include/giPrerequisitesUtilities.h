@@ -12,3 +12,4 @@
 
 #include "giStdHeaders.h"
 
+#include "giLogger.h"

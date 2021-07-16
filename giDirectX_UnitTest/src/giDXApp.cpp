@@ -15,8 +15,8 @@
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  m_width = 1280;
-  m_height = 720;
+  m_width = 1280.f;
+  m_height = 720.f;
   m_world = Matrix4::IDENTITY;
   
 }
@@ -137,7 +137,7 @@ DirectXApp::onCreate() {
           //Load Models
 
   //Load Yoshi model
-  m_yoshi.loadModel("Resources/Models/POD.obj");
+  m_yoshi.loadModel("Resources/Models/silly_dancing.fbx");
 
 
   //Set Topology
@@ -161,18 +161,7 @@ DirectXApp::onCreate() {
                                               0, 
                                               nullptr);
 
-  ////Update the texture
-  //m_gapi->updateTexture(m_colorTexture, 
-  //                      imgLoader.getImgData(), 
-  //                      imgLoader.getPitch(), 
-  //                      imgLoader.getImgSize());
-
-  ////Clear the image loader
-  //imgLoader.clearData();
-
-  //Load the peach model
-  //m_peach.loadModel("Pirate Peach.obj");
-
+ 
   //Create Sampler
   SamplerDesc sampDesc;
   sampDesc.filter = 21;
@@ -189,7 +178,7 @@ DirectXApp::onCreate() {
 
   //Initialize Camera
   m_mainCamera.init(Degrees(75.0f).getRadians(), 
-                    static_cast<float>((m_width/m_height)), 
+                    (m_width/m_height), 
                     0.01f, 
                     1000.0f);
 
@@ -261,21 +250,18 @@ DirectXApp::onRender() {
   //Set Index Buffer
   m_gapi->setIndexBuffer(m_indexBuffer, GI_FORMAT::kFORMAT_R32_UINT);
 
-  //Draw the cube
-  //m_gapi->drawIndexed(36, 0);
-
   //Apply a rotation
   static float tmpRotation = Math::PI / 550.0f;
   tmpRotation += Math::PI / 550.0f;
 
   //Sets values to the world
   m_world = Matrix4::IDENTITY;
-  m_world *= matrixTranslation({0.f, 5.0f, 20.f});
+  m_world *= matrixTranslation({0.f, 200.0f, 5.f});
   //m_world *= matrixRotationY(90);
   //m_world *= matrixRotationY(tmpRotation);
   //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
 
-  cb.mWorld = m_world.transpose();
+  //cb.mWorld = m_world.transpose();
   cb.vMeshColor = m_meshColor;
 
   //Update the Change Every Frame Buffer
@@ -331,10 +317,10 @@ DirectXApp::onEvent(Event inEvent) {
       tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-      tmpVect = { 0.f, 0.1f, 0.1f, 0.0f };
+      tmpVect = { 0.f, 0.1f, 0.f, 0.0f };
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-      tmpVect = { 0.f, -0.1f, 0.1f, 0.0f };
+      tmpVect = { 0.f, -0.1f, 0.f, 0.0f };
     }
     m_mainCamera.move(tmpVect);
     CBNeverChanges tmpNC;
@@ -342,7 +328,7 @@ DirectXApp::onEvent(Event inEvent) {
     m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
   }
   if (inEvent.type == Event::Resized) {
-
+    
     
     CBChangeOnResize tmpCOR;
     tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
