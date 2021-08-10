@@ -14,14 +14,14 @@ namespace giEngineSDK {
   Mesh::Mesh(Vector<SimpleVertex> inVertex, 
              Vector<uint32> inIndex, 
              Vector<Texture> inTextures,
-             aiScene* inScene,
+             //const aiScene* inScene,
              uint32 inNumBones,
              Vector<BoneInfo> inBoneInfo, 
              Map<String, uint32> inBoneMapping) {
     m_vertexVector = inVertex;
     m_facesList = inIndex;
     m_textures = inTextures;
-    m_scene = inScene;
+    //m_scene = inScene;
     m_numBones = inNumBones;
     m_boneInfo = inBoneInfo;
     m_boneMapping = inBoneMapping;
@@ -98,10 +98,10 @@ namespace giEngineSDK {
   }
 
   void 
-  Mesh::readNodeHeirarchy(float inAnimationTime, 
-                          const aiNode* inNode, 
-                          const Matrix4& inParentTransform,
-                          const Matrix4& inGlobalTransform) {
+  readNodeHeirarchy(float inAnimationTime, 
+                    const aiNode* inNode, 
+                    const Matrix4& inParentTransform,
+                    const Matrix4& inGlobalTransform) {
 
     String NodeName(inNode->mName.data);
 
@@ -155,7 +155,7 @@ namespace giEngineSDK {
   }
 
   const aiNodeAnim* 
-  Mesh::findNodeAnim(const aiAnimation* inAnim, const String inNodeName) {
+  findNodeAnim(const aiAnimation* inAnim, const String inNodeName) {
     for(int32 i = 0; i < inAnim->mNumChannels; i++) {
       const aiNodeAnim * temp = inAnim->mChannels[i];
       return inNodeName == String(temp->mNodeName.data) ? temp : nullptr;
@@ -164,9 +164,9 @@ namespace giEngineSDK {
   }
 
   void 
-  Mesh::calcInterpolatedRotation(aiQuaternion& Out, 
-                                 float AnimationTime, 
-                                 const aiNodeAnim* pNodeAnim) {
+  calcInterpolatedRotation(aiQuaternion& Out, 
+                           float AnimationTime, 
+                           const aiNodeAnim* pNodeAnim) {
 
 
      // we need at least two values to interpolate...
@@ -189,7 +189,7 @@ namespace giEngineSDK {
   }
 
   uint32 
-  Mesh::findRotation(float AnimationTime, const aiNodeAnim* pNodeAnim) {
+  findRotation(float AnimationTime, const aiNodeAnim* pNodeAnim) {
     assert(pNodeAnim->mNumRotationKeys > 0);
 
     for (uint32 i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
@@ -202,9 +202,9 @@ namespace giEngineSDK {
   }
 
   void 
-  Mesh::calcInterpolatedScaling(aiVector3D& Out, 
-                                float inAnimationTime, 
-                                const aiNodeAnim* inNodeAnim) {
+  calcInterpolatedScaling(aiVector3D& Out, 
+                          float inAnimationTime, 
+                          const aiNodeAnim* inNodeAnim) {
 
     if(1 == inNodeAnim->mNumScalingKeys) {
       Out.x = inNodeAnim->mScalingKeys[0].mValue.x;
@@ -237,7 +237,7 @@ namespace giEngineSDK {
   }
 
   uint32 
-  Mesh::findScaling(float AnimationTime, const aiNodeAnim* pNodeAnim) {
+  findScaling(float AnimationTime, const aiNodeAnim* pNodeAnim) {
     assert(pNodeAnim->mNumScalingKeys > 0);
 
     for (uint32 i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
@@ -250,9 +250,9 @@ namespace giEngineSDK {
   }
 
   void 
-  Mesh::calcInterpolatedPosition(aiVector3D& Out, 
-                                 float inAnimationTime, 
-                                 const aiNodeAnim* inNodeAnim) {
+  calcInterpolatedPosition(aiVector3D& Out, 
+                           float inAnimationTime, 
+                           const aiNodeAnim* inNodeAnim) {
     if (1 == inNodeAnim->mNumPositionKeys) {
       Out.x = inNodeAnim->mPositionKeys[0].mValue.x;
       Out.y = inNodeAnim->mPositionKeys[0].mValue.y;
@@ -283,7 +283,7 @@ namespace giEngineSDK {
   }
 
   uint32 
-  Mesh::findPosition(float inAnimationTime, const aiNodeAnim* inNodeAnim) {
+  findPosition(float inAnimationTime, const aiNodeAnim* inNodeAnim) {
     assert(inNodeAnim->mNumPositionKeys > 0);
 
     for (uint32 i = 0; i < inNodeAnim->mNumPositionKeys - 1; i++) {

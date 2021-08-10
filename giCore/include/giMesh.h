@@ -80,7 +80,7 @@ namespace giEngineSDK {
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
          Vector<Texture> inTextures,
-         aiScene* inScene,
+         //const aiScene* inScene,
          uint32 inNumBones,
          Vector<BoneInfo> inBoneInfo,
          Map<String, uint32> inBoneMapping);
@@ -113,7 +113,7 @@ namespace giEngineSDK {
     drawMesh();
 
    private:
-    void
+    /*void
     readNodeHeirarchy(float inAnimationTime, 
                       const aiNode* inNode, 
                       const Matrix4& inParentTransform,
@@ -144,7 +144,7 @@ namespace giEngineSDK {
                              const aiNodeAnim* pNodeAnim);
 
     uint32
-    findPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+    findPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);*/
 
 
    protected:

@@ -18,12 +18,12 @@
 namespace giEngineSDK {
 
   Model::Model(String inFileName) {
-    loadModel(inFileName);
+    loadFromFile(inFileName);
   }
 
 
   Model::~Model() {
-
+    unload();
   }
 
   bool 
@@ -49,7 +49,7 @@ namespace giEngineSDK {
 
     m_directory = inFileName.substr(0, inFileName.find_last_of('/') + 1);
 
-    processNode(*this, tmpScene->mRootNode, tmpScene);
+    processNode(*this, /*tmpScene->mRootNode,*/ tmpScene);
   }
 
   void 
@@ -88,7 +88,7 @@ namespace giEngineSDK {
 
 
   Mesh 
-  processMesh(aiMesh* mesh, const aiScene* scene) {
+  processMesh(Model inModel, aiMesh* mesh, const aiScene* scene) {
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
     Vector<Texture> textures;
@@ -140,19 +140,19 @@ namespace giEngineSDK {
         uint32 BoneIndex = 0;
         String BoneName(mesh->mBones[i]->mName.data);
 
-        if (m_boneMapping.find(BoneName) == m_boneMapping.end()) {
-            BoneIndex = m_numBones;
-            m_numBones++;
+        if (inModel.m_boneMapping.find(BoneName) == inModel.m_boneMapping.end()) {
+            BoneIndex = inModel.m_numBones;
+            inModel.m_numBones++;
             BoneInfo bi;
-            m_boneInfo.push_back(bi);
+            inModel.m_boneInfo.push_back(bi);
         }
         else {
-            BoneIndex = m_boneMapping[BoneName];
+            BoneIndex = inModel.m_boneMapping[BoneName];
         }
 
-        m_boneMapping[BoneName] = BoneIndex;
+        inModel.m_boneMapping[BoneName] = BoneIndex;
 
-        memcpy(&m_boneInfo[BoneIndex].offset, &mesh->mBones[i]->mOffsetMatrix, sizeof(Matrix4));
+        memcpy(&inModel.m_boneInfo[BoneIndex].offset, &mesh->mBones[i]->mOffsetMatrix, sizeof(Matrix4));
 
         for (uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
             uint32 VertexID = mesh->mBones[i]->mWeights[j].mVertexId;
@@ -160,14 +160,14 @@ namespace giEngineSDK {
             
 
             for (uint32 k = 0; k < 4; k++) {
-              if (m_weights[k] == 0.0) {
-                m_ids[i] = BoneIndex;
-                m_weights[i] = Weight;
+              if (inModel.m_weights[k] == 0.0) {
+                inModel.m_ids[i] = BoneIndex;
+                inModel.m_weights[i] = Weight;
                 
               }
             }
         }
-    }
+      }
     }
 
 
@@ -176,13 +176,15 @@ namespace giEngineSDK {
     if(mesh->mMaterialIndex >= 0) {
       aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-      Vector<Texture> diffuseMaps = loadMaterialTextures(material,
+      Vector<Texture> diffuseMaps = loadMaterialTextures(inModel,
+                                                         material,
                                                          aiTextureType_DIFFUSE, 
                                                          "texture_diffuse");
 
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-      Vector<Texture> specularMaps = loadMaterialTextures(material,
+      Vector<Texture> specularMaps = loadMaterialTextures(inModel,
+                                                          material,
                                                           aiTextureType_SPECULAR, 
                                                           "texture_specular");
 
@@ -193,15 +195,16 @@ namespace giEngineSDK {
     return Mesh(vertices, 
                 indices, 
                 textures, 
-                m_scene, 
-                m_numBones, 
-                m_boneInfo, 
-                m_boneMapping);
+                //scene, 
+                inModel.m_numBones, 
+                inModel.m_boneInfo, 
+                inModel.m_boneMapping);
   }
 
 
   Vector<Texture>
-  loadMaterialTextures(aiMaterial* mat, 
+  loadMaterialTextures(Model inModel,
+                       aiMaterial* mat, 
                        aiTextureType type, 
                        String typeName) {
 
@@ -211,16 +214,16 @@ namespace giEngineSDK {
       aiString str;
       mat->GetTexture(type, i, &str);
       bool skip = false;
-      for (unsigned int j = 0; j < m_texturesLoaded.size(); j++) {
-        if (std::strcmp(m_texturesLoaded[j].path.data(), str.C_Str()) == 0) {
-          textures.push_back(m_texturesLoaded[j]);
+      for (unsigned int j = 0; j < inModel.m_texturesLoaded.size(); j++) {
+        if (std::strcmp(inModel.m_texturesLoaded[j].path.data(), str.C_Str()) == 0) {
+          textures.push_back(inModel.m_texturesLoaded[j]);
           skip = true;
           break;
         }
       }
       if (!skip)  {   // if texture hasn't been loaded already, load it
         Texture texture;
-        texture.texture = GAPI.TextureFromFile(str.C_Str(), m_directory);
+        texture.texture = GAPI.TextureFromFile(str.C_Str(), inModel.m_directory);
         texture.type = typeName;
         texture.path = str.C_Str();
 
@@ -235,7 +238,7 @@ namespace giEngineSDK {
         texture.samplerState = GAPI.createSampler(sampDesc);
 
         textures.push_back(texture);
-        m_texturesLoaded.push_back(texture); // add to loaded textures
+        inModel.m_texturesLoaded.push_back(texture); // add to loaded textures
       }
     }
     return textures;

@@ -37,6 +37,48 @@ namespace giEngineSDK {
     ///Destructor
     ~Model();
 
+    
+
+    /**
+     * @brief    Load a model from file.
+     * @param    inFileName   File to read a model.
+     * @bug      No known Bugs.
+     */
+    bool 
+    loadFromFile(const String& inFileName) override;
+
+    /**
+     * @brief    Load a model from memory.
+     * @param    inData        The data of the model.
+     * @param    inSizeOfData  The size of the data.
+     * @bug      No known Bugs.
+     */
+    bool
+    loadFromMemory(const char* inData, size_T inSizeOfData) override;
+
+    /**
+    * @brief    Unload the model.
+    * @bug      No known Bugs.
+    */
+    void
+    unload();
+
+    /**
+    * @brief    Save the model to a file.
+    * @bug      No known Bugs.
+    */
+    void 
+    saveToFile(const String& inFile);
+
+
+    /**
+     * @brief 
+     * @param    inDeltaTime 
+     * @param    inTransforms
+     */
+    void
+    update(float inDeltaTime, Vector<Matrix4>& inTransforms);
+
     /**
      * @brief    Draw the model.
      */
@@ -59,22 +101,6 @@ namespace giEngineSDK {
     Vector<String> getTextures() { 
       return m_texturesNames; 
     }
-
-    /**
-     * @brief    Load a model from file.
-     * @param    inFileName   File to read a model.
-     * @bug      No known Bugs.
-     */
-    bool 
-    loadFromFile(const String& inFileName) override;
-
-    /**
-     * @brief 
-     * @param    inDeltaTime 
-     * @param    inTransforms
-     */
-    void
-    update(float inDeltaTime, Vector<Matrix4>& inTransforms);
 
     ///**
     // * @brief 
@@ -103,8 +129,7 @@ namespace giEngineSDK {
     //Vector<Texture> 
     //loadMaterialTextures(aiMaterial* mat, aiTextureType type, String typeName);
 
-
-    //Obtener los nombres de las texturas a cargar por el modelo
+    //Get the name of the textures linked to the model
     Vector<String> m_texturesNames;
 
     //Meshes
@@ -118,7 +143,7 @@ namespace giEngineSDK {
 
     Transform m_transform;
 
-    //For bones
+    //For the bones (animation)
 
     Map<String, uint32> m_boneMapping;
 
