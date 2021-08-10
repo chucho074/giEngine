@@ -173,7 +173,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\giSceneNode.cpp" />
     <ClCompile Include="src\giActor.cpp" />
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
@@ -199,10 +198,12 @@
     <ClInclude Include="include\giModel.h" />
     <ClInclude Include="include\giObject.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
+    <ClInclude Include="include\giResource.h" />
     <ClInclude Include="include\giSampler.h" />
     <ClInclude Include="include\giSceneGraph.h" />
     <ClInclude Include="include\giSceneNode.h" />
     <ClInclude Include="include\giTexture2D.h" />
+    <ClInclude Include="include\giTextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
