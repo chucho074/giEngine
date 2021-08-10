@@ -14,15 +14,11 @@
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
 #include "giMesh.h"
-#include "giComponent.h"
+#include "giResource.h"
 #include <giTransform.h>
 #include <giStdHeaders.h>
 #include <giVector2.h>
 #include <giVector3.h>
-
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
 
 namespace giEngineSDK {
 
@@ -30,7 +26,7 @@ namespace giEngineSDK {
    * @class   Model. 
    * @brief   Basics models.
    */
-  class GI_CORE_EXPORT Model : public Component {
+  class GI_CORE_EXPORT Model final : public Resource {
    public:
 
     ///Default constructor
@@ -69,8 +65,8 @@ namespace giEngineSDK {
      * @param    inFileName   File to read a model.
      * @bug      No known Bugs.
      */
-    void 
-    loadModel(String inFileName);
+    bool 
+    loadFromFile(const String& inFileName) override;
 
     /**
      * @brief 
@@ -80,32 +76,32 @@ namespace giEngineSDK {
     void
     update(float inDeltaTime, Vector<Matrix4>& inTransforms);
 
-    /**
-     * @brief 
-     * @param node 
-     * @param scene 
-     */
-    void 
-    processNode(aiNode* node, const aiScene* scene);
-    
-    /**
-     * @brief 
-     * @param mesh 
-     * @param scene 
-     * @return 
-     */
-    Mesh 
-    processMesh(aiMesh* mesh, const aiScene* scene);
-    
-    /**
-     * @brief 
-     * @param mat 
-     * @param type 
-     * @param typeName 
-     * @return 
-     */
-    Vector<Texture> 
-    loadMaterialTextures(aiMaterial* mat, aiTextureType type, String typeName);
+    ///**
+    // * @brief 
+    // * @param node 
+    // * @param scene 
+    // */
+    //void 
+    //processNode(aiNode* node, const aiScene* scene);
+    //
+    ///**
+    // * @brief 
+    // * @param mesh 
+    // * @param scene 
+    // * @return 
+    // */
+    //Mesh 
+    //processMesh(aiMesh* mesh, const aiScene* scene);
+    //
+    ///**
+    // * @brief 
+    // * @param mat 
+    // * @param type 
+    // * @param typeName 
+    // * @return 
+    // */
+    //Vector<Texture> 
+    //loadMaterialTextures(aiMaterial* mat, aiTextureType type, String typeName);
 
 
     //Obtener los nombres de las texturas a cargar por el modelo
@@ -118,7 +114,7 @@ namespace giEngineSDK {
 
     Vector<Texture> m_texturesLoaded;
 
-    aiScene* m_scene = nullptr;
+    //aiScene* m_scene = nullptr;
 
     Transform m_transform;
 

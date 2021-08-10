@@ -11,6 +11,9 @@
  * @include
  */
 #include "giModel.h"
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
 
 namespace giEngineSDK {
 
@@ -23,8 +26,8 @@ namespace giEngineSDK {
 
   }
 
-  void 
-  Model::loadModel(String inFileName) {
+  bool 
+  Model::loadFromFile(const String& inFileName) {
 
     // Create an instance of the Importer class
     Assimp::Importer importer;
@@ -37,16 +40,16 @@ namespace giEngineSDK {
                       aiProcess_ConvertToLeftHanded |
                       aiProcess_Triangulate);
 
-    m_scene = importer.GetOrphanedScene();
+    const aiScene * tmpScene = importer.GetOrphanedScene();
 
-    if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode) {
+    if (!tmpScene || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !tmpScene->mRootNode) {
       g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
       return;
     }
 
     m_directory = inFileName.substr(0, inFileName.find_last_of('/') + 1);
 
-    processNode(m_scene->mRootNode, m_scene);
+    processNode(*this, tmpScene->mRootNode, tmpScene);
   }
 
   void 
@@ -59,22 +62,33 @@ namespace giEngineSDK {
 
 
   void 
-  Model::processNode(aiNode* node, const aiScene* scene) {
-    // process all the node's meshes (if any)
-    for (uint32 i = 0; i < node->mNumMeshes; i++) {
-      aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-      m_meshes.push_back(processMesh(mesh, scene));
+  processNode(Model inModel, /*aiNode* node,*/ const aiScene* inScene) {
+    //Check if has meshes
+    if (!inScene->HasMeshes()) return;
+    
+    //Model resize the meshes
+    inModel.m_meshes.resize(inScene->mNumMeshes);
+
+    //
+    for (uint32 i = 0; i < inScene->mNumMeshes; ++i) {
+      auto assimpMesh = inScene->mMeshes[i];
+      auto& myMesh = inModel.m_meshes[i];
+      
+      
+      
+      //m_meshes.push_back(processMesh(mesh, inScene));
     }
     // then do the same for each of its children
-    for (uint32 i = 0; i < node->mNumChildren; i++)  {
-      processNode(node->mChildren[i], scene);
-    }
+    //for (uint32 i = 0; i < node->mNumChildren; i++) {
+    //  processNode(node->mChildren[i], inScene);
+    //}
+    
 
   }
 
 
   Mesh 
-  Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+  processMesh(aiMesh* mesh, const aiScene* scene) {
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
     Vector<Texture> textures;
@@ -187,9 +201,9 @@ namespace giEngineSDK {
 
 
   Vector<Texture>
-  Model::loadMaterialTextures(aiMaterial* mat, 
-                              aiTextureType type, 
-                              String typeName) {
+  loadMaterialTextures(aiMaterial* mat, 
+                       aiTextureType type, 
+                       String typeName) {
 
     auto& GAPI = g_graphicsAPI();
     Vector<Texture> textures;

@@ -168,7 +168,7 @@ namespace giEngineSDK {
     Vector<Texture> m_textures;
 
 
-    aiScene* m_scene = nullptr;
+    //aiScene* m_scene = nullptr;
 
     Vector<BoneInfo> m_boneInfo;
     
