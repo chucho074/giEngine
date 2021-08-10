@@ -92,5 +92,11 @@ namespace giEngineSDK {
 
   using std::make_unique; 
 
+  template <typename T>
+  using dynamicPtrCast = std::dynamic_pointer_cast<T>();
+
+
+  template <typename T>
+  using makeShared = std::make_shared<T>();
 
 }
