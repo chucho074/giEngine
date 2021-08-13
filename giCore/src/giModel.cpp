@@ -52,6 +52,21 @@ namespace giEngineSDK {
     //processNode(*this, /*tmpScene->mRootNode,*/ tmpScene);
   }
 
+  bool 
+  Model::loadFromMemory(const char* inData, size_T inSizeOfData) {
+    return false;
+  }
+
+  void 
+  Model::unload() {
+
+  }
+
+  void 
+  Model::saveToFile(const String& inFile) {
+
+  }
+
   void 
   Model::update(float inDeltaTime, Vector<Matrix4>& inTransforms) {
     
@@ -135,7 +150,7 @@ namespace giEngineSDK {
     }
 
     //Bones
-    if(mesh->mNumBones) {
+    /*if(mesh->mNumBones) {
       for (uint32 i = 0 ; i < mesh->mNumBones ; i++) {
         uint32 BoneIndex = 0;
         String BoneName(mesh->mBones[i]->mName.data);
@@ -168,7 +183,7 @@ namespace giEngineSDK {
             }
         }
       }
-    }
+    }*/
 
 
 

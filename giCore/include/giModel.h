@@ -37,8 +37,6 @@ namespace giEngineSDK {
     ///Destructor
     ~Model();
 
-    
-
     /**
      * @brief    Load a model from file.
      * @param    inFileName   File to read a model.
@@ -118,7 +116,7 @@ namespace giEngineSDK {
     // */
     //Mesh 
     //processMesh(aiMesh* mesh, const aiScene* scene);
-    //
+    
     /**
      * @brief 
      * @param mat 

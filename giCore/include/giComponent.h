@@ -34,15 +34,14 @@ namespace giEngineSDK {
     Component() = default;
 
     //Destructor.
-    virtual 
-    ~Component() = 0;
+    ~Component() = default;
 
     virtual void 
-    update(float inDeltaTime) {};
+    update(float inDeltaTime) = 0;
 
 
     virtual void 
-    render() {};
+    render() = 0;
     
    protected:
     

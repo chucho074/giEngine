@@ -13,10 +13,6 @@
 #include "giActor.h"
 
 namespace giEngineSDK {
-  
-  Actor::Actor() {
-
-  }
 
   bool
   Actor::addComponent(COMPONENT_TYPE::E inComponentType) {

@@ -13,8 +13,8 @@
 #pragma once
 #include "giPrerequisitesUtilities.h"
 #include "giObject.h"
-#include "giTransform.h"
 #include "giComponent.h"
+#include <giTransform.h>
 
 namespace giEngineSDK {
 
@@ -23,15 +23,14 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class GI_CORE_EXPORT Actor : public Object
+  class GI_CORE_EXPORT Actor final : public Object
   {
    public:
     //Default Constructor.
-    Actor();
+    Actor() = default;
 
     //Destructor.
-    virtual 
-    ~Actor() = 0;
+    ~Actor() = default;
 
     /**
      * @brief    

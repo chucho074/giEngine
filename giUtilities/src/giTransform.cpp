@@ -13,6 +13,27 @@
 #include "giTransform.h"
 
 namespace giEngineSDK {
-  
+  Transform::Transform() {
 
+  }
+
+  void 
+  Transform::setScale(Vector3 inScale) {
+
+  }
+
+  void 
+  Transform::setRotation(Quaternion inRotation) {
+
+  }
+
+  void 
+  Transform::setTranslation(Vector3 inTranslation) {
+
+  }
+
+  Matrix4 
+  Transform::getMatrix() {
+    return Matrix4();
+  }
 }
