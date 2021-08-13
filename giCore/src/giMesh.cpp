@@ -54,6 +54,7 @@ namespace giEngineSDK {
 
   }
 
+  /*
   void 
   Mesh::update(float inDeltaTime, 
                Vector<Matrix4>& inTransforms, 
@@ -61,6 +62,8 @@ namespace giEngineSDK {
     Matrix4 iden;
     iden = Matrix4::IDENTITY;
 
+    
+    
     float TicksPerSecond = m_scene->mAnimations[0]->mTicksPerSecond != 0 ?
                             m_scene->mAnimations[0]->mTicksPerSecond : 25.0f;
     float TimeInTicks = inDeltaTime * TicksPerSecond;
@@ -73,7 +76,7 @@ namespace giEngineSDK {
     for (uint32 i = 0 ; i < m_numBones; i++) {
         inTransforms[i] = m_boneInfo[i].transformation;
     }
-  }
+  }*/
 
   void
   Mesh::drawMesh() {
@@ -97,6 +100,7 @@ namespace giEngineSDK {
     GAPI.drawIndexed(m_facesList.size(), 0);
   }
 
+  /*
   void 
   readNodeHeirarchy(float inAnimationTime, 
                     const aiNode* inNode, 
@@ -294,6 +298,6 @@ namespace giEngineSDK {
 
     return(0);
   }
-
+  */
   
 }

@@ -119,15 +119,15 @@ namespace giEngineSDK {
     //Mesh 
     //processMesh(aiMesh* mesh, const aiScene* scene);
     //
-    ///**
-    // * @brief 
-    // * @param mat 
-    // * @param type 
-    // * @param typeName 
-    // * @return 
-    // */
-    //Vector<Texture> 
-    //loadMaterialTextures(aiMaterial* mat, aiTextureType type, String typeName);
+    /**
+     * @brief 
+     * @param mat 
+     * @param type 
+     * @param typeName 
+     * @return 
+     */
+    Vector<Texture> 
+    loadMaterialTextures(Model inModel, aiMaterial* mat, aiTextureType type, String typeName);
 
     //Get the name of the textures linked to the model
     Vector<String> m_texturesNames;

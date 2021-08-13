@@ -99,12 +99,12 @@ namespace giEngineSDK {
      * @brief 
      * @param    inDeltaTime 
      * @param    inTransforms
-     */
+     *
     void
     update(float inDeltaTime, 
            Vector<Matrix4>& inTransforms, 
            const Matrix4& inGlobalTransform);
-
+           
     /**
      * @brief    Draw the mesh data.
      * @bug      No known Bugs.

@@ -44,19 +44,19 @@ namespace giEngineSDK {
 
     if (!tmpScene || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !tmpScene->mRootNode) {
       g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
-      return;
+      return false;
     }
 
     m_directory = inFileName.substr(0, inFileName.find_last_of('/') + 1);
 
-    processNode(*this, /*tmpScene->mRootNode,*/ tmpScene);
+    //processNode(*this, /*tmpScene->mRootNode,*/ tmpScene);
   }
 
   void 
   Model::update(float inDeltaTime, Vector<Matrix4>& inTransforms) {
     
     for(auto mesh : m_meshes) {
-      mesh.update(inDeltaTime, inTransforms, m_globalInverseTransform);
+      //mesh.update(inDeltaTime, inTransforms, m_globalInverseTransform);
     }
   }
 
@@ -176,17 +176,17 @@ namespace giEngineSDK {
     if(mesh->mMaterialIndex >= 0) {
       aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-      Vector<Texture> diffuseMaps = loadMaterialTextures(inModel,
-                                                         material,
-                                                         aiTextureType_DIFFUSE, 
-                                                         "texture_diffuse");
+      Vector<Texture> diffuseMaps = inModel.loadMaterialTextures(inModel,
+                                                                 material,
+                                                                 aiTextureType_DIFFUSE, 
+                                                                 "texture_diffuse");
 
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-      Vector<Texture> specularMaps = loadMaterialTextures(inModel,
-                                                          material,
-                                                          aiTextureType_SPECULAR, 
-                                                          "texture_specular");
+      Vector<Texture> specularMaps = inModel.loadMaterialTextures(inModel,
+                                                                  material,
+                                                                  aiTextureType_SPECULAR, 
+                                                                  "texture_specular");
 
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
@@ -203,7 +203,7 @@ namespace giEngineSDK {
 
 
   Vector<Texture>
-  loadMaterialTextures(Model inModel,
+  Model::loadMaterialTextures(Model inModel,
                        aiMaterial* mat, 
                        aiTextureType type, 
                        String typeName) {

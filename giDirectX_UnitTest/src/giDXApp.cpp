@@ -137,7 +137,7 @@ DirectXApp::onCreate() {
           //Load Models
 
   //Load Yoshi model
-  m_yoshi.loadModel("Resources/Models/silly_dancing.fbx");
+  m_yoshi.loadFromFile("Resources/Models/silly_dancing.fbx");
 
 
   //Set Topology
