@@ -27,7 +27,7 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class GI_CORE_EXPORT Component : public Object
+  class GI_CORE_EXPORT Component// : public Object
   {
    public:
     //Default Constructor.

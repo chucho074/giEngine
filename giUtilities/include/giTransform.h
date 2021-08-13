@@ -25,7 +25,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor.
-    Transform();
+    Transform() = default;
 
     //Destructor.
     ~Transform() = default;

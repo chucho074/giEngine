@@ -27,7 +27,7 @@ namespace giEngineSDK {
 
     //Destructor.
     virtual 
-    ~Object() = 0;
+    ~Object() = default;
     
    protected:
     

@@ -40,9 +40,6 @@ namespace giEngineSDK {
     float 
     getDegrees() const;
     
-    const Degrees&
-    operator+() const;
-    
     Degrees
     operator+(const Degrees& inDeg) const;
     

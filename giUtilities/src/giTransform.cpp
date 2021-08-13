@@ -13,10 +13,7 @@
 #include "giTransform.h"
 
 namespace giEngineSDK {
-  Transform::Transform() {
-
-  }
-
+  
   void 
   Transform::setScale(Vector3 inScale) {
 

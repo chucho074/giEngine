@@ -160,7 +160,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giCore_d.lib;giUtilities_d.lib;giUtilities.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>giCore_d.lib;giUtilities_d.lib;d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)/lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

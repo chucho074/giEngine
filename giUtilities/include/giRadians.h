@@ -41,9 +41,6 @@ namespace giEngineSDK {
     
     float 
     getDegrees() const;
-     
-    const Radians&
-    operator+() const;
     
     Radians
     operator+(const Radians& inRad) const;

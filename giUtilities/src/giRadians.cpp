@@ -22,11 +22,6 @@ namespace giEngineSDK {
     return getRadians() * Math::RAD2DEG;
   }
   
-  const Radians&
-  Radians::operator+() const {
-    return getRadians();
-  }
-  
   Radians 
   Radians::operator+(const Radians& inRad) const {
     return Radians(getRadians() + inRad.getRadians());

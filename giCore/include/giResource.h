@@ -26,8 +26,9 @@ class Resource
   Resource() = default;
 
   //Destructor.
-  virtual ~Resource() = default;
-  
+  virtual 
+  ~Resource() = default;
+
   virtual bool 
   loadFromFile(const String& inPath) = 0;
 

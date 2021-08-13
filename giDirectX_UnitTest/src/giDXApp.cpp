@@ -145,21 +145,21 @@ DirectXApp::onCreate() {
 
   //Create Constant Buffer for Never Change
   m_cBufferNeverChange = m_gapi->createBuffer(sizeof(CBNeverChanges), 
-                                             4, 
-                                             0, 
-                                             nullptr);
+                                              4, 
+                                              0, 
+                                              nullptr);
 
   //Create Constant Buffer for Change on Resize
   m_cBufferChangeOnResize = m_gapi->createBuffer(sizeof(CBChangeOnResize), 
-                                              4, 
-                                              0, 
-                                              nullptr);
+                                                 4, 
+                                                 0, 
+                                                 nullptr);
 
   //Create Constant Buffer for Change Every Frame
   m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
-                                              4, 
-                                              0, 
-                                              nullptr);
+                                                   4, 
+                                                   0, 
+                                                   nullptr);
 
  
   //Create Sampler

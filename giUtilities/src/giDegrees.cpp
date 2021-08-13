@@ -22,11 +22,6 @@ namespace giEngineSDK {
     return m_degreesAngle;
   }
   
-  const Degrees& 
-  Degrees::operator+() const {
-    return getDegrees();
-  }
-  
   Degrees 
   Degrees::operator+(const Degrees& inDeg) const {
     return Degrees(getDegrees() + inDeg.getDegrees());
