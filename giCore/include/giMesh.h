@@ -25,28 +25,6 @@
 
 namespace giEngineSDK {
 
-  struct AnimationBone {
-    uint32 id;
-    float weight;
-  };
-
-
-  struct AnimationNode {
-    Transform transformation;
-    Vector<SharedPtr<AnimationNode>> childBones;
-  };
-
-
-  /**
-   * @struct
-   * @brief
-   */
-  struct BoneInfo {
-    Matrix4 offset;
-    Matrix4 transformation;
-  };
-
-
   /**
    * @struct    SimpleVertex.
    * @brief     Basic struc for my vertex.
@@ -55,7 +33,6 @@ namespace giEngineSDK {
     Vector3 Pos;
     Vector2 Tex;
     Vector3 Nor;
-    AnimationBone bones[4];
   };
 
   /**
@@ -81,11 +58,7 @@ namespace giEngineSDK {
     ///Default constructor
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
-         Vector<Texture> inTextures,
-         //const aiScene* inScene,
-         uint32 inNumBones,
-         Vector<BoneInfo> inBoneInfo,
-         Map<String, uint32> inBoneMapping);
+         Vector<Texture> inTextures);
 
     ///Destructor
     ~Mesh();
@@ -96,16 +69,6 @@ namespace giEngineSDK {
      */
     void 
     loadMesh();
-
-    /**
-     * @brief 
-     * @param    inDeltaTime 
-     * @param    inTransforms
-     *
-    void
-    update(float inDeltaTime, 
-           Vector<Matrix4>& inTransforms, 
-           const Matrix4& inGlobalTransform);
            
     /**
      * @brief    Draw the mesh data.
@@ -113,40 +76,6 @@ namespace giEngineSDK {
      */
     void 
     drawMesh();
-
-   private:
-    /*void
-    readNodeHeirarchy(float inAnimationTime, 
-                      const aiNode* inNode, 
-                      const Matrix4& inParentTransform,
-                      const Matrix4& inGlobalTransform);
-
-    const aiNodeAnim * 
-    findNodeAnim(const aiAnimation * inAnim, const String inNodeName);
-
-    void
-    calcInterpolatedRotation(aiQuaternion& Out, 
-                             float AnimationTime, 
-                             const aiNodeAnim* pNodeAnim);
-
-    uint32
-    findRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-
-    void
-    calcInterpolatedScaling(aiVector3D& Out, 
-                            float inAnimationTime, 
-                            const aiNodeAnim* inNodeAnim);
-
-    uint32
-    findScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
-
-    void
-    calcInterpolatedPosition(aiVector3D& Out, 
-                             float AnimationTime, 
-                             const aiNodeAnim* pNodeAnim);
-
-    uint32
-    findPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);*/
 
 
    protected:
@@ -168,16 +97,5 @@ namespace giEngineSDK {
 
     //Textures in the mesh
     Vector<Texture> m_textures;
-
-
-    //aiScene* m_scene = nullptr;
-
-    Vector<BoneInfo> m_boneInfo;
-    
-    uint32 m_numBones;
-
-    Map<String, uint32> m_boneMapping;
-
-    
   };
 }

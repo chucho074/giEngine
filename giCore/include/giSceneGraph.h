@@ -28,14 +28,41 @@ namespace giEngineSDK {
     SceneGraph();
 
     //Destructor.
-    ~SceneGraph();
+    ~SceneGraph() = default;
 
     /**
      * @brief    .
      * @param    inActor 
      */
     void
-    addActor(const SharedPtr<Actor>& inActor);
+    addActor(const SharedPtr<Actor>& inActor, WeakPtr<SceneNode> inParent);
+
+    /**
+     * @brief    .
+     * @param    inID 
+     */
+    SharedPtr<Actor>
+    getActorByID(const uint32& inID);
+
+    /**
+     * @brief    .
+     * @param    inName 
+     */
+    SharedPtr<Actor>
+    getActorByName(const String& inName);
+
+    /**
+     * @brief    .
+     * @param    inParent
+     */
+    List<SharedPtr<SceneNode>>&
+    getNodesByParent(WeakPtr<SceneNode> inParent);
+
+    /**
+     * @brief   Delete that actor, asign the childs to the parent.
+     */
+    void
+    deleteActor(const SharedPtr<Actor>& inActor);
 
     /**
      * @brief    Update every actor.
@@ -50,19 +77,17 @@ namespace giEngineSDK {
     void 
     draw();
 
-    
-
-   protected:
-
-
    private:
 
     /**
-     * @brief    The root of the Scenex.
+     * @brief    The root of the Scene.
      */
     SharedPtr<SceneNode> m_root;
 
+    /**
+     * @brief    The number of the actors.
+     */
+    uint32 m_numActors;
 
   };
-
 }

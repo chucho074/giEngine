@@ -21,28 +21,28 @@ namespace giEngineSDK {
     //Invert Sqrt
     template<typename Type>
     static Type
-    invSqr(Type val) {
+    invSqrt(Type val) {
       return Type(1) / std::sqrt(val);
     }
   
     //Invert Sqrt Specialization
     template<>
     static float
-    invSqr(float val) {
+    invSqrt(float val) {
       return 1.0f / std::sqrtf(val);
     }
   
     //Sqrt
     template<typename Type>
     static Type
-    sqr(Type val) {
+    sqrt(Type val) {
       return std::sqrt(val);
     }
   
     //Sqrt Specialization
     template<>
     static float
-    sqr(float val) {
+    sqrt(float val) {
       return std::sqrtf(val);
     }
   

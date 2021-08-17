@@ -17,10 +17,11 @@
 
 namespace giEngineSDK {
 
-  Model::Model(String inFileName) {
-    loadFromFile(inFileName);
-  }
+  void
+  processNode(Model &inModel, aiNode* node, const aiScene* inScene);
 
+  Mesh 
+  processMesh(Model &inModel, aiMesh* mesh, const aiScene* scene);
 
   Model::~Model() {
     unload();
@@ -42,14 +43,16 @@ namespace giEngineSDK {
 
     const aiScene * tmpScene = importer.GetOrphanedScene();
 
-    if (!tmpScene || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !tmpScene->mRootNode) {
+    if (!tmpScene || 
+        tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE 
+        || !tmpScene->mRootNode) {
       g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
       return false;
     }
 
     m_directory = inFileName.substr(0, inFileName.find_last_of('/') + 1);
 
-    //processNode(*this, /*tmpScene->mRootNode,*/ tmpScene);
+    processNode(*this, tmpScene->mRootNode, tmpScene);
   }
 
   bool 
@@ -67,43 +70,45 @@ namespace giEngineSDK {
 
   }
 
-  void 
-  Model::update(float inDeltaTime, Vector<Matrix4>& inTransforms) {
-    
-    for(auto mesh : m_meshes) {
-      //mesh.update(inDeltaTime, inTransforms, m_globalInverseTransform);
-    }
-  }
-
+  
 
   void 
-  processNode(Model inModel, /*aiNode* node,*/ const aiScene* inScene) {
-    //Check if has meshes
-    if (!inScene->HasMeshes()) return;
-    
-    //Model resize the meshes
-    inModel.m_meshes.resize(inScene->mNumMeshes);
-
+  processNode(Model &inModel, aiNode* node, const aiScene* inScene) {
+    ////Check if has meshes
+    //if (!inScene->HasMeshes()) return;
     //
-    for (uint32 i = 0; i < inScene->mNumMeshes; ++i) {
-      auto assimpMesh = inScene->mMeshes[i];
-      auto& myMesh = inModel.m_meshes[i];
-      
-      
-      
-      //m_meshes.push_back(processMesh(mesh, inScene));
-    }
-    // then do the same for each of its children
+    ////Model resize the meshes
+    //inModel.m_meshes.resize(inScene->mNumMeshes);
+
+    ////
+    //for (uint32 i = 0; i < inScene->mNumMeshes; ++i) {
+    //  auto assimpMesh = inScene->mMeshes[i];
+    //  auto& myMesh = inModel.m_meshes[i];
+    //  
+    //  
+    //  
+    //  inModel.m_meshes.push_back(processMesh(inModel, mesh, inScene));
+    //}
+    //// then do the same for each of its children
     //for (uint32 i = 0; i < node->mNumChildren; i++) {
-    //  processNode(node->mChildren[i], inScene);
+    //  processNode(inModel, node->mChildren[i], inScene);
     //}
     
 
+    // process all the node's meshes (if any)
+    for (uint32 i = 0; i < node->mNumMeshes; i++) {
+      aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
+      inModel.m_meshes.push_back(processMesh(inModel, mesh, inScene));
+    }
+    // then do the same for each of its children
+    for (uint32 i = 0; i < node->mNumChildren; i++) {
+      processNode(inModel, node->mChildren[i], inScene);
+    }
   }
 
 
   Mesh 
-  processMesh(Model inModel, aiMesh* mesh, const aiScene* scene) {
+  processMesh(Model &inModel, aiMesh* mesh, const aiScene* scene) {
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
     Vector<Texture> textures;
@@ -209,19 +214,15 @@ namespace giEngineSDK {
 
     return Mesh(vertices, 
                 indices, 
-                textures, 
-                //scene, 
-                inModel.m_numBones, 
-                inModel.m_boneInfo, 
-                inModel.m_boneMapping);
+                textures);
   }
 
 
   Vector<Texture>
   Model::loadMaterialTextures(Model inModel,
-                       aiMaterial* mat, 
-                       aiTextureType type, 
-                       String typeName) {
+                              aiMaterial* mat, 
+                              aiTextureType type, 
+                              String typeName) {
 
     auto& GAPI = g_graphicsAPI();
     Vector<Texture> textures;

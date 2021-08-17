@@ -171,7 +171,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
     virtual Buffer * 
-    createBuffer(uint32, 
+    createBuffer(size_T, 
                  uint32, 
                  uint32, 
                  void *) { 
@@ -357,7 +357,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
     virtual void 
-    drawIndexed(uint32, 
+    drawIndexed(size_T, 
                 uint32) {};
          
     /**

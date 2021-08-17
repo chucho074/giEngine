@@ -30,6 +30,33 @@ namespace giEngineSDK {
     ~SceneNode();
 
     /**
+     * @brief    .
+     * @param    inID 
+     */
+    SharedPtr<Actor>
+    getActorByID(const uint32& inID);
+
+    /**
+     * @brief    .
+     * @param    inName 
+     */
+    SharedPtr<Actor>
+    getActorByName(const String& inName);
+
+    /**
+     * @brief    .
+     * @param    inParent
+     */
+    List<SharedPtr<SceneNode>>&
+    getNodesByParent(WeakPtr<SceneNode> inParent);
+
+    /**
+     * @brief   Delete that actor, asign the childs to the parent.
+     */
+    void
+    deleteActor(const SharedPtr<Actor>& inActor);
+
+    /**
      * @brief    
      * @param    inDeltaTime 
      */
@@ -44,15 +71,9 @@ namespace giEngineSDK {
 
     WeakPtr<SceneNode> m_parent;
 
-    List<WeakPtr<SceneNode>> m_childs;
+    List<SharedPtr<SceneNode>> m_childs;
 
-    WeakPtr<Actor> m_actor;
-  protected:
-
-
-  private:
+    SharedPtr<Actor> m_actor;
 
   };
-
-
 }

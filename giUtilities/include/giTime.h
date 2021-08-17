@@ -48,7 +48,7 @@ namespace giEngineSDK {
    
    private:
 
-    UniquePtr<Timer> m_timer;
+    SharedPtr<Timer> m_timer;
 
     float m_deltaTime;
 

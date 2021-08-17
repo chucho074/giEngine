@@ -28,6 +28,7 @@
 #include <giSampler.h>
 #include <giMesh.h>
 #include <giModel.h>
+#include <giSceneGraph.h>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 
@@ -36,11 +37,11 @@ using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;
 
 
- /**
-  * @struct   CBNeverChanges.
-  * @brief    The Never changes constant buffer.
-  * @bug      No known Bugs.
-  */ 
+/**
+ * @struct   CBNeverChanges.
+ * @brief    The Never changes constant buffer.
+ * @bug      No known Bugs.
+ */ 
 struct CBNeverChanges {
   Matrix4 mView;
 };
@@ -106,11 +107,11 @@ class DirectXApp : public BaseApp {
   onRender() override;
 
   /**
-  * @brief  Update the events
-  * @param  inMsg    The message
-  * @param  inwParam  The W parameter
-  * @bug    No known Bugs.
-  */
+   * @brief  Update the events
+   * @param  inMsg    The message
+   * @param  inwParam  The W parameter
+   * @bug    No known Bugs.
+   */
   void 
   onEvent(Event inEvent) override;
 
@@ -126,10 +127,10 @@ class DirectXApp : public BaseApp {
   Sampler * m_sampler = nullptr;
 
   //The Vertex Buffer
-  Buffer * m_vertexBuffer = nullptr;
+  //Buffer * m_vertexBuffer = nullptr;
 
   //The Index Buffer 
-  Buffer * m_indexBuffer = nullptr;
+  //Buffer * m_indexBuffer = nullptr;
 
   //The Constant Buffer (Never Change)
   Buffer * m_cBufferNeverChange = nullptr;
@@ -161,9 +162,11 @@ class DirectXApp : public BaseApp {
   //Yoshi Textures
   Texture2D * m_colorTexture = nullptr;
 
+  SceneGraph sceneGraph;
+
   //Peach Model
-  Model m_peach;
+  //Model m_peach;
 
   //Peach Textures
-  Texture2D * m_peachTexture = nullptr;
+  //Texture2D * m_peachTexture = nullptr;
 };

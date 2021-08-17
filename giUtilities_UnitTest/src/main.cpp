@@ -53,8 +53,8 @@ TEST(giUtilities, BasicTypesTest) {
  */
 TEST(BasicMathTest, MathTest) {
   //Quitar numeros magicos
-  EXPECT_EQ(Math::sqr(10), 3);
-  EXPECT_FLOAT_EQ(Math::sqr(10.f), 3.16227766f);
+  EXPECT_EQ(Math::sqrt(10), 3);
+  EXPECT_FLOAT_EQ(Math::sqrt(10.f), 3.16227766f);
   EXPECT_EQ(Math::pow(10, 2), 100);
   EXPECT_FLOAT_EQ(Math::cos(10), -0.83907151f);
   EXPECT_FLOAT_EQ(Math::cosh(10), 11013.2329201f);

@@ -13,6 +13,7 @@
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
+#include "giMath.h"
 
 using giEngineSDK::int32;
 
@@ -36,7 +37,7 @@ namespace giEngineSDK {
   
     Vector4i(Vector4i& inVect);
   
-    ~Vector4i();
+    ~Vector4i() = default;
 
     Vector4i
     operator+(const Vector4i& otherVect);
@@ -102,7 +103,7 @@ namespace giEngineSDK {
     crossProd(const Vector4i& inVectA, const Vector4i& inVectB);
     
     void
-    normalize(Vector4i inVector);
+    normalize();
     
     int32
     magnitude();

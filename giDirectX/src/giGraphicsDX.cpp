@@ -293,7 +293,7 @@ namespace giEngineSDK {
 
 
   Buffer* 
-  CGraphicsDX::createBuffer(uint32 inByteWidth,
+  CGraphicsDX::createBuffer(size_T inByteWidth,
                             uint32 inBindFlags,
                             uint32 inOffset,
                             void* inBufferData) {
@@ -533,7 +533,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::drawIndexed(uint32 inNumIndexes,
+  CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
     m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
   }

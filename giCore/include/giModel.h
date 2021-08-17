@@ -26,13 +26,12 @@ namespace giEngineSDK {
    * @class   Model. 
    * @brief   Basics models.
    */
-  class GI_CORE_EXPORT Model final : public Resource {
+  class GI_CORE_EXPORT Model final : public Resource
+  {
    public:
 
     ///Default constructor
     Model() = default;
-
-    Model(String inFileName);
 
     ///Destructor
     ~Model();
@@ -68,15 +67,6 @@ namespace giEngineSDK {
     void 
     saveToFile(const String& inFile);
 
-
-    /**
-     * @brief 
-     * @param    inDeltaTime 
-     * @param    inTransforms
-     */
-    void
-    update(float inDeltaTime, Vector<Matrix4>& inTransforms);
-
     /**
      * @brief    Draw the model.
      */
@@ -99,23 +89,6 @@ namespace giEngineSDK {
     Vector<String> getTextures() { 
       return m_texturesNames; 
     }
-
-    ///**
-    // * @brief 
-    // * @param node 
-    // * @param scene 
-    // */
-    //void 
-    //processNode(aiNode* node, const aiScene* scene);
-    //
-    ///**
-    // * @brief 
-    // * @param mesh 
-    // * @param scene 
-    // * @return 
-    // */
-    //Mesh 
-    //processMesh(aiMesh* mesh, const aiScene* scene);
     
     /**
      * @brief 
@@ -125,7 +98,10 @@ namespace giEngineSDK {
      * @return 
      */
     Vector<Texture> 
-    loadMaterialTextures(Model inModel, aiMaterial* mat, aiTextureType type, String typeName);
+    loadMaterialTextures(Model inModel, 
+                         aiMaterial* mat, 
+                         aiTextureType type, 
+                         String typeName);
 
     //Get the name of the textures linked to the model
     Vector<String> m_texturesNames;
@@ -137,22 +113,7 @@ namespace giEngineSDK {
 
     Vector<Texture> m_texturesLoaded;
 
-    //aiScene* m_scene = nullptr;
-
     Transform m_transform;
 
-    //For the bones (animation)
-
-    Map<String, uint32> m_boneMapping;
-
-    uint32 m_numBones;
-
-    Vector<BoneInfo> m_boneInfo;
-
-    Vector<uint32> m_ids;
-
-    Vector<uint32> m_weights;
-
-    Matrix4 m_globalInverseTransform;
   };
 }

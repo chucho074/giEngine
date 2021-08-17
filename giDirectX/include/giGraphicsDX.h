@@ -136,7 +136,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     Buffer * 
-    createBuffer(uint32 inByteWidth, 
+    createBuffer(size_T inByteWidth, 
                  uint32 inBindFlags, 
                  uint32 inOffset, 
                  void * inBufferData) override;
@@ -318,7 +318,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    drawIndexed(uint32 inNumIndexes, 
+    drawIndexed(size_T inNumIndexes, 
                 uint32 inStartLocation) override;
     
     /**

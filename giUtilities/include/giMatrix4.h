@@ -220,6 +220,16 @@ namespace giEngineSDK {
   };
 
   /**
+   * @class    matrixRotationX.
+   * @brief    For generate a rotation in a matrix.
+   */
+  class GI_UTILITY_EXPORT matrixRotationX : public Matrix4
+  {
+   public:
+     matrixRotationX(float inAngle);
+  };
+
+  /**
    * @class    matrixRotationY.
    * @brief    For generate a rotation in a matrix.
    */
@@ -227,6 +237,16 @@ namespace giEngineSDK {
   {
    public:
      matrixRotationY(float inAngle);
+  };
+
+  /**
+   * @class    matrixRotationZ.
+   * @brief    For generate a rotation in a matrix.
+   */
+  class GI_UTILITY_EXPORT matrixRotationZ : public Matrix4
+  {
+   public:
+     matrixRotationZ(float inAngle);
   };
 
   /**

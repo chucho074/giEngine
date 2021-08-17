@@ -401,6 +401,21 @@ namespace giEngineSDK {
   }
 
   
+  matrixRotationX::matrixRotationX(float inAngle) {
+    float    fSinAngle = Math::sin(inAngle);
+    float    fCosAngle = Math::cos(inAngle);
+
+    
+    m_xColumn = {1, 0.0f, 0.0f, 0.0f};
+
+    m_yColumn = {0.0f, fCosAngle, fSinAngle, 0.0f};
+
+    m_zColumn = {0.0f, -fSinAngle, fCosAngle, 0.0f};
+
+    m_wColumn = {0.0f, 0.0f, 0.0f, 1.0f};
+
+  }
+  
   matrixRotationY::matrixRotationY(float inAngle) {
     float    fSinAngle = Math::sin(inAngle);
     float    fCosAngle = Math::cos(inAngle);
@@ -413,25 +428,41 @@ namespace giEngineSDK {
     m_zColumn = {fSinAngle, 0.0f, fCosAngle, 0.0f};
 
     m_wColumn = {0.0f, 0.0f, 0.0f, 1.0f};
+
+  }
+  
+  matrixRotationZ::matrixRotationZ(float inAngle) {
+    float    fSinAngle = Math::sin(inAngle);
+    float    fCosAngle = Math::cos(inAngle);
+
+    
+    m_xColumn = {fCosAngle, -fSinAngle, 0.0f, 0.0f};
+
+    m_yColumn = {fSinAngle, fCosAngle, 0.0f, 0.0f};
+
+    m_zColumn = {0.0f, 0.0f, 1.0f, 0.0f};
+
+    m_wColumn = {0.0f, 0.0f, 0.0f, 1.0f};
+    
   }
 
   matrixTranslation::matrixTranslation(Vector3 inVector) {
     
-   /* m_xColumn = {1.0f, 0.0f, 0.0f, 0.0f};
+    m_xColumn = {1.0f, 0.0f, 0.0f, 0.0f};
 
     m_yColumn = {0.0f, 1.0f, 0.0f, 0.0f};
 
     m_zColumn = {0.0f, 0.0f, 1.0f, 0.0f};
 
     m_wColumn = {inVector.x, inVector.y, inVector.z, 1.0f};
-    */
-    m_xColumn = {1.0f, 0.0f, 0.0f, inVector.x};
+    
+    /*m_xColumn = {1.0f, 0.0f, 0.0f, inVector.x};
 
     m_yColumn = {0.0f, 1.0f, 0.0f, inVector.y};
 
     m_zColumn = {0.0f, 0.0f, 1.0f, inVector.z};
 
-    m_wColumn = {0, 0, 0, 1.0f};
+    m_wColumn = {0, 0, 0, 1.0f};*/
 
   }
 

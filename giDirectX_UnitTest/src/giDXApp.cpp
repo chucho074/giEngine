@@ -15,8 +15,8 @@
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  m_width = 1280.f;
-  m_height = 720.f;
+  m_width = 1280;
+  m_height = 720;
   m_world = Matrix4::IDENTITY;
   
 }
@@ -63,81 +63,17 @@ DirectXApp::onCreate() {
   layoutDesc[2].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
   layoutDesc[2].instanceDataStepRate = 0;
 
+  //Create the Input Layout
   m_inputLayout = m_gapi->createIL(layoutDesc, m_vertexShader);
 
   //Create Pixel Shader
   m_pixelShader = m_gapi->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
 
-  //Create vertex for the cube 
-  SimpleVertex vertices[] = {
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 0.0f),Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f) ,Vector3(0,0,0)},
-  
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
-  
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0,0,0)},
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0,0,0)},
-  
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f)  ,Vector3(0,0,0)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)  ,Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)   ,Vector3(0,0,0)},
-  
-    { Vector3(-1.0f, -1.0f, -1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(1.0f, -1.0f, -1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, -1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
-    { Vector3(-1.0f, 1.0f, -1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
-  
-    { Vector3(-1.0f, -1.0f, 1.0f), Vector2(0.0f, 0.0f) ,Vector3(0,0,0)},
-    { Vector3(1.0f, -1.0f, 1.0f), Vector2(1.0f, 0.0f)  ,Vector3(0,0,0)},
-    { Vector3(1.0f, 1.0f, 1.0f), Vector2(1.0f, 1.0f)   ,Vector3(0,0,0)},
-    { Vector3(-1.0f, 1.0f, 1.0f), Vector2(0.0f, 1.0f)  ,Vector3(0,0,0)},
-  };
-
-  //Create VertexBuffer
-  m_vertexBuffer = m_gapi->createBuffer(sizeof(SimpleVertex) * 24, 
-                                        0x1L, 
-                                        0, 
-                                        vertices);
-
-  //Create index for the cube
-  WORD indices[] = {
-    3,1,0,
-    2,1,3,
-  
-    6,4,5,
-    7,4,6,
-  
-    11,9,8,
-    10,9,11,
-  
-    14,12,13,
-    15,12,14,
-  
-    19,17,16,
-    18,17,19,
-  
-    22,20,21,
-    23,20,22
-  };
-
-  //Create Index Buffer
-  m_indexBuffer = m_gapi->createBuffer(sizeof(WORD) * 36, 
-                                       GI_BIND_FLAG::kBIND_INDEX_BUFFER, 
-                                       0, 
-                                       indices);
 
           //Load Models
 
   //Load Yoshi model
-  m_yoshi.loadFromFile("Resources/Models/silly_dancing.fbx");
+  m_yoshi.loadFromFile("Resources/Models/Vela2/Vela2.fbx");
 
 
   //Set Topology
@@ -243,25 +179,19 @@ DirectXApp::onRender() {
   m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
   
-  //Set Vertex Buffer
-  uint32 stride = sizeof(giEngineSDK::SimpleVertex);
-  m_gapi->setVertexBuffer(m_vertexBuffer, stride);
-
-  //Set Index Buffer
-  m_gapi->setIndexBuffer(m_indexBuffer, GI_FORMAT::kFORMAT_R32_UINT);
-
   //Apply a rotation
   static float tmpRotation = Math::PI / 550.0f;
   tmpRotation += Math::PI / 550.0f;
 
   //Sets values to the world
   m_world = Matrix4::IDENTITY;
-  m_world *= matrixTranslation({0.f, 200.0f, 5.f});
-  //m_world *= matrixRotationY(90);
+  m_world *= matrixTranslation({60.f, -10.0f, 50.f});
+  m_world *= matrixRotationY(180);
+  //m_world *= matrixRotationZ(180);
   //m_world *= matrixRotationY(tmpRotation);
   //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
 
-  //cb.mWorld = m_world.transpose();
+  cb.mWorld = m_world.transpose();
   cb.vMeshColor = m_meshColor;
 
   //Update the Change Every Frame Buffer
@@ -287,10 +217,10 @@ DirectXApp::onRender() {
   m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
   
   //Sets the texture
-  m_gapi->psSetShaderResource(0, m_peachTexture);
+  //m_gapi->psSetShaderResource(0, m_peachTexture);
 
   //Draw the model
-  m_peach.drawModel();
+  //m_peach.drawModel();
   
 }
 
@@ -327,9 +257,7 @@ DirectXApp::onEvent(Event inEvent) {
     tmpNC.mView = m_mainCamera.getViewMatrix();
     m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
   }
-  if (inEvent.type == Event::Resized) {
-    
-    
+  if (inEvent.type == Event::Resized) {    
     CBChangeOnResize tmpCOR;
     tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
     m_gapi->updateSubresource(m_cBufferChangeOnResize, &tmpCOR, sizeof(tmpCOR));

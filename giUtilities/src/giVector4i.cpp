@@ -37,9 +37,6 @@ namespace giEngineSDK {
     w = inVect.w;
   }
   
-  Vector4i::~Vector4i() {
-
-  }
   
   Vector4i
   Vector4i::operator+(const Vector4i& otherVect) {
@@ -210,11 +207,11 @@ namespace giEngineSDK {
   }
   
   void
-  Vector4i::normalize(Vector4i inVector) {
+  Vector4i::normalize() {
 
     float mag = magnitude();
     if (mag > 0) {
-      float tmp = 1.0f / mag;
+      int32 tmp = 1.0f / mag;
       x *= tmp;
       y *= tmp;
       z *= tmp;
@@ -230,10 +227,10 @@ namespace giEngineSDK {
   
   int32
   Vector4i::magnitude() {
-    return sqrt(pow(x, 2) 
-                + pow(y, 2) 
-                + pow(z, 2) 
-                + pow(w, 2));
+    return Math::sqrt(pow(x, 2) 
+                      + pow(y, 2) 
+                      + pow(z, 2) 
+                      + pow(w, 2));
   }
 
 }
