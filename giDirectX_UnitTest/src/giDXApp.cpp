@@ -10,8 +10,8 @@
 /**
  * @include
  */
-#include "giDXApp.h"
 #include <giDegrees.h>
+#include "giDXApp.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -69,11 +69,30 @@ DirectXApp::onCreate() {
   //Create Pixel Shader
   m_pixelShader = m_gapi->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
 
+  //Create the resource (The model)
+  //Create & assign to the component (StaticMesh)
+  //Assign the component to the actor
+  //Add the actor to the scene graph
+
+  //SharedPtr<Model> tmpModel(new Model());
+  //tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+
+  //SharedPtr<StaticMesh> modelComponent(new StaticMesh());
+
+  //modelComponent->setModel(tmpModel);
+
+  //SharedPtr<Actor> tmpActor(new Actor());
+
+  //tmpActor->addComponent(modelComponent);
+
+  //sceneGraph.addActor(tmpActor, WeakPtr<SceneNode>());
+
 
           //Load Models
 
   //Load Yoshi model
   m_yoshi.loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  //m_yoshi.loadFromFile("Resources/Models/Stormtrooper/silly_dancing.fbx");
 
 
   //Set Topology

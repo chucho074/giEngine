@@ -22,11 +22,11 @@ namespace giEngineSDK {
    * @struct   Texture.
    */
   struct Texture {
-    uint32 id;
-    String type;
-    String path;
-    Texture2D * texture;
-    Sampler * samplerState;
+    uint32 id;              //The id in the proyect.
+    String type;            //The type of the texture.
+    String path;            //The path of the file.
+    Texture2D * texture;    //The texture.
+    Sampler * samplerState; //The sampler for the texture.
   };
   
   /**
@@ -43,7 +43,7 @@ namespace giEngineSDK {
 
    protected:
 
-    Map<uint32, Texture> m_textures;
+    Vector<Texture> m_textures;
 
   };
 }

@@ -91,3 +91,5 @@ namespace giEngineSDK {
 
   };
 }
+
+//TODO: Hacerlo un modulo.

@@ -17,7 +17,7 @@ namespace giEngineSDK {
 
   namespace COMPONENT_TYPE {
     enum E {
-      kModel = 0,
+      kStaticMesh = 0,
       k
     };
   }

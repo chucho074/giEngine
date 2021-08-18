@@ -17,6 +17,30 @@
 
 namespace giEngineSDK {
 
+  String getPathCorrectly(String inFile) {
+    size_T realPos = 0;
+    size_T posInvSlash = inFile.rfind('\\');
+    size_T posSlash = inFile.rfind('/');
+
+    if(posInvSlash == String::npos) {
+      if(posSlash != String::npos) {
+        realPos = posSlash;
+      }
+    }
+    else {
+      realPos = posInvSlash;
+      if (posSlash == String::npos) {
+        if (posSlash > realPos) {
+          posSlash = realPos;
+        }
+      }
+    }
+    if (realPos == 0) {
+      return "/" + inFile;
+    }
+    return "/" + inFile.substr(realPos + 1, inFile.length() - realPos);
+  }
+
   void
   processNode(Model &inModel, aiNode* node, const aiScene* inScene);
 
@@ -229,9 +253,11 @@ namespace giEngineSDK {
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
       aiString str;
       mat->GetTexture(type, i, &str);
+      String path = str.C_Str();
+      path = getPathCorrectly(path);
       bool skip = false;
       for (unsigned int j = 0; j < inModel.m_texturesLoaded.size(); j++) {
-        if (std::strcmp(inModel.m_texturesLoaded[j].path.data(), str.C_Str()) == 0) {
+        if (std::strcmp(inModel.m_texturesLoaded[j].path.data(), path.c_str()) == 0) {
           textures.push_back(inModel.m_texturesLoaded[j]);
           skip = true;
           break;
@@ -239,9 +265,9 @@ namespace giEngineSDK {
       }
       if (!skip)  {   // if texture hasn't been loaded already, load it
         Texture texture;
-        texture.texture = GAPI.TextureFromFile(str.C_Str(), inModel.m_directory);
+        texture.texture = GAPI.TextureFromFile(path, inModel.m_directory);
         texture.type = typeName;
-        texture.path = str.C_Str();
+        texture.path = path;
 
         SamplerDesc sampDesc;
         sampDesc.filter = 21;

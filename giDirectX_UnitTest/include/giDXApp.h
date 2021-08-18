@@ -28,6 +28,7 @@
 #include <giSampler.h>
 #include <giMesh.h>
 #include <giModel.h>
+#include <giStaticMesh.h>
 #include <giSceneGraph.h>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
@@ -162,7 +163,7 @@ class DirectXApp : public BaseApp {
   //Yoshi Textures
   Texture2D * m_colorTexture = nullptr;
 
-  SceneGraph sceneGraph;
+  //SceneGraph sceneGraph;
 
   //Peach Model
   //Model m_peach;

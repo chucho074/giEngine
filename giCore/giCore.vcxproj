@@ -182,6 +182,7 @@
     <ClCompile Include="src\giSceneGraph.cpp" />
     <ClCompile Include="src\giSceneNode.cpp" />
     <ClCompile Include="src\giSkeletalMesh.cpp" />
+    <ClCompile Include="src\giStaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giComponent.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="include\giSceneGraph.h" />
     <ClInclude Include="include\giSceneNode.h" />
     <ClInclude Include="include\giSkeletalMesh.h" />
+    <ClInclude Include="include\giStaticMesh.h" />
     <ClInclude Include="include\giTexture2D.h" />
     <ClInclude Include="include\giTextureManager.h" />
   </ItemGroup>
