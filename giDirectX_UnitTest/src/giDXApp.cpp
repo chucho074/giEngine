@@ -74,25 +74,19 @@ DirectXApp::onCreate() {
   //Assign the component to the actor
   //Add the actor to the scene graph
 
-  //SharedPtr<Model> tmpModel(new Model());
-  //tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  SharedPtr<Model> tmpModel = make_shared<Model>();
 
-  //SharedPtr<StaticMesh> modelComponent(new StaticMesh());
+  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
 
-  //modelComponent->setModel(tmpModel);
+  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
 
-  //SharedPtr<Actor> tmpActor(new Actor());
+  modelComponent->setModel(tmpModel);
 
-  //tmpActor->addComponent(modelComponent);
+  SharedPtr<Actor> tmpActor = make_shared<Actor>();
 
-  //sceneGraph.addActor(tmpActor, WeakPtr<SceneNode>());
+  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
 
-
-          //Load Models
-
-  //Load Yoshi model
-  m_yoshi.loadFromFile("Resources/Models/Vela2/Vela2.fbx");
-  //m_yoshi.loadFromFile("Resources/Models/Stormtrooper/silly_dancing.fbx");
+  m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
 
   //Set Topology
@@ -168,7 +162,9 @@ void
 DirectXApp::onRender() {
 
   //Set Render Target & Depth Stencil
-  m_gapi->omSetRenderTarget(m_gapi->getDefaultRenderTarget(), 
+  Vector<Texture2D*> tmpVector;
+  tmpVector.push_back(m_gapi->getDefaultRenderTarget());
+  m_gapi->omSetRenderTarget(tmpVector,
                             m_gapi->getDefaultDephtStencil());
 
   //Set Input Layout
@@ -219,7 +215,9 @@ DirectXApp::onRender() {
   m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
 
   //Draw the Yoshi model
-  m_yoshi.drawModel();
+  //m_yoshi.drawModel();
+
+  m_sceneGraph->draw();
 
   //Sets values to the world
   m_world = Matrix4::IDENTITY;

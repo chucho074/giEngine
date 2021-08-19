@@ -21,6 +21,8 @@
 #include "giRenderTargetViewDX.h"
 #include "giVertexShaderDX.h"
 #include "giPixelShaderDX.h"
+#include "giRasterizerDX.h"
+#include "giDepthStateDX.h"
 #include "stb_image.h"
 
 
@@ -331,6 +333,63 @@ namespace giEngineSDK {
   }
 
 
+  Rasterizer *
+  CGraphicsDX::createRasterizer(FILLMODE::E inFillMode,
+                                CULLMODE::E inCullMode,
+                                bool inClockwise) {
+    RasterizerDX* tmpRaster = new RasterizerDX();
+    D3D11_RASTERIZER_DESC tmpDesc;
+    memset(&tmpDesc, 0, sizeof(tmpDesc));
+    switch (inFillMode) {
+    case FILLMODE::kSolid:
+      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      break;
+    case FILLMODE::kWireFrame:
+      tmpDesc.FillMode == D3D11_FILL_WIREFRAME;
+      break;
+    default:
+      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      break;
+    }  
+
+    switch (inCullMode) {
+    case CULLMODE::kNone:
+      tmpDesc.CullMode = D3D11_CULL_NONE;
+      break;
+    case CULLMODE::kFront:
+      tmpDesc.CullMode = D3D11_CULL_FRONT;
+      break;
+    case CULLMODE::kBack:
+      tmpDesc.CullMode = D3D11_CULL_BACK;
+      break;
+    default:
+      tmpDesc.CullMode = D3D11_CULL_BACK;
+      break;
+    }
+
+    tmpDesc.FrontCounterClockwise = inClockwise;
+
+    m_device->CreateRasterizerState(&tmpDesc, &tmpRaster->m_rasterizerState);
+
+    return tmpRaster;
+  }
+
+
+  DepthState *
+  CGraphicsDX::createDepthState(bool inStencilEnable,
+                                bool inDepthEnable) {
+    DepthStateDX * tmpState = new DepthStateDX();
+
+    D3D11_DEPTH_STENCIL_DESC tmpDesc;
+
+    tmpDesc.StencilEnable = inStencilEnable;
+    tmpDesc.DepthEnable = inDepthEnable;
+
+    m_device->CreateDepthStencilState(&tmpDesc, &tmpState->m_State);
+
+    return tmpState;
+  }
+
   void 
   CGraphicsDX::show() {
     m_swapChain->Present(0, 0);
@@ -362,6 +421,16 @@ namespace giEngineSDK {
   CGraphicsDX::setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology) {
     auto tmpTopology = static_cast<D3D_PRIMITIVE_TOPOLOGY>(inTopotology);
     m_devContext->IASetPrimitiveTopology(tmpTopology);
+  }
+
+  void 
+  CGraphicsDX::setRasterizerState(RasterizerDX * inRaster) {
+    m_devContext->RSSetState(inRaster->m_rasterizerState);
+  }
+
+  void
+  CGraphicsDX::setDepthState(DepthStateDX * inDepthState) {
+    m_devContext->OMSetDepthStencilState(inDepthState->m_State, 0);
   }
 
 
@@ -501,7 +570,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::omSetRenderTarget(Texture2D* inRT,
+  CGraphicsDX::omSetRenderTarget(Vector<Texture2D*> inRTs,
                                  Texture2D* inDS) {
 
     ID3D11RenderTargetView* tmpRTV[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
@@ -509,23 +578,23 @@ namespace giEngineSDK {
       tmpRTV[i] = nullptr;
     }
 
-
     ID3D11DepthStencilView* tmpDSV = nullptr;
 
     if (nullptr != inDS) {
       tmpDSV = static_cast<Texture2DDX*>(inDS)->m_depthStencilView;
     }
 
-    if (nullptr != inRT) {
-      tmpRTV[0] = static_cast<Texture2DDX*>(inRT)->m_renderTargetView;
+    for (int32 i = 0; i < inRTs.size(); ++i) {
+      if (nullptr != inRTs[i]) {
+        tmpRTV[0] = static_cast<Texture2DDX*>(inRTs[i])->m_renderTargetView;
+      }
+      else {
+        m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT,
+                                         tmpRTV,
+                                         tmpDSV);
+        return;
+      }
     }
-    else {
-      m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT,
-                                       tmpRTV,
-                                       tmpDSV);
-      return;
-    }
-
 
     m_devContext->OMSetRenderTargets(1, tmpRTV, tmpDSV);
 

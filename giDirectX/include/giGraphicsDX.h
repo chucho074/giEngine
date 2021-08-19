@@ -22,6 +22,8 @@ namespace giEngineSDK {
   class CBufferDX;
   class CInputLayoutDX;
   class CSamplerDX;
+  class RasterizerDX;
+  class DepthStateDX;
 }
 
 namespace giEngineSDK {
@@ -150,6 +152,21 @@ namespace giEngineSDK {
     createSampler(SamplerDesc inDesc) override;
     
     /**
+     * @brief    Create a Rasterizer.
+     */
+    Rasterizer *
+    createRasterizer(FILLMODE::E inFillMode,
+                     CULLMODE::E inCullMode,
+                     bool inClockwise);
+
+    /**
+     * @brief    Create a Depth Stencil State.
+     */
+    DepthState *
+    createDepthState(bool inStencilEnable,
+                     bool inDepthEnable);
+
+    /**
      * @brief    Present.
      * @bug      No known Bugs.
      */
@@ -183,6 +200,17 @@ namespace giEngineSDK {
      */
     void 
     setTopology(GI_PRIMITIVE_TOPOLOGY::E inTopotology) override;
+
+    /**
+     * @brief    Set the rasterizer State.
+     * @param    inRaster      The rasterizer to set.
+     * @bug      No known Bugs.
+     */
+    void 
+    setRasterizerState(RasterizerDX* inRaster);
+
+    void 
+    setDepthState(DepthStateDX* inDepthState);
     
     /**
      * @brief    Update Subresource.
@@ -308,7 +336,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetRenderTarget(Texture2D * inRT = nullptr, 
+    omSetRenderTarget(Vector<Texture2D *> inRT, 
                       Texture2D * inDS = nullptr) override;
      
     /** 

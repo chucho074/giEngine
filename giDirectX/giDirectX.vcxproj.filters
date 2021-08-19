@@ -45,6 +45,12 @@
     <ClInclude Include="include\giPixelShaderDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giRasterizerDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giDepthStateDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp">

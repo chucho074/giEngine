@@ -11,13 +11,14 @@
  * @include
  */
 #pragma once
-#include "giPrerequisitesCore.h"
-#include "giBaseGraphicsAPI.h"
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 #include <giLibraryLoader.h>
 #include <giTime.h>
 #include <giLogger.h>
+#include "giPrerequisitesCore.h"
+#include "giBaseGraphicsAPI.h"
+#include "giSceneGraph.h"
 
 
 #include <iostream>         //Delete this
@@ -158,6 +159,8 @@ class GI_CORE_EXPORT BaseApp
   LibraryLoader m_loader;
 
   GraphicsAPI* m_gapi = nullptr;
+
+  SceneGraph * m_sceneGraph = nullptr;
 
   Time * m_time;
 

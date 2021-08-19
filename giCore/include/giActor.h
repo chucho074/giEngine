@@ -37,8 +37,16 @@ namespace giEngineSDK {
      * @param    inComponentType  .
      * @return 
      */
+    //bool
+    //addComponent(COMPONENT_TYPE::E inComponentType);
+    
+    /**
+     * @brief    
+     * @param    inComponent  .
+     * @return 
+     */
     bool
-    addComponent(COMPONENT_TYPE::E inComponentType);
+    addComponent(SharedPtr<Component> inComponent, COMPONENT_TYPE::E inComponentType);
 
     /**
      * @brief 

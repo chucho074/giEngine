@@ -187,11 +187,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\giBufferDX.h" />
+    <ClInclude Include="include\giDepthStateDX.h" />
     <ClInclude Include="include\giDepthStencilViewDX.h" />
     <ClInclude Include="include\giGraphicsDX.h" />
     <ClInclude Include="include\giInputLayoutDX.h" />
     <ClInclude Include="include\giPixelShaderDX.h" />
     <ClInclude Include="include\giPrerequisitesDX.h" />
+    <ClInclude Include="include\giRasterizerDX.h" />
     <ClInclude Include="include\giRenderTargetViewDX.h" />
     <ClInclude Include="include\giSamplerDX.h" />
     <ClInclude Include="include\giTexture2DDX.h" />

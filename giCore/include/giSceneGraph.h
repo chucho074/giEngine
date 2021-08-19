@@ -13,6 +13,7 @@
 #pragma once
 #include "giActor.h"
 #include "giSceneNode.h"
+#include <giModule.h>
 
 namespace giEngineSDK {
 
@@ -21,7 +22,7 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class GI_CORE_EXPORT SceneGraph
+  class GI_CORE_EXPORT SceneGraph : public Module<SceneGraph>
   {
    public:
     //Default Constructor.
@@ -35,7 +36,7 @@ namespace giEngineSDK {
      * @param    inActor 
      */
     void
-    addActor(const SharedPtr<Actor>& inActor, WeakPtr<SceneNode> inParent);
+    addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent);
 
     /**
      * @brief    .
@@ -57,6 +58,9 @@ namespace giEngineSDK {
      */
     List<SharedPtr<SceneNode>>&
     getNodesByParent(WeakPtr<SceneNode> inParent);
+
+    SharedPtr<SceneNode>
+    getRoot();
 
     /**
      * @brief   Delete that actor, asign the childs to the parent.
@@ -89,7 +93,10 @@ namespace giEngineSDK {
      */
     uint32 m_numActors;
 
+    
   };
-}
 
-//TODO: Hacerlo un modulo.
+  SceneGraph& 
+  g_sceneGraph();
+
+}

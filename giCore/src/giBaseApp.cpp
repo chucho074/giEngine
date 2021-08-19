@@ -118,6 +118,10 @@ BaseApp::initSystems() {
   Logger::startUp();
   m_logger = &g_logger();
 
+  //Start the Scene Graph
+  SceneGraph::startUp();
+  m_sceneGraph = &g_sceneGraph();
+
   //Activate the console only on Debug
 #ifdef DEBUG
   activateConsole();

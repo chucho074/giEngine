@@ -14,29 +14,44 @@
 
 namespace giEngineSDK {
 
-  bool
-  Actor::addComponent(COMPONENT_TYPE::E inComponentType) {
-    //Check if the component exist.
-    if(m_components.count(inComponentType) == 0) {
+  //bool
+  //Actor::addComponent(COMPONENT_TYPE::E inComponentType) {
+  //  //Check if the component exist.
+  //  if(m_components.count(inComponentType) == 0) {
+  //    auto tmpComponent = std::pair<COMPONENT_TYPE::E, SharedPtr<Component>>();
+  //    m_components.insert(tmpComponent);
+
+  //  }
+  //  return false;
+  //}
+
+  bool 
+  Actor::addComponent(SharedPtr<Component> inComponent, COMPONENT_TYPE::E inComponentType) {
+    if (m_components.count(inComponentType) == 0) {
       auto tmpComponent = std::pair<COMPONENT_TYPE::E, SharedPtr<Component>>();
+      tmpComponent.first = inComponentType;
+      tmpComponent.second = inComponent;
       m_components.insert(tmpComponent);
 
     }
     return false;
   }
 
-  void 
+  void
   Actor::update(float inDeltaTime) {
-    for (auto components : m_components) {
-      components.second->update(inDeltaTime);
+    if (!m_components.empty()) {
+      for (auto components : m_components) {
+        components.second->update(inDeltaTime);
+      }
     }
-    
   }
 
   void 
   Actor::render() {
-    for (auto components : m_components) {
-      components.second->render();
+    if(!m_components.empty()) {
+      for (auto components : m_components) {
+        components.second->render();
+      }
     }
   }
 

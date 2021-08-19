@@ -194,6 +194,7 @@
     <ClInclude Include="include\giBaseVertexShader.h" />
     <ClInclude Include="include\giBuffer.h" />
     <ClInclude Include="include\giCamera.h" />
+    <ClInclude Include="include\giDepthState.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
     <ClInclude Include="include\giInputLayout.h" />
     <ClInclude Include="include\giMaterial.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="include\giModel.h" />
     <ClInclude Include="include\giObject.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
+    <ClInclude Include="include\giRasterizer.h" />
     <ClInclude Include="include\giResource.h" />
     <ClInclude Include="include\giSampler.h" />
     <ClInclude Include="include\giSceneGraph.h" />

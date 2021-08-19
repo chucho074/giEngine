@@ -16,15 +16,16 @@ namespace giEngineSDK {
   SceneGraph::SceneGraph() {
     m_numActors = 0;
     SharedPtr<Actor> sceneActor;
-    sceneActor.reset(new Actor());
+    m_root = make_shared<SceneNode>();
+    sceneActor = make_shared<Actor>();
     m_root->m_actor = sceneActor;
   }
 
   void 
-  SceneGraph::addActor(const SharedPtr<Actor>& inActor, WeakPtr<SceneNode> inParent) {
+  SceneGraph::addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent) {
 
     inActor->m_actorId = m_numActors;
-    SharedPtr<SceneNode> tmpNode;
+    SharedPtr<SceneNode> tmpNode = make_shared<SceneNode>();
     tmpNode->m_actor = inActor;
     m_root->getNodesByParent(inParent).push_back(tmpNode);
   }
@@ -41,10 +42,21 @@ namespace giEngineSDK {
 
   List<SharedPtr<SceneNode>>&
   SceneGraph::getNodesByParent(WeakPtr<SceneNode> inParent) {
+    if (SharedPtr<SceneNode>(nullptr) == inParent.lock()) {
+      List<SharedPtr<SceneNode>> tmpList;
+      tmpList.push_back(m_root);
+      return tmpList;
+    }
+
     return m_root->getNodesByParent(inParent);
   }
 
-  void 
+  SharedPtr<SceneNode>
+  SceneGraph::getRoot() {
+    return m_root;
+  }
+
+  void
   SceneGraph::deleteActor(const SharedPtr<Actor>& inActor) {
     m_root->deleteActor(inActor);
   }
@@ -57,5 +69,10 @@ namespace giEngineSDK {
   void 
   SceneGraph::draw() {
     m_root->render();
+  }
+
+  SceneGraph&
+    g_sceneGraph() {
+    return SceneGraph::instance();
   }
 }

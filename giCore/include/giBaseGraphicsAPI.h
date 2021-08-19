@@ -26,11 +26,21 @@ namespace giEngineSDK {
   class Buffer;
   class InputLayout;
   class Sampler;
+  class Rasterizer;
+  class DepthState;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
   struct InputLayoutDesc;
   struct SamplerDesc;
+
+  namespace FILLMODE {
+    enum E;
+  }
+
+  namespace CULLMODE {
+    enum E;
+  }
 }
 
 /**
@@ -50,50 +60,50 @@ namespace giEngineSDK {
     ~GraphicsAPI() = default;
     
     /**
-      * @brief    Prepare the Module.
-      * @bug      No known Bugs.
-      */
+     * @brief    Prepare the Module.
+     * @bug      No known Bugs.
+     */
     void 
     onStartUp() override {};
     
     /**
-      * @brief    Clear the Module.
-      * @bug      No known Bugs.
-      */
+     * @brief    Clear the Module.
+     * @bug      No known Bugs.
+     */
     void 
     onShutDown() override {};
     
     /**
-      * @brief    In charge of the creation of the device & SwapChain
-      * @param    inWindow   The window object.
-      * @param    inWidth    The width of the screen.
-      * @param    inHeight   The height of the screen.
-      * @bug      No known Bugs.
-      */
+     * @brief    In charge of the creation of the device & SwapChain
+     * @param    inWindow   The window object.
+     * @param    inWidth    The width of the screen.
+     * @param    inHeight   The height of the screen.
+     * @bug      No known Bugs.
+     */
     virtual void 
     init(void *) {};
     
     /**
-      * @brief    In Charge to create the device and the swap chain.
-      * @param    inWindow   The window object.
-      * @param    inWidth    The width of the screen.
-      * @param    inHeight   The height of the screen.
-      * @bug      No known Bugs.
-      */
+     * @brief    In Charge to create the device and the swap chain.
+     * @param    inWindow   The window object.
+     * @param    inWidth    The width of the screen.
+     * @param    inHeight   The height of the screen.
+     * @bug      No known Bugs.
+     */
     virtual bool 
     createDeviceAndSwpaChain(void *) { 
       return false;  
     };
          
     /**
-      * @brief    Creates the texture in the Device.
-      * @param    inWidth        The width of the texture.
-      * @param    inHeigh        The heigh of the texture.
-      * @param    inMipLevels    The mip levels.
-      * @param    inFormat       The format of the texture.
-      * @param    inBindFlags    The bind flags of the texture.
-      * @bug      No known Bugs.
-      */
+     * @brief    Creates the texture in the Device.
+     * @param    inWidth        The width of the texture.
+     * @param    inHeigh        The heigh of the texture.
+     * @param    inMipLevels    The mip levels.
+     * @param    inFormat       The format of the texture.
+     * @param    inBindFlags    The bind flags of the texture.
+     * @bug      No known Bugs.
+     */
     virtual Texture2D * 
     createTex2D(int32,
                 int32,
@@ -104,14 +114,14 @@ namespace giEngineSDK {
     };
 
     /**
-      * @brief    Creates the View Port in the Device.
-      * @param    inWidth     The width of the viewport.
-      * @param    inHeight    The height of the viewport.
-      * @param    inTopX      The position to set the left corner of the window in x.
-      * @param    inTopY      The position to set the left corner of the window in y.
-      * @return   Returns .
-      * @bug      No known Bugs.
-      */
+     * @brief    Creates the View Port in the Device.
+     * @param    inWidth     The width of the viewport.
+     * @param    inHeight    The height of the viewport.
+     * @param    inTopX      The position to set the left corner of the window in x.
+     * @param    inTopY      The position to set the left corner of the window in y.
+     * @return   Returns .
+     * @bug      No known Bugs.
+     */
     virtual void 
     createVP(uint32,
              int32,
@@ -120,12 +130,12 @@ namespace giEngineSDK {
              int32) {};
     
     /**
-      * @brief    Create the Vertex Shader.
-      * @param    inFileName    The name of the file.
-      * @param    inEntryPoint  The entry point in the shader.
-      * @param    inShaderModel The model in the shader.
-      * @bug      No known Bugs.
-      */
+     * @brief    Create the Vertex Shader.
+     * @param    inFileName    The name of the file.
+     * @param    inEntryPoint  The entry point in the shader.
+     * @param    inShaderModel The model in the shader.
+     * @bug      No known Bugs.
+     */
     virtual BaseVertexShader * 
     createVS(String,
              String,
@@ -135,12 +145,12 @@ namespace giEngineSDK {
     };
     
     /**
-      * @brief    Create the Pixel Shader.
-      * @param    inFileName    The name of the file.
-      * @param    inEntryPoint  The entry point in the shader.
-      * @param    inShaderModel The model in the shader.
-      * @bug      No known Bugs.
-      */
+     * @brief    Create the Pixel Shader.
+     * @param    inFileName    The name of the file.
+     * @param    inEntryPoint  The entry point in the shader.
+     * @param    inShaderModel The model in the shader.
+     * @bug      No known Bugs.
+     */
     virtual BasePixelShader * 
     createPS(String,
              String,
@@ -149,12 +159,12 @@ namespace giEngineSDK {
     };
 
     /**
-      * @brief    Creates the Input Layout.
-      * @param    inDesc    A vector with the inputLayout information.
-      * @param    inShader  The vertex shader.
-      * @return   Returns   The Input layout.
-      * @bug      No known Bugs.
-      */
+     * @brief    Creates the Input Layout.
+     * @param    inDesc    A vector with the inputLayout information.
+     * @param    inShader  The vertex shader.
+     * @return   Returns   The Input layout.
+     * @bug      No known Bugs.
+     */
     virtual InputLayout * 
     createIL(Vector<InputLayoutDesc> &, 
              BaseShader *) { 
@@ -162,14 +172,14 @@ namespace giEngineSDK {
     };
 
     /**
-      * @brief    Creates a buffer.
-      * @param    inByteWidth   The byte Width for the buffer.
-      * @param    inBindFlags   The bind flags for the buffer.
-      * @param    inOffset      The offset of the buffer.
-      * @param    inBufferData  The information to save into the buffer.
-      * @return   Returns the buffer.
-      * @bug      No known Bugs.
-      */
+     * @brief    Creates a buffer.
+     * @param    inByteWidth   The byte Width for the buffer.
+     * @param    inBindFlags   The bind flags for the buffer.
+     * @param    inOffset      The offset of the buffer.
+     * @param    inBufferData  The information to save into the buffer.
+     * @return   Returns the buffer.
+     * @bug      No known Bugs.
+     */
     virtual Buffer * 
     createBuffer(size_T, 
                  uint32, 
@@ -179,14 +189,38 @@ namespace giEngineSDK {
      };
     
     /**
-      * @brief    Creates a Sampler.
-      * @param    inDesc   The descriptor of the sampler.
-      * @bug      No known Bugs.
-      */
+     * @brief    Creates a Sampler.
+     * @param    inDesc   The descriptor of the sampler.
+     * @bug      No known Bugs.
+     */
     virtual Sampler * 
     createSampler(SamplerDesc) { 
       return nullptr; 
     };
+
+    /**
+     * @brief    Creates a Rasterizer.
+     * @param    inFillMode  The fill mode for the raster.
+     * @param    inCullMode  The cull mode for the raster.
+     * @param    inClockwise If the raster is in clockwise.
+     */
+    virtual Rasterizer *
+    createRasterizer(FILLMODE::E inFillMode,
+                     CULLMODE::E inCullMode,
+                     bool inClockwise) {
+      return nullptr;
+    }
+    
+    /**
+     * @brief    Creates a Rasterizer.
+     * @param    inStencilEnable  The fill mode for the raster.
+     * @param    inDepthEnable    The cull mode for the raster.
+     */
+    virtual DepthState *
+    createDepthState(bool inStencilEnable,
+                     bool inDepthEnable) {
+      return nullptr;
+    }
     
     /**
       * @brief    Present.
@@ -347,7 +381,7 @@ namespace giEngineSDK {
       * @bug      No known Bugs.
       */
     virtual void 
-    omSetRenderTarget(Texture2D * = nullptr, 
+    omSetRenderTarget(Vector<Texture2D *>, 
                       Texture2D * = nullptr) {};
     
     /** 
