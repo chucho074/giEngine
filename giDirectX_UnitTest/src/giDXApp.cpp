@@ -26,48 +26,48 @@ void
 DirectXApp::onCreate() {
 
   //Create Vertex Shader 
-  m_vertexShader = m_gapi->createVS("Resources/MyShader.fx", "VS", "vs_4_0");
+  //m_vertexShader = m_gapi->createVS("Resources/MyShader.fx", "VS", "vs_4_0");
 
   //Create Input Layout
-  Vector<InputLayoutDesc> layoutDesc;
+  //Vector<InputLayoutDesc> layoutDesc;
 
   //Set the size for the inputLayout
-  layoutDesc.resize(3);
+  //layoutDesc.resize(3);
 
           //Sets the input Layout values
 
-  //Positions
-  layoutDesc[0].semanticName = "POSITION";
-  layoutDesc[0].semanticIndex = 0;
-  layoutDesc[0].format = DXGI_FORMAT_R32G32B32_FLOAT;
-  layoutDesc[0].inputSlot = 0;
-  layoutDesc[0].alignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-  layoutDesc[0].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-  layoutDesc[0].instanceDataStepRate = 0;
+  ////Positions
+  //layoutDesc[0].semanticName = "POSITION";
+  //layoutDesc[0].semanticIndex = 0;
+  //layoutDesc[0].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
+  //layoutDesc[0].inputSlot = 0;
+  //layoutDesc[0].alignedByteOffset = ALIGN_ELEMENT;
+  //layoutDesc[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+  //layoutDesc[0].instanceDataStepRate = 0;
 
-  //texcoords
-  layoutDesc[1].semanticName = "TEXCOORD";
-  layoutDesc[1].semanticIndex = 0;
-  layoutDesc[1].format = DXGI_FORMAT_R32G32_FLOAT;
-  layoutDesc[1].inputSlot = 0;
-  layoutDesc[1].alignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-  layoutDesc[1].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-  layoutDesc[1].instanceDataStepRate = 0;
-  
-  //normals
-  layoutDesc[2].semanticName = "NORMAL";
-  layoutDesc[2].semanticIndex = 0;
-  layoutDesc[2].format = DXGI_FORMAT_R32G32_FLOAT;
-  layoutDesc[2].inputSlot = 0;
-  layoutDesc[2].alignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-  layoutDesc[2].inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-  layoutDesc[2].instanceDataStepRate = 0;
+  ////texcoords
+  //layoutDesc[1].semanticName = "TEXCOORD";
+  //layoutDesc[1].semanticIndex = 0;
+  //layoutDesc[1].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
+  //layoutDesc[1].inputSlot = 0;
+  //layoutDesc[1].alignedByteOffset = ALIGN_ELEMENT;
+  //layoutDesc[1].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+  //layoutDesc[1].instanceDataStepRate = 0;
+  //
+  ////normals
+  //layoutDesc[2].semanticName = "NORMAL";
+  //layoutDesc[2].semanticIndex = 0;
+  //layoutDesc[2].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
+  //layoutDesc[2].inputSlot = 0;
+  //layoutDesc[2].alignedByteOffset = ALIGN_ELEMENT;
+  //layoutDesc[2].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+  //layoutDesc[2].instanceDataStepRate = 0;
 
-  //Create the Input Layout
-  m_inputLayout = m_gapi->createIL(layoutDesc, m_vertexShader);
+  ////Create the Input Layout
+  //m_inputLayout = m_gapi->createIL(layoutDesc, m_vertexShader);
 
-  //Create Pixel Shader
-  m_pixelShader = m_gapi->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
+  ////Create Pixel Shader
+  //m_pixelShader = m_gapi->createPS("Resources/MyShader.fx", "PS", "ps_4_0");
 
   //Create the resource (The model)
   //Create & assign to the component (StaticMesh)
@@ -161,22 +161,22 @@ DirectXApp::onUpdate(float inDeltaTime) {
 void 
 DirectXApp::onRender() {
 
-  //Set Render Target & Depth Stencil
-  Vector<Texture2D*> tmpVector;
-  tmpVector.push_back(m_gapi->getDefaultRenderTarget());
-  m_gapi->omSetRenderTarget(tmpVector,
-                            m_gapi->getDefaultDephtStencil());
+  ////Set Render Target & Depth Stencil
+  //Vector<Texture2D*> tmpVector;
+  //tmpVector.push_back(m_gapi->getDefaultRenderTarget());
+  //m_gapi->omSetRenderTarget(tmpVector,
+  //                          m_gapi->getDefaultDephtStencil());
 
-  //Set Input Layout
-  m_gapi->aiSetInputLayout(m_inputLayout);
+  ////Set Input Layout
+  //m_gapi->aiSetInputLayout(m_inputLayout);
 
-  //Clear the back buffer
-  float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-  m_gapi->clearRTV(m_gapi->getDefaultRenderTarget(), 
-                   ClearColor);
+  ////Clear the back buffer
+  //float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+  //m_gapi->clearRTV(m_gapi->getDefaultRenderTarget(), 
+  //                 ClearColor);
 
-  //Clear the depth buffer to 1.0 (max depth)
-  m_gapi->clearDSV(m_gapi->getDefaultDephtStencil());
+  ////Clear the depth buffer to 1.0 (max depth)
+  //m_gapi->clearDSV(m_gapi->getDefaultDephtStencil());
 
   //Update variables that change once per frame
   CBChangesEveryFrame cb;
@@ -185,11 +185,11 @@ DirectXApp::onRender() {
   m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  m_gapi->vsSetShader(m_vertexShader);
+  //m_gapi->vsSetShader(m_vertexShader);
   m_gapi->vsSetConstantBuffer(0, m_cBufferNeverChange);
   m_gapi->vsSetConstantBuffer(1, m_cBufferChangeOnResize);
   m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
-  m_gapi->psSetShader(m_pixelShader);
+  //m_gapi->psSetShader(m_pixelShader);
   m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
   m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
@@ -217,7 +217,7 @@ DirectXApp::onRender() {
   //Draw the Yoshi model
   //m_yoshi.drawModel();
 
-  m_sceneGraph->draw();
+  //m_sceneGraph->draw();
 
   //Sets values to the world
   m_world = Matrix4::IDENTITY;

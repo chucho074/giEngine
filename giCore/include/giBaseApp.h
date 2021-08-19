@@ -156,14 +156,16 @@ class GI_CORE_EXPORT BaseApp
   WindowBase m_window;
 
   //
-  LibraryLoader m_loader;
+  LibraryLoader m_loaderGAPI;
+
+  LibraryLoader m_loaderRenderer;
 
   GraphicsAPI* m_gapi = nullptr;
 
   SceneGraph * m_sceneGraph = nullptr;
 
-  Time * m_time;
+  Time * m_time = nullptr;
 
-  Logger * m_logger;
+  Logger * m_logger = nullptr;
 };
 

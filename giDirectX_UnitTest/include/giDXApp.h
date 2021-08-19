@@ -154,4 +154,20 @@ class DirectXApp : public BaseApp {
   //The color For the mesh
   Vector4 m_meshColor { 0.f, 0.f, 0.f, 0.f };
 
+  
+          //MODELS
+
+  //Yoshi Model
+  Model m_yoshi;
+
+  //Yoshi Textures
+  Texture2D * m_colorTexture = nullptr;
+
+  SceneGraph sceneGraph;
+
+  //Peach Model
+  //Model m_peach;
+
+  //Peach Textures
+  //Texture2D * m_peachTexture = nullptr;
 };

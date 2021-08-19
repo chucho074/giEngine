@@ -14,7 +14,6 @@
 #include "giPrerequisitesCore.h"
 #include <giModule.h>
 #include "giSampler.h"
-#include "stb_image.h"
 
 ///Forward declarations
 namespace giEngineSDK {

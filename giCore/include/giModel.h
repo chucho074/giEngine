@@ -97,11 +97,11 @@ namespace giEngineSDK {
      * @param typeName 
      * @return 
      */
-    Vector<Texture> 
+    /*Vector<Texture> 
     loadMaterialTextures(Model inModel, 
                          aiMaterial* mat, 
                          aiTextureType type, 
-                         String typeName);
+                         String typeName);*/
 
     //Get the name of the textures linked to the model
     Vector<String> m_texturesNames;

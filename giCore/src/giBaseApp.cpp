@@ -11,20 +11,25 @@
  * @include
  */
 #include "giBaseApp.h"
+#include <giRenderer.h>
 #include "giBaseGraphicsAPI.h"
 
 
 int32 
 BaseApp::run() {
 
+  
   //Create the main window
   createWindow();
 
   //Initialize every system
   initSystems();
+  auto& renderer = Renderer::instance();
 
   //Send message to device
   onCreate();
+
+  renderer.create();
 
   //App Loop
   while (m_window.isOpen()) {
@@ -49,6 +54,8 @@ BaseApp::run() {
     
     //Render Frame
     render();
+
+    renderer.render();
     
   }
 
@@ -99,8 +106,8 @@ BaseApp::initSystems() {
   WindowHandle handle = m_window.getSystemHandle();
 
   //Start the Graphics
-  if (m_loader.loadPlugin("giDirectX_d.dll")) {
-    auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loader.getProcedureByName("createGraphicsAPI"));
+  if (m_loaderGAPI.loadPlugin("giDirectX_d.dll")) {
+    auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loaderGAPI.getProcedureByName("createGraphicsAPI"));
 
     GraphicsAPI::startUp();
     GraphicsAPI* GAPI = createGraphicsAPI();
@@ -109,6 +116,11 @@ BaseApp::initSystems() {
     //Initialize the Graphics API
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
+  
+  if (m_loaderRenderer.loadPlugin("giRenderer_d.dll")) {
+    Renderer::startUp();
+  }
+
 
   //Start the time
   Time::startUp();
@@ -132,6 +144,8 @@ void
 BaseApp::destroySystems() {
   m_window.close();
   GraphicsAPI::shutDown();
+  Renderer::shutDown();
   Time::shutDown();
   Logger::shutDown();
+  SceneGraph::shutDown();
 }

@@ -15,9 +15,12 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
+
+
 namespace giEngineSDK {
 
-  String getPathCorrectly(String inFile) {
+  String 
+  getPathCorrectly(String inFile) {
     size_T realPos = 0;
     size_T posInvSlash = inFile.rfind('\\');
     size_T posSlash = inFile.rfind('/');
@@ -40,6 +43,51 @@ namespace giEngineSDK {
     }
     return "/" + inFile.substr(realPos + 1, inFile.length() - realPos);
   }
+
+  Vector<Texture>
+  loadMaterialTextures(Model inModel,
+                              aiMaterial* mat, 
+                              aiTextureType type, 
+                              String typeName) {
+
+    auto& GAPI = g_graphicsAPI();
+    Vector<Texture> textures;
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+      aiString str;
+      mat->GetTexture(type, i, &str);
+      String path = str.C_Str();
+      path = getPathCorrectly(path);
+      bool skip = false;
+      for (unsigned int j = 0; j < inModel.m_texturesLoaded.size(); j++) {
+        if (std::strcmp(inModel.m_texturesLoaded[j].path.data(), path.c_str()) == 0) {
+          textures.push_back(inModel.m_texturesLoaded[j]);
+          skip = true;
+          break;
+        }
+      }
+      if (!skip)  {   // if texture hasn't been loaded already, load it
+        Texture texture;
+        texture.texture = GAPI.TextureFromFile(path, inModel.m_directory);
+        texture.type = typeName;
+        texture.path = path;
+
+        SamplerDesc sampDesc;
+        sampDesc.filter = 21;
+        sampDesc.addressU = 1;
+        sampDesc.addressV = 1;
+        sampDesc.addressW = 1;
+        sampDesc.comparisonFunc = 1;
+        sampDesc.minLOD = 0;
+        sampDesc.maxLOD = 3.402823466e+38f;
+        texture.samplerState = GAPI.createSampler(sampDesc);
+
+        textures.push_back(texture);
+        inModel.m_texturesLoaded.push_back(texture); // add to loaded textures
+      }
+    }
+    return textures;
+  }
+
 
   void
   processNode(Model &inModel, aiNode* node, const aiScene* inScene);
@@ -220,17 +268,17 @@ namespace giEngineSDK {
     if(mesh->mMaterialIndex >= 0) {
       aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-      Vector<Texture> diffuseMaps = inModel.loadMaterialTextures(inModel,
-                                                                 material,
-                                                                 aiTextureType_DIFFUSE, 
-                                                                 "texture_diffuse");
+      Vector<Texture> diffuseMaps = loadMaterialTextures(inModel,
+                                                         material,
+                                                         aiTextureType_DIFFUSE, 
+                                                         "texture_diffuse");
 
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-      Vector<Texture> specularMaps = inModel.loadMaterialTextures(inModel,
-                                                                  material,
-                                                                  aiTextureType_SPECULAR, 
-                                                                  "texture_specular");
+      Vector<Texture> specularMaps = loadMaterialTextures(inModel,
+                                                          material,
+                                                          aiTextureType_SPECULAR, 
+                                                          "texture_specular");
 
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
@@ -242,50 +290,7 @@ namespace giEngineSDK {
   }
 
 
-  Vector<Texture>
-  Model::loadMaterialTextures(Model inModel,
-                              aiMaterial* mat, 
-                              aiTextureType type, 
-                              String typeName) {
-
-    auto& GAPI = g_graphicsAPI();
-    Vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-      aiString str;
-      mat->GetTexture(type, i, &str);
-      String path = str.C_Str();
-      path = getPathCorrectly(path);
-      bool skip = false;
-      for (unsigned int j = 0; j < inModel.m_texturesLoaded.size(); j++) {
-        if (std::strcmp(inModel.m_texturesLoaded[j].path.data(), path.c_str()) == 0) {
-          textures.push_back(inModel.m_texturesLoaded[j]);
-          skip = true;
-          break;
-        }
-      }
-      if (!skip)  {   // if texture hasn't been loaded already, load it
-        Texture texture;
-        texture.texture = GAPI.TextureFromFile(path, inModel.m_directory);
-        texture.type = typeName;
-        texture.path = path;
-
-        SamplerDesc sampDesc;
-        sampDesc.filter = 21;
-        sampDesc.addressU = 1;
-        sampDesc.addressV = 1;
-        sampDesc.addressW = 1;
-        sampDesc.comparisonFunc = 1;
-        sampDesc.minLOD = 0;
-        sampDesc.maxLOD = 3.402823466e+38f;
-        texture.samplerState = GAPI.createSampler(sampDesc);
-
-        textures.push_back(texture);
-        inModel.m_texturesLoaded.push_back(texture); // add to loaded textures
-      }
-    }
-    return textures;
-  }
-
+  
 
   void 
   Model::drawModel() {
