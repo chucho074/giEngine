@@ -74,7 +74,7 @@ PS_OUTPUT PS_GBUFFER(PS_INPUT inPS) : SV_TARGET
   PS_OUTPUT output = (PS_OUTPUT)0;
   
   //Positions
-  output.Position = float4(inPS.Position.xyz, 1.0f);
+  output.Position = float4(inPS.PosView.xyz, 1.0f);
   
   //Normals & Roughness
   float3 normal = NormaTexture.Sample(SamplState, inPS.TexCoord).xyz;

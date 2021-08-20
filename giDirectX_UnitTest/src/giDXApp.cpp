@@ -120,7 +120,7 @@ DirectXApp::onRender() {
   m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
   m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  m_gapi->psSetShaderResource(0, m_colorTexture);
+  //m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
   
   //Apply a rotation

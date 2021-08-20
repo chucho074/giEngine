@@ -598,7 +598,7 @@ namespace giEngineSDK {
       }
     }
 
-    m_devContext->OMSetRenderTargets(1, tmpRTV, tmpDSV);
+    m_devContext->OMSetRenderTargets(tmpSize, tmpRTV, tmpDSV);
 
   }
 

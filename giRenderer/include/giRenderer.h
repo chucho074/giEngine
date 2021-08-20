@@ -22,6 +22,30 @@ namespace giEngineSDK {
 
 
 namespace giEngineSDK {
+
+  /**
+   * @struct   SSAOConstantBuffer.
+   * @brief    The Camera constant buffer.
+   * @bug      No known Bugs.
+   */
+  struct SSAOConstantBuffer {
+    float SampleRadius;
+    float Intensity;
+    float Scale;
+    float Bias;
+  };
+
+  /**
+   * @struct   BlurConstantBuffer.
+   * @brief    The Camera constant buffer.
+   * @bug      No known Bugs.
+   */
+  struct BlurConstantBuffer {
+    float Viewport[2] = { 1280 , 720 };   //TODO
+    float Gamma = 1.0f;
+  };
+
+
   class Renderer : public BaseRenderer
   {
    public:
@@ -70,12 +94,45 @@ namespace giEngineSDK {
     //Rasterizer
     SharedPtr<Rasterizer> m_rasterGBuffer;
 
+    Vector<Texture2D*> m_renderTargets;
+
+    //GBUFFER
     //The Vertex shader
     BaseVertexShader* m_vertexShader = nullptr;
 
     //The Pixel Shader
     BasePixelShader* m_pixelShader = nullptr;
+
+    //SSAO
+    //The Vertex shader
+    BaseVertexShader* m_vertexShaderSSAO = nullptr;
+
+    //The Pixel Shader
+    BasePixelShader* m_pixelShaderSSAO = nullptr;
+
+
+    InputLayout* m_inputLayoutSSAO = nullptr;
+
+    Buffer* m_cBufferSSAO = nullptr;
     
+    Vector<Texture2D*> m_SSAOTexture;
+
+    //SAQ
+    SharedPtr<Model> m_SAQ;
+
+    //Blur
+
+    //The Pixel Shader
+    BasePixelShader* m_pixelShaderBlurH = nullptr;
+
+    //The Pixel Shader
+    BasePixelShader* m_pixelShaderBlurV = nullptr;
+
+    InputLayout* m_inputLayoutBlur = nullptr;
+
+    Vector<Texture2D*> m_BlurTexture;
+
+    Buffer* m_cBufferBlur = nullptr;
   };
 
   /**
