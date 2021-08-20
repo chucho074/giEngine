@@ -18,6 +18,7 @@
 #include <giLogger.h>
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
+#include "giBaseRenderer.h"
 #include "giSceneGraph.h"
 
 
@@ -162,10 +163,11 @@ class GI_CORE_EXPORT BaseApp
 
   GraphicsAPI* m_gapi = nullptr;
 
+  BaseRenderer* m_renderer = nullptr;
+
   SceneGraph * m_sceneGraph = nullptr;
 
   Time * m_time = nullptr;
 
   Logger * m_logger = nullptr;
 };
-

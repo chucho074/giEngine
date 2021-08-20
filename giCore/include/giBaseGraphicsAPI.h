@@ -53,7 +53,7 @@ namespace giEngineSDK {
    public:
     
     ///Default Constructor.
-    GraphicsAPI() {};
+    GraphicsAPI() = default;
     
     ///Destructor.
     ~GraphicsAPI() = default;
@@ -222,60 +222,60 @@ namespace giEngineSDK {
     }
     
     /**
-      * @brief    Present.
-      * @bug      No known Bugs.
-      */
+     * @brief    Present.
+     * @bug      No known Bugs.
+     */
     virtual void 
     show() {};
     
     /**
-      * @brief    Set VertexBuffer.
-      * @param    inBuffer   The buffer to set as vertex in the context.
-      * @param    inStride   The stride for the buffer.
-      * @bug      No known Bugs.
-      */
+     * @brief    Set VertexBuffer.
+     * @param    inBuffer   The buffer to set as vertex in the context.
+     * @param    inStride   The stride for the buffer.
+     * @bug      No known Bugs.
+     */
     virtual void 
     setVertexBuffer(Buffer *, 
                     uint32 ) {};
     
     /**
-      * @brief    Set IndexBuffer.
-      * @param    inBuffer   The buffer to set as index in the context.
-      * @param    inFormat   The format of the data.
-      * @bug      No known Bugs.
-      */
+     * @brief    Set IndexBuffer.
+     * @param    inBuffer   The buffer to set as index in the context.
+     * @param    inFormat   The format of the data.
+     * @bug      No known Bugs.
+     */
     virtual void 
     setIndexBuffer(Buffer *, 
                    GI_FORMAT::E) {};
     
     /**
-      * @brief     Set PrimitiveTopology.
-      * @param     inTopology   The type of topology to set.
-      * @bug       No known Bugs.
-      */
+     * @brief     Set PrimitiveTopology.
+     * @param     inTopology   The type of topology to set.
+     * @bug       No known Bugs.
+     */
     virtual void 
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
     
     /**
-      * @brief    Update Subresource.
-      * @param    inBuffer   The buffer with the information.
-      * @param    inData     The data to update.
-      * @param    inPitch    Pitch of the data.
-      * @bug      No known Bugs.
-      */
+     * @brief    Update Subresource.
+     * @param    inBuffer   The buffer with the information.
+     * @param    inData     The data to update.
+     * @param    inPitch    Pitch of the data.
+     * @bug      No known Bugs.
+     */
     virtual void 
     updateSubresource(Buffer *, 
                       void *, 
                       uint32) {};
     
     /**
-      * @brief    Update Texture.
-      * @param    inTexture      The texture to update.
-      * @param    inData         The data to udapte.
-      * @param    inPitch        The pitch.
-      * @param    inDepthPitch   The depth pitch.
-      * @bug      No known Bugs.
-      */
+     * @brief    Update Texture.
+     * @param    inTexture      The texture to update.
+     * @param    inData         The data to udapte.
+     * @param    inPitch        The pitch.
+     * @param    inDepthPitch   The depth pitch.
+     * @bug      No known Bugs.
+     */
     virtual void 
     updateTexture(Texture2D *, 
                   const void *, 
@@ -283,149 +283,149 @@ namespace giEngineSDK {
                   uint32) {};
     
     /**
-      * @brief    Clear the Back Buffer.
-      * @param    inColor    The color to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Clear the Back Buffer.
+     * @param    inColor    The color to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     clearBackTexture(float[4]) {};
     
     /**
-      * @brief    Clear Render Target View.
-      * @param    inRTV      The render target view to clear.
-      * @param    inColor    The color to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Clear Render Target View.
+     * @param    inRTV      The render target view to clear.
+     * @param    inColor    The color to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     clearRTV(Texture2D*, float [4]) {};
     
     /**
-      * @brief    Clear Depth Stencil View.
-      * @param    inDSV   The Depth stencil view to clear.
-      * @bug      No known Bugs.
-      */
+     * @brief    Clear Depth Stencil View.
+     * @param    inDSV   The Depth stencil view to clear.
+     * @bug      No known Bugs.
+     */
     virtual void 
     clearDSV(Texture2D*) {};
     
     /**
-      * @brief    Vertex Shader Set Shader.
-      * @param    inVShader   The Vertex Shader to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Vertex Shader Set Shader.
+     * @param    inVShader   The Vertex Shader to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     vsSetShader(BaseShader * = nullptr) {};
     
     /**
-      * @brief    Vertex Shader Set Constant Buffer.
-      * @param    inSlot     Index to begin setting constant buffers.
-      * @param    inBuffer   The constant buffer to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Vertex Shader Set Constant Buffer.
+     * @param    inSlot     Index to begin setting constant buffers.
+     * @param    inBuffer   The constant buffer to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     vsSetConstantBuffer(uint32, 
                         Buffer * = nullptr) {};
     
     /**
-      * @brief    Pixel Shader Set Shader.
-      * @param    inPShader    The pixel Shader to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Pixel Shader Set Shader.
+     * @param    inPShader    The pixel Shader to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     psSetShader(BaseShader * = nullptr) {};
     
     /**
-      * @brief    Pixel Shader Set Constant Buffer.
-      * @param    inSlot      The index to begin setting constant buffer.
-      * @param    inBuffer    The constant buffer to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Pixel Shader Set Constant Buffer.
+     * @param    inSlot      The index to begin setting constant buffer.
+     * @param    inBuffer    The constant buffer to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     psSetConstantBuffer(uint32, 
                         Buffer *) {};
     
     /**
-      * @brief    Pixel Shadder Set Shader Resource.
-      * @param    inSlot      The index to begin setting constant buffer.
-      * @param    inTexture   The texture to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    Pixel Shadder Set Shader Resource.
+     * @param    inSlot      The index to begin setting constant buffer.
+     * @param    inTexture   The texture to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     psSetShaderResource(uint32, 
                         Texture2D * = nullptr) {};
     
     /**
-      * @brief    Pixel Shader Set Samplers.
-      * @param    inSlot          The index to begin setting the sampler.
-      * @param    inNumSamplers   The number of samplers.
-      * @param    inSampler       The sampler.
-      * @bug      No known Bugs.
-      */
+     * @brief    Pixel Shader Set Samplers.
+     * @param    inSlot          The index to begin setting the sampler.
+     * @param    inNumSamplers   The number of samplers.
+     * @param    inSampler       The sampler.
+     * @bug      No known Bugs.
+     */
     virtual void 
     psSetSampler(uint32, 
                  uint32, 
                  Sampler *) {};
     
     /** 
-      * @brief    IA Set Input Layout.
-      * @param    inInputLayout   The input layout to set.
-      * @bug      No known Bugs.
-      */
+     * @brief    IA Set Input Layout.
+     * @param    inInputLayout   The input layout to set.
+     * @bug      No known Bugs.
+     */
     virtual void 
     aiSetInputLayout(InputLayout *) {};
     
     /** 
-      * @brief    OM Set Render Targets.
-      * @param    inRT    The Render Target texture.
-      * @param    inDS    The Depth Stencil texture.
-      * @bug      No known Bugs.
-      */
+     * @brief    OM Set Render Targets.
+     * @param    inRT    The Render Target texture.
+     * @param    inDS    The Depth Stencil texture.
+     * @bug      No known Bugs.
+     */
     virtual void 
     omSetRenderTarget(Vector<Texture2D *>, 
                       Texture2D * = nullptr) {};
     
     /** 
-      * @brief    Draw Index.
-      * @param    inNumIndexes       The number of idexes to draw.
-      * @param    inStartLocation    the start location to draw.
-      * @bug      No known Bugs.
-      */
+     * @brief    Draw Index.
+     * @param    inNumIndexes       The number of idexes to draw.
+     * @param    inStartLocation    the start location to draw.
+     * @bug      No known Bugs.
+     */
     virtual void 
     drawIndexed(size_T, 
                 uint32) {};
          
     /**
-      * @brief    Gets the default Render Target.
-      * @return   Returns the back Buffer texture.
-      */
+     * @brief    Gets the default Render Target.
+     * @return   Returns the back Buffer texture.
+     */
     virtual Texture2D * 
     getDefaultRenderTarget() { 
       return nullptr; 
     };
     
     /**
-      * @brief    Gets the default Depth Stencil.
-      * @return   Returns the Depth Stencil View texutre.
-      */
+     * @brief    Gets the default Depth Stencil.
+     * @return   Returns the Depth Stencil View texutre.
+     */
     virtual Texture2D*
     getDefaultDephtStencil() { 
       return nullptr; 
     };
 
     /**
-      * @brief    Reads a texture form a file.
-      * @param    inString     .
-      * @param    inDirectory  The directory of the texture to read.
-      * @return   Returns the texture readed from a file.
-      */
+     * @brief    Reads a texture form a file.
+     * @param    inString     .
+     * @param    inDirectory  The directory of the texture to read.
+     * @return   Returns the texture readed from a file.
+     */
     virtual Texture2D *
     TextureFromFile(String inString, String inDirectory) { 
       return nullptr;
     };
   
     /**
-      * @brief    Set the object of the Graphics API.
-      * @param    inAPI   The api to set.
-      */
+     * @brief    Set the object of the Graphics API.
+     * @param    inAPI   The api to set.
+     */
     void
     setObject(GraphicsAPI * inAPI) {
        GraphicsAPI::_instance() = inAPI;

@@ -1,8 +1,8 @@
 /**
- * @file    giBaseGraphicsAPI.cpp
+ * @file    giBaseRenderer
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
- * @date    19/04/2021
+ * @date    20/08/2021
  * @brief   A basic description of the what do the doc.
  * @bug     No known Bugs.
  */
@@ -10,11 +10,11 @@
 /**
  * @include
  */
-#include "giBaseGraphicsAPI.h"
+#include "giBaseRenderer.h"
 
 namespace giEngineSDK {
-  GraphicsAPI&
-  g_graphicsAPI() {
-    return GraphicsAPI::instance();
+  BaseRenderer&
+  g_renderer() {
+    return BaseRenderer::instance();
   }
 }

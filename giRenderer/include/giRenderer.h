@@ -11,14 +11,18 @@
  * @include
  */
 #pragma once
-#include <giModule.h>
+#include <giBaseRenderer.h>
 #include "giPrerequisitesRenderer.h"
+
 namespace giEngineSDK {
   class Model;
   class BaseVertexShader;
   class BasePixelShader;
+}
 
-  class GI_RENDERER_EXPORT Renderer : public Module<Renderer>
+
+namespace giEngineSDK {
+  class Renderer : public BaseRenderer
   {
    public:
     //Default Constructor
@@ -31,19 +35,19 @@ namespace giEngineSDK {
      * @brief    .
      */
     void
-    create();
+    create() override;
     
     /**
      * @brief    .
      */
     void
-    render();
+    render() override;
 
     /**
      * @brief    .
      */
     void
-    setModels(Vector<SharedPtr<Model>> inModelList);
+    setModels(Vector<SharedPtr<Model>> inModelList) override;
 
     //The input Layout
     InputLayout* m_inputLayout = nullptr;
@@ -74,8 +78,13 @@ namespace giEngineSDK {
     
   };
 
-
-  GI_RENDERER_EXPORT Renderer&
-  g_Renderer();
+  /**
+   * @brief   Create the gAPI with a dll.
+   */
+  extern "C" GI_PLUGIN_EXPORT Renderer *
+    createRenderer() {
+    auto renderer = new Renderer();
+    return renderer;
+  }
 
 }

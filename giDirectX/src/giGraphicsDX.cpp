@@ -584,9 +584,11 @@ namespace giEngineSDK {
       tmpDSV = static_cast<Texture2DDX*>(inDS)->m_depthStencilView;
     }
 
-    for (int32 i = 0; i < inRTs.size(); ++i) {
+    size_T tmpSize = inRTs.size();
+
+    for (int32 i = 0; i < tmpSize; ++i) {
       if (nullptr != inRTs[i]) {
-        tmpRTV[0] = static_cast<Texture2DDX*>(inRTs[i])->m_renderTargetView;
+        tmpRTV[i] = static_cast<Texture2DDX*>(inRTs[i])->m_renderTargetView;
       }
       else {
         m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT,

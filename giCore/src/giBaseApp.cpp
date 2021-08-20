@@ -11,8 +11,8 @@
  * @include
  */
 #include "giBaseApp.h"
-#include <giRenderer.h>
 #include "giBaseGraphicsAPI.h"
+#include "giBaseRenderer.h"
 
 
 int32 
@@ -24,7 +24,7 @@ BaseApp::run() {
 
   //Initialize every system
   initSystems();
-  auto& renderer = Renderer::instance();
+  auto& renderer = BaseRenderer::instance();
 
   //Send message to device
   onCreate();
@@ -116,10 +116,19 @@ BaseApp::initSystems() {
     //Initialize the Graphics API
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
-  
+
+  //Start the Renderer
   if (m_loaderRenderer.loadPlugin("giRenderer_d.dll")) {
-    Renderer::startUp();
+    auto createRenderer = reinterpret_cast<funCreateRenderer>(m_loaderRenderer.getProcedureByName("createRenderer"));
+
+    BaseRenderer::startUp();
+    BaseRenderer* renderer = createRenderer();
+    g_renderer().setObject(renderer);
+    m_renderer = &g_renderer();
+    
   }
+  
+ 
 
 
   //Start the time
@@ -144,7 +153,7 @@ void
 BaseApp::destroySystems() {
   m_window.close();
   GraphicsAPI::shutDown();
-  Renderer::shutDown();
+  BaseRenderer::shutDown();
   Time::shutDown();
   Logger::shutDown();
   SceneGraph::shutDown();

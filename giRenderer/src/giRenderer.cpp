@@ -107,9 +107,4 @@ namespace giEngineSDK {
     
   }
 
-
-
-  Renderer& g_Renderer() {
-    return Renderer::instance();
-  }
 }

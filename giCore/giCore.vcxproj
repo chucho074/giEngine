@@ -147,7 +147,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;giRenderer_d.lib</AdditionalDependencies>
+      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -176,6 +176,7 @@
     <ClCompile Include="src\giActor.cpp" />
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
+    <ClCompile Include="src\giBaseRenderer.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
