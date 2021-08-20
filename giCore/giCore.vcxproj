@@ -185,6 +185,7 @@
     <ClCompile Include="src\giStaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseRenderer.h" />
     <ClInclude Include="include\giComponent.h" />
     <ClInclude Include="include\giActor.h" />
     <ClInclude Include="include\giBaseApp.h" />

@@ -13,14 +13,10 @@ SamplerState samLinear : register( s0 );
 cbuffer cbNeverChanges : register( b0 )
 {
     matrix View;
+	matrix Projection;
 };
 
-cbuffer cbChangeOnResize : register( b1 )
-{
-    matrix Projection;
-};
-
-cbuffer cbChangesEveryFrame : register( b2 )
+cbuffer cbChangesEveryFrame : register( b1 )
 {
     matrix World;
     float4 vMeshColor;

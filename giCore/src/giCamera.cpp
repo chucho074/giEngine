@@ -31,11 +31,16 @@ namespace giEngineSDK {
     m_aspectRatio = inAR;
     m_near = inNear;
     m_far = inFar;
-    update();
+    updateData();
   }
   
   void 
-  Camera::update() {
+  Camera::update(float inDT) {
+    
+  }
+
+  void
+  Camera::updateData() {
     m_viewMatrix = lookToLH(m_eye, m_at, m_up);
     
     updateVM();
@@ -94,14 +99,14 @@ namespace giEngineSDK {
   
   Matrix4 
   Camera::getViewMatrix() {
-    update();
+    updateData();
     return m_viewMatrix;
   }
   
   Matrix4 
   Camera::getProyectionMatrix() {
     //Update the matrix
-    update();
+    updateData();
 
     //Returns the matrix
     return m_projMatrix;

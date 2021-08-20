@@ -37,11 +37,11 @@ namespace giEngineSDK {
     ~Component() = default;
 
     virtual void 
-    update(float inDeltaTime) = 0;
+    update(float inDeltaTime) { };
 
 
     virtual void 
-    render() = 0;
+    render() { };
     
    protected:
     

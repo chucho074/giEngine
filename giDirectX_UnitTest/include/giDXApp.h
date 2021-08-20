@@ -37,22 +37,13 @@ using giEngineSDK::Buffer;
 using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;
 
-
 /**
- * @struct   CBNeverChanges.
- * @brief    The Never changes constant buffer.
- * @bug      No known Bugs.
- */ 
-struct CBNeverChanges {
-  Matrix4 mView;
-};
-
-/**
- * @struct   CBChangeOnResize.
- * @brief    The change on Resize Constant buffer.
+ * @struct   CameraConstantBuffer.
+ * @brief    The Camera constant buffer.
  * @bug      No known Bugs.
  */
-struct CBChangeOnResize {
+struct CameraConstantBuffer {
+  Matrix4 mView;
   Matrix4 mProjection;
 };
 
@@ -127,17 +118,11 @@ class DirectXApp : public BaseApp {
   //The Sampler
   Sampler * m_sampler = nullptr;
 
-  //The Vertex Buffer
-  //Buffer * m_vertexBuffer = nullptr;
-
-  //The Index Buffer 
-  //Buffer * m_indexBuffer = nullptr;
-
   //The Constant Buffer (Never Change)
-  Buffer * m_cBufferNeverChange = nullptr;
+  Buffer * m_cBufferCamera = nullptr;
 
   //The Constant Buffer (Change on Resize)
-  Buffer * m_cBufferChangeOnResize = nullptr;
+  //Buffer * m_cBufferChangeOnResize = nullptr;
 
   //The Constant Buffer (Change Every Frame)
   Buffer * m_cBufferChangeEveryFrame = nullptr;
@@ -154,20 +139,9 @@ class DirectXApp : public BaseApp {
   //The color For the mesh
   Vector4 m_meshColor { 0.f, 0.f, 0.f, 0.f };
 
-  
-          //MODELS
-
-  //Yoshi Model
-  Model m_yoshi;
-
   //Yoshi Textures
   Texture2D * m_colorTexture = nullptr;
 
   SceneGraph sceneGraph;
 
-  //Peach Model
-  //Model m_peach;
-
-  //Peach Textures
-  //Texture2D * m_peachTexture = nullptr;
 };

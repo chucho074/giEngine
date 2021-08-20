@@ -128,5 +128,8 @@
     <ClInclude Include="include\giDepthState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giBaseRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,16 +11,17 @@
  * @include
  */
 #pragma once
-#include "giPrerequisitesCore.h"
 #include <giVector4.h>
 #include <giMatrix4.h>
+#include "giPrerequisitesCore.h"
+#include "giComponent.h"
 
 namespace giEngineSDK {
   /**
    * @class   Camera. 
    * @brief   A basic uses for the camera.
    */
-  class GI_CORE_EXPORT Camera
+  class GI_CORE_EXPORT Camera : Component
   {
    public:
     ///Default Constructor
@@ -40,10 +41,16 @@ namespace giEngineSDK {
     init(float inAngle, float inAR, float inNear, float inFar);
 
     /**
+     * @brief   Update the buffers.
+     */
+    void
+    update(float inDT) override;
+
+    /**
      * @brief   Update the Camera information.
      */
     void 
-    update();
+    updateData();
 
     /**
      * @brief   Update the View Matrix information.

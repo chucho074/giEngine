@@ -76,17 +76,24 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
 
-    //Clear the back buffer
-    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-    gapi.clearRTV(gapi.getDefaultRenderTarget(),
-                     ClearColor);
 
+    //Set Render Target & Depth Stencil
+    Vector<Texture2D*> tmpVector;
+    tmpVector.push_back(gapi.getDefaultRenderTarget());
+
+    gapi.omSetRenderTarget(tmpVector,
+                           gapi.getDefaultDephtStencil());
+    
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayout);
-
+    
+    //Clear the back buffer
+    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+    gapi.clearRTV(gapi.getDefaultRenderTarget(), 
+                     ClearColor);
+    
     //Clear the depth buffer to 1.0 (max depth)
     gapi.clearDSV(gapi.getDefaultDephtStencil());
-
 
     gapi.vsSetShader(m_vertexShader);
 

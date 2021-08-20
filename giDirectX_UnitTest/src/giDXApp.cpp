@@ -93,16 +93,10 @@ DirectXApp::onCreate() {
   m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
-  m_cBufferNeverChange = m_gapi->createBuffer(sizeof(CBNeverChanges), 
-                                              4, 
-                                              0, 
-                                              nullptr);
-
-  //Create Constant Buffer for Change on Resize
-  m_cBufferChangeOnResize = m_gapi->createBuffer(sizeof(CBChangeOnResize), 
-                                                 4, 
-                                                 0, 
-                                                 nullptr);
+  m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
+                                         4, 
+                                         0, 
+                                         nullptr);
 
   //Create Constant Buffer for Change Every Frame
   m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
@@ -132,14 +126,17 @@ DirectXApp::onCreate() {
                     1000.0f);
 
   //Sets the view matrix
-  CBNeverChanges tmpNC;
-  tmpNC.mView = m_mainCamera.getViewMatrix();
-  m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
+  CameraConstantBuffer tmpConstantCamera;
+  tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
+  m_gapi->updateSubresource(m_cBufferCamera, 
+                            &tmpConstantCamera, 
+                            sizeof(tmpConstantCamera));
 
   //Sets the projection matrix
-  CBChangeOnResize tmpCOR;
-  tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
-  m_gapi->updateSubresource(m_cBufferChangeOnResize, &tmpCOR, sizeof(tmpCOR));
+  tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
+  m_gapi->updateSubresource(m_cBufferCamera, 
+                            &tmpConstantCamera, 
+                            sizeof(tmpConstantCamera));
   
 }
 
@@ -186,11 +183,10 @@ DirectXApp::onRender() {
 
   //Render the cube/sets values
   //m_gapi->vsSetShader(m_vertexShader);
-  m_gapi->vsSetConstantBuffer(0, m_cBufferNeverChange);
-  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeOnResize);
-  m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
+  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShader(m_pixelShader);
-  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
   
@@ -210,9 +206,9 @@ DirectXApp::onRender() {
   cb.vMeshColor = m_meshColor;
 
   //Update the Change Every Frame Buffer
-  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  /*m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
   m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
-  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);*/
 
   //Draw the Yoshi model
   //m_yoshi.drawModel();
@@ -220,18 +216,18 @@ DirectXApp::onRender() {
   //m_sceneGraph->draw();
 
   //Sets values to the world
-  m_world = Matrix4::IDENTITY;
+  //m_world = Matrix4::IDENTITY;
   //m_world = XMMatrixRotationY(tmpRotation);
   //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
   //m_world *= XMMatrixTranslation(0.f, 1.5f, 0.f);
 
-  cb.mWorld = m_world.transpose();
-  cb.vMeshColor = m_meshColor;
-  
-  //Update the Change Every Frame Buffer
-  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
-  m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
-  m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  //cb.mWorld = m_world.transpose();
+  //cb.vMeshColor = m_meshColor;
+  //
+  ////Update the Change Every Frame Buffer
+  //m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  //m_gapi->vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+  //m_gapi->psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
   
   //Sets the texture
   //m_gapi->psSetShaderResource(0, m_peachTexture);
@@ -270,13 +266,19 @@ DirectXApp::onEvent(Event inEvent) {
       tmpVect = { 0.f, -0.1f, 0.f, 0.0f };
     }
     m_mainCamera.move(tmpVect);
-    CBNeverChanges tmpNC;
-    tmpNC.mView = m_mainCamera.getViewMatrix();
-    m_gapi->updateSubresource(m_cBufferNeverChange, &tmpNC, sizeof(tmpNC));
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantCamera;
+    tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
+    m_gapi->updateSubresource(m_cBufferCamera, 
+                              &tmpConstantCamera, 
+                              sizeof(tmpConstantCamera));
   }
   if (inEvent.type == Event::Resized) {    
-    CBChangeOnResize tmpCOR;
-    tmpCOR.mProjection = m_mainCamera.getProyectionMatrix();
-    m_gapi->updateSubresource(m_cBufferChangeOnResize, &tmpCOR, sizeof(tmpCOR));
+    CameraConstantBuffer tmpConstantCamera;
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
+    m_gapi->updateSubresource(m_cBufferCamera, 
+                              &tmpConstantCamera, 
+                              sizeof(tmpConstantCamera));
   }
 }
