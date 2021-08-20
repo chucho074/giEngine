@@ -26,13 +26,13 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     
     //Create Vertex Shader 
-    m_vertexShader = gapi.createVS("Resources/MyShader.fx", "VS", "vs_4_0");
+    m_vertexShader = gapi.createVS("Resources/gBuffer.hlsl", "VS_GBUFFER", "vs_4_0");
     
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDesc;
     
     //Set the size for the inputLayout
-    layoutDesc.resize(3);
+    layoutDesc.resize(5);
     
             //Sets the input Layout values
     
@@ -57,17 +57,35 @@ namespace giEngineSDK {
     //normals
     layoutDesc[2].semanticName = "NORMAL";
     layoutDesc[2].semanticIndex = 0;
-    layoutDesc[2].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
+    layoutDesc[2].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
     layoutDesc[2].inputSlot = 0;
     layoutDesc[2].alignedByteOffset = ALIGN_ELEMENT;
     layoutDesc[2].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
     layoutDesc[2].instanceDataStepRate = 0;
+
+    //tangents
+    layoutDesc[3].semanticName = "TANGENT";
+    layoutDesc[3].semanticIndex = 0;
+    layoutDesc[3].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
+    layoutDesc[3].inputSlot = 0;
+    layoutDesc[3].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDesc[3].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDesc[3].instanceDataStepRate = 0;
+
+    //binormals
+    layoutDesc[4].semanticName = "BINORMAL";
+    layoutDesc[4].semanticIndex = 0;
+    layoutDesc[4].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
+    layoutDesc[4].inputSlot = 0;
+    layoutDesc[4].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDesc[4].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDesc[4].instanceDataStepRate = 0;
     
     //Create the Input Layout
     m_inputLayout = gapi.createIL(layoutDesc, m_vertexShader);
     
     //Create Pixel Shader
-    m_pixelShader = gapi.createPS("Resources/MyShader.fx", "PS", "ps_4_0");
+    m_pixelShader = gapi.createPS("Resources/gBuffer.hlsl", "PS_GBUFFER", "ps_4_0");
   }
   
   void 

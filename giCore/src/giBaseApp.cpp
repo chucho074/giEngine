@@ -127,9 +127,6 @@ BaseApp::initSystems() {
     m_renderer = &g_renderer();
     
   }
-  
- 
-
 
   //Start the time
   Time::startUp();
