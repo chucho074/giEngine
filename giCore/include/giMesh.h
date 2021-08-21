@@ -31,6 +31,8 @@ namespace giEngineSDK {
     Vector3 Pos;
     Vector2 Tex;
     Vector3 Nor;
+    Vector3 Tang;
+    Vector3 BiNor;
   };
 
   /**

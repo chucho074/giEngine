@@ -171,8 +171,6 @@ namespace giEngineSDK {
     //The Pixel Shader
     BasePixelShader* m_pixelShaderBlurV = nullptr;
 
-    InputLayout* m_inputLayoutBlur = nullptr;
-
     Vector<Texture2D*> m_BlurTexture;
 
     Buffer* m_cBufferBlur = nullptr;

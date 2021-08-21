@@ -110,6 +110,7 @@ namespace giEngineSDK {
     // probably to request more postprocessing than we do in this example.
     importer.ReadFile(inFileName,
                       aiProcessPreset_TargetRealtime_MaxQuality |
+                      aiProcess_TransformUVCoords|
                       aiProcess_ConvertToLeftHanded |
                       aiProcess_Triangulate);
 

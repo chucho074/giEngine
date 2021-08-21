@@ -45,16 +45,16 @@ DirectXApp::onCreate() {
   m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
-  //m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
-  //                                       4, 
-  //                                       0, 
-  //                                       nullptr);
+  m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
+                                         4, 
+                                         0, 
+                                         nullptr);
 
-  ////Create Constant Buffer for Change Every Frame
-  //m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
-  //                                                 4, 
-  //                                                 0, 
-  //                                                 nullptr);
+  //Create Constant Buffer for Change Every Frame
+  m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
+                                                   4, 
+                                                   0, 
+                                                   nullptr);
 
  
   //Create Sampler
@@ -97,12 +97,12 @@ DirectXApp::onRender() {
   CBChangesEveryFrame cb;
   cb.mWorld = m_world.transpose();
   cb.vMeshColor = m_meshColor;
-  //m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  //m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
-  //m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  //m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
+  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
   

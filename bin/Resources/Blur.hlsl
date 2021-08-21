@@ -10,17 +10,20 @@ cbuffer BlurBuffer : register(b0)
 
 struct VS_INPUT
 {
+  float3 msPos    : POSITION0;
   float2 TexCoord : TEXCOORD0;
 };
 
 
 struct PS_INPUT
 {
+  float4 psPos    : SV_POSITION;
   float2 TexCoord : TEXCOORD0;
 };
 
 PS_INPUT vs_blur(VS_INPUT inVS) {
   PS_INPUT output;
+  output.psPos = float4(inVS.msPos.xyz, 1.0f);
   output.TexCoord = inVS.TexCoord.xy;
   return output;
 }

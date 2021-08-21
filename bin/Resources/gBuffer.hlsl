@@ -20,10 +20,10 @@ cbuffer cbChangesEveryFrame : register(b1)
 struct VS_INPUT
 {
   float3 Position  : POSITION0;
-  float2 TexCoord : TEXCOORD0;
-  float3 Normal   : NORMAL0;
-  float3 Tangent  : TANGENT0;
-  float3 BiNormal : BINORMAL0;
+  float2 TexCoord  : TEXCOORD0;
+  float3 Normal    : NORMAL0;
+  float3 Tangent   : TANGENT0;
+  float3 BiNormal  : BINORMAL0;
 };
 
 struct PS_INPUT 

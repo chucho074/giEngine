@@ -134,19 +134,19 @@ namespace giEngineSDK {
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Normales
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Albedo
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
 
     /************************************************************************/
@@ -169,7 +169,7 @@ namespace giEngineSDK {
     //Positions
     layoutDescSSAO[0].semanticName = "POSITION";
     layoutDescSSAO[0].semanticIndex = 0;
-    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT;
+    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
     layoutDescSSAO[0].inputSlot = 0;
     layoutDescSSAO[0].alignedByteOffset = ALIGN_ELEMENT;
     layoutDescSSAO[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
@@ -191,7 +191,7 @@ namespace giEngineSDK {
                             720, 
                             1,
                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     SSAOConstantBuffer SSAOcb;
     SSAOcb.Intensity = 2.0f;
@@ -217,32 +217,13 @@ namespace giEngineSDK {
     //Create Pixel Shader
     m_pixelShaderBlurV = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurV", "ps_4_0");
 
-    //Create Input Layout
-    Vector<InputLayoutDesc> layoutDescBlur;
-
-    //Set the size for the inputLayout
-    layoutDescBlur.resize(1);
-
-    //Sets the input Layout values
-
-    //Texcoords
-    layoutDescBlur[0].semanticName = "TEXCOORD";
-    layoutDescBlur[0].semanticIndex = 0;
-    layoutDescBlur[0].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
-    layoutDescBlur[0].inputSlot = 0;
-    layoutDescBlur[0].alignedByteOffset = ALIGN_ELEMENT;
-    layoutDescBlur[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
-    layoutDescBlur[0].instanceDataStepRate = 0;
-
-    //Create the Input Layout
-    m_inputLayoutBlur = gapi.createIL(layoutDescBlur, m_vertexShaderBlur);
 
     //Create the texture
     m_BlurTexture.push_back(gapi.createTex2D(1280,
                             720, 
                             1,
                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     BlurConstantBuffer Blurcb;
     Blurcb.Gamma = 1;
@@ -294,7 +275,7 @@ namespace giEngineSDK {
                             720, 
                             1,
                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
@@ -326,6 +307,9 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/
+    //Set Render Targets
+    gapi.omSetRenderTarget(m_renderTargets,
+                           gapi.getDefaultDephtStencil());
 
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayout);
@@ -348,9 +332,7 @@ namespace giEngineSDK {
     //Clear the depth buffer to 1.0 (max depth)
     gapi.clearDSV(gapi.getDefaultDephtStencil());
 
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_renderTargets,
-                           gapi.getDefaultDephtStencil());
+    
     
     
 
@@ -360,7 +342,14 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           SSAO                                       */
     /************************************************************************/
-    
+    //Set Render Targets
+    gapi.omSetRenderTarget(m_SSAOTexture,
+                           nullptr);
+
+     //Clear the texture to draw
+    gapi.clearRTV(m_SSAOTexture[0],
+                  ClearColor);
+
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayoutSSAO);
 
@@ -372,16 +361,8 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(0, m_cBufferSSAO);
     gapi.psSetConstantBuffer(0, m_cBufferSSAO);
 
-    //Clear the texture to draw
-    //gapi.clearRTV(m_SSAOTexture,
-    //              ClearColor);
-
     //Clear the depth buffer to 1.0 (max depth)
     
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_SSAOTexture,
-                           gapi.getDefaultDephtStencil());
-
     gapi.psSetShaderResource(0, m_renderTargets[0]);
     gapi.psSetShaderResource(1, m_renderTargets[1]);
 
@@ -391,60 +372,72 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           BlurH                                       */
     /************************************************************************/
+    //Set Render Targets
+    gapi.omSetRenderTarget(m_BlurTexture,
+                           nullptr);
+
+    //Clear the texture to draw
+    gapi.clearRTV(m_BlurTexture[0],
+                  ClearColor);
 
     //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutBlur);
+    //gapi.aiSetInputLayout(m_inputLayoutBlur);
 
     //Set Shaders
-    gapi.vsSetShader(m_vertexShaderBlur);
+    //gapi.vsSetShader(m_vertexShaderSSAO);
     gapi.psSetShader(m_pixelShaderBlurH);
 
     //Set Constant Buffers
     gapi.vsSetConstantBuffer(0, m_cBufferBlur);
     gapi.psSetConstantBuffer(0, m_cBufferBlur);
 
-    //Clear the texture to draw
-    //gapi.clearRTV(m_SSAOTexture,
-    //              ClearColor);
-
     //Clear the depth buffer to 1.0 (max depth)
-
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_BlurTexture,
-                           gapi.getDefaultDephtStencil());
 
     gapi.psSetShaderResource(0, m_SSAOTexture[0]);
     m_SAQ->drawModel();
+
+    gapi.psSetShaderResource(0, nullptr);
+
+
     /************************************************************************/
     /*                           BlurV                                      */
     /************************************************************************/
+    //Set Render Targets
+    gapi.omSetRenderTarget(m_SSAOTexture,
+                           nullptr);
+
+    //Clear the texture to draw
+    //gapi.clearRTV(m_SSAOTexture[0],
+    //              ClearColor);
 
     //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutBlur);
+    //gapi.aiSetInputLayout(m_inputLayoutBlur);
 
     //Set Shaders
-    gapi.vsSetShader(m_vertexShaderSSAO);
+    //gapi.vsSetShader(m_vertexShaderSSAO);
     gapi.psSetShader(m_pixelShaderBlurV);
 
     //Set Constant Buffers
     gapi.vsSetConstantBuffer(0, m_cBufferBlur);
     gapi.psSetConstantBuffer(0, m_cBufferBlur);
 
-    //Clear the texture to draw
-    //gapi.clearRTV(m_SSAOTexture,
-    //              ClearColor);
-
     //Clear the depth buffer to 1.0 (max depth)
-
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_BlurTexture,
-                           gapi.getDefaultDephtStencil());
 
     gapi.psSetShaderResource(0, m_BlurTexture[0]);
     m_SAQ->drawModel();
+
+    gapi.psSetShaderResource(0, nullptr);
+    gapi.psSetShaderResource(1, nullptr);
+
     /************************************************************************/
     /*                           Light                                     */
     /************************************************************************/
+
+    //Set Render Targets
+    Vector<Texture2D*> tmpVector;
+    tmpVector.push_back(gapi.getDefaultRenderTarget());
+    gapi.omSetRenderTarget(tmpVector,
+                           gapi.getDefaultDephtStencil());
 
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayoutLight);
@@ -466,11 +459,7 @@ namespace giEngineSDK {
 
     //Clear the depth buffer to 1.0 (max depth)
 
-    //Set Render Targets
-    Vector<Texture2D*> tmpVector;
-    tmpVector.push_back(gapi.getDefaultRenderTarget());
-    gapi.omSetRenderTarget(tmpVector,
-                           gapi.getDefaultDephtStencil());
+    
 
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
 

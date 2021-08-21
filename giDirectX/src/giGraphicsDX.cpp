@@ -178,7 +178,7 @@ namespace giEngineSDK {
       rtvDesc.Format = tempDesc.Format;
       rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
       rtvDesc.Texture2D.MipSlice = 0;
-      if (FAILED(m_device->CreateRenderTargetView(temp->m_texture, nullptr, &temp->m_renderTargetView))) {
+      if (FAILED(m_device->CreateRenderTargetView(temp->m_texture, &rtvDesc, &temp->m_renderTargetView))) {
         __debugbreak();
         return nullptr;
       }
@@ -191,7 +191,7 @@ namespace giEngineSDK {
       dsvDesc.Format = tempDesc.Format;
       dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
       dsvDesc.Texture2D.MipSlice = 0;
-      if (FAILED(m_device->CreateDepthStencilView(temp->m_texture, nullptr, &temp->m_depthStencilView))) {
+      if (FAILED(m_device->CreateDepthStencilView(temp->m_texture, &dsvDesc, &temp->m_depthStencilView))) {
         __debugbreak();
         return nullptr;
       }
@@ -202,11 +202,11 @@ namespace giEngineSDK {
       memset(&srvDesc, 0, sizeof(srvDesc));
       srvDesc.Format = tempDesc.Format;
       srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-      srvDesc.Texture2D.MipLevels = 0;
+      srvDesc.Texture2D.MipLevels = 1;
       srvDesc.Texture2D.MostDetailedMip = 0;
 
       if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, 
-                                                    nullptr, 
+                                                    &srvDesc, 
                                                     &temp->m_subResourceData))) {
         __debugbreak();
         return nullptr;
@@ -573,7 +573,7 @@ namespace giEngineSDK {
   CGraphicsDX::omSetRenderTarget(Vector<Texture2D*> inRTs,
                                  Texture2D* inDS) {
 
-    ID3D11RenderTargetView* tmpRTV[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+    static ID3D11RenderTargetView* tmpRTV[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
     for (int32 i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
       tmpRTV[i] = nullptr;
     }
@@ -591,14 +591,11 @@ namespace giEngineSDK {
         tmpRTV[i] = static_cast<Texture2DDX*>(inRTs[i])->m_renderTargetView;
       }
       else {
-        m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT,
-                                         tmpRTV,
-                                         tmpDSV);
-        return;
+        break;
       }
     }
 
-    m_devContext->OMSetRenderTargets(tmpSize, tmpRTV, tmpDSV);
+    m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, tmpRTV, tmpDSV);
 
   }
 
