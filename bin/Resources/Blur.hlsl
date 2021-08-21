@@ -8,10 +8,22 @@ cbuffer BlurBuffer : register(b0)
     float gamma = 1.0f;
 };
 
+struct VS_INPUT
+{
+  float2 TexCoord : TEXCOORD0;
+};
+
+
 struct PS_INPUT
 {
-	float2 TexCoord : TEXCOORD0;
+  float2 TexCoord : TEXCOORD0;
 };
+
+PS_INPUT vs_blur(VS_INPUT inVS) {
+  PS_INPUT output;
+  output.TexCoord = inVS.TexCoord.xy;
+  return output;
+}
 
 float4 ps_gaussian_blurH(PS_INPUT input) : SV_TARGET
 {

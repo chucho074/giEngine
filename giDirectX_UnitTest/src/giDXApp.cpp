@@ -45,16 +45,16 @@ DirectXApp::onCreate() {
   m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
-  m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
-                                         4, 
-                                         0, 
-                                         nullptr);
+  //m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
+  //                                       4, 
+  //                                       0, 
+  //                                       nullptr);
 
-  //Create Constant Buffer for Change Every Frame
-  m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
-                                                   4, 
-                                                   0, 
-                                                   nullptr);
+  ////Create Constant Buffer for Change Every Frame
+  //m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
+  //                                                 4, 
+  //                                                 0, 
+  //                                                 nullptr);
 
  
   //Create Sampler
@@ -71,24 +71,7 @@ DirectXApp::onCreate() {
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
 
-  //Initialize Camera
-  m_mainCamera.init(Degrees(75.0f).getRadians(), 
-                    (m_width/m_height), 
-                    0.01f, 
-                    1000.0f);
-
-  //Sets the view matrix
-  CameraConstantBuffer tmpConstantCamera;
-  tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
-  m_gapi->updateSubresource(m_cBufferCamera, 
-                            &tmpConstantCamera, 
-                            sizeof(tmpConstantCamera));
-
-  //Sets the projection matrix
-  tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
-  m_gapi->updateSubresource(m_cBufferCamera, 
-                            &tmpConstantCamera, 
-                            sizeof(tmpConstantCamera));
+  
   
 }
 
@@ -114,12 +97,12 @@ DirectXApp::onRender() {
   CBChangesEveryFrame cb;
   cb.mWorld = m_world.transpose();
   cb.vMeshColor = m_meshColor;
-  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  //m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
-  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  //m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
+  //m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  //m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
   
@@ -144,44 +127,44 @@ DirectXApp::onRender() {
 void 
 DirectXApp::onEvent(Event inEvent) {
   
-  Vector4 tmpVect;
-  if (inEvent.type == Event::KeyPressed) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-        sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-      tmpVect = { 0.f, 0.f, 0.1f, 0.0f };
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-        sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-      tmpVect = { 0.f, 0.f, -0.1f, 0.0f };
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
-        sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-      tmpVect = { -0.1f, 0.f, 0.f, 0.0f };
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
-        sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-      tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-      tmpVect = { 0.f, 0.1f, 0.f, 0.0f };
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-      tmpVect = { 0.f, -0.1f, 0.f, 0.0f };
-    }
-    m_mainCamera.move(tmpVect);
-    //Sets the view matrix
-    CameraConstantBuffer tmpConstantCamera;
-    tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
-    m_gapi->updateSubresource(m_cBufferCamera, 
-                              &tmpConstantCamera, 
-                              sizeof(tmpConstantCamera));
-  }
-  if (inEvent.type == Event::Resized) {    
-    CameraConstantBuffer tmpConstantCamera;
-    //Sets the projection matrix
-    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
-    m_gapi->updateSubresource(m_cBufferCamera, 
-                              &tmpConstantCamera, 
-                              sizeof(tmpConstantCamera));
-  }
+  //Vector4 tmpVect;
+  //if (inEvent.type == Event::KeyPressed) {
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+  //    tmpVect = { 0.f, 0.f, 0.1f, 0.0f };
+  //  }
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+  //    tmpVect = { 0.f, 0.f, -0.1f, 0.0f };
+  //  }
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
+  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+  //    tmpVect = { -0.1f, 0.f, 0.f, 0.0f };
+  //  }
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+  //    tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
+  //  }
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+  //    tmpVect = { 0.f, 0.1f, 0.f, 0.0f };
+  //  }
+  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+  //    tmpVect = { 0.f, -0.1f, 0.f, 0.0f };
+  //  }
+  //  m_mainCamera.move(tmpVect);
+  //  //Sets the view matrix
+  //  CameraConstantBuffer tmpConstantCamera;
+  //  tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
+  //  m_gapi->updateSubresource(m_cBufferCamera, 
+  //                            &tmpConstantCamera, 
+  //                            sizeof(tmpConstantCamera));
+  //}
+  //if (inEvent.type == Event::Resized) {    
+  //  CameraConstantBuffer tmpConstantCamera;
+  //  //Sets the projection matrix
+  //  tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
+  //  m_gapi->updateSubresource(m_cBufferCamera, 
+  //                            &tmpConstantCamera, 
+  //                            sizeof(tmpConstantCamera));
+  //}
 }

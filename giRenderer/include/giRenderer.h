@@ -12,6 +12,7 @@
  */
 #pragma once
 #include <giBaseRenderer.h>
+#include <giCamera.h>
 #include "giPrerequisitesRenderer.h"
 
 namespace giEngineSDK {
@@ -22,6 +23,26 @@ namespace giEngineSDK {
 
 
 namespace giEngineSDK {
+  /**
+   * @struct   CameraConstantBuffer.
+   * @brief    The Camera constant buffer.
+   * @bug      No known Bugs.
+   */
+  struct CameraConstantBuffer {
+    Matrix4 mView;
+    Matrix4 mProjection;
+  };
+
+  /**
+   * @struct   CBChangesEveryFrame.
+   * @brief    The Changes Every Frames Constant Buffer.
+   * @bug      No known Bugs.
+   */
+  struct CBChangesEveryFrame {
+    Matrix4 mWorld;
+    Vector4 vMeshColor;
+  };
+
 
   /**
    * @struct   SSAOConstantBuffer.
@@ -34,6 +55,15 @@ namespace giEngineSDK {
     float Scale;
     float Bias;
   };
+  /**
+   * @struct   LightConstantBuffer.
+   * @brief    The Camera constant buffer.
+   * @bug      No known Bugs.
+   */
+  struct LightConstantBuffer {
+    Vector3 LightPos;
+    float LightIntensity;
+  };
 
   /**
    * @struct   BlurConstantBuffer.
@@ -41,8 +71,9 @@ namespace giEngineSDK {
    * @bug      No known Bugs.
    */
   struct BlurConstantBuffer {
-    float Viewport[2] = { 1280 , 720 };   //TODO
+    Vector2 Viewport;   
     float Gamma = 1.0f;
+    float Garbage = 0;   //Just for the 16 magic
   };
 
 
@@ -72,6 +103,17 @@ namespace giEngineSDK {
      */
     void
     setModels(Vector<SharedPtr<Model>> inModelList) override;
+
+    //The main camera 
+    Camera m_mainCamera;
+
+    //The Constant Buffer (Never Change)
+    Buffer * m_cBufferCamera = nullptr;
+
+
+    //The Constant Buffer (Change Every Frame)
+    Buffer * m_cBufferChangeEveryFrame = nullptr;
+
 
     //The input Layout
     InputLayout* m_inputLayout = nullptr;
@@ -121,7 +163,8 @@ namespace giEngineSDK {
     SharedPtr<Model> m_SAQ;
 
     //Blur
-
+    //The Vertex Shader
+    BaseVertexShader* m_vertexShaderBlur = nullptr;
     //The Pixel Shader
     BasePixelShader* m_pixelShaderBlurH = nullptr;
 
@@ -133,6 +176,17 @@ namespace giEngineSDK {
     Vector<Texture2D*> m_BlurTexture;
 
     Buffer* m_cBufferBlur = nullptr;
+
+
+    //Light
+    //The Vertex Shader
+    BaseVertexShader* m_vertexShaderLight = nullptr;
+    //The Pixel Shader
+    BasePixelShader* m_pixelShaderLight = nullptr;
+    //The input Layout
+    InputLayout* m_inputLayoutLight = nullptr;
+    //The Constant Buffer
+    Buffer* m_cBufferLight = nullptr;
   };
 
   /**

@@ -17,7 +17,7 @@
 #include <giStaticMesh.h>
 #include <giBaseVertexShader.h>
 #include <giBasePixelShader.h>
-
+#include <giDegrees.h>
 #include "giRenderer.h"
 
 namespace giEngineSDK {
@@ -27,6 +27,38 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
     
+    //Initialize Camera
+   m_mainCamera.init(Degrees(75.0f).getRadians(), 
+                    (1280/720), 
+                    0.01f, 
+                    1000.0f);
+
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantCamera;
+    tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
+
+    //Create Constant Buffer for Never Change
+    m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                        4, 
+                                        0, 
+                                        nullptr);
+    
+    //Create Constant Buffer for Change Every Frame
+    m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
+                                                  4, 
+                                                  0, 
+                                                  nullptr);
+
+    gapi.updateSubresource(m_cBufferCamera, 
+                           &tmpConstantCamera, 
+                           sizeof(tmpConstantCamera));
+    
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
+    gapi.updateSubresource(m_cBufferCamera, 
+                            &tmpConstantCamera, 
+                            sizeof(tmpConstantCamera));
+
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/
@@ -177,7 +209,7 @@ namespace giEngineSDK {
     /*                               BLUR                                   */
     /************************************************************************/
     //Create Vertex Shader 
-    //Se agarra del SSAO
+    m_vertexShaderBlur = gapi.createVS("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
     //Create Pixel Shader
     m_pixelShaderBlurH = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurH", "ps_4_0");
@@ -203,7 +235,7 @@ namespace giEngineSDK {
     layoutDescBlur[0].instanceDataStepRate = 0;
 
     //Create the Input Layout
-    m_inputLayoutBlur = gapi.createIL(layoutDescBlur, m_vertexShaderSSAO);
+    m_inputLayoutBlur = gapi.createIL(layoutDescBlur, m_vertexShaderBlur);
 
     //Create the texture
     m_BlurTexture.push_back(gapi.createTex2D(1280,
@@ -213,11 +245,67 @@ namespace giEngineSDK {
                             GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     BlurConstantBuffer Blurcb;
-
+    Blurcb.Gamma = 1;
+    Blurcb.Viewport.x = 1280;
+    Blurcb.Viewport.y = 720;
     m_cBufferBlur = gapi.createBuffer(sizeof(BlurConstantBuffer),
                                       4, 
                                       0, 
                                       &Blurcb);
+
+    /************************************************************************/
+    /*                               LIGHT                                   */
+    /************************************************************************/
+    //Create Vertex Shader 
+    m_vertexShaderLight = gapi.createVS("Resources/Light.hlsl", "vs_main", "vs_4_0");
+
+    //Create Pixel Shader
+    m_pixelShaderLight = gapi.createPS("Resources/Light.hlsl", "ps_main", "ps_4_0");
+
+    //Create Input Layout
+    Vector<InputLayoutDesc> layoutDescLight;
+
+    //Set the size for the inputLayout
+    layoutDescLight.resize(2);
+
+    //Sets the input Layout values
+    //Positions
+    layoutDescLight[0].semanticName = "POSITION";
+    layoutDescLight[0].semanticIndex = 0;
+    layoutDescLight[0].format = GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT;
+    layoutDescLight[0].inputSlot = 0;
+    layoutDescLight[0].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDescLight[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDescLight[0].instanceDataStepRate = 0;
+    //Texcoords
+    layoutDescLight[1].semanticName = "TEXCOORD";
+    layoutDescLight[1].semanticIndex = 0;
+    layoutDescLight[1].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
+    layoutDescLight[1].inputSlot = 0;
+    layoutDescLight[1].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDescLight[1].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDescLight[1].instanceDataStepRate = 0;
+
+    //Create the Input Layout
+    m_inputLayoutLight = gapi.createIL(layoutDescLight, m_vertexShaderLight);
+
+    //Create the texture
+    m_BlurTexture.push_back(gapi.createTex2D(1280,
+                            720, 
+                            1,
+                            GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                            GI_BIND_FLAG::kBIND_RENDER_TARGET & GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+    LightConstantBuffer Lightcb;
+    Lightcb.LightIntensity = 2;
+    Lightcb.LightPos.x = 360;
+    Lightcb.LightPos.x = 280;
+    Lightcb.LightPos.x = -200;
+    m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
+                                      4, 
+                                      0, 
+                                      &Lightcb);
+    
 
     m_SAQ = make_shared<Model>();
 
@@ -247,6 +335,9 @@ namespace giEngineSDK {
     gapi.psSetShader(m_pixelShader);
 
     //Set Constant Buffers
+    gapi.vsSetConstantBuffer(0, m_cBufferCamera);
+    gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+    gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
 
     
     //Clear the back buffer
@@ -302,10 +393,10 @@ namespace giEngineSDK {
     /************************************************************************/
 
     //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutSSAO);
+    gapi.aiSetInputLayout(m_inputLayoutBlur);
 
     //Set Shaders
-    gapi.vsSetShader(m_vertexShaderSSAO);
+    gapi.vsSetShader(m_vertexShaderBlur);
     gapi.psSetShader(m_pixelShaderBlurH);
 
     //Set Constant Buffers
@@ -329,7 +420,7 @@ namespace giEngineSDK {
     /************************************************************************/
 
     //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutSSAO);
+    gapi.aiSetInputLayout(m_inputLayoutBlur);
 
     //Set Shaders
     gapi.vsSetShader(m_vertexShaderSSAO);
@@ -351,6 +442,37 @@ namespace giEngineSDK {
 
     gapi.psSetShaderResource(0, m_BlurTexture[0]);
     m_SAQ->drawModel();
+    /************************************************************************/
+    /*                           Light                                     */
+    /************************************************************************/
+
+    //Set Input Layout
+    gapi.aiSetInputLayout(m_inputLayoutLight);
+
+    //Set Shaders
+    gapi.vsSetShader(m_vertexShaderLight);
+    gapi.psSetShader(m_pixelShaderLight);
+
+    //Set Constant Buffers
+    gapi.vsSetConstantBuffer(0, m_cBufferCamera);
+    gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+    gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+    gapi.vsSetConstantBuffer(2, m_cBufferLight);
+    gapi.psSetConstantBuffer(2, m_cBufferLight);
+
+    //Clear the texture to draw
+    //gapi.clearRTV(m_SSAOTexture,
+    //              ClearColor);
+
+    //Clear the depth buffer to 1.0 (max depth)
+
+    //Set Render Targets
+    Vector<Texture2D*> tmpVector;
+    tmpVector.push_back(gapi.getDefaultRenderTarget());
+    gapi.omSetRenderTarget(tmpVector,
+                           gapi.getDefaultDephtStencil());
+
+    //gapi.psSetShaderResource(0, m_BlurTexture[0]);
 
   }
   
