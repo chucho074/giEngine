@@ -151,7 +151,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                               SSAO                                   */
-    /************************************************************************/
+    /************************************************************************
     //Create Vertex Shader 
     m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
@@ -207,7 +207,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                               BLUR                                   */
-    /************************************************************************/
+    /************************************************************************
     //Create Vertex Shader 
     m_vertexShaderBlur = gapi.createVS("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
@@ -235,7 +235,7 @@ namespace giEngineSDK {
                                       &Blurcb);
 
     /************************************************************************/
-    /*                               LIGHT                                   */
+    /*                               LIGHT                                  */
     /************************************************************************/
     //Create Vertex Shader 
     m_vertexShaderLight = gapi.createVS("Resources/Light.hlsl", "vs_main", "vs_4_0");
@@ -287,7 +287,7 @@ namespace giEngineSDK {
                                       0, 
                                       &Lightcb);
     
-
+    
     m_SAQ = make_shared<Model>();
 
     m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
@@ -341,7 +341,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           SSAO                                       */
-    /************************************************************************/
+    /************************************************************************
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -370,8 +370,8 @@ namespace giEngineSDK {
     m_SAQ->drawModel();
 
     /************************************************************************/
-    /*                           BlurH                                       */
-    /************************************************************************/
+    /*                           BlurH                                      */
+    /************************************************************************
     //Set Render Targets
     gapi.omSetRenderTarget(m_BlurTexture,
                            nullptr);
@@ -401,7 +401,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurV                                      */
-    /************************************************************************/
+    /************************************************************************
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -430,7 +430,7 @@ namespace giEngineSDK {
     gapi.psSetShaderResource(1, nullptr);
 
     /************************************************************************/
-    /*                           Light                                     */
+    /*                           Light                                      */
     /************************************************************************/
 
     //Set Render Targets
@@ -458,10 +458,11 @@ namespace giEngineSDK {
     //              ClearColor);
 
     //Clear the depth buffer to 1.0 (max depth)
-
+    
     
 
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
+    
 
   }
   

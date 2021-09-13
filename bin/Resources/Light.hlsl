@@ -62,6 +62,7 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET
    float DiffuseLightIntensity = max(0.0f, dot(LightDir, normal.xyz)) * LightIntensity0;
 
    //return float4(pow(diffuse.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
-   return float4(pow(diffuse.xyz * DiffuseLightIntensity, 1.0f/gamma), 1) * ao;
+   //return float4(pow(diffuse.xyz * DiffuseLightIntensity, 1.0f/gamma), 1) * ao;
+   return float4(diffuse.xyz, 1);
 
 }

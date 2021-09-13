@@ -112,8 +112,8 @@ DirectXApp::onRender() {
 
   //Sets values to the world
   m_world = Matrix4::IDENTITY;
-  m_world *= matrixTranslation({60.f, -10.0f, 50.f});
-  m_world *= matrixRotationY(180);
+  //m_world *= matrixTranslation({60.f, -10.0f, 50.f});
+  //m_world *= matrixRotationY(180);
   //m_world *= matrixRotationZ(180);
   //m_world *= matrixRotationY(tmpRotation);
   //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);

@@ -110,7 +110,7 @@ class DirectXApp : public BaseApp {
  private:
 
    //The main camera 
-   Camera m_mainCamera;
+   //Camera m_mainCamera;
 
   //The input Layout
   InputLayout * m_inputLayout = nullptr;

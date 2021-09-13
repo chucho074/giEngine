@@ -44,13 +44,15 @@ struct PS_OUTPUT
 PS_INPUT VS_GBUFFER(VS_INPUT inVS) 
 {
   PS_INPUT output;
-  matrix WorldView = mul(World, View);
+  //matrix WorldView = mul(World, View);
+  matrix WorldView = View;
   
   //Position View
-  output.PosView = mul(float4(inVS.Position.xyz, 1.0f), WorldView).xyz;
+  float4 posView = mul(WorldView, float4(inVS.Position.xyz, 1.0f));
+  output.PosView = posView.xyz;
   
   //Position
-  output.Position = mul(float4(output.PosView, 1.0f), Projection);
+  output.Position = mul(Projection, posView);
   
   //Normal
   float3 normal = normalize(mul(float4(inVS.Normal.xyz, 0.0f), WorldView).xyz);
@@ -69,7 +71,7 @@ PS_INPUT VS_GBUFFER(VS_INPUT inVS)
 }
 
 
-PS_OUTPUT PS_GBUFFER(PS_INPUT inPS) : SV_TARGET
+PS_OUTPUT PS_GBUFFER(PS_INPUT inPS)
 {
   PS_OUTPUT output = (PS_OUTPUT)0;
   
