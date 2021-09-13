@@ -35,7 +35,7 @@ namespace giEngineSDK {
 
     //Sets the view matrix
     CameraConstantBuffer tmpConstantCamera;
-    tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
+    tmpConstantCamera.mView = m_mainCamera.getViewMatrix().transpose();
 
     //Create Constant Buffer for Never Change
     m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
@@ -54,7 +54,7 @@ namespace giEngineSDK {
                            sizeof(tmpConstantCamera));
     
     //Sets the projection matrix
-    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
+    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
     gapi.updateSubresource(m_cBufferCamera, 
                             &tmpConstantCamera, 
                             sizeof(tmpConstantCamera));
