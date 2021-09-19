@@ -33,7 +33,6 @@ namespace giEngineSDK {
     //Constructor from another matrix
     Matrix4(Matrix4 & inMatrix);
 
-
     /**
      * @brief    Constructor with Vectors as parameters.
      * @param    inColumX   Vector for the column x.
@@ -42,10 +41,9 @@ namespace giEngineSDK {
      * @param    inColumW   Vector for the column w.
      */
     Matrix4(Vector4 inColumX,
-    Vector4 inColumY,
-    Vector4 inColumZ,
-    Vector4 inColumW) {
-    
+            Vector4 inColumY,
+            Vector4 inColumZ,
+            Vector4 inColumW) {
       m_xColumn = inColumX;
       m_yColumn = inColumY;
       m_zColumn = inColumZ;
@@ -85,14 +83,12 @@ namespace giEngineSDK {
      */
     void
     operator*=(const Matrix4& inMatrix) {
-      
       auto tmpMatrix = *this * inMatrix;
 
       m_xColumn = tmpMatrix.m_xColumn;
       m_yColumn = tmpMatrix.m_yColumn;
       m_zColumn = tmpMatrix.m_zColumn;
       m_wColumn = tmpMatrix.m_wColumn;
-
     }
 
     /**
@@ -191,7 +187,6 @@ namespace giEngineSDK {
 
     static const Matrix4
     IDENTITY;
-    
   };
 
   /**
@@ -201,9 +196,9 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT lookToLH : public Matrix4
   {
    public:
-     lookToLH(Vector4 inEyePos,
-              Vector4 inEyeDirection,
-              Vector4 inUpDirection);
+    lookToLH(Vector4 inEyePos,
+             Vector4 inEyeDirection,
+             Vector4 inUpDirection);
   };
 
   /**
@@ -213,10 +208,10 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT perspectiveFovLH : public Matrix4
   {
    public:
-     perspectiveFovLH(float inFov,
-                      float inAR,
-                      float inNear,
-                      float inFar);
+    perspectiveFovLH(float inFov,
+                     float inAR,
+                     float inNear,
+                     float inFar);
   };
 
   /**
@@ -226,7 +221,7 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT matrixRotationX : public Matrix4
   {
    public:
-     matrixRotationX(float inAngle);
+    matrixRotationX(float inAngle);
   };
 
   /**
@@ -236,7 +231,7 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT matrixRotationY : public Matrix4
   {
    public:
-     matrixRotationY(float inAngle);
+    matrixRotationY(float inAngle);
   };
 
   /**
@@ -246,7 +241,7 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT matrixRotationZ : public Matrix4
   {
    public:
-     matrixRotationZ(float inAngle);
+    matrixRotationZ(float inAngle);
   };
 
   /**
@@ -256,7 +251,6 @@ namespace giEngineSDK {
   class GI_UTILITY_EXPORT matrixTranslation : public Matrix4
   {
    public:
-     matrixTranslation(Vector3 inVector);
+    matrixTranslation(Vector3 inVector);
   };
-
 }

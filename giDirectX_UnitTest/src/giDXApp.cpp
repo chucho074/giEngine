@@ -24,8 +24,6 @@ DirectXApp::DirectXApp() {
 
 void 
 DirectXApp::onCreate() {
-
-
   SharedPtr<Model> tmpModel = make_shared<Model>();
 
   tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
@@ -40,11 +38,11 @@ DirectXApp::onCreate() {
 
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
-
   //Set Topology
   m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   //Create Constant Buffer for Never Change
+  /*
   m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
                                          4, 
                                          0, 
@@ -55,7 +53,7 @@ DirectXApp::onCreate() {
                                                    4, 
                                                    0, 
                                                    nullptr);
-
+  */
  
   //Create Sampler
   SamplerDesc sampDesc;
@@ -92,11 +90,24 @@ DirectXApp::onUpdate(float inDeltaTime) {
 
 void 
 DirectXApp::onRender() {
+  /*
+  // Apply a rotation
+  static float tmpRotation = Math::PI / 550.0f;
+  tmpRotation += Math::PI / 550.0f;
 
-  //Update variables that change once per frame
+  // Sets values to the world
+  m_world = Matrix4::IDENTITY;
+  //m_world *= matrixTranslation({60.f, -10.0f, 50.f});
+  //m_world *= matrixRotationY(180);
+  //m_world *= matrixRotationZ(180);
+  //m_world *= matrixRotationY(tmpRotation);
+  //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
+
+  // Update variables that change once per frame
   CBChangesEveryFrame cb;
   cb.mWorld = m_world.transpose();
   cb.vMeshColor = m_meshColor;
+
   m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
@@ -105,22 +116,7 @@ DirectXApp::onRender() {
   m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShaderResource(0, m_colorTexture);
   m_gapi->psSetSampler(0, 1, m_sampler);
-  
-  //Apply a rotation
-  static float tmpRotation = Math::PI / 550.0f;
-  tmpRotation += Math::PI / 550.0f;
-
-  //Sets values to the world
-  m_world = Matrix4::IDENTITY;
-  //m_world *= matrixTranslation({60.f, -10.0f, 50.f});
-  //m_world *= matrixRotationY(180);
-  //m_world *= matrixRotationZ(180);
-  //m_world *= matrixRotationY(tmpRotation);
-  //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-
-  cb.mWorld = m_world.transpose();
-  cb.vMeshColor = m_meshColor;
-  
+  */
 }
 
 
@@ -155,16 +151,16 @@ DirectXApp::onEvent(Event inEvent) {
   //  //Sets the view matrix
   //  CameraConstantBuffer tmpConstantCamera;
   //  tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
-  //  m_gapi->updateSubresource(m_cBufferCamera, 
-  //                            &tmpConstantCamera, 
+  //  m_gapi->updateSubresource(m_cBufferCamera,
+  //                            &tmpConstantCamera,
   //                            sizeof(tmpConstantCamera));
   //}
-  //if (inEvent.type == Event::Resized) {    
-  //  CameraConstantBuffer tmpConstantCamera;
-  //  //Sets the projection matrix
+  //if (inEvent.type == Event::Resized) {
+  //  CameraConstantBuffer tmpConstantCamera1;
+  //  Sets the projection matrix
   //  tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
-  //  m_gapi->updateSubresource(m_cBufferCamera, 
-  //                            &tmpConstantCamera, 
+  //  m_gapi->updateSubresource(m_cBufferCamera,
+  //                            &tmpConstantCamera,
   //                            sizeof(tmpConstantCamera));
   //}
 }

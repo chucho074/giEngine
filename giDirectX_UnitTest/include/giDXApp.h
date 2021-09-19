@@ -108,9 +108,9 @@ class DirectXApp : public BaseApp {
   onEvent(Event inEvent) override;
 
  private:
-
-   //The main camera 
-   //Camera m_mainCamera;
+   
+  //The main camera 
+  Camera m_mainCamera;
 
   //The input Layout
   InputLayout * m_inputLayout = nullptr;
@@ -119,19 +119,19 @@ class DirectXApp : public BaseApp {
   Sampler * m_sampler = nullptr;
 
   //The Constant Buffer (Never Change)
-  Buffer * m_cBufferCamera = nullptr;
+  //Buffer * m_cBufferCamera = nullptr;
 
   //The Constant Buffer (Change on Resize)
   //Buffer * m_cBufferChangeOnResize = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  Buffer * m_cBufferChangeEveryFrame = nullptr;
+  //Buffer * m_cBufferChangeEveryFrame = nullptr;
 
   //The Vertex shader
-  BaseVertexShader * m_vertexShader = nullptr;
+  //BaseVertexShader * m_vertexShader = nullptr;
 
   //The Pixel Shader
-  BasePixelShader * m_pixelShader = nullptr;
+  //BasePixelShader * m_pixelShader = nullptr;
 
   //The World Matrix
   Matrix4 m_world;

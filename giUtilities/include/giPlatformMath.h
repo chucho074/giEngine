@@ -101,6 +101,20 @@ namespace giEngineSDK {
     tan(float inValue) {
       return std::tanf(inValue);
     }
+
+    //cot
+    template<typename Type>
+    static float
+    cot(Type inValue) {
+      return std::cos(inValue) / std::sin(inValue);
+    }
+
+    //cot
+    template<>
+    static float
+    cot(float inValue) {
+      return std::cosf(inValue) / std::sinf(inValue);
+    }
     
     //cos hiper
     template<typename Type>

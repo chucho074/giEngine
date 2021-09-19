@@ -28,36 +28,52 @@ namespace giEngineSDK {
     auto& sgraph = SceneGraph::instance();
     
     //Initialize Camera
-   m_mainCamera.init(Degrees(75.0f).getRadians(), 
-                    (1280/720), 
-                    0.01f, 
-                    1000.0f);
+    m_mainCamera.init(0.78539816339f,
+                      1280.0f / 720.0f,
+                      0.01f, 
+                      1000.0f);
 
-    //Sets the view matrix
+    SamplerDesc sampDesc;
+    sampDesc.filter = 21;
+    sampDesc.addressU = 1;
+    sampDesc.addressV = 1;
+    sampDesc.addressW = 1;
+    sampDesc.comparisonFunc = 1;
+    sampDesc.minLOD = 0;
+    sampDesc.maxLOD = 3.402823466e+38f;
+    m_sampler = gapi.createSampler(sampDesc);
+
     CameraConstantBuffer tmpConstantCamera;
+    //Sets the view matrix
     tmpConstantCamera.mView = m_mainCamera.getViewMatrix().transpose();
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
 
     //Create Constant Buffer for Never Change
     m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
-                                        4, 
+                                        4,
                                         0, 
                                         nullptr);
-    
+
+    gapi.updateSubresource(m_cBufferCamera,
+                           &tmpConstantCamera,
+                           sizeof(tmpConstantCamera));
+
+    // Update variables that change once per frame
+    CBChangesEveryFrame cb;
+    cb.mWorld = Matrix4::IDENTITY;
+    cb.mWorld.m_xColumn.x = 0.05f;
+    cb.mWorld.m_yColumn.y = 0.05f;
+    cb.mWorld.m_zColumn.z = 0.05f;
+    cb.vMeshColor = m_meshColor;
+
     //Create Constant Buffer for Change Every Frame
     m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
                                                   4, 
                                                   0, 
                                                   nullptr);
 
-    gapi.updateSubresource(m_cBufferCamera, 
-                           &tmpConstantCamera, 
-                           sizeof(tmpConstantCamera));
-    
-    //Sets the projection matrix
-    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
-    gapi.updateSubresource(m_cBufferCamera, 
-                            &tmpConstantCamera, 
-                            sizeof(tmpConstantCamera));
+    gapi.updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
     /************************************************************************/
     /*                           GBUFFER                                    */
@@ -77,7 +93,7 @@ namespace giEngineSDK {
     //Set the size for the inputLayout
     layoutDesc.resize(5);
     
-            //Sets the input Layout values
+    //Sets the input Layout values
     
     //Positions
     layoutDesc[0].semanticName = "POSITION";
@@ -251,7 +267,7 @@ namespace giEngineSDK {
 
     //Sets the input Layout values
     //Positions
-    layoutDescLight[0].semanticName = "POSITION";
+    layoutDescLight[0].semanticName = "SV_POSITION";
     layoutDescLight[0].semanticIndex = 0;
     layoutDescLight[0].format = GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT;
     layoutDescLight[0].inputSlot = 0;
@@ -286,21 +302,14 @@ namespace giEngineSDK {
                                       4, 
                                       0, 
                                       &Lightcb);
-    
-    
+
     m_SAQ = make_shared<Model>();
-
-    m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
-
-    
-    
-
-
+    String prefix = "C:/Users/F_A_R/source/repos/clase-shaders/giEngine/bin/Resources/";
+    m_SAQ->loadFromFile(prefix + "Models/ScreenAlignedQuad.3ds");
   }
   
   void 
   Renderer::render() {
-
     auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
 
@@ -323,7 +332,6 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
     gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
 
-    
     //Clear the back buffer
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
     gapi.clearRTV(gapi.getDefaultRenderTarget(), 
@@ -331,10 +339,6 @@ namespace giEngineSDK {
     
     //Clear the depth buffer to 1.0 (max depth)
     gapi.clearDSV(gapi.getDefaultDephtStencil());
-
-    
-    
-    
 
     //Draw models
     sgraph.draw();
@@ -436,6 +440,7 @@ namespace giEngineSDK {
     //Set Render Targets
     Vector<Texture2D*> tmpVector;
     tmpVector.push_back(gapi.getDefaultRenderTarget());
+
     gapi.omSetRenderTarget(tmpVector,
                            gapi.getDefaultDephtStencil());
 
@@ -453,22 +458,31 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(2, m_cBufferLight);
     gapi.psSetConstantBuffer(2, m_cBufferLight);
 
+    gapi.psSetShaderResource(0, m_renderTargets[0]);
+    gapi.psSetShaderResource(1, m_renderTargets[1]);
+    gapi.psSetShaderResource(2, m_renderTargets[2]);
+
+    gapi.psSetSampler(0, 1, m_sampler);
+
     //Clear the texture to draw
     //gapi.clearRTV(m_SSAOTexture,
     //              ClearColor);
+    
+    //Clear the back buffer
+    float BackBufferColor[4] = { 1.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+    gapi.clearRTV(gapi.getDefaultRenderTarget(),
+                  BackBufferColor);
+
+    //Clear the depth buffer to 1.0 (max depth)
+    gapi.clearDSV(gapi.getDefaultDephtStencil());
 
     //Clear the depth buffer to 1.0 (max depth)
     
-    
-
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
-    
-
+    m_SAQ->drawModel();
   }
   
   void 
-  Renderer::setModels(Vector<SharedPtr<Model>> inModelList) {
-    
+  Renderer::setModels(Vector<SharedPtr<Model>> inModelList) { 
   }
-
 }

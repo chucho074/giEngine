@@ -352,7 +352,7 @@ namespace giEngineSDK {
   lookToLH::lookToLH(Vector4 inEyePos, 
                      Vector4 inEyeDirection, 
                      Vector4 inUpDirection) {
-    
+    /*
     Vector4 z = (inEyeDirection - inEyePos);
     z.normalize();
 
@@ -367,23 +367,46 @@ namespace giEngineSDK {
     y.w = y.dotProd(-inEyePos);
     z.w = z.dotProd(-inEyePos);
 
-    m_xColumn = x; 
-    m_yColumn = y; 
+    m_xColumn = x;
+    m_yColumn = y;
     m_zColumn = z; 
     m_wColumn = { 0, 0, 0, 1 };
+    */
+    
+    Vector4 Axis[3];
+    Vector4 negativePosition = -inEyePos;
+    
+    // z axis
+    Axis[2] = inEyeDirection - inEyePos;
+    Axis[2].normalize();
+    // x axis
+    Axis[0] = inUpDirection.cross(Axis[2]);
+    Axis[0].normalize();
+    // y axis
+    Axis[1] = Axis[2].cross(Axis[0]);
+    Axis[1].normalize();
 
+    for (size_t i = 0; i < 3; ++i) {
+      m_xColumn[i] = Axis[i].x;
+      m_yColumn[i] = Axis[i].y;
+      m_zColumn[i] = Axis[i].z;
+      m_wColumn[i] = Axis[i].dotProd(negativePosition);
+    }
+
+    m_xColumn[3] = 0.0f;
+    m_yColumn[3] = 0.0f;
+    m_zColumn[3] = 0.0f;
+    m_wColumn[3] = 1.0f;
   }
-
 
   perspectiveFovLH::perspectiveFovLH(float inFov, 
                                      float inAR, 
                                      float inNear, 
                                      float inFar) {
-
     //float h = cosf(inFov) / sinf(inFov);
     //float w = h / inAR;
     //float viewRange = inFar / (inFar - inNear);
-
+    /*
     float    SinFov = sinf(0.5f * inFov);
     float    CosFov = cosf(0.5f * inFov);
 
@@ -391,15 +414,19 @@ namespace giEngineSDK {
     float Width = Height / inAR;
     float fRange = inFar / (inFar - inNear);
 
-
     m_xColumn = { Width, 0, 0, 0 };
     m_yColumn = { 0, Height, 0, 0 };
     m_zColumn = { 0, 0, fRange, 1 };
-    m_wColumn = { 0, 0, -fRange * inNear, 0 };
+    m_wColumn = { 0, 0, -inNear * fRange, 0 };
+    */
+    float yScale = Math::cot(inFov / 2.0f);
+    float xScale = yScale / inAR;
 
-
+    m_xColumn = Vector4(xScale, 0.f, 0.f, 0.f);
+    m_yColumn = Vector4(0.f, yScale, 0.f, 0.f);
+    m_zColumn = Vector4(0.f, 0.f, inFar / (inFar - inNear), 1.f);
+    m_wColumn = Vector4(0.f, 0.f, -inNear * (inFar / (inFar - inNear)), 0.f);
   }
-
   
   matrixRotationX::matrixRotationX(float inAngle) {
     float    fSinAngle = Math::sin(inAngle);

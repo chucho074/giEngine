@@ -75,6 +75,45 @@ namespace giEngineSDK {
     Vector4
     operator-()const;
     
+    float
+    operator[](uint32 index) const {
+      switch (index)
+      {
+      case 0:
+        return x;
+        break;
+      case 1:
+        return y;
+        break;
+      case 2:
+        return z;
+      case 3:
+        return w;
+      default:
+        return x;
+        break;
+      }
+    }
+
+    float&
+    operator[](uint32 index) {
+      switch (index)
+      {
+      case 0:
+        return x;
+        break;
+      case 1:
+        return y;
+        break;
+      case 2:
+        return z;
+      case 3:
+        return w;
+      default:
+        return x;
+        break;
+      }
+    }
     
     bool
     operator>=(const Vector4& otherVect) const;

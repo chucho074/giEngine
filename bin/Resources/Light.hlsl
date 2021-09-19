@@ -27,28 +27,29 @@ cbuffer LightBuffer : register(b2)
 
 struct VS_INPUT 
 {
-  float4 Position : POSITION0;
+  float4 Position : SV_POSITION;
   float2 TexCoord : TEXCOORD0;
 };
 
 struct PS_INPUT 
 {
-   float4 Position : POSITION0;
+   float4 Position : SV_POSITION;
    float2 TexCoord : TEXCOORD0;
 };
 
-PS_INPUT vs_main( VS_INPUT Input )
+PS_INPUT vs_main(VS_INPUT Input)
 {
   PS_INPUT Output;
   
-  Output.Position = Input.Position;
-  Output.TexCoord = Input.TexCoord;
+  Output.Position = float4(Input.Position.xyz, 1.0f);
+  //Output.TexCoord = Input.TexCoord;
+  Output.TexCoord = (Input.Position.xy + 1.0f) * 0.5f;
+  Output.TexCoord.y = 1.0f - Output.TexCoord.y;
   
   return Output;
 }
 
-
-float4 ps_main(PS_INPUT Input) : SV_TARGET
+float4 ps_main(PS_INPUT Input) : SV_TARGET0
 {
    float gamma = 2.2f;
    float4 posWorld = PosTexture.Sample(SamplState, Input.TexCoord);
@@ -64,5 +65,5 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET
    //return float4(pow(diffuse.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
    //return float4(pow(diffuse.xyz * DiffuseLightIntensity, 1.0f/gamma), 1) * ao;
    return float4(diffuse.xyz, 1);
-
+   //return float4(Input.TexCoord, 0.0f, 1);
 }

@@ -14,24 +14,21 @@
 #include "giBaseGraphicsAPI.h"
 #include "giBaseRenderer.h"
 
-
 int32 
 BaseApp::run() {
-
-  
-  //Create the main window
+  // Create the main window
   createWindow();
 
-  //Initialize every system
+  // Initialize every system
   initSystems();
   auto& renderer = BaseRenderer::instance();
 
-  //Send message to device
+  // Send message to device
   onCreate();
 
   renderer.create();
 
-  //App Loop
+  // App Loop
   while (m_window.isOpen()) {
     Event eventsWnd;
     while (m_window.pollEvent(eventsWnd)) {
@@ -40,39 +37,34 @@ BaseApp::run() {
         break;
       }
       
-      //Eventos propios
+      // Eventos propios
       onEvent(eventsWnd);
     }
 
-
-    //Update Time
+    // Update Time
     m_time->update();
     float deltaTime = g_time().getTime();
 
-    //Update Game Logic
+    // Update Game Logic
     update(deltaTime);
     
-    //Render Frame
+    // Render Frame
     render();
 
     renderer.render();
-    
   }
 
-  //Write the logs
+  // Write the logs
   m_logger->SendToFile();
 
-
-  //Destroy the resources
+  // Destroy the resources
   onDestroy();
-
 
   return 0;
 }
 
 void 
 BaseApp::createWindow() {
-  
   if (m_window.isOpen()) {
     return;
   }
@@ -84,8 +76,6 @@ BaseApp::createWindow() {
                   sf::Style::Default);
 
   m_window.setPosition({ 0, 0 });
-
-  
 }
 
 void 
@@ -125,7 +115,6 @@ BaseApp::initSystems() {
     BaseRenderer* renderer = createRenderer();
     g_renderer().setObject(renderer);
     m_renderer = &g_renderer();
-    
   }
 
   //Start the time
