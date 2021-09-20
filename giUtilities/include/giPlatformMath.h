@@ -18,6 +18,20 @@ namespace giEngineSDK {
     static const uint32 SELECT0;
     static const uint32 SELECT1;
 
+    //Cot
+    template<typename Type>
+    static float
+      cot(Type inValue) {
+      return std::cos(inValue) / std::sin(inValue);
+    }
+
+    //Cot Specialization
+    template<>
+    static float
+      cot(float inValue) {
+      return std::cosf(inValue) / std::sinf(inValue);
+    }
+
     //Invert Sqrt
     template<typename Type>
     static Type

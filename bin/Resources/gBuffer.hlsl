@@ -7,14 +7,14 @@ SamplerState SamplState : register (s0);
 
 cbuffer CameraBuffer : register(b0)
 {
-    matrix View;
+  matrix View;
 	matrix Projection;
 };
 
 cbuffer cbChangesEveryFrame : register(b1)
 {
-    matrix World;
-    float4 vMeshColor;
+  matrix World;
+  float4 vMeshColor;
 };
 
 struct VS_INPUT
@@ -44,15 +44,14 @@ struct PS_OUTPUT
 PS_INPUT VS_GBUFFER(VS_INPUT inVS) 
 {
   PS_INPUT output;
-  //matrix WorldView = mul(World, View);
-  matrix WorldView = View;
+  matrix WorldView = mul(World, View);
   
   //Position View
-  float4 posView = mul(WorldView, float4(inVS.Position.xyz, 1.0f));
-  output.PosView = posView.xyz;
+  float4 posView = mul(float4(inVS.Position.xyz, 1.0f), WorldView);
+  output.PosView = posView;
   
   //Position
-  output.Position = mul(Projection, posView);
+  output.Position = mul(posView, Projection);
   
   //Normal
   float3 normal = normalize(mul(float4(inVS.Normal.xyz, 0.0f), WorldView).xyz);

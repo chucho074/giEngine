@@ -56,17 +56,6 @@ DirectXApp::onCreate() {
                                                    0, 
                                                    nullptr);
 
- 
-  //Create Sampler
-  SamplerDesc sampDesc;
-  sampDesc.filter = 21;
-  sampDesc.addressU = 1;
-  sampDesc.addressV = 1;
-  sampDesc.addressW = 1;
-  sampDesc.comparisonFunc = 1;
-  sampDesc.minLOD = 0;
-  sampDesc.maxLOD = 3.402823466e+38f;
-  m_sampler = m_gapi->createSampler(sampDesc);
 
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
@@ -94,32 +83,32 @@ void
 DirectXApp::onRender() {
 
   //Update variables that change once per frame
-  CBChangesEveryFrame cb;
-  cb.mWorld = m_world.transpose();
-  cb.vMeshColor = m_meshColor;
-  m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
+  //CBChangesEveryFrame cb;
+  //cb.mWorld = m_world.transpose();
+  //cb.vMeshColor = m_meshColor;
+  //m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
 
   //Render the cube/sets values
-  m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
-  m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  //m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
+  //m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
+  //m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShaderResource(0, m_colorTexture);
-  m_gapi->psSetSampler(0, 1, m_sampler);
+  //m_gapi->psSetSampler(0, 1, m_sampler);
   
   //Apply a rotation
-  static float tmpRotation = Math::PI / 550.0f;
-  tmpRotation += Math::PI / 550.0f;
+  //static float tmpRotation = Math::PI / 550.0f;
+  //tmpRotation += Math::PI / 550.0f;
 
   //Sets values to the world
-  m_world = Matrix4::IDENTITY;
+  //m_world = Matrix4::IDENTITY;
   //m_world *= matrixTranslation({60.f, -10.0f, 50.f});
   //m_world *= matrixRotationY(180);
   //m_world *= matrixRotationZ(180);
   //m_world *= matrixRotationY(tmpRotation);
   //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
 
-  cb.mWorld = m_world.transpose();
-  cb.vMeshColor = m_meshColor;
+  //cb.mWorld = m_world.transpose();
+  //cb.vMeshColor = m_meshColor;
   
 }
 

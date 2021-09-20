@@ -43,11 +43,10 @@ namespace giEngineSDK {
   Camera::updateData() {
     m_viewMatrix = lookToLH(m_eye, m_at, m_up);
     
-    updateVM();
+    //updateVM();
     //m_viewMatrix = m_viewMatrix.transpose();
     
     m_projMatrix = perspectiveFovLH(m_angle, m_aspectRatio, m_near, m_far);
-    m_projMatrix = m_projMatrix.transpose();
   }
   
   void 

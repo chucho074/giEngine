@@ -109,12 +109,6 @@ class DirectXApp : public BaseApp {
 
  private:
 
-   //The main camera 
-   //Camera m_mainCamera;
-
-  //The input Layout
-  InputLayout * m_inputLayout = nullptr;
-
   //The Sampler
   Sampler * m_sampler = nullptr;
 
@@ -127,20 +121,8 @@ class DirectXApp : public BaseApp {
   //The Constant Buffer (Change Every Frame)
   Buffer * m_cBufferChangeEveryFrame = nullptr;
 
-  //The Vertex shader
-  BaseVertexShader * m_vertexShader = nullptr;
-
-  //The Pixel Shader
-  BasePixelShader * m_pixelShader = nullptr;
-
   //The World Matrix
   Matrix4 m_world;
-
-  //The color For the mesh
-  Vector4 m_meshColor { 0.f, 0.f, 0.f, 0.f };
-
-  //Yoshi Textures
-  Texture2D * m_colorTexture = nullptr;
 
   SceneGraph sceneGraph;
 

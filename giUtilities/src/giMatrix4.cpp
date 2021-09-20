@@ -353,7 +353,7 @@ namespace giEngineSDK {
                      Vector4 inEyeDirection, 
                      Vector4 inUpDirection) {
     
-    Vector4 z = (inEyeDirection - inEyePos);
+    /*Vector4 z = (inEyeDirection - inEyePos);
     z.normalize();
 
     Vector4 x;
@@ -362,16 +362,35 @@ namespace giEngineSDK {
 
     Vector4 y;
     y = z.cross(x);
+    y.normalize();
 
     x.w = x.dotProd(-inEyePos);
     y.w = y.dotProd(-inEyePos);
     z.w = z.dotProd(-inEyePos);
 
-    m_xColumn = x; 
-    m_yColumn = y; 
-    m_zColumn = z; 
+    m_xColumn = x;
+    m_yColumn = y;
+    m_zColumn = z;
     m_wColumn = { 0, 0, 0, 1 };
+    transpose();*/
 
+    Vector4 Axis[3];
+    Vector4 negativePosition = -inEyePos;
+
+    // z axis
+    Axis[2] = inEyeDirection - inEyePos;
+    Axis[2].normalize();
+    // x axis
+    Axis[0] = inUpDirection.cross(Axis[2]);
+    Axis[0].normalize();
+    // y axis
+    Axis[1] = Axis[2].cross(Axis[0]);
+    Axis[1].normalize();
+
+    m_xColumn = { Axis[0].x, Axis[1].x, Axis[2].x, 0 };
+    m_yColumn = { Axis[0].y, Axis[1].y, Axis[2].y, 0 };
+    m_zColumn = { Axis[0].z, Axis[1].z, Axis[2].z, 0 };
+    m_wColumn = { Axis[0].dotProd(negativePosition), Axis[1].dotProd(negativePosition), Axis[2].dotProd(negativePosition), 1 };
   }
 
 
@@ -380,22 +399,22 @@ namespace giEngineSDK {
                                      float inNear, 
                                      float inFar) {
 
-    //float h = cosf(inFov) / sinf(inFov);
-    //float w = h / inAR;
-    //float viewRange = inFar / (inFar - inNear);
-
-    float    SinFov = sinf(0.5f * inFov);
-    float    CosFov = cosf(0.5f * inFov);
-
-    float Height = CosFov / SinFov;
-    float Width = Height / inAR;
-    float fRange = inFar / (inFar - inNear);
-
+    /*float Height = Math::cot(inFov / 2.0f);
+    float Width  = Height / inAR;
+    float fRange = inFar  / (inFar - inNear);
 
     m_xColumn = { Width, 0, 0, 0 };
     m_yColumn = { 0, Height, 0, 0 };
     m_zColumn = { 0, 0, fRange, 1 };
-    m_wColumn = { 0, 0, -fRange * inNear, 0 };
+    m_wColumn = { 0, 0, -inNear * fRange, 0 };*/
+
+    float yScale = Math::cot(inFov / 2.0f);
+    float xScale = yScale / inAR;
+
+    m_xColumn = Vector4(xScale, 0.f, 0.f, 0.f);
+    m_yColumn = Vector4(0.f, yScale, 0.f, 0.f);
+    m_zColumn = Vector4(0.f, 0.f, inFar / (inFar - inNear), 1.f);
+    m_wColumn = Vector4(0.f, 0.f, -inNear * (inFar / (inFar - inNear)), 0.f);
 
 
   }
@@ -456,14 +475,6 @@ namespace giEngineSDK {
 
     m_wColumn = {inVector.x, inVector.y, inVector.z, 1.0f};
     
-    /*m_xColumn = {1.0f, 0.0f, 0.0f, inVector.x};
-
-    m_yColumn = {0.0f, 1.0f, 0.0f, inVector.y};
-
-    m_zColumn = {0.0f, 0.0f, 1.0f, inVector.z};
-
-    m_wColumn = {0, 0, 0, 1.0f};*/
-
   }
 
 }

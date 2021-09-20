@@ -28,36 +28,61 @@ namespace giEngineSDK {
     auto& sgraph = SceneGraph::instance();
     
     //Initialize Camera
-   m_mainCamera.init(Degrees(75.0f).getRadians(), 
-                    (1280/720), 
-                    0.01f, 
-                    1000.0f);
+    m_mainCamera.init(Degrees(75.0f).getRadians(), 
+                      1280.f / 720.f, 
+                      0.01f, 
+                      1000.0f);
+
+    //Create Sampler
+    SamplerDesc sampDesc;
+    sampDesc.filter = 21;
+    sampDesc.addressU = 1;
+    sampDesc.addressV = 1;
+    sampDesc.addressW = 1;
+    sampDesc.comparisonFunc = 1;
+    sampDesc.minLOD = 0;
+    sampDesc.maxLOD = 3.402823466e+38f;
+    m_sampler = gapi.createSampler(sampDesc);
+
 
     //Sets the view matrix
     CameraConstantBuffer tmpConstantCamera;
     tmpConstantCamera.mView = m_mainCamera.getViewMatrix().transpose();
 
-    //Create Constant Buffer for Never Change
-    m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
-                                        4, 
-                                        0, 
-                                        nullptr);
-    
-    //Create Constant Buffer for Change Every Frame
-    m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
-                                                  4, 
-                                                  0, 
-                                                  nullptr);
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
 
+    //Create Constant Buffer for Camera
+    m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                        4,
+                                        0,
+                                        nullptr);
+    //Update the Camera Constant Buffer 
     gapi.updateSubresource(m_cBufferCamera, 
                            &tmpConstantCamera, 
                            sizeof(tmpConstantCamera));
     
-    //Sets the projection matrix
-    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
-    gapi.updateSubresource(m_cBufferCamera, 
-                            &tmpConstantCamera, 
-                            sizeof(tmpConstantCamera));
+    // Update variables that change once per frame
+    CBChangesEveryFrame tmpConstantEveryFrame;
+    tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;
+    tmpConstantEveryFrame.mWorld.m_xColumn.x = 0.05f;
+    tmpConstantEveryFrame.mWorld.m_yColumn.y = 0.05f;
+    tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;
+    tmpConstantEveryFrame.vMeshColor = m_meshColor;
+
+    //Create Constant Buffer for Change Every Frame
+    m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
+                                                  4,
+                                                  0,
+                                                  nullptr);
+
+
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferChangeEveryFrame,
+                           &tmpConstantEveryFrame,
+                           sizeof(tmpConstantEveryFrame));
+    
+    
 
     /************************************************************************/
     /*                           GBUFFER                                    */
@@ -151,7 +176,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                               SSAO                                   */
-    /************************************************************************
+    /************************************************************************/
     //Create Vertex Shader 
     m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
@@ -207,7 +232,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                               BLUR                                   */
-    /************************************************************************
+    /************************************************************************/
     //Create Vertex Shader 
     m_vertexShaderBlur = gapi.createVS("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
@@ -251,7 +276,7 @@ namespace giEngineSDK {
 
     //Sets the input Layout values
     //Positions
-    layoutDescLight[0].semanticName = "POSITION";
+    layoutDescLight[0].semanticName = "SV_POSITION";
     layoutDescLight[0].semanticIndex = 0;
     layoutDescLight[0].format = GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT;
     layoutDescLight[0].inputSlot = 0;
@@ -323,7 +348,6 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
     gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
 
-    
     //Clear the back buffer
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
     gapi.clearRTV(gapi.getDefaultRenderTarget(), 
@@ -332,16 +356,12 @@ namespace giEngineSDK {
     //Clear the depth buffer to 1.0 (max depth)
     gapi.clearDSV(gapi.getDefaultDephtStencil());
 
-    
-    
-    
-
     //Draw models
     sgraph.draw();
 
     /************************************************************************/
     /*                           SSAO                                       */
-    /************************************************************************
+    /************************************************************************/
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -371,7 +391,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurH                                      */
-    /************************************************************************
+    /************************************************************************/
     //Set Render Targets
     gapi.omSetRenderTarget(m_BlurTexture,
                            nullptr);
@@ -401,7 +421,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurV                                      */
-    /************************************************************************
+    /************************************************************************/
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -436,6 +456,7 @@ namespace giEngineSDK {
     //Set Render Targets
     Vector<Texture2D*> tmpVector;
     tmpVector.push_back(gapi.getDefaultRenderTarget());
+
     gapi.omSetRenderTarget(tmpVector,
                            gapi.getDefaultDephtStencil());
 
@@ -453,15 +474,32 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(2, m_cBufferLight);
     gapi.psSetConstantBuffer(2, m_cBufferLight);
 
+    /*for (int32 i = 0; i < m_renderTargets.size(); ++i) {
+      gapi.psSetShaderResource(i, m_renderTargets[i]);
+    }*/
+
+    gapi.psSetShaderResource(0, m_renderTargets[0]);
+    gapi.psSetShaderResource(1, m_renderTargets[1]);
+    gapi.psSetShaderResource(2, m_renderTargets[2]);
+
+
+    gapi.psSetSampler(0, 1, m_sampler);
+
     //Clear the texture to draw
-    //gapi.clearRTV(m_SSAOTexture,
+    //gapi.clearRTV(gapi.getDefaultRenderTarget(),
     //              ClearColor);
 
+    //Clear the back buffer
+    float BackBufferColor[4] = { 1.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+    gapi.clearRTV(gapi.getDefaultRenderTarget(),
+                  BackBufferColor);
+
     //Clear the depth buffer to 1.0 (max depth)
-    
+    gapi.clearDSV(gapi.getDefaultDephtStencil());
     
 
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
+    m_SAQ->drawModel();
     
 
   }

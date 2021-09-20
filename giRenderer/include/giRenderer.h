@@ -128,7 +128,7 @@ namespace giEngineSDK {
     //Buffer * m_indexBuffer = nullptr;
 
     //The color For the mesh
-    Vector4 m_meshColor{ 0.f, 0.f, 0.f, 0.f };
+    Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };
 
     //Depth Stencil State
     SharedPtr<DepthState> m_depthStateGBuffer;
