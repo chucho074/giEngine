@@ -305,8 +305,8 @@ namespace giEngineSDK {
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
     Lightcb.LightPos.x = 360;
-    Lightcb.LightPos.x = 280;
-    Lightcb.LightPos.x = -200;
+    Lightcb.LightPos.y = 280;
+    Lightcb.LightPos.z = -200;
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       4, 
                                       0, 
@@ -478,6 +478,7 @@ namespace giEngineSDK {
       gapi.psSetShaderResource(i, m_renderTargets[i]);
     }
 
+    gapi.psSetShaderResource(3, m_SSAOTexture[0]);
 
     gapi.psSetSampler(0, 1, m_sampler);
 

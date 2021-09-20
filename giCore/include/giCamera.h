@@ -84,9 +84,12 @@ namespace giEngineSDK {
     float m_aspectRatio = 0;
     float m_near = 0;
     float m_far = 0;
-    Vector4 m_eye = { 0.0f, -3.0f, -6.0f, 1.0f };  //En posicion del mundo
+    Vector4 m_eye = { 0.0f, -8.0f, -6.0f, 1.0f };  //En posicion del mundo
     Vector4 m_at = { 0.0f, 0.0f, 0.0f, 1.0f };  //En posicion del mundo
     Vector4 m_up = { 0.0f, 1.0f, 0.0f, 1.0f };  //Up del mundo
+    //Vector4 m_eye = { 200.0f,  -100.0f, -6.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_at  = { -0.91f,  0.39f,  0.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_up  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
     Matrix4 m_viewMatrix;
     Matrix4 m_projMatrix;
     Vector4 m_right;
