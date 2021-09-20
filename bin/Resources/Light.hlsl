@@ -42,7 +42,7 @@ PS_INPUT vs_main( VS_INPUT Input )
   PS_INPUT Output;
   
   Output.Position = float4(Input.Position.xyz, 1.0f);
-  Output.TexCoord = (Input.TexCoord.xy + 1.0f) * 0.5f;
+  Output.TexCoord = (Input.Position.xy + 1.0f) * 0.5f;
   Output.TexCoord.y = 1.0f - Output.TexCoord.y;
   
   return Output;

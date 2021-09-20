@@ -474,25 +474,16 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(2, m_cBufferLight);
     gapi.psSetConstantBuffer(2, m_cBufferLight);
 
-    /*for (int32 i = 0; i < m_renderTargets.size(); ++i) {
+    for (int32 i = 0; i < m_renderTargets.size(); ++i) {
       gapi.psSetShaderResource(i, m_renderTargets[i]);
-    }*/
-
-    gapi.psSetShaderResource(0, m_renderTargets[0]);
-    gapi.psSetShaderResource(1, m_renderTargets[1]);
-    gapi.psSetShaderResource(2, m_renderTargets[2]);
+    }
 
 
     gapi.psSetSampler(0, 1, m_sampler);
 
     //Clear the texture to draw
-    //gapi.clearRTV(gapi.getDefaultRenderTarget(),
-    //              ClearColor);
-
-    //Clear the back buffer
-    float BackBufferColor[4] = { 1.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
     gapi.clearRTV(gapi.getDefaultRenderTarget(),
-                  BackBufferColor);
+                  ClearColor);
 
     //Clear the depth buffer to 1.0 (max depth)
     gapi.clearDSV(gapi.getDefaultDephtStencil());
