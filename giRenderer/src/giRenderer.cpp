@@ -64,10 +64,10 @@ namespace giEngineSDK {
     
     // Update variables that change once per frame
     CBChangesEveryFrame tmpConstantEveryFrame;
-    tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;
+    tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;/*
     tmpConstantEveryFrame.mWorld.m_xColumn.x = 0.05f;
     tmpConstantEveryFrame.mWorld.m_yColumn.y = 0.05f;
-    tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;
+    tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;*/
     tmpConstantEveryFrame.vMeshColor = m_meshColor;
 
     //Create Constant Buffer for Change Every Frame

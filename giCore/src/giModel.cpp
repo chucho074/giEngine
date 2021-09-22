@@ -214,8 +214,28 @@ namespace giEngineSDK {
         vertex.Tex.y = 0.f;
       }
 
-      //
-
+      //Tangentes
+      if(mesh->mTangents) {
+        vertex.Tang.x = mesh->mTangents[i].x;
+        vertex.Tang.y = mesh->mTangents[i].y;
+        vertex.Tang.z = mesh->mTangents[i].z;
+      }
+      else {
+        vertex.Tang.x = 0.0f;
+        vertex.Tang.y = 0.0f;
+        vertex.Tang.z = 0.0f;
+      }
+      //bitangentes
+      if (mesh->mBitangents) {
+        vertex.BiNor.x = mesh->mBitangents[i].x;
+        vertex.BiNor.y = mesh->mBitangents[i].y;
+        vertex.BiNor.z = mesh->mBitangents[i].z;
+      }
+      else {
+        vertex.BiNor.x = 0.0f;
+        vertex.BiNor.y = 0.0f;
+        vertex.BiNor.z = 0.0f;
+      }
 
       vertices.push_back(vertex);
     }

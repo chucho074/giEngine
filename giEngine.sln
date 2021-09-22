@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giRenderer", "giRenderer\gi
 		{4E5979E7-8E58-4C71-8906-931883E0B749} = {4E5979E7-8E58-4C71-8906-931883E0B749}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giInput", "giInput\giInput.vcxproj", "{FB7C2660-955D-4DF9-938C-E19BA311974C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_DLL|x64 = Debug_DLL|x64
@@ -160,6 +162,22 @@ Global
 		{03CEC1BA-C206-4872-B692-E8665D219EBF}.Release|x64.Build.0 = Release|x64
 		{03CEC1BA-C206-4872-B692-E8665D219EBF}.Release|x86.ActiveCfg = Release|Win32
 		{03CEC1BA-C206-4872-B692-E8665D219EBF}.Release|x86.Build.0 = Release|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug_DLL|x64.ActiveCfg = Debug|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug_DLL|x64.Build.0 = Debug|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug_DLL|x86.ActiveCfg = Debug|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug_DLL|x86.Build.0 = Debug|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug|x64.ActiveCfg = Debug|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug|x64.Build.0 = Debug|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug|x86.ActiveCfg = Debug|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Debug|x86.Build.0 = Debug|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release_DLL|x64.ActiveCfg = Release|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release_DLL|x64.Build.0 = Release|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release_DLL|x86.ActiveCfg = Release|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release_DLL|x86.Build.0 = Release|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release|x64.ActiveCfg = Release|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release|x64.Build.0 = Release|x64
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release|x86.ActiveCfg = Release|Win32
+		{FB7C2660-955D-4DF9-938C-E19BA311974C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
