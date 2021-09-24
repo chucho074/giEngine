@@ -66,8 +66,8 @@ namespace giEngineSDK {
       GI_DRIVER_TYPE::kDRIVER_TYPE_REFERENCE
     };
     Vector<GI_FEATURE_LEVEL::E> featureLvl = {
-      //GI_FEATURE_LEVEL::kFEATURE_LEVEL_11_0,
-      //GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_1,
+      GI_FEATURE_LEVEL::kFEATURE_LEVEL_11_0,
+      GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_1,
       GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_0
     };
 
@@ -100,14 +100,14 @@ namespace giEngineSDK {
                                          &m_device,
                                          reinterpret_cast<D3D_FEATURE_LEVEL*>(&selectFeatureLvl),
                                          &m_devContext);
-      if (FAILED(hr)) {
-        if (S_OK == hr) {
-          return true;
-        }
-        else {
-          return false;
-        }
+      
+      if (S_OK == hr) {
+        break;;
       }
+      else {
+        return false;
+      }
+      
     }
     m_backBuffer = new Texture2DDX();
 
