@@ -8,7 +8,7 @@ SamplerState SamplState : register (s0);
 cbuffer CameraBuffer : register(b0)
 {
   matrix View;
-	matrix Projection;
+  matrix Projection;
 };
 
 cbuffer cbChangesEveryFrame : register(b1)
@@ -82,7 +82,8 @@ PS_OUTPUT PS_GBUFFER(PS_INPUT inPS)
   normal = (normal * 2.0f) - 1.0f;
   normal = normalize(mul(normal, inPS.TBN).xyz);
   output.Normal.xyz = normal;
-  output.Normal.w = RoughTexture.Sample(SamplState, inPS.TexCoord).x;
+  //output.Normal.w = RoughTexture.Sample(SamplState, inPS.TexCoord).x;
+  output.Normal.w = 1;
   
   //Albedo & Metalic
   float3 albedo = AlbedTexture.Sample(SamplState, inPS.TexCoord).xyz;

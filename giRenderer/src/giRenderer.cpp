@@ -212,12 +212,16 @@ namespace giEngineSDK {
     //Create the Input Layout
     m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
 
-    m_SSAOTexture.push_back(gapi.createTex2D(1280,
-                            720, 
-                            1,
-                            GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+    m_SSAOTexture.push_back(gapi.createTex2D(512,
+                                             512, 
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
+    
+    for (int32 i = 0; i < 7; ++i) {
+      m_SSAOTexture.push_back(nullptr);
+    }
     SSAOConstantBuffer SSAOcb;
     SSAOcb.Intensity = 2.0f;
     SSAOcb.SampleRadius = 0.800f;
@@ -244,16 +248,16 @@ namespace giEngineSDK {
 
 
     //Create the texture
-    m_BlurTexture.push_back(gapi.createTex2D(1280,
-                            720, 
+    m_BlurTexture.push_back(gapi.createTex2D(256,
+                            256, 
                             1,
                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                             GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     BlurConstantBuffer Blurcb;
     Blurcb.Gamma = 1;
-    Blurcb.Viewport.x = 1280;
-    Blurcb.Viewport.y = 720;
+    Blurcb.Viewport.x = 256;
+    Blurcb.Viewport.y = 256;
     m_cBufferBlur = gapi.createBuffer(sizeof(BlurConstantBuffer),
                                       4, 
                                       0, 
@@ -343,6 +347,8 @@ namespace giEngineSDK {
     gapi.vsSetShader(m_vertexShader);
     gapi.psSetShader(m_pixelShader);
 
+    gapi.psSetSampler(0, 1, m_sampler);
+
     //Set Constant Buffers
     gapi.vsSetConstantBuffer(0, m_cBufferCamera);
     gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
@@ -391,7 +397,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurH                                      */
-    /************************************************************************/
+    /************************************************************************
     //Set Render Targets
     gapi.omSetRenderTarget(m_BlurTexture,
                            nullptr);
@@ -421,7 +427,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurV                                      */
-    /************************************************************************/
+    /************************************************************************
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -480,8 +486,6 @@ namespace giEngineSDK {
 
     gapi.psSetShaderResource(3, m_SSAOTexture[0]);
 
-    gapi.psSetSampler(0, 1, m_sampler);
-
     //Clear the texture to draw
     gapi.clearRTV(gapi.getDefaultRenderTarget(),
                   ClearColor);
@@ -493,6 +497,12 @@ namespace giEngineSDK {
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
     m_SAQ->drawModel();
     
+
+    for (int32 i = 0; i < m_renderTargets.size(); ++i) {
+      gapi.psSetShaderResource(i, nullptr);
+    }
+
+    gapi.psSetShaderResource(3, nullptr);
 
   }
   

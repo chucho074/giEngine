@@ -69,7 +69,9 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   };
   
   float4 p = GetPosition(input.TexCoord);
-  
+  if(p.w == 0.0f) {
+	return Output;
+  }
   //clip(p.w < 1.0f ? -1 : 1);
   
   float3 n = GetNormal(input.TexCoord);
@@ -79,6 +81,7 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   float rad = SampleRadius / p.z;
   
   int iterations = 4;
+  [unroll]
   for (int j = 0; j < iterations; ++j) {
     float2 coord1 = reflect(vec[j], rand) * rad;
     float2 coord2 = float2(coord1.x * 0.707 - coord1.y * 0.707,

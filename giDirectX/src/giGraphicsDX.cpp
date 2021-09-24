@@ -66,8 +66,8 @@ namespace giEngineSDK {
       GI_DRIVER_TYPE::kDRIVER_TYPE_REFERENCE
     };
     Vector<GI_FEATURE_LEVEL::E> featureLvl = {
-      GI_FEATURE_LEVEL::kFEATURE_LEVEL_11_0,
-      GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_1,
+      //GI_FEATURE_LEVEL::kFEATURE_LEVEL_11_0,
+      //GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_1,
       GI_FEATURE_LEVEL::kFEATURE_LEVEL_10_0
     };
 
@@ -402,7 +402,7 @@ namespace giEngineSDK {
     UINT offset = 0;
     m_devContext->IASetVertexBuffers(0, 
                                      1, 
-                                     &static_cast<CBufferDX*>(inBuffer)->m_buffer, 
+                                     &(static_cast<CBufferDX*>(inBuffer)->m_buffer),
                                      &inStride, 
                                      &offset);
   }

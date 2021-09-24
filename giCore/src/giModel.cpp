@@ -296,12 +296,26 @@ namespace giEngineSDK {
 
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
+      Vector<Texture> normalMaps = loadMaterialTextures(inModel,
+                                                         material,
+                                                         aiTextureType_NORMALS, 
+                                                         "texture_normal");
+
+      textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
       Vector<Texture> specularMaps = loadMaterialTextures(inModel,
                                                           material,
                                                           aiTextureType_SPECULAR, 
                                                           "texture_specular");
 
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+      Vector<Texture> roughnessMaps = loadMaterialTextures(inModel,
+                                                          material,
+                                                          aiTextureType_SHININESS, 
+                                                          "texture_shininess");
+
+      textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
 
     }
 
