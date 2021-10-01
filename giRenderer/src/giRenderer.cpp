@@ -97,7 +97,7 @@ namespace giEngineSDK {
     tmpConstantEveryFrame.mWorld.m_xColumn.x = 0.05f;
     tmpConstantEveryFrame.mWorld.m_yColumn.y = 0.05f;
     tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;*/
-    tmpConstantEveryFrame.vMeshColor = m_meshColor;
+    //tmpConstantEveryFrame.vMeshColor = m_meshColor;
 
 
     //Create Constant Buffer for Change Every Frame
@@ -310,10 +310,10 @@ namespace giEngineSDK {
     m_pixelShaderShadow = gapi.createPS("Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
 
     //Create the texture
-    m_ShadowTexture.push_back(gapi.createTex2D(1920, 
-                                               1080, 
+    m_ShadowTexture.push_back(gapi.createTex2D(1024, 
+                                               1024, 
                                                1, 
-                                               GI_FORMAT::kFORMAT_R8_UNORM, 
+                                               GI_FORMAT::kFORMAT_R16_FLOAT, 
                                                GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
@@ -360,12 +360,12 @@ namespace giEngineSDK {
     m_inputLayoutLight = gapi.createIL(layoutDescLight, m_vertexShaderLight);
 
     //Create the texture
-    m_BlurTexture.push_back(gapi.createTex2D(1280,
+   /* m_BlurTexture.push_back(gapi.createTex2D(1280,
                                              720, 
                                              1,
                                              GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                              GI_BIND_FLAG::kBIND_RENDER_TARGET 
-                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));*/
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
@@ -400,6 +400,15 @@ namespace giEngineSDK {
     gapi.omSetRenderTarget(m_renderTargets,
                            gapi.getDefaultDephtStencil());
 
+
+                           //Clear the back buffer
+    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
+    gapi.clearRTV(gapi.getDefaultRenderTarget(), 
+                     ClearColor);
+    
+    //Clear the depth buffer to 1.0 (max depth)
+    gapi.clearDSV(gapi.getDefaultDephtStencil());
+
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayout);
 
@@ -413,14 +422,6 @@ namespace giEngineSDK {
     gapi.vsSetConstantBuffer(0, m_cBufferCamera);
     gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
     gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-
-    //Clear the back buffer
-    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-    gapi.clearRTV(gapi.getDefaultRenderTarget(), 
-                     ClearColor);
-    
-    //Clear the depth buffer to 1.0 (max depth)
-    gapi.clearDSV(gapi.getDefaultDephtStencil());
 
     //Draw models
     sgraph.draw();
@@ -454,6 +455,9 @@ namespace giEngineSDK {
 
 
     m_SAQ->drawModel();
+
+    gapi.psSetShaderResource(0, nullptr);
+    gapi.psSetShaderResource(1, nullptr);
 
     /************************************************************************/
     /*                           BlurH                                      */
@@ -560,6 +564,13 @@ namespace giEngineSDK {
     gapi.omSetRenderTarget(tmpVector,
                            gapi.getDefaultDephtStencil());
 
+    //Clear the texture to draw
+    gapi.clearRTV(gapi.getDefaultRenderTarget(),
+                  ClearColor);
+
+    //Clear the depth buffer to 1.0 (max depth)
+    gapi.clearDSV(gapi.getDefaultDephtStencil());
+
     //Set Input Layout
     gapi.aiSetInputLayout(m_inputLayoutLight);
 
@@ -569,10 +580,12 @@ namespace giEngineSDK {
 
     //Set Constant Buffers
     gapi.vsSetConstantBuffer(0, m_cBufferCamera);
-    gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-    gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-    gapi.vsSetConstantBuffer(2, m_cBufferLight);
-    gapi.psSetConstantBuffer(2, m_cBufferLight);
+    gapi.vsSetConstantBuffer(1, m_cBufferShadow);
+    gapi.psSetConstantBuffer(1, m_cBufferShadow);
+    gapi.vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+    gapi.psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
+    gapi.vsSetConstantBuffer(3, m_cBufferLight);
+    gapi.psSetConstantBuffer(3, m_cBufferLight);
 
     for (int32 i = 0; i < m_renderTargets.size(); ++i) {
       gapi.psSetShaderResource(i, m_renderTargets[i]);
@@ -581,12 +594,7 @@ namespace giEngineSDK {
     gapi.psSetShaderResource(3, m_SSAOTexture[0]);
     gapi.psSetShaderResource(4, m_ShadowTexture[0]);
 
-    //Clear the texture to draw
-    gapi.clearRTV(gapi.getDefaultRenderTarget(),
-                  ClearColor);
-
-    //Clear the depth buffer to 1.0 (max depth)
-    gapi.clearDSV(gapi.getDefaultDephtStencil());
+    
     
 
     //gapi.psSetShaderResource(0, m_BlurTexture[0]);
@@ -598,6 +606,7 @@ namespace giEngineSDK {
     }
 
     gapi.psSetShaderResource(3, nullptr);
+    gapi.psSetShaderResource(4, nullptr);
 
   }
   

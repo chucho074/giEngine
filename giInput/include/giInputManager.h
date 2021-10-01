@@ -19,10 +19,10 @@
 namespace giEngineSDK {
   enum Button
   {
-    ButtonMenu,
-    ButtonConfirm,
-    MouseX,
-    MouseY
+    FrontMovement,
+    BackMovement,
+    LeftMovement,
+    RightMovement
   };
 
   class Input : BaseInput
@@ -57,6 +57,9 @@ namespace giEngineSDK {
     runEvents();
 
    private:
+
+    bool front, back, left, right = false;
+
     //
     gainput::InputManager m_manager;
     //

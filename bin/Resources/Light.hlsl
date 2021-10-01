@@ -5,6 +5,7 @@ Texture2D AOTexture   : register (t3);
 Texture2D ShadTexture : register (t4);
 
 SamplerState SamplState  : register (s0);
+SamplerState SamplState2 : register (s1);
 
 cbuffer CameraBuffer : register(b0)
 {
@@ -86,65 +87,73 @@ PS_INPUT vs_main( VS_INPUT Input )
 
 float4 ps_main(PS_INPUT Input) : SV_TARGET0
 {
-   float gamma = 2.2f;
-   //Positions
-   float4 posWorld = float4(PosTexture.Sample(SamplState, Input.TexCoord).xyz, 1);
-   //Normals
-   float4 normal = NormTexture.Sample(SamplState, Input.TexCoord);
-   float roughness = normal.w;
-   normal.w = 0.0f;
-   float4 diffuse = DiffTexture.Sample(SamplState, Input.TexCoord);
-   diffuse.xyz = pow(diffuse.xyz,  gamma);
-   float metalic = diffuse.w;
-   diffuse.w = 1.0f;
-   //float4 emissive = pow(EmisTexture.Sample(SamplState, Input.TexCoord), gamma);
-   //Ambient Occlusion
-   float ao = AOTexture.Sample(SamplState, Input.TexCoord).r;
-   //Specular
-   float3 specular = lerp(0.04f, diffuse.xyz, metalic);
-   //Light Dir
-   float4 viewLightDir = mul(float4(LightPos0, 1.0f), posWorld);
-   float3 viewViewDir = mul(ViewPos, posWorld);
+  float gamma = 2.2f;
+  matrix matWV = mul(View, World);
 
-   float3 LightDir = normalize(viewLightDir.xyz - posWorld.xyz);
-   float3 viewDir = normalize(viewViewDir.xyz - posWorld.xyz);
-   //Diffuse Light 
-   //float DiffuseLightIntensity = max(0.0f, dot(LightDir, normal.xyz)) * LightIntensity0;
-   float NdL = max(0.0f, dot(normal.xyz, LightDir));
-   float NdV = max(0.001f, dot(normal.xyz, viewDir));
-   
-   float3 H = normalize(viewDir + LightDir);
-   float E = 0.001f; 
-   float NdH = max(E, dot(normal, H));
-   float HdL = saturate(dot(H, LightDir));
-   float HdV = saturate(dot(H, viewDir));
-	
-   float3 Reflect = normalize(reflect(-viewDir, normal));
-   
-   float D = ndf_GGX(NdH, roughness);
-   float3 F = fresnelSchlick(specular, HdL);
-   float G = ga_SchlickGGX(NdL, NdV, roughness);
-	
-   float3 specu = (D * F * G) / max(0.00001, (NdL * NdV * 4.0f));
-	
-   //Shadows
-   float shadow = 1.0f;
-   float4 shadowPosition = mul(posWorld, InverseView);
-   float4 shadow_W = mul(float4(shadowPosition.xyz, 1.0f), ViewShadow);
-   float4 shadowPosClip = mul(shadow_W, ProjectionShadow);
-   shadowPosClip /= shadowPosClip.w;
-   
-   float2 shadowTexCoord = shadowPosClip.xy;
-   
-   shadowTexCoord.y = 1 - shadowTexCoord.y;
-	
-   float depth = ShadTexture.Sample(SamplState, shadowTexCoord).x;
-   
-   //return float4();
-   //return float4(pow(diffuse.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
-   //return float4(pow(((diffuse.xyz * NdL * LightIntensity0) + (specu)) /** ao*/, 1.0f/gamma), 1);
-   //return float4(pow(((diffuse.xyz * NdL * LightIntensity0) + (specu)), 1.0f/gamma), 1);
-   return float4(pow((((1-shadow) * (diffuse.xyz * NdL * LightIntensity0)) + (specu)) * ao, 1.0f/gamma), 1);
-   //return float4(diffuse.xyz, 1);
+  //Positions
+  float4 posWorld = float4(PosTexture.Sample(SamplState, Input.TexCoord).xyz, 1.0f);
+  //Normals
+  float4 normal = NormTexture.Sample(SamplState, Input.TexCoord);
+  float roughness = normal.w;
+  normal.w = 0.0f;
+  //Albedo
+  float4 albedo = DiffTexture.Sample(SamplState, Input.TexCoord);
+  albedo.xyz = pow(albedo.xyz,  gamma).xyz;
+  float metalic = albedo.w;
+  albedo.w = 1.0f;
+  //float4 emissive = pow(EmisTexture.Sample(SamplState, Input.TexCoord), gamma);
+  //Ambient Occlusion
+  float ao = AOTexture.Sample(SamplState, Input.TexCoord).r;
+  //Specular
+  float3 specular = lerp(0.04f, albedo.xyz, metalic);
+  //Light Dir
+  float4 viewLightDir = mul(float4(LightPos0, 1.0f), matWV);
+  float3 viewViewDir = mul(ViewPos, matWV);
+
+  float3 LightDir = normalize(viewLightDir.xyz - posWorld.xyz);
+  float3 viewDir = normalize(viewViewDir.xyz - posWorld.xyz);
+  //Diffuse Light 
+  //float DiffuseLightIntensity = max(0.0f, dot(LightDir, normal.xyz)) * LightIntensity0;
+  float NdL = max(0.0f, dot(normal.xyz, LightDir));
+  float NdV = max(0.001f, dot(normal.xyz, viewDir));
+  
+  float3 H = normalize(viewDir + LightDir);
+  float E = 0.001f; 
+  float NdH = max(E, dot(normal, H));
+  float HdL = saturate(dot(H, LightDir));
+  float HdV = saturate(dot(H, viewDir));
+
+  float3 Reflect = normalize(reflect(-viewDir, normal));
+  
+  float D = ndf_GGX(NdH, roughness);
+  float3 F = fresnelSchlick(specular, HdL);
+  float G = ga_SchlickGGX(NdL, NdV, roughness);
+
+  float3 specu = (D * F * G) / max(0.00001, (NdL * NdV * 4.0f));
+
+  //Shadows
+  float shadow = 1.0f;
+  float4 shadowPosition = mul(posWorld, InverseView);
+  float4 shadow_W = mul(float4(shadowPosition.xyz, 1.0f), ViewShadow);
+  float4 shadowPosClip = mul(shadow_W, ProjectionShadow);
+  shadowPosClip /= shadowPosClip.w;
+  
+  float3 shadowTexCoord = 0.5 + (shadowPosClip.xyz * 0.5);
+  
+  shadowTexCoord.y = 1 - shadowTexCoord.y;
+
+  float depth = ShadTexture.Sample(SamplState2, shadowTexCoord.xy).x;
+  
+  float lastDepth = shadowTexCoord.z;
+  shadow = lastDepth + 0.1 > depth ? 0.0f : 1.0f;
+
+  return float4(viewLightDir.xyz, 1.0f);
+  //return float4(pow(albedo.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
+  //return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)) /** ao*/, 1.0f/gamma), 1);
+  return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)), 1.0f/gamma), 1);
+  /*return float4(pow((((1-shadow) * 
+                (albedo.xyz * NdL * LightIntensity0)) 
+                 + (specu)) * ao, 1.0f/gamma), 1);*/
+  //return float4(albedo.xyz, 1);
 
 }

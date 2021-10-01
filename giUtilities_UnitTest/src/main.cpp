@@ -239,7 +239,9 @@ TEST(MatrixTest, MatixTest) {
   //Matrix Multpily test
   result = A * B;
   auto multiply = result.m_wColumn.w;
-  EXPECT_EQ(multiply, 386);
+  auto multiply2 = result.m_xColumn.x;
+  EXPECT_EQ(multiply, 80);
+  EXPECT_EQ(multiply2, 386);
   
   //Matrix Decrement test
   result = A - B;

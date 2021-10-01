@@ -48,39 +48,40 @@ namespace giEngineSDK {
 
   void 
   Input::setButtons() {
-    m_inputMap->MapBool(ButtonMenu, keyboardId, gainput::KeyEscape);
-    m_inputMap->MapBool(ButtonConfirm, mouseId, gainput::MouseButtonLeft);
-    m_inputMap->MapBool(ButtonConfirm, padId, gainput::PadButtonA);
-    m_inputMap->MapFloat(MouseX, mouseId, gainput::MouseAxisX);
-    m_inputMap->MapFloat(MouseY, mouseId, gainput::MouseAxisY);
+    m_inputMap->MapBool(FrontMovement, keyboardId, gainput::KeyW);
+    m_inputMap->MapBool(BackMovement,  keyboardId, gainput::KeyS);
+    m_inputMap->MapBool(LeftMovement,  keyboardId, gainput::KeyA);
+    m_inputMap->MapBool(RightMovement, keyboardId, gainput::KeyD);
+    
   }
 
   void 
   Input::runEvents() {
     // Check button states
-    if (m_inputMap->GetBoolWasDown(ButtonConfirm))
-    {
-      gainput::InputDevicePad* pad = static_cast<gainput::InputDevicePad*>(m_manager.GetDevice(padId));
-      pad->Vibrate(1.0f, 0.0f);
+    if (m_inputMap->GetBoolWasDown(FrontMovement)) {
+      front = false;
     }
-    if (m_inputMap->GetBoolWasDown(ButtonMenu))
-    {
-      gainput::InputDevicePad* pad = static_cast<gainput::InputDevicePad*>(m_manager.GetDevice(padId));
-      pad->Vibrate(0.0f, 0.0f);
+    if (m_inputMap->GetBoolWasDown(BackMovement)) {
+      back = false;
     }
-
-    if (m_inputMap->GetBoolWasDown(ButtonMenu))
-    {
-      cout << "Open Menu!!\n";
+    if (m_inputMap->GetBoolWasDown(LeftMovement)) {
+      left = false;
     }
-    if (m_inputMap->GetBoolWasDown(ButtonConfirm))
-    {
-      std::cout << "Confirmed!!\n";
+    if (m_inputMap->GetBoolWasDown(RightMovement)) {
+      right = false;
     }
 
-    if (m_inputMap->GetFloatDelta(MouseX) != 0.0f || m_inputMap->GetFloatDelta(MouseY) != 0.0f)
-    {
-      std::cout << "Mouse: %f, %f\n", m_inputMap->GetFloat(MouseX), m_inputMap->GetFloat(MouseY);
+    if (m_inputMap->GetBoolIsNew(FrontMovement)) {
+      front = true;
+    }
+    if (m_inputMap->GetBoolIsNew(BackMovement)) {
+      back = true;
+    }
+    if (m_inputMap->GetBoolIsNew(LeftMovement)) {
+      left = true;
+    }
+    if (m_inputMap->GetBoolIsNew(RightMovement)) {
+      right = true;
     }
   }
 

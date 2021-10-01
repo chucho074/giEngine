@@ -263,10 +263,10 @@ namespace giEngineSDK {
                                  m_wColumn.x * (m_xColumn.y * m_yColumn.z -m_xColumn.z * m_yColumn.y));
       //w
       Result.m_wColumn.x = -RDet * Det3;
-      Result.m_wColumn.w =  RDet * (m_xColumn.x * tmpMat.m_wColumn.x -
+      Result.m_wColumn.y =  RDet * (m_xColumn.x * tmpMat.m_wColumn.x -
                                  m_yColumn.x * tmpMat.m_wColumn.y +
                                  m_zColumn.x * tmpMat.m_wColumn.z);
-      Result.m_wColumn.w = -RDet * (m_xColumn.x * (m_yColumn.y * m_zColumn.w - m_yColumn.w * m_zColumn.y) -
+      Result.m_wColumn.z = -RDet * (m_xColumn.x * (m_yColumn.y * m_zColumn.w - m_yColumn.w * m_zColumn.y) -
                                  m_yColumn.x * (m_xColumn.y * m_zColumn.w - m_xColumn.w * m_zColumn.y) +
                                  m_zColumn.x * (m_xColumn.y * m_yColumn.w - m_xColumn.w * m_yColumn.y));
       Result.m_wColumn.w =  RDet * (m_xColumn.x * (m_yColumn.y * m_zColumn.z - m_yColumn.z * m_zColumn.y) -
@@ -275,7 +275,7 @@ namespace giEngineSDK {
     }
      
     
-    return Result;
+    return Result.transpose();
   }
 
   float
@@ -390,7 +390,10 @@ namespace giEngineSDK {
     m_xColumn = { Axis[0].x, Axis[1].x, Axis[2].x, 0 };
     m_yColumn = { Axis[0].y, Axis[1].y, Axis[2].y, 0 };
     m_zColumn = { Axis[0].z, Axis[1].z, Axis[2].z, 0 };
-    m_wColumn = { Axis[0].dotProd(negativePosition), Axis[1].dotProd(negativePosition), Axis[2].dotProd(negativePosition), 1 };
+    m_wColumn = { Axis[0].dotProd(negativePosition), 
+                  Axis[1].dotProd(negativePosition), 
+                  Axis[2].dotProd(negativePosition), 
+                  1 };
   }
 
 

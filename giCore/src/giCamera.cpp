@@ -101,6 +101,7 @@ namespace giEngineSDK {
     m_eye = inVect;
     m_at = inVect2;
     m_up = inVect3;
+    updateData();
   }
   
   Matrix4 

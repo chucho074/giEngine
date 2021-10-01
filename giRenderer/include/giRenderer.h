@@ -40,7 +40,7 @@ namespace giEngineSDK {
    */
   struct CBChangesEveryFrame {
     Matrix4 mWorld;
-    Vector4 vMeshColor;
+    //Vector4 vMeshColor;
   };
 
 
