@@ -426,10 +426,10 @@ namespace giEngineSDK {
      * @brief    Set the object of the Graphics API.
      * @param    inAPI   The api to set.
      */
-    void
+   /* void
     setObject(GraphicsAPI * inAPI) {
        GraphicsAPI::_instance() = inAPI;
-     }
+    }*/
   };
   
   GI_CORE_EXPORT GraphicsAPI& 

@@ -95,6 +95,13 @@ namespace giEngineSDK {
     
     m_viewMatrix = Axis * Pos;
   }
+
+  void 
+  Camera::setPosition(Vector4 inVect, Vector4 inVect2, Vector4 inVect3) {
+    m_eye = inVect;
+    m_at = inVect2;
+    m_up = inVect3;
+  }
   
   Matrix4 
   Camera::getViewMatrix() {

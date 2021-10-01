@@ -15,10 +15,6 @@
 #include <giModule.h>
 #include <giModel.h>
 
-//namespace giEngineSDK {
-//  class Model;
-//}
-
 namespace giEngineSDK {
   class BaseRenderer : public Module<BaseRenderer>
   {
@@ -52,10 +48,10 @@ namespace giEngineSDK {
      * @brief    Set the object of the Graphics API.
      * @param    inAPI   The api to set.
      */
-    void
+    /*void
     setObject(BaseRenderer* inRenderer) {
       BaseRenderer::_instance() = inRenderer;
-     }
+     }*/
   };
 
   GI_CORE_EXPORT BaseRenderer& 

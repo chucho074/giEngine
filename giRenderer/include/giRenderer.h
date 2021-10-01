@@ -63,6 +63,8 @@ namespace giEngineSDK {
   struct LightConstantBuffer {
     Vector3 LightPos;
     float LightIntensity;
+    Vector4 ViewPos;
+    Matrix4 InverseView;
   };
 
   /**
@@ -175,6 +177,17 @@ namespace giEngineSDK {
 
     Buffer* m_cBufferBlur = nullptr;
 
+    //Shadows
+    //The Vertex Shader
+    BaseVertexShader* m_vertexShaderShadow = nullptr;
+    //The Pixel Shader
+    BasePixelShader* m_pixelShaderShadow = nullptr;
+    //The texture
+    Vector<Texture2D*> m_ShadowTexture;
+    //The buffer
+    Buffer* m_cBufferShadow = nullptr;
+    //Camera
+    Camera m_ShadowCamera;
 
     //Light
     //The Vertex Shader

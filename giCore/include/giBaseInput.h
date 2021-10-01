@@ -11,20 +11,37 @@
  * @include
  */
 #pragma once
-#include <giPrerequisitesUtilities.h>
+#include <giPrerequisitesCore.h>
+#include <giModule.h>
 
 namespace giEngineSDK {
-  class BaseInput 
+  class BaseInput : public Module<BaseInput>
   {
    public:
     //Desfault Constructor
-    BaseInput();
+    BaseInput() = default;
     //Destructor
-    ~BaseInput();
+    ~BaseInput() = default;
 
-   protected:
-   	
-   private:
+    virtual void 
+    init() {}
+
+    virtual void
+    createInputDevice() {}
+
+    virtual void
+    update() {}
+
+    virtual void
+    updateSize(int inWidth, int inHeight) {}
+
+    virtual void
+    sendEvent() {}
 
   };
-};
+  GI_CORE_EXPORT BaseInput& 
+  g_inputManager();
+
+  //For load the DLL
+  using funCreateInputManager = BaseInput * (*)();
+}

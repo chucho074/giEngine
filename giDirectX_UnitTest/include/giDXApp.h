@@ -105,7 +105,7 @@ class DirectXApp : public BaseApp {
    * @bug    No known Bugs.
    */
   void 
-  onEvent(Event inEvent) override;
+  onEvent(MSG inMsg) override;
 
  private:
 

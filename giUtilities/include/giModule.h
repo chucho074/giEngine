@@ -186,6 +186,17 @@ namespace giEngineSDK {
       static bool inst = false;
       return inst;
     }
+
+   public:
+    /**
+     * @brief    Set the object of the Graphics API.
+     * @param    inAPI   The api to set.
+     */
+    template<typename T>
+    void
+    setObject(T * inObject) {
+      T::_instance() = inObject;
+    }
   };
 }
 

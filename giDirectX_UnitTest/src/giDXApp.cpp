@@ -114,8 +114,10 @@ DirectXApp::onRender() {
 
 
 void 
-DirectXApp::onEvent(Event inEvent) {
+DirectXApp::onEvent(MSG inMsg) {
   
+  //g_
+
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {
   //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||

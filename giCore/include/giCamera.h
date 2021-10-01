@@ -64,6 +64,13 @@ namespace giEngineSDK {
      */
     void 
     move(Vector4 inVect);
+    
+    /**
+     * @brief   Apply a new camera position.
+     * @param   inVect   The position to set the camera.
+     */
+    void 
+    setPosition(Vector4 inVect1, Vector4 inVect2, Vector4 inVect3);
 
     /**
      * @brief   Update and get the View Matrix.

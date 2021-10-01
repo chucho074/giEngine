@@ -15,6 +15,14 @@
 #include <giBaseInput.h>
 #include <gainput/gainput.h>
 
+enum Button
+{
+  ButtonMenu,
+  ButtonConfirm,
+  MouseX,
+  MouseY
+};
+
 namespace giEngineSDK {
   class Input : BaseInput
   {
@@ -36,12 +44,33 @@ namespace giEngineSDK {
 
     void
     updateSize(int inWidth, int inHeight);
+
+    void
+    sendEvent();
+
    protected:
-  	
+  	void 
+    setButtons();
+
    private:
     //
-    gainput::InputManager Manager;
+    gainput::InputManager m_manager;
     //
-    gainput::InputMap InputMap;
+    gainput::InputMap * m_inputMap;
+
+    gainput::DeviceId mouseId;
+
+    gainput::DeviceId keyboardId;
+    
+    gainput::DeviceId padId;
   };
+
+  /**
+   * @brief   Create the Input Manager with a dll.
+   */
+  extern "C" GI_PLUGIN_EXPORT Input *
+    createInputManager() {
+    auto in = new Input();
+    return in;
+  }
 }

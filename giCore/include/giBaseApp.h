@@ -20,11 +20,12 @@
 #include "giBaseGraphicsAPI.h"
 #include "giBaseRenderer.h"
 #include "giSceneGraph.h"
+#include "giBaseInput.h"
 
 
-#include <iostream>         //Delete this
-#include <io.h>             //Delete this
-#include <fcntl.h>          //Delete this
+//#include <iostream>         //Delete this
+//#include <io.h>             //Delete this
+//#include <fcntl.h>          //Delete this
 
 using namespace giEngineSDK;
 
@@ -32,7 +33,6 @@ using sf::VideoMode;
 using sf::Window;
 using sf::WindowBase;
 using sf::WindowHandle;
-using sf::Event;
 
 /**
  * @class    BaseApp.
@@ -95,7 +95,7 @@ class GI_CORE_EXPORT BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(Event) {};
+  onEvent(MSG inMsg) {};
 
  private:
   /**
@@ -119,6 +119,13 @@ class GI_CORE_EXPORT BaseApp
    */
   void 
   render();
+  
+  /**
+   * @brief    Method that draw the information Not Modified Func.
+   * @bug      No known Bugs.
+   */
+  void 
+  event(MSG inMsg);
 
   /**
    * @brief    Method that initialize the modules and plug-ins for the engine.
@@ -161,6 +168,8 @@ class GI_CORE_EXPORT BaseApp
 
   LibraryLoader m_loaderRenderer;
 
+  LibraryLoader m_loaderInput;
+
   GraphicsAPI* m_gapi = nullptr;
 
   BaseRenderer* m_renderer = nullptr;
@@ -170,4 +179,6 @@ class GI_CORE_EXPORT BaseApp
   Time * m_time = nullptr;
 
   Logger * m_logger = nullptr;
+
+  BaseInput * m_inputManager = nullptr;
 };

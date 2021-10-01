@@ -33,6 +33,16 @@ namespace giEngineSDK {
                       0.01f, 
                       1000.0f);
 
+    //Initialize Shadow Camera
+    m_ShadowCamera.init(Degrees(75.0f).getRadians(), 
+                        1920 / 1080, 
+                        0.01f, 
+                        1000.0f);
+
+    m_ShadowCamera.setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
+                               { 0.0f, 1.0f, 0.0f, 0.0f },
+                               { 0.0f, 1.0f,  0.0f, 0.0f });
+
     //Create Sampler
     SamplerDesc sampDesc;
     sampDesc.filter = 21;
@@ -44,7 +54,7 @@ namespace giEngineSDK {
     sampDesc.maxLOD = 3.402823466e+38f;
     m_sampler = gapi.createSampler(sampDesc);
 
-
+    //Main Camera
     //Sets the view matrix
     CameraConstantBuffer tmpConstantCamera;
     tmpConstantCamera.mView = m_mainCamera.getViewMatrix().transpose();
@@ -61,7 +71,26 @@ namespace giEngineSDK {
     gapi.updateSubresource(m_cBufferCamera, 
                            &tmpConstantCamera, 
                            sizeof(tmpConstantCamera));
+
+    //Shadow Camera
     
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantShadowCamera;
+    tmpConstantShadowCamera.mView = m_ShadowCamera.getViewMatrix().transpose();
+
+    //Sets the projection matrix
+    tmpConstantShadowCamera.mProjection = m_ShadowCamera.getProyectionMatrix().transpose();
+
+    //Create Constant Buffer for Camera
+    m_cBufferShadow = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                        4,
+                                        0,
+                                        nullptr);
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferShadow,
+                           &tmpConstantShadowCamera,
+                           sizeof(tmpConstantShadowCamera));
+
     // Update variables that change once per frame
     CBChangesEveryFrame tmpConstantEveryFrame;
     tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;/*
@@ -69,6 +98,7 @@ namespace giEngineSDK {
     tmpConstantEveryFrame.mWorld.m_yColumn.y = 0.05f;
     tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;*/
     tmpConstantEveryFrame.vMeshColor = m_meshColor;
+
 
     //Create Constant Buffer for Change Every Frame
     m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
@@ -154,24 +184,28 @@ namespace giEngineSDK {
     
     
     //Create the textures
+    
     //Positions
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Normales
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Albedo
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                               GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
 
     /************************************************************************/
@@ -212,11 +246,12 @@ namespace giEngineSDK {
     //Create the Input Layout
     m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
 
-    m_SSAOTexture.push_back(gapi.createTex2D(512,
-                                             512, 
+    m_SSAOTexture.push_back(gapi.createTex2D(1280,
+                                             720, 
                                              1,
                                              GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                             GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     
     for (int32 i = 0; i < 7; ++i) {
@@ -248,20 +283,45 @@ namespace giEngineSDK {
 
 
     //Create the texture
-    m_BlurTexture.push_back(gapi.createTex2D(256,
-                            256, 
-                            1,
-                            GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+    m_BlurTexture.push_back(gapi.createTex2D(1280,
+                                             720,
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
+    //Set the Constant buffer data
     BlurConstantBuffer Blurcb;
     Blurcb.Gamma = 1;
-    Blurcb.Viewport.x = 256;
-    Blurcb.Viewport.y = 256;
+    Blurcb.Viewport.x = 1280;
+    Blurcb.Viewport.y = 720;
     m_cBufferBlur = gapi.createBuffer(sizeof(BlurConstantBuffer),
                                       4, 
                                       0, 
                                       &Blurcb);
+
+    /************************************************************************/
+    /*                              SHADOWS                                 */
+    /************************************************************************/
+    //Create Vertex Shader
+    m_vertexShaderShadow = gapi.createVS("Resources/Shadow.hlsl", "vs_Shadow", "vs_4_0");
+    
+    //Create Pixel Shader
+    m_pixelShaderShadow = gapi.createPS("Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
+
+    //Create the texture
+    m_ShadowTexture.push_back(gapi.createTex2D(1920, 
+                                               1080, 
+                                               1, 
+                                               GI_FORMAT::kFORMAT_R8_UNORM, 
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+    //Pasar la textura al pase de iluminacion o textura de sombras, pasar la info de la camara de vista y la camara de sombras para 
+    //pasar la inversa de la matriz de vista de la camara de sombras, agarrar las posiciones, convertirlas a espacio de vista de la luz
+    //y luego pasarlos a espacio de proyeccion (multiplicar por sus matrices, clip) sacar las coords de textura y ponerlas en terminos de entre 0 y 1
+    //Operacion -> 0.5+ Posiciones * 0.5, samplear la textura, pasar el sampler y poner en X y Y con los valores de la operacion
+
 
     /************************************************************************/
     /*                               LIGHT                                  */
@@ -301,28 +361,28 @@ namespace giEngineSDK {
 
     //Create the texture
     m_BlurTexture.push_back(gapi.createTex2D(1280,
-                            720, 
-                            1,
-                            GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                            GI_BIND_FLAG::kBIND_RENDER_TARGET | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                             720, 
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
     Lightcb.LightPos.x = 360;
     Lightcb.LightPos.y = 280;
     Lightcb.LightPos.z = -200;
+    Lightcb.ViewPos = m_mainCamera.m_viewMatrix.m_zColumn;
+    Lightcb.InverseView = m_mainCamera.m_viewMatrix.inverse();
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
-                                      4, 
-                                      0, 
+                                      4,
+                                      0,
                                       &Lightcb);
     
     
     m_SAQ = make_shared<Model>();
 
     m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
-
-    
-    
 
 
   }
@@ -397,7 +457,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurH                                      */
-    /************************************************************************
+    /************************************************************************/
     //Set Render Targets
     gapi.omSetRenderTarget(m_BlurTexture,
                            nullptr);
@@ -427,7 +487,7 @@ namespace giEngineSDK {
 
     /************************************************************************/
     /*                           BlurV                                      */
-    /************************************************************************
+    /************************************************************************/
     //Set Render Targets
     gapi.omSetRenderTarget(m_SSAOTexture,
                            nullptr);
@@ -454,6 +514,40 @@ namespace giEngineSDK {
 
     gapi.psSetShaderResource(0, nullptr);
     gapi.psSetShaderResource(1, nullptr);
+
+    /************************************************************************/
+    /*                           Shadow                                     */
+    /************************************************************************/
+
+    //gapi.createVP();
+
+    //Set Render Targets
+    gapi.omSetRenderTarget(m_ShadowTexture,
+                           nullptr);
+
+     //Clear the texture to draw
+    gapi.clearRTV(m_ShadowTexture[0],
+                  ClearColor);
+
+    //Set Input Layout
+    gapi.aiSetInputLayout(m_inputLayout);
+
+    //Set Shaders
+    gapi.vsSetShader(m_vertexShaderShadow);
+    gapi.psSetShader(m_pixelShaderShadow);
+
+    //Set Constant Buffers
+    gapi.vsSetConstantBuffer(0, m_cBufferShadow);
+    gapi.psSetConstantBuffer(0, m_cBufferShadow);
+
+    //Clear the depth buffer to 1.0 (max depth)
+    
+    //gapi.psSetShaderResource(0, m_renderTargets[0]);
+    //gapi.psSetShaderResource(1, m_renderTargets[1]);
+
+
+    sgraph.draw();
+    //m_SAQ->drawModel();
 
     /************************************************************************/
     /*                           Light                                      */
@@ -485,6 +579,7 @@ namespace giEngineSDK {
     }
 
     gapi.psSetShaderResource(3, m_SSAOTexture[0]);
+    gapi.psSetShaderResource(4, m_ShadowTexture[0]);
 
     //Clear the texture to draw
     gapi.clearRTV(gapi.getDefaultRenderTarget(),

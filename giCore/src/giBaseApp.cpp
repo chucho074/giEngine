@@ -10,15 +10,18 @@
 /**
  * @include
  */
+#include <windows.h>
+#include <stdio.h>
 #include "giBaseApp.h"
 #include "giBaseGraphicsAPI.h"
 #include "giBaseRenderer.h"
+#include "giBaseInput.h"
+
 
 
 int32 
 BaseApp::run() {
 
-  
   //Create the main window
   createWindow();
 
@@ -33,15 +36,14 @@ BaseApp::run() {
 
   //App Loop
   while (m_window.isOpen()) {
-    Event eventsWnd;
-    while (m_window.pollEvent(eventsWnd)) {
-      if (eventsWnd.type == Event::Closed) {
-        m_window.close();
-        break;
-      }
-      
+    MSG msg;
+    HWND hWnd = m_window.getSystemHandle();
+    while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+
       //Eventos propios
-      onEvent(eventsWnd);
+      event(msg);
     }
 
 
@@ -100,6 +102,13 @@ BaseApp::render() {
 }
 
 void 
+BaseApp::event(MSG inMsg) {
+  
+
+  onEvent(inMsg);
+}
+
+void 
 BaseApp::initSystems() {
 
   //Get the window handle
@@ -125,6 +134,16 @@ BaseApp::initSystems() {
     BaseRenderer* renderer = createRenderer();
     g_renderer().setObject(renderer);
     m_renderer = &g_renderer();
+    
+  }
+  //Start the inputManager
+  if (m_loaderInput.loadPlugin("giInput_d.dll")) {
+    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
+
+    BaseInput::startUp();
+    BaseInput * input = createInputManager();
+    g_inputManager().setObject(input);
+    m_inputManager = &g_inputManager();
     
   }
 
