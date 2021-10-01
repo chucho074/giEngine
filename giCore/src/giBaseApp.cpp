@@ -10,8 +10,6 @@
 /**
  * @include
  */
-#include <windows.h>
-#include <stdio.h>
 #include "giBaseApp.h"
 #include "giBaseGraphicsAPI.h"
 #include "giBaseRenderer.h"
@@ -32,20 +30,29 @@ BaseApp::run() {
   //Send message to device
   onCreate();
 
+  m_inputManager->init();
+
   renderer.create();
 
   //App Loop
+  HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
     MSG msg;
-    HWND hWnd = m_window.getSystemHandle();
+    Event eventsWnd;
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
 
+      m_window.pollEvent(eventsWnd);
+      if (eventsWnd.type == Event::Closed) {
+        m_window.close();
+        break;
+      }
+
       //Eventos propios
       event(msg);
+      m_inputManager->runEvents();
     }
-
 
     //Update Time
     m_time->update();
@@ -104,7 +111,6 @@ BaseApp::render() {
 void 
 BaseApp::event(MSG inMsg) {
   
-
   onEvent(inMsg);
 }
 

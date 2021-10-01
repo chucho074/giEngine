@@ -13,6 +13,7 @@
 #pragma once
 #include <giPrerequisitesCore.h>
 #include <giModule.h>
+#include <windows.h>
 
 namespace giEngineSDK {
   class BaseInput : public Module<BaseInput>
@@ -36,8 +37,10 @@ namespace giEngineSDK {
     updateSize(int inWidth, int inHeight) {}
 
     virtual void
-    sendEvent() {}
-
+    sendEvent(MSG inMessage) {}
+    
+    virtual void 
+    runEvents() {}
   };
   GI_CORE_EXPORT BaseInput& 
   g_inputManager();

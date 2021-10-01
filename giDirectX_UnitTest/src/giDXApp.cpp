@@ -116,7 +116,7 @@ DirectXApp::onRender() {
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
-  //g_
+  g_inputManager().sendEvent(inMsg);
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {

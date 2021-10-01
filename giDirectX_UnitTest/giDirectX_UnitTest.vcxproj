@@ -154,7 +154,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core;$(SolutionDir)giRenderer/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core;$(SolutionDir)giRenderer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

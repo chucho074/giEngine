@@ -56,7 +56,7 @@ float DoAmbientOcclusion(in float2 tcoord, in float2 uv, in float3 p, in float3 
 
 VS_OUTPUT VS_SSAO(VS_INPUT inVS) {
   VS_OUTPUT output;
-  output.psPos = float4(inVS.msPos.xyz, 1.0f);
+  output.psPos = float4(inVS.msPos, 1.0f);
   output.TexCoord = inVS.TexCoord.xy;
   return output;
 }
@@ -69,9 +69,9 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   };
   
   float4 p = GetPosition(input.TexCoord);
-  if(p.w == 0.0f) {
-	return Output;
-  }
+  // if(p.w == 0.0f) {
+	// return Output;
+  // }
   //clip(p.w < 1.0f ? -1 : 1);
   
   float3 n = GetNormal(input.TexCoord);
@@ -81,7 +81,7 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   float rad = SampleRadius / p.z;
   
   int iterations = 4;
-  [unroll]
+  //[unroll]
   for (int j = 0; j < iterations; ++j) {
     float2 coord1 = reflect(vec[j], rand) * rad;
     float2 coord2 = float2(coord1.x * 0.707 - coord1.y * 0.707,
@@ -94,6 +94,6 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   }
   
   ao /= (iterations * 4);
-  Output.Color.rgb = 1 - ao.xxx;
+  Output.Color.rgb = float4( 1 - ao.xxx, 1);
   return Output;
 }

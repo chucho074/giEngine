@@ -11,6 +11,9 @@
  * @include
  */
 #include "giInputManager.h"
+#include <iostream>
+
+using std::cout;
 
 namespace giEngineSDK {
   void 
@@ -38,8 +41,9 @@ namespace giEngineSDK {
   }
 
   void 
-  Input::sendEvent() {
-    m_manager.HandleMessage();
+  Input::sendEvent(MSG inMessage) {
+    m_manager.HandleMessage(inMessage);
+    //runEvents();
   }
 
   void 
@@ -49,6 +53,35 @@ namespace giEngineSDK {
     m_inputMap->MapBool(ButtonConfirm, padId, gainput::PadButtonA);
     m_inputMap->MapFloat(MouseX, mouseId, gainput::MouseAxisX);
     m_inputMap->MapFloat(MouseY, mouseId, gainput::MouseAxisY);
+  }
+
+  void 
+  Input::runEvents() {
+    // Check button states
+    if (m_inputMap->GetBoolWasDown(ButtonConfirm))
+    {
+      gainput::InputDevicePad* pad = static_cast<gainput::InputDevicePad*>(m_manager.GetDevice(padId));
+      pad->Vibrate(1.0f, 0.0f);
+    }
+    if (m_inputMap->GetBoolWasDown(ButtonMenu))
+    {
+      gainput::InputDevicePad* pad = static_cast<gainput::InputDevicePad*>(m_manager.GetDevice(padId));
+      pad->Vibrate(0.0f, 0.0f);
+    }
+
+    if (m_inputMap->GetBoolWasDown(ButtonMenu))
+    {
+      cout << "Open Menu!!\n";
+    }
+    if (m_inputMap->GetBoolWasDown(ButtonConfirm))
+    {
+      std::cout << "Confirmed!!\n";
+    }
+
+    if (m_inputMap->GetFloatDelta(MouseX) != 0.0f || m_inputMap->GetFloatDelta(MouseY) != 0.0f)
+    {
+      std::cout << "Mouse: %f, %f\n", m_inputMap->GetFloat(MouseX), m_inputMap->GetFloat(MouseY);
+    }
   }
 
 }

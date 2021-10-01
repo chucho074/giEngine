@@ -88,12 +88,13 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
 {
    float gamma = 2.2f;
    //Positions
-   float4 posWorld = PosTexture.Sample(SamplState, Input.TexCoord);
+   float4 posWorld = float4(PosTexture.Sample(SamplState, Input.TexCoord).xyz, 1);
    //Normals
    float4 normal = NormTexture.Sample(SamplState, Input.TexCoord);
    float roughness = normal.w;
    normal.w = 0.0f;
-   float4 diffuse = pow(DiffTexture.Sample(SamplState, Input.TexCoord), gamma);
+   float4 diffuse = DiffTexture.Sample(SamplState, Input.TexCoord);
+   diffuse.xyz = pow(diffuse.xyz,  gamma);
    float metalic = diffuse.w;
    diffuse.w = 1.0f;
    //float4 emissive = pow(EmisTexture.Sample(SamplState, Input.TexCoord), gamma);
@@ -139,10 +140,11 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
 	
    float depth = ShadTexture.Sample(SamplState, shadowTexCoord).x;
    
-   //return float4(NdL.xxx, 1.0f);
+   //return float4();
    //return float4(pow(diffuse.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
    //return float4(pow(((diffuse.xyz * NdL * LightIntensity0) + (specu)) /** ao*/, 1.0f/gamma), 1);
-   return float4(pow(((diffuse.xyz * NdL * LightIntensity0) + (specu)) * ao, 1.0f/gamma), 1);
+   //return float4(pow(((diffuse.xyz * NdL * LightIntensity0) + (specu)), 1.0f/gamma), 1);
+   return float4(pow((((1-shadow) * (diffuse.xyz * NdL * LightIntensity0)) + (specu)) * ao, 1.0f/gamma), 1);
    //return float4(diffuse.xyz, 1);
 
 }

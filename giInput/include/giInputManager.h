@@ -14,16 +14,17 @@
 #include <giPrerequisitesUtilities.h>
 #include <giBaseInput.h>
 #include <gainput/gainput.h>
-
-enum Button
-{
-  ButtonMenu,
-  ButtonConfirm,
-  MouseX,
-  MouseY
-};
+#include <windows.h>
 
 namespace giEngineSDK {
+  enum Button
+  {
+    ButtonMenu,
+    ButtonConfirm,
+    MouseX,
+    MouseY
+  };
+
   class Input : BaseInput
   {
    public:
@@ -46,11 +47,14 @@ namespace giEngineSDK {
     updateSize(int inWidth, int inHeight);
 
     void
-    sendEvent();
+    sendEvent(MSG inMessage);
 
    protected:
   	void 
     setButtons();
+
+    void 
+    runEvents();
 
    private:
     //

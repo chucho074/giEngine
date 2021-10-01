@@ -94,7 +94,8 @@ namespace giEngineSDK {
     //Vector4 m_eye = { 0.0f, -8.0f, -6.0f, 1.0f };  //En posicion del mundo
     //Vector4 m_at = { 0.0f, 0.0f, 0.0f, 1.0f };  //En posicion del mundo
     //Vector4 m_up = { 0.0f, 1.0f, 0.0f, 1.0f };  //Up del mundo
-    Vector4 m_eye = { 100.0f,  -50.0f, -50.0f, 1.0f };  // En posicion del mundo
+    Vector4 m_eye = { 100.0f,  -50.0f, -180.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_up  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
     Matrix4 m_viewMatrix;

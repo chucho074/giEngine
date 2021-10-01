@@ -33,6 +33,7 @@ using sf::VideoMode;
 using sf::Window;
 using sf::WindowBase;
 using sf::WindowHandle;
+using sf::Event;
 
 /**
  * @class    BaseApp.
