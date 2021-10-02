@@ -95,6 +95,8 @@ namespace giEngineSDK {
   //template <typename T>
   using std::dynamic_pointer_cast;
 
+  using std::static_pointer_cast;
+
 
   //template <typename T>
   using std::make_shared;

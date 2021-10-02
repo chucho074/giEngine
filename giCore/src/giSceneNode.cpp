@@ -52,9 +52,11 @@ namespace giEngineSDK {
     else {
       for (auto nodes : m_childs) {
         auto tmpActor = nodes->getActorByName(inName);
-        auto tmpName = tmpActor->m_actorName;
-        if (inName == tmpName) {
-          return tmpActor;
+        if(nullptr != tmpActor) {
+          auto tmpName = tmpActor->m_actorName;
+          if (inName == tmpName) {
+            return tmpActor;
+          }
         }
       }
     }
@@ -72,9 +74,11 @@ namespace giEngineSDK {
     else {
       for (auto nodes : m_childs) {
         auto tmpListNodes = nodes->getNodesByParent(inParent);
-        if (inParent.lock()->m_parent.lock() == nodes->m_parent.lock()) {
+        
+        if (!tmpListNodes.empty() && (inParent.lock()->m_parent.lock() == nodes->m_parent.lock())) {
           return tmpListNodes;
         }
+        
       }
     }
     return m_childs;

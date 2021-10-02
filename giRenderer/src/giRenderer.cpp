@@ -27,21 +27,13 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
     
-    //Initialize Camera
-    m_mainCamera.init(Degrees(75.0f).getRadians(), 
-                      1280.f / 720.f, 
-                      0.01f, 
-                      1000.0f);
-
-    //Initialize Shadow Camera
-    m_ShadowCamera.init(Degrees(75.0f).getRadians(), 
-                        1920 / 1080, 
-                        0.01f, 
-                        1000.0f);
-
-    m_ShadowCamera.setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
-                               { 0.0f, 1.0f, 0.0f, 0.0f },
-                               { 0.0f, 1.0f,  0.0f, 0.0f });
+    //Get the main camera
+    auto& camera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+    m_mainCamera = static_pointer_cast<Camera>(camera);
+    //Get the Shadow Camera
+    
+    auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
+    m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
     //Create Sampler
     SamplerDesc sampDesc;
@@ -57,10 +49,10 @@ namespace giEngineSDK {
     //Main Camera
     //Sets the view matrix
     CameraConstantBuffer tmpConstantCamera;
-    tmpConstantCamera.mView = m_mainCamera.getViewMatrix().transpose();
+    tmpConstantCamera.mView = m_mainCamera->getViewMatrix().transpose();
 
     //Sets the projection matrix
-    tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix().transpose();
+    tmpConstantCamera.mProjection = m_mainCamera->getProyectionMatrix().transpose();
 
     //Create Constant Buffer for Camera
     m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
@@ -76,10 +68,10 @@ namespace giEngineSDK {
     
     //Sets the view matrix
     CameraConstantBuffer tmpConstantShadowCamera;
-    tmpConstantShadowCamera.mView = m_ShadowCamera.getViewMatrix().transpose();
+    tmpConstantShadowCamera.mView = m_ShadowCamera->getViewMatrix().transpose();
 
     //Sets the projection matrix
-    tmpConstantShadowCamera.mProjection = m_ShadowCamera.getProyectionMatrix().transpose();
+    tmpConstantShadowCamera.mProjection = m_ShadowCamera->getProyectionMatrix().transpose();
 
     //Create Constant Buffer for Camera
     m_cBufferShadow = gapi.createBuffer(sizeof(CameraConstantBuffer),
@@ -372,8 +364,8 @@ namespace giEngineSDK {
     Lightcb.LightPos.x = 360;
     Lightcb.LightPos.y = 280;
     Lightcb.LightPos.z = -200;
-    Lightcb.ViewPos = m_mainCamera.m_viewMatrix.m_zColumn;
-    Lightcb.InverseView = m_mainCamera.m_viewMatrix.inverse();
+    Lightcb.ViewPos = m_mainCamera->m_viewMatrix.m_zColumn;
+    Lightcb.InverseView = m_mainCamera->m_viewMatrix.inverse();
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       4,
                                       0,

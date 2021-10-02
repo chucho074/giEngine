@@ -11,6 +11,7 @@
  * @include
  */
 #include <giDegrees.h>
+#include <giCamera.h>
 #include "giDXApp.h"
 
 DirectXApp::DirectXApp() {
@@ -25,21 +26,40 @@ DirectXApp::DirectXApp() {
 void 
 DirectXApp::onCreate() {
 
+  //Sets the main camera
+  SharedPtr<Camera> mainCamera = make_shared<Camera>();
+  mainCamera->init(Degrees(75.0f).getRadians(),
+                   1280.f / 720.f,
+                   0.01f,
+                   1000.0f);
+  SharedPtr<Actor> cameraActor = make_shared<Actor>();
+  cameraActor->m_actorName = "MainCamera";
+  cameraActor->addComponent(mainCamera, COMPONENT_TYPE::kCamera);
+  m_sceneGraph->addActor(cameraActor, m_sceneGraph->getRoot());
 
+  //Sets Vela's model
   SharedPtr<Model> tmpModel = make_shared<Model>();
-
   tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
-
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
-
   modelComponent->setModel(tmpModel);
-
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
-
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-
+  tmpActor->m_actorName = "Vela";
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
+  //Sets the shadow camera
+  SharedPtr<Camera> shadowCamera = make_shared<Camera>();
+  shadowCamera->init(Degrees(75.0f).getRadians(),
+                     1280.f / 720.f,
+                     0.01f,
+                     1000.0f);
+  shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
+                            { 0.0f,   1.0f,    0.0f,   0.0f },
+                            { 0.0f,   1.0f,    0.0f,   0.0f });
+  SharedPtr<Actor> lightActor = make_shared<Actor>();
+  lightActor->m_actorName = "Light";
+  lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kCamera);
+  m_sceneGraph->addActor(lightActor, m_sceneGraph->getRoot());
 
   //Set Topology
   m_gapi->setTopology(GI_PRIMITIVE_TOPOLOGY::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);

@@ -21,7 +21,7 @@ namespace giEngineSDK {
    * @class   Camera. 
    * @brief   A basic uses for the camera.
    */
-  class GI_CORE_EXPORT Camera : Component
+  class GI_CORE_EXPORT Camera : public Component
   {
    public:
     ///Default Constructor

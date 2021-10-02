@@ -147,13 +147,13 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
   float lastDepth = shadowTexCoord.z;
   shadow = lastDepth + 0.1 > depth ? 0.0f : 1.0f;
 
-  return float4(viewLightDir.xyz, 1.0f);
+  //return float4(viewLightDir.xyz, 1.0f);
   //return float4(pow(albedo.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
   //return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)) /** ao*/, 1.0f/gamma), 1);
-  return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)), 1.0f/gamma), 1);
-  /*return float4(pow((((1-shadow) * 
+  //return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)), 1.0f/gamma), 1);
+  return float4(pow((((1-shadow) * 
                 (albedo.xyz * NdL * LightIntensity0)) 
-                 + (specu)) * ao, 1.0f/gamma), 1);*/
+                 + (specu)) * ao, 1.0f/gamma), 1);
   //return float4(albedo.xyz, 1);
 
 }

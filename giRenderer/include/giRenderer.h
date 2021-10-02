@@ -107,7 +107,7 @@ namespace giEngineSDK {
     setModels(Vector<SharedPtr<Model>> inModelList) override;
 
     //The main camera 
-    Camera m_mainCamera;
+    SharedPtr<Camera> m_mainCamera;
 
     //The Constant Buffer (Never Change)
     Buffer * m_cBufferCamera = nullptr;
@@ -122,12 +122,6 @@ namespace giEngineSDK {
 
     //The Sampler
     Sampler* m_sampler = nullptr;
-
-    //The Vertex Buffer
-    //Buffer * m_vertexBuffer = nullptr;
-
-    //The Index Buffer 
-    //Buffer * m_indexBuffer = nullptr;
 
     //The color For the mesh
     Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };
@@ -187,7 +181,7 @@ namespace giEngineSDK {
     //The buffer
     Buffer* m_cBufferShadow = nullptr;
     //Camera
-    Camera m_ShadowCamera;
+    SharedPtr<Camera> m_ShadowCamera;
 
     //Light
     //The Vertex Shader

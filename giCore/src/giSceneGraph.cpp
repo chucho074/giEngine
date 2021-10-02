@@ -19,6 +19,7 @@ namespace giEngineSDK {
     m_root = make_shared<SceneNode>();
     sceneActor = make_shared<Actor>();
     m_root->m_actor = sceneActor;
+    m_root->m_actor->m_actorName = "Root";
   }
 
   void 
@@ -27,6 +28,7 @@ namespace giEngineSDK {
     inActor->m_actorId = m_numActors;
     SharedPtr<SceneNode> tmpNode = make_shared<SceneNode>();
     tmpNode->m_actor = inActor;
+    tmpNode->m_parent = inParent;
     m_root->getNodesByParent(inParent).push_back(tmpNode);
   }
 
