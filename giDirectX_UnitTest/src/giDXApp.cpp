@@ -47,6 +47,16 @@ DirectXApp::onCreate() {
   tmpActor->m_actorName = "Vela";
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
+  //Sets plane model
+  SharedPtr<Model> tmpModelPlane = make_shared<Model>();
+  tmpModelPlane->loadFromFile("Resources/Models/plano.fbx");
+  SharedPtr<StaticMesh> modelComponentPlane = make_shared<StaticMesh>();
+  modelComponentPlane->setModel(tmpModelPlane);
+  SharedPtr<Actor> tmpActorPlane = make_shared<Actor>();
+  tmpActorPlane->addComponent(modelComponentPlane, COMPONENT_TYPE::kStaticMesh);
+  tmpActorPlane->m_actorName = "Plane";
+  m_sceneGraph->addActor(tmpActorPlane, m_sceneGraph->getRoot());
+
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
   shadowCamera->init(Degrees(75.0f).getRadians(),
