@@ -98,7 +98,28 @@ namespace giEngineSDK {
      * @brief    .
      */
     void
+    update() override;
+
+    /**
+     * @brief    .
+     */
+    void
     render() override;
+
+    /**
+     * 
+     */
+    void
+    renderData(Vector<Texture2D*> inRendertarget,
+               Texture2D* inDS,
+               InputLayout* inInputLayout,
+               BaseVertexShader* inVertexShader,
+               BasePixelShader* inPixelShader,
+               Sampler* inSampler,
+               Vector<Buffer*> inConstantBuffers,
+               Vector<Texture2D*> inShaderResources = Vector<Texture2D*>(),
+               bool inDrawSAQ = false, 
+               bool inClear = true);
 
     /**
      * @brief    .
@@ -112,10 +133,8 @@ namespace giEngineSDK {
     //The Constant Buffer (Never Change)
     Buffer * m_cBufferCamera = nullptr;
 
-
     //The Constant Buffer (Change Every Frame)
     Buffer * m_cBufferChangeEveryFrame = nullptr;
-
 
     //The input Layout
     InputLayout* m_inputLayout = nullptr;
@@ -192,6 +211,9 @@ namespace giEngineSDK {
     InputLayout* m_inputLayoutLight = nullptr;
     //The Constant Buffer
     Buffer* m_cBufferLight = nullptr;
+
+
+    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
   };
 
   /**

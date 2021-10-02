@@ -378,6 +378,11 @@ namespace giEngineSDK {
 
 
   }
+
+  void
+  Renderer::update() {
+    
+  }
   
   void 
   Renderer::render() {
@@ -388,218 +393,181 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_renderTargets,
-                           gapi.getDefaultDephtStencil());
+    Vector<Buffer*> tmpGbufferConstants;
 
+    tmpGbufferConstants.push_back(m_cBufferCamera);
+    tmpGbufferConstants.push_back(m_cBufferChangeEveryFrame);
 
-                           //Clear the back buffer
-    float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-    gapi.clearRTV(gapi.getDefaultRenderTarget(), 
-                     ClearColor);
-    
-    //Clear the depth buffer to 1.0 (max depth)
-    gapi.clearDSV(gapi.getDefaultDephtStencil());
-
-    //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayout);
-
-    //Set Shaders
-    gapi.vsSetShader(m_vertexShader);
-    gapi.psSetShader(m_pixelShader);
-
-    gapi.psSetSampler(0, 1, m_sampler);
-
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferCamera);
-    gapi.vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-    gapi.psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-
-    //Draw models
-    sgraph.draw();
+    renderData(m_renderTargets, 
+               gapi.getDefaultDephtStencil(),
+               m_inputLayout,
+               m_vertexShader,
+               m_pixelShader,
+               m_sampler,
+               tmpGbufferConstants);
 
     /************************************************************************/
     /*                           SSAO                                       */
     /************************************************************************/
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_SSAOTexture,
-                           nullptr);
+    Vector<Buffer*> tmpSSAOConstants;
+    tmpSSAOConstants.push_back(m_cBufferSSAO);
+    Vector<Texture2D*> tmpSSAOShaderResources;
+    tmpSSAOShaderResources.push_back(m_renderTargets[0]);
+    tmpSSAOShaderResources.push_back(m_renderTargets[1]);
 
-     //Clear the texture to draw
-    gapi.clearRTV(m_SSAOTexture[0],
-                  ClearColor);
-
-    //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutSSAO);
-
-    //Set Shaders
-    gapi.vsSetShader(m_vertexShaderSSAO);
-    gapi.psSetShader(m_pixelShaderSSAO);
-
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferSSAO);
-    gapi.psSetConstantBuffer(0, m_cBufferSSAO);
-
-    //Clear the depth buffer to 1.0 (max depth)
-    
-    gapi.psSetShaderResource(0, m_renderTargets[0]);
-    gapi.psSetShaderResource(1, m_renderTargets[1]);
-
-
-    m_SAQ->drawModel();
-
-    gapi.psSetShaderResource(0, nullptr);
-    gapi.psSetShaderResource(1, nullptr);
+    renderData(m_SSAOTexture,
+               nullptr,
+               m_inputLayoutSSAO,
+               m_vertexShaderSSAO,
+               m_pixelShaderSSAO,
+               nullptr,
+               tmpSSAOConstants,
+               tmpSSAOShaderResources,
+               true);
 
     /************************************************************************/
     /*                           BlurH                                      */
     /************************************************************************/
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_BlurTexture,
-                           nullptr);
+    Vector<Buffer*> tmpBlurHConstants;
+    tmpBlurHConstants.push_back(m_cBufferBlur);
 
-    //Clear the texture to draw
-    gapi.clearRTV(m_BlurTexture[0],
-                  ClearColor);
-
-    //Set Input Layout
-    //gapi.aiSetInputLayout(m_inputLayoutBlur);
-
-    //Set Shaders
-    //gapi.vsSetShader(m_vertexShaderSSAO);
-    gapi.psSetShader(m_pixelShaderBlurH);
-
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferBlur);
-    gapi.psSetConstantBuffer(0, m_cBufferBlur);
-
-    //Clear the depth buffer to 1.0 (max depth)
-
-    gapi.psSetShaderResource(0, m_SSAOTexture[0]);
-    m_SAQ->drawModel();
-
-    gapi.psSetShaderResource(0, nullptr);
-
+    renderData(m_BlurTexture,
+               nullptr,
+               nullptr,
+               nullptr,
+               m_pixelShaderBlurH,
+               nullptr,
+               tmpBlurHConstants,
+               m_SSAOTexture,
+               true);
 
     /************************************************************************/
     /*                           BlurV                                      */
     /************************************************************************/
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_SSAOTexture,
-                           nullptr);
+    Vector<Buffer*> tmpBlurVConstants;
+    tmpBlurVConstants.push_back(m_cBufferBlur);
 
-    //Clear the texture to draw
-    //gapi.clearRTV(m_SSAOTexture[0],
-    //              ClearColor);
-
-    //Set Input Layout
-    //gapi.aiSetInputLayout(m_inputLayoutBlur);
-
-    //Set Shaders
-    //gapi.vsSetShader(m_vertexShaderSSAO);
-    gapi.psSetShader(m_pixelShaderBlurV);
-
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferBlur);
-    gapi.psSetConstantBuffer(0, m_cBufferBlur);
-
-    //Clear the depth buffer to 1.0 (max depth)
-
-    gapi.psSetShaderResource(0, m_BlurTexture[0]);
-    m_SAQ->drawModel();
-
-    gapi.psSetShaderResource(0, nullptr);
-    gapi.psSetShaderResource(1, nullptr);
+    renderData(m_SSAOTexture,
+               nullptr,
+               nullptr,
+               nullptr,
+               m_pixelShaderBlurV,
+               nullptr,
+               tmpBlurVConstants,
+               m_BlurTexture,
+               true, 
+               false);
 
     /************************************************************************/
     /*                           Shadow                                     */
     /************************************************************************/
+    Vector<Buffer*> tmpShadowConstants;
+    tmpShadowConstants.push_back(m_cBufferShadow);
 
-    //gapi.createVP();
-
-    //Set Render Targets
-    gapi.omSetRenderTarget(m_ShadowTexture,
-                           nullptr);
-
-     //Clear the texture to draw
-    gapi.clearRTV(m_ShadowTexture[0],
-                  ClearColor);
-
-    //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayout);
-
-    //Set Shaders
-    gapi.vsSetShader(m_vertexShaderShadow);
-    gapi.psSetShader(m_pixelShaderShadow);
-
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferShadow);
-    gapi.psSetConstantBuffer(0, m_cBufferShadow);
-
-    //Clear the depth buffer to 1.0 (max depth)
+    renderData(m_ShadowTexture,
+               nullptr,
+               m_inputLayout,
+               m_vertexShaderShadow,
+               m_pixelShaderShadow,
+               nullptr,
+               tmpShadowConstants);
     
-    //gapi.psSetShaderResource(0, m_renderTargets[0]);
-    //gapi.psSetShaderResource(1, m_renderTargets[1]);
-
-
-    sgraph.draw();
-    //m_SAQ->drawModel();
 
     /************************************************************************/
     /*                           Light                                      */
     /************************************************************************/
-
-    //Set Render Targets
     Vector<Texture2D*> tmpVector;
     tmpVector.push_back(gapi.getDefaultRenderTarget());
+    Vector<Buffer*> tmpLightConstants;
+    tmpLightConstants.push_back(m_cBufferCamera);
+    tmpLightConstants.push_back(m_cBufferShadow);
+    tmpLightConstants.push_back(m_cBufferChangeEveryFrame);
+    tmpLightConstants.push_back(m_cBufferLight);
 
-    gapi.omSetRenderTarget(tmpVector,
-                           gapi.getDefaultDephtStencil());
+    Vector<Texture2D*> tmpLightShaderResources;
+    for(auto RT : m_renderTargets) {
+      tmpLightShaderResources.push_back(RT);
+    }
+    tmpLightShaderResources.push_back(m_SSAOTexture[0]);
+    tmpLightShaderResources.push_back(m_ShadowTexture[0]);
 
-    //Clear the texture to draw
-    gapi.clearRTV(gapi.getDefaultRenderTarget(),
-                  ClearColor);
+    renderData(tmpVector,
+               gapi.getDefaultDephtStencil(),
+               m_inputLayoutLight,
+               m_vertexShaderLight,
+               m_pixelShaderLight,
+               nullptr,
+               tmpLightConstants,
+               tmpLightShaderResources,
+               true);
+   
+  }
 
-    //Clear the depth buffer to 1.0 (max depth)
-    gapi.clearDSV(gapi.getDefaultDephtStencil());
+  void
+  Renderer::renderData(Vector<Texture2D*> inRenderTarget,
+                       Texture2D * inDS, 
+                       InputLayout * inInputLayout,
+                       BaseVertexShader * inVertexShader,
+                       BasePixelShader * inPixelShader,
+                       Sampler * inSampler, 
+                       Vector<Buffer*> inConstantBuffers,
+                       Vector<Texture2D*> inShaderResources,
+                       bool inDrawSAQ, 
+                       bool inClear) {
 
-    //Set Input Layout
-    gapi.aiSetInputLayout(m_inputLayoutLight);
+    auto& gapi = g_graphicsAPI();
 
-    //Set Shaders
-    gapi.vsSetShader(m_vertexShaderLight);
-    gapi.psSetShader(m_pixelShaderLight);
+    auto& sgraph = SceneGraph::instance();
 
-    //Set Constant Buffers
-    gapi.vsSetConstantBuffer(0, m_cBufferCamera);
-    gapi.vsSetConstantBuffer(1, m_cBufferShadow);
-    gapi.psSetConstantBuffer(1, m_cBufferShadow);
-    gapi.vsSetConstantBuffer(2, m_cBufferChangeEveryFrame);
-    gapi.psSetConstantBuffer(2, m_cBufferChangeEveryFrame);
-    gapi.vsSetConstantBuffer(3, m_cBufferLight);
-    gapi.psSetConstantBuffer(3, m_cBufferLight);
+    gapi.omSetRenderTarget(inRenderTarget, inDS);
 
-    for (int32 i = 0; i < m_renderTargets.size(); ++i) {
-      gapi.psSetShaderResource(i, m_renderTargets[i]);
+    if(inClear) {
+      gapi.clearRTV(inRenderTarget[0], ClearColor);
     }
 
-    gapi.psSetShaderResource(3, m_SSAOTexture[0]);
-    gapi.psSetShaderResource(4, m_ShadowTexture[0]);
-
-    
-    
-
-    //gapi.psSetShaderResource(0, m_BlurTexture[0]);
-    m_SAQ->drawModel();
-    
-
-    for (int32 i = 0; i < m_renderTargets.size(); ++i) {
-      gapi.psSetShaderResource(i, nullptr);
+    if(nullptr != inDS && inClear) {
+      gapi.clearDSV(inDS);
     }
 
-    gapi.psSetShaderResource(3, nullptr);
-    gapi.psSetShaderResource(4, nullptr);
+    if (nullptr != inInputLayout) {
+      gapi.aiSetInputLayout(inInputLayout);
+    }
 
+    if(nullptr != inVertexShader) {
+      gapi.vsSetShader(inVertexShader);
+    }
+
+    if(nullptr != inPixelShader) {
+      gapi.psSetShader(inPixelShader);
+    }
+
+    if(nullptr != inSampler) {
+      gapi.psSetSampler(0, 1, inSampler);
+    }
+
+    for (int i = 0; i < inConstantBuffers.size(); ++i) {
+      gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
+      gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
+    }
+
+    int j = 0;
+    for (; j < inShaderResources.size(); ++j) {
+      gapi.psSetShaderResource(j, inShaderResources[j]);
+    }
+
+    //Draw
+    if(inDrawSAQ) {
+      m_SAQ->drawModel();
+    } 
+    else {
+      sgraph.draw();
+    }
+
+    if(0 > j) {
+      for(int k = 0; k <= j; ++k) {
+        gapi.psSetShaderResource(k, nullptr);
+      }
+    }
   }
   
   void 

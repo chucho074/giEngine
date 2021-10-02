@@ -41,6 +41,12 @@ namespace giEngineSDK {
      * @brief    .
      */
     virtual void
+    update() {};
+
+    /**
+     * @brief    .
+     */
+    virtual void
     setModels(Vector<SharedPtr<Model>> inModelList) {};
 
 

@@ -53,6 +53,7 @@ DirectXApp::onCreate() {
                      1280.f / 720.f,
                      0.01f,
                      1000.0f);
+
   shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f });

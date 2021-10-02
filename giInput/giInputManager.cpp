@@ -43,7 +43,6 @@ namespace giEngineSDK {
   void 
   Input::sendEvent(MSG inMessage) {
     m_manager.HandleMessage(inMessage);
-    //runEvents();
   }
 
   void 

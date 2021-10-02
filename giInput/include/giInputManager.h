@@ -17,15 +17,14 @@
 #include <windows.h>
 
 namespace giEngineSDK {
-  enum Button
-  {
+  enum Button {
     FrontMovement,
     BackMovement,
     LeftMovement,
     RightMovement
   };
 
-  class Input : BaseInput
+  class Input : public BaseInput
   {
    public:
     //Default Constructor
@@ -48,6 +47,7 @@ namespace giEngineSDK {
 
     void
     sendEvent(MSG inMessage);
+
 
    protected:
   	void 
