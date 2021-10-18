@@ -15,13 +15,13 @@
 
 namespace giEngineSDK {
   Camera::Camera() {
-    m_front = (m_at - m_eye);
-    m_front.normalize();
+    m_forward = (m_at - m_eye);
+    m_forward.normalize();
 
-    m_right = m_up.cross(m_front);
-    m_right.normalize();
+    m_rightVector = m_upVect.cross(m_forward);
+    m_rightVector.normalize();
     
-    m_up2 = m_front.cross(m_right);
+    m_up2 = m_forward.cross(m_rightVector);
     //m_up2.normalize();
   }
   
@@ -36,12 +36,12 @@ namespace giEngineSDK {
   
   void 
   Camera::update(float inDT) {
-    
+    move(inDT);
   }
 
   void
   Camera::updateData() {
-    m_viewMatrix = lookToLH(m_eye, m_at, m_up);
+    m_viewMatrix = lookToLH(m_eye, m_at, m_upVect);
     
     //updateVM();
     //m_viewMatrix = m_viewMatrix.transpose();
@@ -51,56 +51,66 @@ namespace giEngineSDK {
   
   void 
   Camera::updateVM() {
-    m_right = m_viewMatrix.m_xColumn;
-    m_right.w = 0.f;
+    m_rightVector = m_viewMatrix.m_xColumn;
+    m_rightVector.w = 0.f;
 
     m_up2 = m_viewMatrix.m_yColumn;
     m_up2.w = 0.f;
     
-    m_front = m_viewMatrix.m_zColumn;
-    m_front.w = 0.f;
+    m_forward = m_viewMatrix.m_zColumn;
+    m_forward.w = 0.f;
     
-    m_at = m_eye + m_front;
+    m_at = m_eye + m_forward;
   }
   
   void 
-  Camera::move(Vector4 inVect) {
+  Camera::move(float inDT) {
     
-    if (inVect.x != 0.f) {
-      m_eye += (m_right * inVect.x);
+    Vector3 pos = Vector3(m_viewMatrix.m_wColumn.x,
+                          m_viewMatrix.m_wColumn.y,
+                          m_viewMatrix.m_wColumn.z);
+
+    Vector3 tmpVect;
+
+    if(m_front || m_back) {
+      tmpVect.x = m_viewMatrix.m_zColumn.x;
+      tmpVect.y = m_viewMatrix.m_zColumn.y;
+      tmpVect.z = m_viewMatrix.m_zColumn.z;
     }
-    if (inVect.y != 0.f) {
-      m_eye += (m_up2 * inVect.y);
-    }
-    if (inVect.z != 0.f) {
-      m_eye += (m_front * inVect.z);
-    }
-
-    m_up2.normalize();
-    m_right.normalize();
-    m_front.normalize();
-
-    Matrix4 Axis({ m_right.x,  m_right.y,  m_right.z,    0 },
-                 { m_up2.x,    m_up2.y,    m_up2.z,      0 },
-                 { m_front.x,  m_front.y,  m_front.z,    0 },
-                 { 0,      0,      0,        1 });
-    Axis.transpose();
-
-    Matrix4 Pos({1, 0, 0, -m_eye.x},
-                {0, 1, 0, -m_eye.y},
-                {0, 0, 1, -m_eye.z},
-                {0, 0, 0, 1});
-    //Pos.transpose();
-
     
-    m_viewMatrix = Axis * Pos;
+    if(m_right || m_left) {
+      tmpVect.x = m_viewMatrix.m_xColumn.x;
+      tmpVect.y = m_viewMatrix.m_xColumn.y;
+      tmpVect.z = m_viewMatrix.m_xColumn.z;
+    }
+
+    if(m_up || m_down) {
+      tmpVect.x = m_viewMatrix.m_yColumn.x;
+      tmpVect.y = m_viewMatrix.m_yColumn.y;
+      tmpVect.z = m_viewMatrix.m_yColumn.z;
+    }
+
+
+    float tmpSpeed = m_speed;
+
+    if(m_down || m_right || m_front) {
+      tmpSpeed = -m_speed;
+    }
+
+    auto tmpResult = tmpVect * (tmpSpeed * inDT);
+
+    pos += tmpResult;
+
+    m_viewMatrix.m_wColumn.x = pos.x;
+    m_viewMatrix.m_wColumn.y = pos.y;
+    m_viewMatrix.m_wColumn.z = pos.z;
   }
 
   void 
   Camera::setPosition(Vector4 inVect, Vector4 inVect2, Vector4 inVect3) {
     m_eye = inVect;
     m_at = inVect2;
-    m_up = inVect3;
+    m_upVect = inVect3;
     updateData();
   }
   

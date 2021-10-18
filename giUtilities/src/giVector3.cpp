@@ -47,6 +47,41 @@ namespace giEngineSDK {
   Vector3::operator/(const Vector3& otherVect) {
     return Vector3(x / otherVect.x, y / otherVect.y, z / otherVect.z);
   }
+
+  void 
+  Vector3::operator=(const Vector3& otherVect) {
+    x = otherVect.x;
+    y = otherVect.y;
+    z = otherVect.z;
+  }
+
+  void 
+  Vector3::operator+=(const Vector3& otherVect) {
+    x += otherVect.x;
+    y += otherVect.y;
+    z += otherVect.z;
+  }
+
+  void 
+  Vector3::operator-=(const Vector3& otherVect) {
+    x -= otherVect.x;
+    y -= otherVect.y;
+    z -= otherVect.z;
+  }
+
+  void 
+  Vector3::operator*=(const Vector3& otherVect) {
+    x *= otherVect.x;
+    y *= otherVect.y;
+    z *= otherVect.z;
+  }
+
+  void 
+  Vector3::operator/=(const Vector3& otherVect) {
+    x /= otherVect.x;
+    y /= otherVect.y;
+    z /= otherVect.z;
+  }
     
   Vector3
   Vector3::operator+(const float& otherVal) {

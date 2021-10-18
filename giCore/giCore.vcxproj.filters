@@ -16,6 +16,9 @@
     <Filter Include="BaseApp">
       <UniqueIdentifier>{6880c1e1-8178-4136-9981-e58b107d11e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\BaseShaders">
+      <UniqueIdentifier>{872d37e8-0090-45e0-b678-a0d7c8592fed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giBaseApp.cpp">
@@ -92,12 +95,6 @@
     <ClInclude Include="include\giModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giBasePixelShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giBaseVertexShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -139,6 +136,18 @@
     </ClInclude>
     <ClInclude Include="include\giBaseInput.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBasePixelShader.h">
+      <Filter>Header Files\BaseShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseVertexShader.h">
+      <Filter>Header Files\BaseShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseComputeShader.h">
+      <Filter>Header Files\BaseShaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giUnorderedAccessView.h">
+      <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

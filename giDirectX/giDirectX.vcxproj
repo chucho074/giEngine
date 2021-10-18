@@ -187,6 +187,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\giBufferDX.h" />
+    <ClInclude Include="include\giComputeShaderDX.h" />
     <ClInclude Include="include\giDepthStateDX.h" />
     <ClInclude Include="include\giDepthStencilViewDX.h" />
     <ClInclude Include="include\giGraphicsDX.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="include\giVertexShaderDX.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\giComputeShaderDX.cpp" />
     <ClCompile Include="src\giGraphicsDX.cpp" />
     <ClCompile Include="src\giInputLayoutDX.cpp" />
     <ClCompile Include="src\giPixelShaderDX.cpp" />

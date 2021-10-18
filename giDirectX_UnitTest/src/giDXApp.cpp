@@ -107,6 +107,14 @@ DirectXApp::onUpdate(float inDeltaTime) {
   GI_UNREFERENCED_PARAMETER(inDeltaTime);
   //World rotation
   //m_world = XMMatrixRotationY(inDeltaTime);
+
+  auto& camera = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+
+  if(camera) {
+    camera;
+  }
+
+  m_sceneGraph->update(inDeltaTime);
 }
 
 

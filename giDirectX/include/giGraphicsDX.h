@@ -116,6 +116,18 @@ namespace giEngineSDK {
     createPS(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
+             
+    /**
+     * @brief    Create the Compute Shader.
+     * @param    inFileName    The name of the file.
+     * @param    inEntryPoint  The entry point in the shader.
+     * @param    inShaderModel The model in the shader.
+     * @bug      No known Bugs.
+     */
+    BaseComputeShader * 
+    createCS(String inFileName,
+             String inEntryPoint,
+             String inShaderModel) override;
 
     /**
      * @brief    Creates the Input Layout.
@@ -348,6 +360,17 @@ namespace giEngineSDK {
     void 
     drawIndexed(size_T inNumIndexes, 
                 uint32 inStartLocation) override;
+
+    /**
+     * @brief    Dispatch for Compute Shaders.
+     * @param    inThreadGroupX  The number of groups dispatched in the x direction.
+     * @param    inThreadGroupY  The number of groups dispatched in the y direction.
+     * @param    inThreadGroupZ  The number of groups dispatched in the z direction.
+     */
+     void
+     dispatch(uint32 inThreadGroupX, 
+              uint32 inThreadGroupY, 
+              uint32 inThreadGroupZ) override;
     
     /**
      * @brief    Gets the default Render Target.

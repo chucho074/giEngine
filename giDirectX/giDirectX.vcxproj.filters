@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{6bd30435-424c-42bf-8d9c-1cdfa64d3cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giGraphicsDX.h">
@@ -39,17 +42,20 @@
     <ClInclude Include="include\giRenderTargetViewDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giVertexShaderDX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giPixelShaderDX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giRasterizerDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giDepthStateDX.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giComputeShaderDX.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPixelShaderDX.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVertexShaderDX.h">
+      <Filter>Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -59,14 +65,17 @@
     <ClCompile Include="src\giInputLayoutDX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\giVertexShaderDX.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\giPixelShaderDX.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giSamplerDX.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giComputeShaderDX.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giPixelShaderDX.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giVertexShaderDX.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

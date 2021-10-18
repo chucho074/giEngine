@@ -60,10 +60,10 @@ namespace giEngineSDK {
 
     /**
      * @brief   Apply a movement in the camera position.
-     * @param   inVect   The direction to move the camera.
+     * @param   inDT   The delta time.
      */
     void 
-    move(Vector4 inVect);
+    move(float inDT);
     
     /**
      * @brief   Apply a new camera position.
@@ -93,16 +93,20 @@ namespace giEngineSDK {
     float m_far = 0;
     //Vector4 m_eye = { 0.0f, -8.0f, -6.0f, 1.0f };  //En posicion del mundo
     //Vector4 m_at = { 0.0f, 0.0f, 0.0f, 1.0f };  //En posicion del mundo
-    //Vector4 m_up = { 0.0f, 1.0f, 0.0f, 1.0f };  //Up del mundo
+    //Vector4 m_upVect = { 0.0f, 1.0f, 0.0f, 1.0f };  //Up del mundo
     Vector4 m_eye = { 100.0f,  -50.0f, -180.0f, 1.0f };  // En posicion del mundo
     //Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
-    Vector4 m_up  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
+    Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
     Matrix4 m_viewMatrix;
     Matrix4 m_projMatrix;
-    Vector4 m_right;
+    Vector4 m_rightVector;
     Vector4 m_up2;    //Up de la camara
-    Vector4 m_front;
+    Vector4 m_forward;
 
+    float m_speed = 1.f;
+
+    bool m_front, m_back, m_left, m_right = false;
+    bool m_up, m_down = false;
   };
 }

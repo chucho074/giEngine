@@ -20,6 +20,7 @@
 #include "giSamplerDX.h"
 #include "giRenderTargetViewDX.h"
 #include "giVertexShaderDX.h"
+#include "giComputeShaderDX.h"
 #include "giPixelShaderDX.h"
 #include "giRasterizerDX.h"
 #include "giDepthStateDX.h"
@@ -272,6 +273,25 @@ namespace giEngineSDK {
     }
 
     return tempPS;
+  }
+
+  BaseComputeShader* 
+  CGraphicsDX::createCS(String inFileName, 
+                        String inEntryPoint, 
+                        String inShaderModel) {
+
+    ComputeShaderDX* tempCS = new ComputeShaderDX();
+    tempCS->init(inFileName, inEntryPoint, inShaderModel);
+    if (FAILED(m_device->CreateComputeShader(tempCS->m_compiledCShader->GetBufferPointer(),
+                                             tempCS->m_compiledCShader->GetBufferSize(),
+                                             nullptr,
+                                             &tempCS->m_computeShader))) {
+                                             
+      __debugbreak();
+      return nullptr;
+    }
+
+    return tempCS;
   }
 
 
@@ -604,6 +624,13 @@ namespace giEngineSDK {
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
     m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
+  }
+
+  void 
+  CGraphicsDX::dispatch(uint32 inThreadGroupX, 
+                        uint32 inThreadGroupY, 
+                        uint32 inThreadGroupZ) {
+    m_devContext->Dispatch(inThreadGroupX, inThreadGroupY, inThreadGroupZ);
   }
 
   Texture2D* 

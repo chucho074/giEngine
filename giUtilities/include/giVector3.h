@@ -39,6 +39,21 @@ namespace giEngineSDK {
     
     Vector3
     operator/(const Vector3& otherVect); 
+
+    void
+    operator=(const Vector3& otherVect);
+    
+    void
+    operator+=(const Vector3& otherVect);
+    
+    void
+    operator-=(const Vector3& otherVect);
+    
+    void
+    operator*=(const Vector3& otherVect);
+    
+    void
+    operator/=(const Vector3& otherVect);
     
     Vector3
     operator+(const float& otherVal);

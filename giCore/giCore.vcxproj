@@ -183,6 +183,7 @@
     <ClCompile Include="src\giStaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseComputeShader.h" />
     <ClInclude Include="include\giBaseInput.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
     <ClInclude Include="include\giComponent.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="include\giStaticMesh.h" />
     <ClInclude Include="include\giTexture2D.h" />
     <ClInclude Include="include\giTextureManager.h" />
+    <ClInclude Include="include\giUnorderedAccessView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

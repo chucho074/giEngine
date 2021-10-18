@@ -21,6 +21,7 @@ namespace giEngineSDK {
   class BaseShader;
   class BaseVertexShader;
   class BasePixelShader;
+  class BaseComputeShader;
   class BaseShader;
   class Buffer;
   class InputLayout;
@@ -152,6 +153,20 @@ namespace giEngineSDK {
      */
     virtual BasePixelShader * 
     createPS(String,
+             String,
+             String){ 
+      return nullptr; 
+    };
+
+    /**
+     * @brief    Create the Pixel Shader.
+     * @param    inFileName    The name of the file.
+     * @param    inEntryPoint  The entry point in the shader.
+     * @param    inShaderModel The model in the shader.
+     * @bug      No known Bugs.
+     */
+    virtual BaseComputeShader * 
+    createCS(String,
              String,
              String){ 
       return nullptr; 
@@ -392,6 +407,15 @@ namespace giEngineSDK {
     virtual void 
     drawIndexed(size_T, 
                 uint32) {};
+
+    /**
+     * @brief    Dispatch for Compute Shaders.
+     * @param    inThreadGroupX  The number of groups dispatched in the x direction.
+     * @param    inThreadGroupY  The number of groups dispatched in the y direction.
+     * @param    inThreadGroupZ  The number of groups dispatched in the z direction.
+     */
+     virtual void
+     dispatch(uint32, uint32, uint32) {}
          
     /**
      * @brief    Gets the default Render Target.
