@@ -24,7 +24,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor
-  	UnorderedAccessViewDX();
+  	UnorderedAccessViewDX() = default;
 
     //Destructor
   	~UnorderedAccessViewDX() {

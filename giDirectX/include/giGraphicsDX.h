@@ -24,7 +24,7 @@ namespace giEngineSDK {
   class CSamplerDX;
   class RasterizerDX;
   class DepthStateDX;
-  class UnorderedAccessViewDX
+  //class UnorderedAccessViewDX;
 }
 
 namespace giEngineSDK {
