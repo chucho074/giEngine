@@ -19,8 +19,9 @@ namespace giEngineSDK {
     time(&timer);
     timeinfo = localtime(&timer);
 
-    m_logId = timeinfo->tm_hour, "-", timeinfo->tm_min, "-", timeinfo->tm_mday, "-",
-              timeinfo->tm_mon, "-", timeinfo->tm_yday;
+    m_logId = timeinfo->tm_hour + "-"+ timeinfo->tm_min, "-" + timeinfo->tm_mday, "-" +
+              timeinfo->tm_mon, "-" + timeinfo->tm_yday;
+    //m_path =  ("Log/Log" + m_logId + ".txt");
   }
   
   void
@@ -34,7 +35,7 @@ namespace giEngineSDK {
   void 
   Logger::SendToFile() {
     std::fstream fs;
-    fs.open(m_path, std::fstream::out | std::fstream::app);
+    fs.open(m_path, std::fstream::out );//| std::fstream::app);
     fs << "The number of errors in total is: " + m_numErrors;
     for(auto errors : m_errors) {
       fs << errors.second;

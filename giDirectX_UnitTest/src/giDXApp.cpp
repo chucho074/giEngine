@@ -77,13 +77,13 @@ DirectXApp::onCreate() {
 
   //Create Constant Buffer for Never Change
   m_cBufferCamera = m_gapi->createBuffer(sizeof(CameraConstantBuffer),
-                                         4, 
+                                         GI_BIND_FLAG::kBIND_CONSTANT_BUFFER, 
                                          0, 
                                          nullptr);
 
   //Create Constant Buffer for Change Every Frame
   m_cBufferChangeEveryFrame = m_gapi->createBuffer(sizeof(CBChangesEveryFrame), 
-                                                   4, 
+                                                   GI_BIND_FLAG::kBIND_CONSTANT_BUFFER, 
                                                    0, 
                                                    nullptr);
 

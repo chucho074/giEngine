@@ -24,6 +24,7 @@ namespace giEngineSDK {
   class CSamplerDX;
   class RasterizerDX;
   class DepthStateDX;
+  class UnorderedAccessViewDX
 }
 
 namespace giEngineSDK {
@@ -169,14 +170,22 @@ namespace giEngineSDK {
     Rasterizer *
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
-                     bool inClockwise);
+                     bool inClockwise) override;
 
     /**
      * @brief    Create a Depth Stencil State.
      */
     DepthState *
     createDepthState(bool inStencilEnable,
-                     bool inDepthEnable);
+                     bool inDepthEnable) override;
+
+    /**
+     * @brief    Create a Unordered Access View.
+     */
+    BaseUnorderedAccessView *
+    createUnorderedAccessView(Buffer* inData,
+                              GI_FORMAT::E inFormat,
+                              int32 inNumElements) override;
 
     /**
      * @brief    Present.

@@ -24,6 +24,7 @@
 #include "giPixelShaderDX.h"
 #include "giRasterizerDX.h"
 #include "giDepthStateDX.h"
+#include "giUnorderedAccessViewDX.h"
 #include "stb_image.h"
 
 
@@ -168,6 +169,7 @@ namespace giEngineSDK {
 
     if (FAILED(m_device->CreateTexture2D(&tempDesc, nullptr, &temp->m_texture))) {
       //Send error message
+      g_logger().SetError(ERROR_TYPE::kTextureCreation, "Texture can't be created");
       //Pone un breakpoint cuando llegue aqui
       __debugbreak();
       return nullptr;
@@ -179,7 +181,12 @@ namespace giEngineSDK {
       rtvDesc.Format = tempDesc.Format;
       rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
       rtvDesc.Texture2D.MipSlice = 0;
-      if (FAILED(m_device->CreateRenderTargetView(temp->m_texture, &rtvDesc, &temp->m_renderTargetView))) {
+      if (FAILED(m_device->CreateRenderTargetView(temp->m_texture, 
+                                                  &rtvDesc, 
+                                                  &temp->m_renderTargetView))) {
+        //Send error message
+        g_logger().SetError(ERROR_TYPE::kTextureCreation, 
+                            "Texture can't be created as Render Target View");
         __debugbreak();
         return nullptr;
       }
@@ -192,7 +199,12 @@ namespace giEngineSDK {
       dsvDesc.Format = tempDesc.Format;
       dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
       dsvDesc.Texture2D.MipSlice = 0;
-      if (FAILED(m_device->CreateDepthStencilView(temp->m_texture, &dsvDesc, &temp->m_depthStencilView))) {
+      if (FAILED(m_device->CreateDepthStencilView(temp->m_texture, 
+                                                  &dsvDesc, 
+                                                  &temp->m_depthStencilView))) {
+        //Send error message
+        g_logger().SetError(ERROR_TYPE::kTextureCreation, 
+                            "Texture can't be created as a Depth Stencil View");
         __debugbreak();
         return nullptr;
       }
@@ -209,6 +221,10 @@ namespace giEngineSDK {
       if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, 
                                                     &srvDesc, 
                                                     &temp->m_subResourceData))) {
+
+        //Send error message
+        g_logger().SetError(ERROR_TYPE::kTextureCreation, 
+                            "Texture can't be created as a Shader Resource View");
         __debugbreak();
         return nullptr;
       }
@@ -331,10 +347,13 @@ namespace giEngineSDK {
     if (FAILED(m_device->CreateBuffer(&tmpDesc,
                                       (inBufferData == nullptr ? nullptr : &tmpData),
                                       &tmpBuffer->m_buffer))) {
-
+      g_logger().SetError(ERROR_TYPE::kBufferCreation, 
+                          "A buffer can't be created");
       __debugbreak();
       return nullptr;
     }
+
+
 
     return tmpBuffer;
   }
@@ -346,6 +365,8 @@ namespace giEngineSDK {
     tmpSampler->init(inDesc);
     if (FAILED(m_device->CreateSamplerState(&tmpSampler->m_desc, 
                                             &tmpSampler->m_sampler))) {
+      g_logger().SetError(ERROR_TYPE::kSamplerCreation, 
+                          "A sampler can't be created");
       __debugbreak();
       return nullptr;
     }
@@ -408,6 +429,39 @@ namespace giEngineSDK {
     m_device->CreateDepthStencilState(&tmpDesc, &tmpState->m_State);
 
     return tmpState;
+  }
+
+  BaseUnorderedAccessView* 
+  CGraphicsDX::createUnorderedAccessView(Buffer * inData,
+                                         GI_FORMAT::E inFormat,
+                                         int32 inNumElements) {
+
+    CBufferDX* tmpBufferData = (CBufferDX*)inData;
+    UnorderedAccessViewDX * tmpUAV = new UnorderedAccessViewDX();
+
+    D3D11_BUFFER_UAV tmpBufferUAV;
+    tmpBufferUAV.Flags = 0;
+    tmpBufferUAV.FirstElement = 0;
+    tmpBufferUAV.NumElements = inNumElements;
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDesc;
+    tmpDesc.Format = (DXGI_FORMAT)inFormat;
+    tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    tmpDesc.Buffer = tmpBufferUAV;
+
+    if(FAILED(m_device->CreateUnorderedAccessView((tmpBufferData == nullptr 
+                                                   ? nullptr 
+                                                    : tmpBufferData->m_buffer),
+                                                  &tmpDesc,
+                                                  &tmpUAV->m_uav))) {
+
+      g_logger().SetError(ERROR_TYPE::kUAVCreation,
+                          "A Unordered Access View can't be created");
+      __debugbreak();
+      return nullptr;
+    }
+
+    return tmpUAV;
   }
 
   void 

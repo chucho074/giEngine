@@ -32,6 +32,7 @@ namespace giEngineSDK {
     uint32 memPitch = 0;
     uint32 memSlicePitch = 0;
   };
+
   
   /**
    * @class    Buffer.

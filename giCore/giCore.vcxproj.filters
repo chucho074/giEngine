@@ -146,7 +146,7 @@
     <ClInclude Include="include\giBaseComputeShader.h">
       <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
-    <ClInclude Include="include\giUnorderedAccessView.h">
+    <ClInclude Include="include\giBaseUnorderedAccessView.h">
       <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
   </ItemGroup>

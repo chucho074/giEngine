@@ -28,6 +28,7 @@ namespace giEngineSDK {
   class Sampler;
   class Rasterizer;
   class DepthState;
+  class BaseUnorderedAccessView;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -233,6 +234,18 @@ namespace giEngineSDK {
     virtual DepthState *
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) {
+      return nullptr;
+    }
+
+    /**
+     * @brief    Creates a Unordered Access View.
+     * @param    inStencilEnable  The fill mode for the raster.
+     * @param    inDepthEnable    The cull mode for the raster.
+     */
+    virtual BaseUnorderedAccessView *
+    createUnorderedAccessView(Buffer* inData,
+                              GI_FORMAT::E inFormat,
+                              int32 inNumElements) {
       return nullptr;
     }
     

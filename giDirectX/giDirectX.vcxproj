@@ -198,6 +198,7 @@
     <ClInclude Include="include\giRenderTargetViewDX.h" />
     <ClInclude Include="include\giSamplerDX.h" />
     <ClInclude Include="include\giTexture2DDX.h" />
+    <ClInclude Include="include\giUnorderedAccessViewDX.h" />
     <ClInclude Include="include\giVertexShaderDX.h" />
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,11 @@ namespace giEngineSDK {
       kModelLoading = 0,
       kWindowCreation,
       kAnimationLoading,
-      kxxxx
+      kTextureCreation,
+      kBufferCreation,
+      kSamplerCreation,
+      kUAVCreation,
+      kCreation
     };
   }
 
@@ -60,7 +64,7 @@ namespace giEngineSDK {
     /**
      * @brief  The path to save the file.
      */
-    String m_path = ("Log/Log" + m_logId +  ".txt");
+    String m_path = ("Log/LogDefault.txt");
 
     /**
      * @brief  The number of errors.
