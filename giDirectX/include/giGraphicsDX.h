@@ -24,7 +24,7 @@ namespace giEngineSDK {
   class CSamplerDX;
   class RasterizerDX;
   class DepthStateDX;
-  class UnorderedAccessViewDX
+  class UnorderedAccessViewDX;
 }
 
 namespace giEngineSDK {
@@ -154,7 +154,8 @@ namespace giEngineSDK {
     createBuffer(size_T inByteWidth, 
                  uint32 inBindFlags, 
                  uint32 inOffset, 
-                 void * inBufferData) override;
+                 void * inBufferData,
+                 uint32 inStructureStride = 0) override;
     
     /**
      * @brief    Creates a Sampler.
@@ -183,9 +184,14 @@ namespace giEngineSDK {
      * @brief    Create a Unordered Access View.
      */
     BaseUnorderedAccessView *
-    createUnorderedAccessView(Buffer* inData,
-                              GI_FORMAT::E inFormat,
-                              int32 inNumElements) override;
+    createUAVBuffer(Buffer* inData,
+                    GI_FORMAT::E inFormat,
+                    int32 inNumElements) override;
+
+    BaseUnorderedAccessView *
+    createUAVTexture(Texture2D* inData,
+                     GI_FORMAT::E inFormat,
+                     int32 inNumElements) override;
 
     /**
      * @brief    Present.

@@ -334,7 +334,8 @@ namespace giEngineSDK {
   CGraphicsDX::createBuffer(size_T inByteWidth,
                             uint32 inBindFlags,
                             uint32 inOffset,
-                            void* inBufferData) {
+                            void* inBufferData,
+                            uint32 inStructureStride) {
 
     GI_UNREFERENCED_PARAMETER(inOffset);
     CBufferDX* tmpBuffer = new CBufferDX();
@@ -344,6 +345,15 @@ namespace giEngineSDK {
     tmpData.SysMemPitch = inByteWidth;
     tmpData.SysMemSlicePitch = 0;
 
+
+
+    if (inBindFlags & GI_BIND_FLAG::kBIND_SHADER_RESOURCE 
+        && inBindFlags & GI_BIND_FLAG::kBIND_UNORDERED_ACCESS) {
+      tmpDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+      tmpDesc.StructureByteStride = inStructureStride;
+    }
+    
+    
     if (FAILED(m_device->CreateBuffer(&tmpDesc,
                                       (inBufferData == nullptr ? nullptr : &tmpData),
                                       &tmpBuffer->m_buffer))) {
@@ -432,11 +442,11 @@ namespace giEngineSDK {
   }
 
   BaseUnorderedAccessView* 
-  CGraphicsDX::createUnorderedAccessView(Buffer * inData,
-                                         GI_FORMAT::E inFormat,
-                                         int32 inNumElements) {
+  CGraphicsDX::createUAVBuffer(Buffer * inData,
+                               GI_FORMAT::E inFormat,
+                               int32 inNumElements) {
 
-    CBufferDX* tmpBufferData = (CBufferDX*)inData;
+    CBufferDX* tmpBufferData = static_cast<CBufferDX*>(inData);
     UnorderedAccessViewDX * tmpUAV = new UnorderedAccessViewDX();
 
     D3D11_BUFFER_UAV tmpBufferUAV;
@@ -448,6 +458,38 @@ namespace giEngineSDK {
     tmpDesc.Format = (DXGI_FORMAT)inFormat;
     tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
     tmpDesc.Buffer = tmpBufferUAV;
+    if (tmpBufferData == nullptr) {
+      return nullptr;
+    }
+    if(FAILED(m_device->CreateUnorderedAccessView(tmpBufferData->m_buffer,
+                                                  &tmpDesc,
+                                                  &tmpUAV->m_uav))) {
+
+      g_logger().SetError(ERROR_TYPE::kUAVCreation,
+                          "A Unordered Access View can't be created");
+      __debugbreak();
+      return nullptr;
+    }
+
+    return tmpUAV;
+  }
+
+  BaseUnorderedAccessView* 
+  CGraphicsDX::createUAVTexture(Texture2D * inData,
+                                GI_FORMAT::E inFormat,
+                                int32 inNumElements) {
+
+    CBufferDX* tmpBufferData = (CBufferDX*)inData;
+    UnorderedAccessViewDX * tmpUAV = new UnorderedAccessViewDX();
+
+    
+    D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDesc;
+    tmpDesc.Format = (DXGI_FORMAT)inFormat;
+    tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+    tmpDesc.Buffer.Flags = 0;
+    tmpDesc.Buffer.FirstElement = 0;
+    tmpDesc.Buffer.NumElements = 1;
+
 
     if(FAILED(m_device->CreateUnorderedAccessView((tmpBufferData == nullptr 
                                                    ? nullptr 

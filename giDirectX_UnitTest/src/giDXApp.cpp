@@ -88,6 +88,16 @@ DirectXApp::onCreate() {
                                                    nullptr);
 
 
+  //UAVs
+  m_UAVBuffer = m_gapi->createBuffer(sizeof(float) * 1024, 
+                                     GI_BIND_FLAG::kBIND_UNORDERED_ACCESS 
+                                     | GI_BIND_FLAG::kBIND_SHADER_RESOURCE, 
+                                     0,
+                                     nullptr,
+                                     sizeof(float));
+
+  m_UAV = m_gapi->createUAVBuffer(m_UAVBuffer, GI_FORMAT::kFORMAT_UNKNOWN, 1024);
+
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
 

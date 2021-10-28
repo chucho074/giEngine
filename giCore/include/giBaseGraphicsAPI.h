@@ -199,7 +199,8 @@ namespace giEngineSDK {
     createBuffer(size_T, 
                  uint32, 
                  uint32, 
-                 void *) { 
+                 void *,
+                 uint32 = 0) { 
        return nullptr; 
      };
     
@@ -243,9 +244,21 @@ namespace giEngineSDK {
      * @param    inDepthEnable    The cull mode for the raster.
      */
     virtual BaseUnorderedAccessView *
-    createUnorderedAccessView(Buffer* inData,
-                              GI_FORMAT::E inFormat,
-                              int32 inNumElements) {
+    createUAVBuffer(Buffer* inData,
+                    GI_FORMAT::E inFormat,
+                    int32 inNumElements) {
+      return nullptr;
+    }
+
+    /**
+     * @brief    Creates a Unordered Access View.
+     * @param    inStencilEnable  The fill mode for the raster.
+     * @param    inDepthEnable    The cull mode for the raster.
+     */
+    virtual BaseUnorderedAccessView *
+    createUAVTexture(Texture2D* inData,
+                     GI_FORMAT::E inFormat,
+                     int32 inNumElements) {
       return nullptr;
     }
     
