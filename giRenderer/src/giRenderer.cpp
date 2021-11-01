@@ -204,10 +204,10 @@ namespace giEngineSDK {
     /*                               SSAO                                   */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
+    //m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderSSAO = gapi.createPS("Resources/SSAO.hlsl", "PS_SSAO", "ps_4_0");
+    m_computeShaderSSAO = gapi.createCS("Resources/ComputeSSAO.hlsl", "main", "cs_5_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescSSAO;
@@ -236,7 +236,7 @@ namespace giEngineSDK {
     layoutDescSSAO[1].instanceDataStepRate = 0;
 
     //Create the Input Layout
-    m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
+    //m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
 
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
@@ -415,7 +415,7 @@ namespace giEngineSDK {
     tmpSSAOShaderResources.push_back(m_renderTargets[0]);
     tmpSSAOShaderResources.push_back(m_renderTargets[1]);
 
-    renderData(m_SSAOTexture,
+    /*renderData(m_SSAOTexture,
                nullptr,
                m_inputLayoutSSAO,
                m_vertexShaderSSAO,
@@ -423,7 +423,7 @@ namespace giEngineSDK {
                nullptr,
                tmpSSAOConstants,
                tmpSSAOShaderResources,
-               true);
+               true);*/
 
     /************************************************************************/
     /*                           BlurH                                      */

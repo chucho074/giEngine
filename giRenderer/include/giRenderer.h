@@ -161,14 +161,8 @@ namespace giEngineSDK {
     BasePixelShader* m_pixelShader = nullptr;
 
     //SSAO
-    //The Vertex shader
-    BaseVertexShader* m_vertexShaderSSAO = nullptr;
-
-    //The Pixel Shader
-    BasePixelShader* m_pixelShaderSSAO = nullptr;
-
-
-    InputLayout* m_inputLayoutSSAO = nullptr;
+    //The Compute Shader
+    BaseComputeShader* m_computeShaderSSAO = nullptr;
 
     Buffer* m_cBufferSSAO = nullptr;
     
