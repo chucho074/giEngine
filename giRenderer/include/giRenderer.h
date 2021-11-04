@@ -54,6 +54,8 @@ namespace giEngineSDK {
     float Intensity;
     float Scale;
     float Bias;
+    Vector2 TextureSize;
+    Vector2 kk;
   };
   /**
    * @struct   LightConstantBuffer.
@@ -107,7 +109,7 @@ namespace giEngineSDK {
     render() override;
 
     /**
-     * 
+     * brief
      */
     void
     renderData(Vector<Texture2D*> inRendertarget,
@@ -121,6 +123,16 @@ namespace giEngineSDK {
                bool inDrawSAQ = false, 
                bool inClear = true);
 
+    /**
+     * @brief
+     */
+    void 
+    dispatchData(Vector<Buffer*> inConstantBuffers,
+                 BaseComputeShader * inCS,
+                 Vector<Texture2D*> inShaderResources,
+                 Vector<Texture2D*> inUAVS,
+                 Sampler* inSampler,
+                 Vector3 inDispatch);
     /**
      * @brief    .
      */
@@ -165,7 +177,6 @@ namespace giEngineSDK {
     BaseComputeShader* m_computeShaderSSAO = nullptr;
 
     Buffer* m_cBufferSSAO = nullptr;
-    
     Vector<Texture2D*> m_SSAOTexture;
 
     //SAQ

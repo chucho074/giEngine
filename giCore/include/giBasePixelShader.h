@@ -21,7 +21,7 @@ namespace giEngineSDK {
    */
   class BasePixelShader : public BaseShader
   {
-  public:
+   public:
     //Constructor
     BasePixelShader() {};
 

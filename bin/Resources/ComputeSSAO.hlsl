@@ -21,11 +21,11 @@ struct CS_INPUT {
 };
 
 float4 GetPosition(in float2 uv) {
-  return PositionSampler.Sample(SamplState, uv);
+  return PositionSampler.SampleLevel(SamplState, uv, 0);
 }
 
 float3 GetNormal(in float2 uv) {
-  return normalize(NormalSampler.Sample(SamplState, uv).xyz);
+  return normalize(NormalSampler.SampleLevel(SamplState, uv, 0).xyz);
 }
 
 float3 GetRandom(in float2 uv) {

@@ -17,6 +17,7 @@
 #include <giStaticMesh.h>
 #include <giBaseVertexShader.h>
 #include <giBasePixelShader.h>
+#include <giBaseComputeShader.h>
 #include <giDegrees.h>
 #include "giRenderer.h"
 
@@ -56,8 +57,7 @@ namespace giEngineSDK {
 
     //Create Constant Buffer for Camera
     m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
-                                        4,
-                                        0,
+                                        GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                         nullptr);
     //Update the Camera Constant Buffer 
     gapi.updateSubresource(m_cBufferCamera, 
@@ -75,8 +75,7 @@ namespace giEngineSDK {
 
     //Create Constant Buffer for Camera
     m_cBufferShadow = gapi.createBuffer(sizeof(CameraConstantBuffer),
-                                        4,
-                                        0,
+                                        GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                         nullptr);
     //Update the Camera Constant Buffer 
     gapi.updateSubresource(m_cBufferShadow,
@@ -94,8 +93,7 @@ namespace giEngineSDK {
 
     //Create Constant Buffer for Change Every Frame
     m_cBufferChangeEveryFrame = gapi.createBuffer(sizeof(CBChangesEveryFrame), 
-                                                  4,
-                                                  0,
+                                                  GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                                   nullptr);
 
 
@@ -203,61 +201,33 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                               SSAO                                   */
     /************************************************************************/
-    //Create Vertex Shader 
-    //m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
-    //Create Pixel Shader
+    //Create Compute Shader
     m_computeShaderSSAO = gapi.createCS("Resources/ComputeSSAO.hlsl", "main", "cs_5_0");
-
-    //Create Input Layout
-    Vector<InputLayoutDesc> layoutDescSSAO;
-
-    //Set the size for the inputLayout
-    layoutDescSSAO.resize(2);
-
-    //Sets the input Layout values
-
-    //Positions
-    layoutDescSSAO[0].semanticName = "POSITION";
-    layoutDescSSAO[0].semanticIndex = 0;
-    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
-    layoutDescSSAO[0].inputSlot = 0;
-    layoutDescSSAO[0].alignedByteOffset = ALIGN_ELEMENT;
-    layoutDescSSAO[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
-    layoutDescSSAO[0].instanceDataStepRate = 0;
-
-    //Texcoords
-    layoutDescSSAO[1].semanticName = "TEXCOORD";
-    layoutDescSSAO[1].semanticIndex = 0;
-    layoutDescSSAO[1].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
-    layoutDescSSAO[1].inputSlot = 0;
-    layoutDescSSAO[1].alignedByteOffset = ALIGN_ELEMENT;
-    layoutDescSSAO[1].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
-    layoutDescSSAO[1].instanceDataStepRate = 0;
-
-    //Create the Input Layout
-    //m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
 
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
                                              1,
                                              GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                              GI_BIND_FLAG::kBIND_RENDER_TARGET 
-                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
 
     
-    for (int32 i = 0; i < 7; ++i) {
+    /*for (int32 i = 0; i < 7; ++i) {
       m_SSAOTexture.push_back(nullptr);
-    }
+    }*/
+
     SSAOConstantBuffer SSAOcb;
     SSAOcb.Intensity = 2.0f;
     SSAOcb.SampleRadius = 0.800f;
     SSAOcb.Scale = 1.0f;
     SSAOcb.Bias = 0.0800f;
+    SSAOcb.TextureSize = Vector2(1280, 720);
+
 
     m_cBufferSSAO = gapi.createBuffer(sizeof(SSAOConstantBuffer),
-                                      4, 
-                                      0, 
+                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &SSAOcb);
 
 
@@ -288,8 +258,7 @@ namespace giEngineSDK {
     Blurcb.Viewport.x = 1280;
     Blurcb.Viewport.y = 720;
     m_cBufferBlur = gapi.createBuffer(sizeof(BlurConstantBuffer),
-                                      4, 
-                                      0, 
+                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER, 
                                       &Blurcb);
 
     /************************************************************************/
@@ -367,8 +336,7 @@ namespace giEngineSDK {
     Lightcb.ViewPos = m_mainCamera->m_viewMatrix.m_zColumn;
     Lightcb.InverseView = m_mainCamera->m_viewMatrix.inverse();
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
-                                      4,
-                                      0,
+                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &Lightcb);
     
     
@@ -415,15 +383,12 @@ namespace giEngineSDK {
     tmpSSAOShaderResources.push_back(m_renderTargets[0]);
     tmpSSAOShaderResources.push_back(m_renderTargets[1]);
 
-    /*renderData(m_SSAOTexture,
-               nullptr,
-               m_inputLayoutSSAO,
-               m_vertexShaderSSAO,
-               m_pixelShaderSSAO,
-               nullptr,
-               tmpSSAOConstants,
-               tmpSSAOShaderResources,
-               true);*/
+    dispatchData(tmpSSAOConstants,
+                 m_computeShaderSSAO,
+                 tmpSSAOShaderResources,
+                 m_SSAOTexture,
+                 m_sampler,
+                 {1280/32, 720/32, 1});  //Cambiar
 
     /************************************************************************/
     /*                           BlurH                                      */
@@ -434,7 +399,7 @@ namespace giEngineSDK {
     renderData(m_BlurTexture,
                nullptr,
                nullptr,
-               nullptr,
+               m_vertexShaderBlur,
                m_pixelShaderBlurH,
                nullptr,
                tmpBlurHConstants,
@@ -450,7 +415,7 @@ namespace giEngineSDK {
     renderData(m_SSAOTexture,
                nullptr,
                nullptr,
-               nullptr,
+               m_vertexShaderBlur,
                m_pixelShaderBlurV,
                nullptr,
                tmpBlurVConstants,
@@ -563,9 +528,56 @@ namespace giEngineSDK {
       sgraph.draw();
     }
 
-    if(0 > j) {
+    if(0 < j) {
       for(int k = 0; k <= j; ++k) {
         gapi.psSetShaderResource(k, nullptr);
+      }
+    }
+    gapi.unbindRenderTarget();
+  }
+
+  void 
+  Renderer::dispatchData(Vector<Buffer*> inConstantBuffers,
+                         BaseComputeShader * inCS,
+                         Vector<Texture2D*> inShaderResources,
+                         Vector<Texture2D*> inUAVS,
+                         Sampler* inSampler,
+                         Vector3 inDispatch) {
+    //Get the Gapi
+    auto& gapi = g_graphicsAPI();
+    //Set Compute
+    gapi.csSetShader(inCS);
+    //Set samplers
+    if (nullptr != inSampler) {
+      gapi.csSetSampler(0, 1, inSampler);
+    }
+    //Set Constant Buffers
+    for (int32 i = 0; i < inConstantBuffers.size(); ++i) {
+      gapi.csSetConstantBuffer(i, inConstantBuffers[i]);
+    }
+    //Set UAVs
+    size_T tmpSize = inUAVS.size();
+    int32 j = 0;
+    for(; j <tmpSize; ++j) {
+      gapi.setUAV(j, inUAVS[j]);
+    }
+    //Set Shader Resources
+    int32 k = 0;
+    for (; k < inShaderResources.size(); ++k) {
+      gapi.csSetShaderResource(k, inShaderResources[k]);
+    }
+    //Dispatch
+    gapi.dispatch(inDispatch.x, inDispatch.y, inDispatch.z);
+    //Unbind UAVs
+    if (0 < j) {
+      for(int32 i = 0; i < j; ++i) {
+        gapi.setUAV(i, nullptr);
+      }
+    }
+    //Unbind Shader Resources
+    if (0 < k) {
+      for (int32 l = 0; l < k; ++l) {
+        gapi.csSetShaderResource(l, nullptr);
       }
     }
   }

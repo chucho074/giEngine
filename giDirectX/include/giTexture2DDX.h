@@ -52,5 +52,6 @@ namespace giEngineSDK {
     ID3D11ShaderResourceView* m_subResourceData = nullptr;
     ID3D11DepthStencilView* m_depthStencilView = nullptr;
     ID3D11RenderTargetView* m_renderTargetView = nullptr;
+    ID3D11UnorderedAccessView * m_UAV = nullptr;
   };
 }

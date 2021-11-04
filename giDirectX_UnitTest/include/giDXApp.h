@@ -30,7 +30,6 @@
 #include <giModel.h>
 #include <giStaticMesh.h>
 #include <giSceneGraph.h>
-#include <giBaseUnorderedAccessView.h>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 
@@ -126,9 +125,4 @@ class DirectXApp : public BaseApp {
   Matrix4 m_world;
 
   SceneGraph sceneGraph;
-
-
-  Buffer * m_UAVBuffer;
-
-  BaseUnorderedAccessView * m_UAV;
 };
