@@ -213,11 +213,6 @@ namespace giEngineSDK {
                                              | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
                                              | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
 
-    
-    /*for (int32 i = 0; i < 7; ++i) {
-      m_SSAOTexture.push_back(nullptr);
-    }*/
-
     SSAOConstantBuffer SSAOcb;
     SSAOcb.Intensity = 2.0f;
     SSAOcb.SampleRadius = 0.800f;
@@ -234,14 +229,12 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                               BLUR                                   */
     /************************************************************************/
-    //Create Vertex Shader 
-    m_vertexShaderBlur = gapi.createVS("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderBlurH = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurH", "ps_4_0");
+    m_csBlurH = gapi.createCS("Resources/ComputeBlur.hlsl", "cs_gaussian_blurH", "cs_5_0");
 
     //Create Pixel Shader
-    m_pixelShaderBlurV = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurV", "ps_4_0");
+    m_csBlurV = gapi.createCS("Resources/ComputeBlur.hlsl", "cs_gaussian_blurV", "cs_5_0");
 
 
     //Create the texture
@@ -250,13 +243,15 @@ namespace giEngineSDK {
                                              1,
                                              GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                              GI_BIND_FLAG::kBIND_RENDER_TARGET 
-                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
 
     //Set the Constant buffer data
     BlurConstantBuffer Blurcb;
     Blurcb.Gamma = 1;
     Blurcb.Viewport.x = 1280;
     Blurcb.Viewport.y = 720;
+    Blurcb.TextureSize = Vector2(1280, 720);
     m_cBufferBlur = gapi.createBuffer(sizeof(BlurConstantBuffer),
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER, 
                                       &Blurcb);
@@ -396,15 +391,12 @@ namespace giEngineSDK {
     Vector<Buffer*> tmpBlurHConstants;
     tmpBlurHConstants.push_back(m_cBufferBlur);
 
-    renderData(m_BlurTexture,
-               nullptr,
-               nullptr,
-               m_vertexShaderBlur,
-               m_pixelShaderBlurH,
-               nullptr,
-               tmpBlurHConstants,
-               m_SSAOTexture,
-               true);
+    /*dispatchData(tmpBlurHConstants,
+                 m_csBlurH,
+                 m_SSAOTexture,
+                 m_BlurTexture,
+                 m_sampler,
+                 {1280/32, 720/32, 1});*/
 
     /************************************************************************/
     /*                           BlurV                                      */
@@ -412,16 +404,12 @@ namespace giEngineSDK {
     Vector<Buffer*> tmpBlurVConstants;
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
-    renderData(m_SSAOTexture,
-               nullptr,
-               nullptr,
-               m_vertexShaderBlur,
-               m_pixelShaderBlurV,
-               nullptr,
-               tmpBlurVConstants,
-               m_BlurTexture,
-               true, 
-               false);
+    /*dispatchData(tmpBlurVConstants,
+                 m_csBlurV,
+                 m_SSAOTexture,
+                 m_BlurTexture,
+                 m_sampler,
+                 {1280/32, 720/32, 1});*/
 
     /************************************************************************/
     /*                           Shadow                                     */
