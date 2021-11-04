@@ -391,12 +391,12 @@ namespace giEngineSDK {
     Vector<Buffer*> tmpBlurHConstants;
     tmpBlurHConstants.push_back(m_cBufferBlur);
 
-    /*dispatchData(tmpBlurHConstants,
+    dispatchData(tmpBlurHConstants,
                  m_csBlurH,
                  m_SSAOTexture,
                  m_BlurTexture,
                  m_sampler,
-                 {1280/32, 720/32, 1});*/
+                 {1280/32, 720/32, 1});
 
     /************************************************************************/
     /*                           BlurV                                      */
@@ -404,12 +404,12 @@ namespace giEngineSDK {
     Vector<Buffer*> tmpBlurVConstants;
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
-    /*dispatchData(tmpBlurVConstants,
+    dispatchData(tmpBlurVConstants,
                  m_csBlurV,
                  m_SSAOTexture,
                  m_BlurTexture,
                  m_sampler,
-                 {1280/32, 720/32, 1});*/
+                 {1280/32, 720/32, 1});
 
     /************************************************************************/
     /*                           Shadow                                     */
