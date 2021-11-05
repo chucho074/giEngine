@@ -149,5 +149,8 @@
     <ClInclude Include="include\giBaseUnorderedAccessView.h">
       <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
+    <ClInclude Include="include\giBlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

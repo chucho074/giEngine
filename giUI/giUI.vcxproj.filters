@@ -23,5 +23,8 @@
     <ClInclude Include="include\giImGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giPrerequisitesUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

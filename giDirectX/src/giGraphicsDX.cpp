@@ -24,7 +24,7 @@
 #include "giPixelShaderDX.h"
 #include "giRasterizerDX.h"
 #include "giDepthStateDX.h"
-#include "giUnorderedAccessViewDX.h"
+#include "giBlendStateDX.h"
 #include "stb_image.h"
 
 
@@ -431,39 +431,6 @@ namespace giEngineSDK {
     return tmpState;
   }
 
-  BaseUnorderedAccessView* 
-  CGraphicsDX::createUnorderedAccessView(Buffer * inData,
-                                         GI_FORMAT::E inFormat,
-                                         int32 inNumElements) {
-
-    CBufferDX* tmpBufferData = (CBufferDX*)inData;
-    UnorderedAccessViewDX * tmpUAV = new UnorderedAccessViewDX();
-
-    D3D11_BUFFER_UAV tmpBufferUAV;
-    tmpBufferUAV.Flags = 0;
-    tmpBufferUAV.FirstElement = 0;
-    tmpBufferUAV.NumElements = inNumElements;
-
-    D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDesc;
-    tmpDesc.Format = (DXGI_FORMAT)inFormat;
-    tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-    tmpDesc.Buffer = tmpBufferUAV;
-
-    if(FAILED(m_device->CreateUnorderedAccessView((tmpBufferData == nullptr 
-                                                   ? nullptr 
-                                                    : tmpBufferData->m_buffer),
-                                                  &tmpDesc,
-                                                  &tmpUAV->m_uav))) {
-
-      g_logger().SetError(ERROR_TYPE::kUAVCreation,
-                          "A Unordered Access View can't be created");
-      __debugbreak();
-      return nullptr;
-    }
-
-    return tmpUAV;
-  }
-
   void 
   CGraphicsDX::show() {
     m_swapChain->Present(0, 0);
@@ -563,7 +530,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::vsSetShader(BaseShader* inVShader) {
+  CGraphicsDX::vsSetShader(BaseVertexShader* inVShader) {
     
     auto tmpShader = static_cast<VertexShaderDX*>(inVShader);
 
@@ -590,7 +557,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetShader(BaseShader* inPShader) {
+  CGraphicsDX::psSetShader(BasePixelShader* inPShader) {
 
     auto tmpShader = static_cast<PixelShaderDX*>(inPShader);
 
@@ -675,6 +642,16 @@ namespace giEngineSDK {
 
 
   void 
+  CGraphicsDX::omSetBlendState(BlendState* inBlendState, 
+                               const float inBlendFactor[4],
+                               uint32 inSampleMask) {
+    
+    ID3D11BlendState * tmpBlendState;
+    tmpBlendState = static_cast<BlendStateDX*>(inBlendState)->m_blendState;
+    m_devContext->OMSetBlendState(tmpBlendState, inBlendFactor, inSampleMask);
+  }
+
+  void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
     m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);

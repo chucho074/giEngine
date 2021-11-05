@@ -24,7 +24,6 @@ namespace giEngineSDK {
   class CSamplerDX;
   class RasterizerDX;
   class DepthStateDX;
-  //class UnorderedAccessViewDX;
 }
 
 namespace giEngineSDK {
@@ -180,14 +179,6 @@ namespace giEngineSDK {
                      bool inDepthEnable) override;
 
     /**
-     * @brief    Create a Unordered Access View.
-     */
-    BaseUnorderedAccessView *
-    createUnorderedAccessView(Buffer* inData,
-                              GI_FORMAT::E inFormat,
-                              int32 inNumElements) override;
-
-    /**
      * @brief    Present.
      * @bug      No known Bugs.
      */
@@ -290,7 +281,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    vsSetShader(BaseShader * inVShader = nullptr) override;
+    vsSetShader(BaseVertexShader * inVShader = nullptr) override;
     
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -308,7 +299,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetShader(BaseShader * inPShader = nullptr) override;
+    psSetShader(BasePixelShader * inPShader = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -359,6 +350,18 @@ namespace giEngineSDK {
     void 
     omSetRenderTarget(Vector<Texture2D *> inRT, 
                       Texture2D * inDS = nullptr) override;
+
+    /** 
+     * @brief    Set Blend State.
+     * @param    inBlendState   Pointer to a blend-state interface. NULL for a default.
+     * @param    inBlendFactor  Array of blend factors, one for each RGBA component.
+     * @param    inSampleMask   32-bit sample coverage. The default value is 0xffffffff.
+     * @bug      No known Bugs.
+     */
+    void 
+    omSetBlendState(BlendState * inBlendState,
+                    const float inBlendFactor[4],
+                    uint32 inSampleMask = 0xffffffff) override;
      
     /** 
      * @brief    Draw Index.
