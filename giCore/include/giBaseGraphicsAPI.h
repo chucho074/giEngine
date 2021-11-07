@@ -137,7 +137,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual BaseVertexShader * 
-    createVS(String,
+    createVS(wString,
              String,
              String) { 
 
@@ -152,7 +152,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual BasePixelShader * 
-    createPS(String,
+    createPS(wString,
              String,
              String){ 
       return nullptr; 
@@ -166,7 +166,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual BaseComputeShader * 
-    createCS(String,
+    createCS(wString,
              String,
              String){ 
       return nullptr; 

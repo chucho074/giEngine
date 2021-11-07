@@ -101,7 +101,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseVertexShader * 
-    createVS(String inFileName,
+    createVS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
     
@@ -113,7 +113,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BasePixelShader * 
-    createPS(String inFileName,
+    createPS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
              
@@ -125,7 +125,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseComputeShader * 
-    createCS(String inFileName,
+    createCS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
 

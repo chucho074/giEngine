@@ -111,10 +111,10 @@ namespace giEngineSDK {
 
 
     //Create Vertex Shader 
-    m_vertexShader = gapi.createVS("Resources/gBuffer.hlsl", "VS_GBUFFER", "vs_4_0");
+    m_vertexShader = gapi.createVS(L"Resources/gBuffer.hlsl", "VS_GBUFFER", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShader = gapi.createPS("Resources/gBuffer.hlsl", "PS_GBUFFER", "ps_4_0");
+    m_pixelShader = gapi.createPS(L"Resources/gBuffer.hlsl", "PS_GBUFFER", "ps_4_0");
     
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDesc;
@@ -203,7 +203,7 @@ namespace giEngineSDK {
     /************************************************************************/
 
     //Create Compute Shader
-    m_computeShaderSSAO = gapi.createCS("Resources/ComputeSSAO.hlsl", "main", "cs_5_0");
+    m_computeShaderSSAO = gapi.createCS(L"Resources/ComputeSSAO.hlsl", "main", "cs_5_0");
 
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
@@ -231,10 +231,10 @@ namespace giEngineSDK {
     /************************************************************************/
 
     //Create Pixel Shader
-    m_csBlurH = gapi.createCS("Resources/ComputeBlur.hlsl", "cs_gaussian_blurH", "cs_5_0");
+    m_csBlurH = gapi.createCS(L"Resources/ComputeBlur.hlsl", "cs_gaussian_blurH", "cs_5_0");
 
     //Create Pixel Shader
-    m_csBlurV = gapi.createCS("Resources/ComputeBlur.hlsl", "cs_gaussian_blurV", "cs_5_0");
+    m_csBlurV = gapi.createCS(L"Resources/ComputeBlur.hlsl", "cs_gaussian_blurV", "cs_5_0");
 
 
     //Create the texture
@@ -260,10 +260,10 @@ namespace giEngineSDK {
     /*                              SHADOWS                                 */
     /************************************************************************/
     //Create Vertex Shader
-    m_vertexShaderShadow = gapi.createVS("Resources/Shadow.hlsl", "vs_Shadow", "vs_4_0");
+    m_vertexShaderShadow = gapi.createVS(L"Resources/Shadow.hlsl", "vs_Shadow", "vs_4_0");
     
     //Create Pixel Shader
-    m_pixelShaderShadow = gapi.createPS("Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
+    m_pixelShaderShadow = gapi.createPS(L"Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
 
     //Create the texture
     m_ShadowTexture.push_back(gapi.createTex2D(1024, 
@@ -283,10 +283,10 @@ namespace giEngineSDK {
     /*                               LIGHT                                  */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderLight = gapi.createVS("Resources/Light.hlsl", "vs_main", "vs_4_0");
+    m_vertexShaderLight = gapi.createVS(L"Resources/Light.hlsl", "vs_main", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderLight = gapi.createPS("Resources/Light.hlsl", "ps_main", "ps_4_0");
+    m_pixelShaderLight = gapi.createPS(L"Resources/Light.hlsl", "ps_main", "ps_4_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescLight;
@@ -314,14 +314,6 @@ namespace giEngineSDK {
 
     //Create the Input Layout
     m_inputLayoutLight = gapi.createIL(layoutDescLight, m_vertexShaderLight);
-
-    //Create the texture
-   /* m_BlurTexture.push_back(gapi.createTex2D(1280,
-                                             720, 
-                                             1,
-                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
-                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));*/
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
@@ -383,7 +375,7 @@ namespace giEngineSDK {
                  tmpSSAOShaderResources,
                  m_SSAOTexture,
                  m_sampler,
-                 {1280/32, 720/32, 1});  //Cambiar
+                 {1280/32, 23, 1});  
 
     /************************************************************************/
     /*                           BlurH                                      */
@@ -396,7 +388,7 @@ namespace giEngineSDK {
                  m_SSAOTexture,
                  m_BlurTexture,
                  m_sampler,
-                 {1280/32, 720/32, 1});
+                 {1280/32, 23, 1});
 
     /************************************************************************/
     /*                           BlurV                                      */
@@ -406,10 +398,10 @@ namespace giEngineSDK {
 
     dispatchData(tmpBlurVConstants,
                  m_csBlurV,
-                 m_SSAOTexture,
                  m_BlurTexture,
+                 m_SSAOTexture,
                  m_sampler,
-                 {1280/32, 720/32, 1});
+                 {1280/32, 23, 1});
 
     /************************************************************************/
     /*                           Shadow                                     */

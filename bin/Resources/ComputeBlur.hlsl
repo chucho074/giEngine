@@ -24,7 +24,7 @@ void
 cs_gaussian_blurH(CS_INPUT input) {
   uint2 index = input.globalThreadID.xy;
 
-  float4 tmpBlur = Blur[index].xxxx;
+  float4 tmpBlur = Blur[index];
 
   float2 TexCoord = index / TextureSize; //psPos/size
 
@@ -46,7 +46,7 @@ void
 cs_gaussian_blurV(CS_INPUT input) {
   uint2 index = input.globalThreadID.xy;
   
-  float4 tmpBlur = Blur[index].xxxx;
+  float4 tmpBlur = Blur[index];
 
   float2 TexCoord = index / TextureSize; //psPos/size
 

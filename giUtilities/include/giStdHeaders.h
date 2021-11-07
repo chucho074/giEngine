@@ -20,6 +20,9 @@
 #include <map>
 #include <memory>
 
+//#include <codecvt>
+//#include <locale>
+
 namespace giEngineSDK {
   using String = std::string;
   using wString = std::wstring;
@@ -97,8 +100,22 @@ namespace giEngineSDK {
 
   using std::static_pointer_cast;
 
-
   //template <typename T>
   using std::make_shared;
+
+
+  ////Wstring & String converters functions
+  //using convert_t = std::codecvt_utf8<wchar_t>;
+  //std::wstring_convert<convert_t, wchar_t> strconverter;
+
+  //String 
+  //to_string(wString wstr) {
+  //  return strconverter.to_bytes(wstr);
+  //}
+
+  //wString 
+  //to_wstring(String str) {
+  //  return strconverter.from_bytes(str);
+  //}
 
 }

@@ -77,8 +77,8 @@ namespace giEngineSDK {
   struct BlurConstantBuffer {
     Vector2 Viewport;   
     float Gamma = 1.0f;
-    float Garbage = 0;   //Just for the 16 magic
     Vector2 TextureSize;   
+    Vector3 Garbage;   //Just for the 16 magic
   };
 
 

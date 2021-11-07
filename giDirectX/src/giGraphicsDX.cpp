@@ -273,7 +273,7 @@ namespace giEngineSDK {
 
 
   BaseVertexShader* 
-  CGraphicsDX::createVS(String inFileName,
+  CGraphicsDX::createVS(wString inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
 
@@ -294,7 +294,7 @@ namespace giEngineSDK {
 
 
   BasePixelShader* 
-  CGraphicsDX::createPS(String inFileName,
+  CGraphicsDX::createPS(wString inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
     PixelShaderDX* tempPS = new PixelShaderDX();
@@ -312,7 +312,7 @@ namespace giEngineSDK {
   }
 
   BaseComputeShader* 
-  CGraphicsDX::createCS(String inFileName, 
+  CGraphicsDX::createCS(wString inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
 
