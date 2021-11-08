@@ -34,16 +34,14 @@ namespace giEngineSDK {
     auto& GAPI = g_graphicsAPI();
 
     m_vertexBuffer = GAPI.createBuffer(sizeof(SimpleVertex) * 
-                                       static_cast<int32>(m_vertexVector.size()),
-                                       0x1L,
-                                       0,
+                                         static_cast<int32>(m_vertexVector.size()),
+                                       GI_BIND_FLAG::kBIND_VERTEX_BUFFER,
                                        m_vertexVector.data());
 
     
 
     m_indexBuffer = GAPI.createBuffer(sizeof(uint32) * m_facesList.size(),
-                                      0x2L,
-                                      0,
+                                      GI_BIND_FLAG::kBIND_INDEX_BUFFER,
                                       m_facesList.data());
 
 

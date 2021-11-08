@@ -125,5 +125,4 @@ class DirectXApp : public BaseApp {
   Matrix4 m_world;
 
   SceneGraph sceneGraph;
-
 };

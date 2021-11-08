@@ -19,15 +19,15 @@ namespace giEngineSDK {
    * @class     BaseComputeShader.
    * @brief     A base shader for Compute.
    */
-   class BaseComputeShader : public BaseShader
-   {
-    public:
-     //Default Costructor
-     BaseComputeShader() {}
-
-     //Destructor
-     virtual
-     ~BaseComputeShader() {}
-   };
-
+  class BaseComputeShader : public BaseShader
+  {
+   public:
+    //Default Costructor
+    BaseComputeShader() {}
+  
+    //Destructor
+    virtual
+    ~BaseComputeShader() {}
+  };
+  
 }

@@ -24,7 +24,6 @@
 #include "giPixelShaderDX.h"
 #include "giRasterizerDX.h"
 #include "giDepthStateDX.h"
-#include "giUnorderedAccessViewDX.h"
 #include "stb_image.h"
 
 
@@ -230,6 +229,27 @@ namespace giEngineSDK {
       }
     }
 
+    if(D3D11_BIND_UNORDERED_ACCESS & inBindFlags) {
+      D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDesc;
+      memset(&tmpDesc, 0, sizeof(tmpDesc));
+      tmpDesc.Format = (DXGI_FORMAT)inFormat;
+      tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+      tmpDesc.Buffer.Flags = 0;
+      tmpDesc.Buffer.FirstElement = 0;
+      tmpDesc.Buffer.NumElements = 1;
+      
+      
+      if(FAILED(m_device->CreateUnorderedAccessView(temp->m_texture,
+                                                    &tmpDesc,
+                                                    &temp->m_UAV))) {
+      
+        g_logger().SetError(ERROR_TYPE::kUAVCreation,
+                            "A Unordered Access View can't be created");
+        __debugbreak();
+        return nullptr;
+      }
+    }
+
     return temp;
 
   }
@@ -253,7 +273,7 @@ namespace giEngineSDK {
 
 
   BaseVertexShader* 
-  CGraphicsDX::createVS(String inFileName,
+  CGraphicsDX::createVS(wString inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
 
@@ -274,7 +294,7 @@ namespace giEngineSDK {
 
 
   BasePixelShader* 
-  CGraphicsDX::createPS(String inFileName,
+  CGraphicsDX::createPS(wString inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
     PixelShaderDX* tempPS = new PixelShaderDX();
@@ -292,7 +312,7 @@ namespace giEngineSDK {
   }
 
   BaseComputeShader* 
-  CGraphicsDX::createCS(String inFileName, 
+  CGraphicsDX::createCS(wString inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
 
@@ -332,18 +352,28 @@ namespace giEngineSDK {
 
   Buffer* 
   CGraphicsDX::createBuffer(size_T inByteWidth,
-                            uint32 inBindFlags,
-                            uint32 inOffset,
-                            void* inBufferData) {
+                            int32 inBindFlags,
+                            void*  inBufferData,
+                            uint32 inStructureStride,
+                            uint32 inNumElements,
+                            GI_FORMAT::E inFormat) {
 
-    GI_UNREFERENCED_PARAMETER(inOffset);
+    //GI_UNREFERENCED_PARAMETER(inOffset);
     CBufferDX* tmpBuffer = new CBufferDX();
     CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
     tmpData.SysMemPitch = inByteWidth;
     tmpData.SysMemSlicePitch = 0;
+    tmpDesc.StructureByteStride = 0;
 
+    //If is a unordered Access View or shader Resource
+    if (inBindFlags & GI_BIND_FLAG::kBIND_SHADER_RESOURCE 
+        && inBindFlags & GI_BIND_FLAG::kBIND_UNORDERED_ACCESS) {
+      tmpDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+      tmpDesc.StructureByteStride = inStructureStride;
+    }
+    //Create The buffer
     if (FAILED(m_device->CreateBuffer(&tmpDesc,
                                       (inBufferData == nullptr ? nullptr : &tmpData),
                                       &tmpBuffer->m_buffer))) {
@@ -352,9 +382,28 @@ namespace giEngineSDK {
       __debugbreak();
       return nullptr;
     }
-
-
-
+    //Create the UAV
+    if (inBindFlags & GI_BIND_FLAG::kBIND_UNORDERED_ACCESS) {
+      D3D11_BUFFER_UAV tmpBufferUAV;
+      tmpBufferUAV.Flags = 0;
+      tmpBufferUAV.FirstElement = 0;
+      tmpBufferUAV.NumElements = inNumElements;
+      
+      D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDescUAV;
+      tmpDescUAV.Format = (DXGI_FORMAT)inFormat;
+      tmpDescUAV.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+      tmpDescUAV.Buffer = tmpBufferUAV;
+      
+      if (FAILED(m_device->CreateUnorderedAccessView(tmpBuffer->m_buffer,
+                                                     &tmpDescUAV,
+                                                     &tmpBuffer->m_UAV))) {
+      
+        g_logger().SetError(ERROR_TYPE::kUAVCreation,
+                            "A Unordered Access View can't be created");
+        __debugbreak();
+        return nullptr;
+      }
+    }
     return tmpBuffer;
   }
 
@@ -431,39 +480,6 @@ namespace giEngineSDK {
     return tmpState;
   }
 
-  BaseUnorderedAccessView* 
-  CGraphicsDX::createUnorderedAccessView(Buffer * inData,
-                                         GI_FORMAT::E inFormat,
-                                         int32 inNumElements) {
-
-    CBufferDX* tmpBufferData = (CBufferDX*)inData;
-    UnorderedAccessViewDX * tmpUAV = new UnorderedAccessViewDX();
-
-    D3D11_BUFFER_UAV tmpBufferUAV;
-    tmpBufferUAV.Flags = 0;
-    tmpBufferUAV.FirstElement = 0;
-    tmpBufferUAV.NumElements = inNumElements;
-
-    D3D11_UNORDERED_ACCESS_VIEW_DESC tmpDesc;
-    tmpDesc.Format = (DXGI_FORMAT)inFormat;
-    tmpDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-    tmpDesc.Buffer = tmpBufferUAV;
-
-    if(FAILED(m_device->CreateUnorderedAccessView((tmpBufferData == nullptr 
-                                                   ? nullptr 
-                                                    : tmpBufferData->m_buffer),
-                                                  &tmpDesc,
-                                                  &tmpUAV->m_uav))) {
-
-      g_logger().SetError(ERROR_TYPE::kUAVCreation,
-                          "A Unordered Access View can't be created");
-      __debugbreak();
-      return nullptr;
-    }
-
-    return tmpUAV;
-  }
-
   void 
   CGraphicsDX::show() {
     m_swapChain->Present(0, 0);
@@ -507,6 +523,19 @@ namespace giEngineSDK {
     m_devContext->OMSetDepthStencilState(inDepthState->m_State, 0);
   }
 
+  void
+  CGraphicsDX::setUAV(int32 inStartSlot, Texture2D * inUAV) {
+    ID3D11UnorderedAccessView * tmpUAV = nullptr;
+
+    if (nullptr != inUAV) {
+      tmpUAV = static_cast<Texture2DDX*>(inUAV)->m_UAV;
+      
+    }
+    m_devContext->CSSetUnorderedAccessViews(inStartSlot, 
+                                            1, 
+                                            &tmpUAV,
+                                            nullptr);
+  }
 
   void 
   CGraphicsDX::updateSubresource(Buffer* inBuffer,
@@ -602,12 +631,31 @@ namespace giEngineSDK {
     m_devContext->PSSetShader(tmpPShader, NULL, 0);
   }
 
+  void 
+  CGraphicsDX::csSetShader(BaseShader* inCShader) {
+    auto tmpShader = static_cast<ComputeShaderDX*>(inCShader);
+
+    ID3D11ComputeShader* tmpCShader = nullptr;
+    if (nullptr != tmpShader) {
+      tmpCShader = tmpShader->m_computeShader;
+    }
+
+    m_devContext->CSSetShader(tmpCShader, NULL, 0);
+  }
+
 
   void 
   CGraphicsDX::psSetConstantBuffer(uint32 inSlot,
                                    Buffer* inBuffer) {
 
     m_devContext->PSSetConstantBuffers(inSlot, 
+                                       1, 
+                                       &static_cast<CBufferDX*>(inBuffer)->m_buffer);
+  }
+
+  void 
+  CGraphicsDX::csSetConstantBuffer(uint32 inSlot, Buffer* inBuffer) {
+    m_devContext->CSSetConstantBuffers(inSlot, 
                                        1, 
                                        &static_cast<CBufferDX*>(inBuffer)->m_buffer);
   }
@@ -625,6 +673,16 @@ namespace giEngineSDK {
     m_devContext->PSSetShaderResources(inSlot, 1, &tmpSRV);
   }
 
+  void 
+  CGraphicsDX::csSetShaderResource(uint32 inSlot, Texture2D* inTexture) {
+    ID3D11ShaderResourceView* tmpSRV = nullptr;
+    if (nullptr != inTexture) {
+      tmpSRV = static_cast<Texture2DDX*>(inTexture)->getSRV();
+    }
+
+    m_devContext->CSSetShaderResources(inSlot, 1, &tmpSRV);
+  }
+
 
   void 
   CGraphicsDX::psSetSampler(uint32 inSlot,
@@ -634,6 +692,16 @@ namespace giEngineSDK {
     auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
 
     m_devContext->PSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_sampler);
+  }
+
+  void 
+  CGraphicsDX::csSetSampler(uint32 inSlot,
+                            uint32 inNumSamplers,
+                            Sampler* inSampler) {
+
+    auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
+
+    m_devContext->CSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_sampler);
   }
 
 
@@ -673,6 +741,19 @@ namespace giEngineSDK {
 
   }
 
+  void
+  CGraphicsDX::unbindRenderTarget() {
+
+    ID3D11RenderTargetView* tmpRTV[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+  
+    for (int32 i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+      tmpRTV[i] = nullptr;
+    }
+    
+    ID3D11DepthStencilView* tmpDSV = nullptr;
+    
+    m_devContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, tmpRTV, tmpDSV);
+  }
 
   void 
   CGraphicsDX::drawIndexed(size_T inNumIndexes,

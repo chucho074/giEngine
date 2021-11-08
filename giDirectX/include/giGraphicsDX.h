@@ -24,7 +24,6 @@ namespace giEngineSDK {
   class CSamplerDX;
   class RasterizerDX;
   class DepthStateDX;
-  //class UnorderedAccessViewDX;
 }
 
 namespace giEngineSDK {
@@ -102,7 +101,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseVertexShader * 
-    createVS(String inFileName,
+    createVS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
     
@@ -114,7 +113,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BasePixelShader * 
-    createPS(String inFileName,
+    createPS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
              
@@ -126,7 +125,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseComputeShader * 
-    createCS(String inFileName,
+    createCS(wString inFileName,
              String inEntryPoint,
              String inShaderModel) override;
 
@@ -152,9 +151,11 @@ namespace giEngineSDK {
      */
     Buffer * 
     createBuffer(size_T inByteWidth, 
-                 uint32 inBindFlags, 
-                 uint32 inOffset, 
-                 void * inBufferData) override;
+                 int32 inBindFlags, 
+                 void * inBufferData,
+                 uint32 inStructureStride = 0,
+                 uint32 inNumElements = 0,
+                 GI_FORMAT::E = GI_FORMAT::kFORMAT_UNKNOWN) override;
     
     /**
      * @brief    Creates a Sampler.
@@ -178,14 +179,6 @@ namespace giEngineSDK {
     DepthState *
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) override;
-
-    /**
-     * @brief    Create a Unordered Access View.
-     */
-    BaseUnorderedAccessView *
-    createUnorderedAccessView(Buffer* inData,
-                              GI_FORMAT::E inFormat,
-                              int32 inNumElements) override;
 
     /**
      * @brief    Present.
@@ -233,6 +226,14 @@ namespace giEngineSDK {
     void 
     setDepthState(DepthStateDX* inDepthState);
     
+    /**
+     * @brief   Set the Unordered Access Views.
+     * @param   inUAV         The unordered Accesss View to set.
+     * @bug     No known Bugs.
+     */
+    void
+    setUAV(int32, Texture2D* inUAV) override;
+
     /**
      * @brief    Update Subresource.
      * @param    inBuffer   The buffer with the information.
@@ -309,6 +310,14 @@ namespace giEngineSDK {
      */
     void 
     psSetShader(BaseShader * inPShader = nullptr) override;
+
+    /**
+     * @brief    Pixel Shader Set Shader.
+     * @param    inPShader    The pixel Shader to set.
+     * @bug      No known Bugs.
+     */
+    void 
+    csSetShader(BaseShader * inCShader = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -318,6 +327,15 @@ namespace giEngineSDK {
      */
     void 
     psSetConstantBuffer(uint32 inSlot, 
+                        Buffer * inBuffer) override;
+    /**
+     * @brief    Compute Shader Set Constant Buffer.
+     * @param    inSlot      The index to begin setting constant buffer.
+     * @param    inBuffer    The constant buffer to set.
+     * @bug      No known Bugs.
+     */
+    void 
+    csSetConstantBuffer(uint32 inSlot, 
                         Buffer * inBuffer) override;
     
     /**
@@ -329,6 +347,15 @@ namespace giEngineSDK {
     void 
     psSetShaderResource(uint32 inSlot, 
                         Texture2D * inTexture = nullptr) override;
+    /**
+     * @brief    Compute Shadder Set Shader Resource.
+     * @param    inSlot      The index to begin setting constant buffer.
+     * @param    inTexture   The texture to set.
+     * @bug      No known Bugs.
+     */
+    void 
+    csSetShaderResource(uint32 inSlot, 
+                        Texture2D * inTexture = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Samplers.
@@ -339,6 +366,18 @@ namespace giEngineSDK {
      */
     void 
     psSetSampler(uint32 inSlot, 
+                 uint32 inNumSamplers, 
+                 Sampler * inSampler) override;
+    
+    /**
+     * @brief    Compute Shader Set Samplers.
+     * @param    inSlot          The index to begin setting the sampler.
+     * @param    inNumSamplers   The number of samplers.
+     * @param    inSampler       The sampler.
+     * @bug      No known Bugs.
+     */
+    void 
+    csSetSampler(uint32 inSlot, 
                  uint32 inNumSamplers, 
                  Sampler * inSampler) override;
     
@@ -359,6 +398,9 @@ namespace giEngineSDK {
     void 
     omSetRenderTarget(Vector<Texture2D *> inRT, 
                       Texture2D * inDS = nullptr) override;
+
+    void
+    unbindRenderTarget() override;
      
     /** 
      * @brief    Draw Index.

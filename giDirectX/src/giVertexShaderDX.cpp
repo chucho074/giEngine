@@ -24,7 +24,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  VertexShaderDX::init(String inFileName,
+  VertexShaderDX::init(wString inFileName,
                        String inEntryPoint, 
                        String inShaderModel) {
 
@@ -35,7 +35,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  VertexShaderDX::CompileShaderFromFile(String szFileName,
+  VertexShaderDX::CompileShaderFromFile(wString szFileName,
                                         String szEntryPoint, 
                                         String szShaderModel, 
                                         ID3DBlob** ppBlobOut) {
@@ -50,19 +50,16 @@ namespace giEngineSDK {
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DX11CompileFromFileA(szFileName.c_str(),
-                                NULL,
-                                NULL,
-                                szEntryPoint.c_str(),
-                                szShaderModel.c_str(),
-                                dwShaderFlags,
-                                0,
-                                NULL,
-                                ppBlobOut,
-                                &pErrorBlob,
-                                NULL);
+    hr = D3DCompileFromFile(szFileName.c_str(),
+                            NULL,
+                            NULL,
+                            szEntryPoint.c_str(),
+                            szShaderModel.c_str(),
+                            dwShaderFlags,
+                            0,
+                            ppBlobOut,
+                            &pErrorBlob);
 
     if (FAILED(hr)) {
       if (pErrorBlob != NULL) {

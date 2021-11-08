@@ -57,9 +57,6 @@
     <ClInclude Include="include\giVertexShaderDX.h">
       <Filter>Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="include\giUnorderedAccessViewDX.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp">

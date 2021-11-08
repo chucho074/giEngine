@@ -54,6 +54,8 @@ namespace giEngineSDK {
     float Intensity;
     float Scale;
     float Bias;
+    Vector2 TextureSize;
+    Vector2 kk;
   };
   /**
    * @struct   LightConstantBuffer.
@@ -75,7 +77,8 @@ namespace giEngineSDK {
   struct BlurConstantBuffer {
     Vector2 Viewport;   
     float Gamma = 1.0f;
-    float Garbage = 0;   //Just for the 16 magic
+    Vector2 TextureSize;   
+    Vector3 Garbage;   //Just for the 16 magic
   };
 
 
@@ -107,7 +110,7 @@ namespace giEngineSDK {
     render() override;
 
     /**
-     * 
+     * brief
      */
     void
     renderData(Vector<Texture2D*> inRendertarget,
@@ -122,6 +125,16 @@ namespace giEngineSDK {
                bool inClear = true);
 
     /**
+     * @brief
+     */
+    void 
+    dispatchData(Vector<Buffer*> inConstantBuffers,
+                 BaseComputeShader * inCS,
+                 Vector<Texture2D*> inShaderResources,
+                 Vector<Texture2D*> inUAVS,
+                 Sampler* inSampler,
+                 Vector3 inDispatch);
+    /**
      * @brief    .
      */
     void
@@ -129,68 +142,46 @@ namespace giEngineSDK {
 
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
-
     //The Constant Buffer (Never Change)
     Buffer * m_cBufferCamera = nullptr;
-
     //The Constant Buffer (Change Every Frame)
     Buffer * m_cBufferChangeEveryFrame = nullptr;
-
     //The input Layout
     InputLayout* m_inputLayout = nullptr;
-
     //The Sampler
     Sampler* m_sampler = nullptr;
-
     //The color For the mesh
     Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };
-
     //Depth Stencil State
     SharedPtr<DepthState> m_depthStateGBuffer;
-
     //Rasterizer
     SharedPtr<Rasterizer> m_rasterGBuffer;
-
     Vector<Texture2D*> m_renderTargets;
 
-    //GBUFFER
+                //GBUFFER
     //The Vertex shader
     BaseVertexShader* m_vertexShader = nullptr;
-
     //The Pixel Shader
     BasePixelShader* m_pixelShader = nullptr;
 
-    //SSAO
-    //The Vertex shader
-    BaseVertexShader* m_vertexShaderSSAO = nullptr;
-
-    //The Pixel Shader
-    BasePixelShader* m_pixelShaderSSAO = nullptr;
-
-
-    InputLayout* m_inputLayoutSSAO = nullptr;
-
+                  //SSAO
+    //The Compute Shader
+    BaseComputeShader* m_computeShaderSSAO = nullptr;
     Buffer* m_cBufferSSAO = nullptr;
-    
     Vector<Texture2D*> m_SSAOTexture;
 
     //SAQ
     SharedPtr<Model> m_SAQ;
 
-    //Blur
-    //The Vertex Shader
-    BaseVertexShader* m_vertexShaderBlur = nullptr;
-    //The Pixel Shader
-    BasePixelShader* m_pixelShaderBlurH = nullptr;
-
-    //The Pixel Shader
-    BasePixelShader* m_pixelShaderBlurV = nullptr;
-
+                  //Blur
+    //The Compute Shader
+    BaseComputeShader* m_csBlurH = nullptr;
+    //The Compute Shader
+    BaseComputeShader* m_csBlurV = nullptr;
     Vector<Texture2D*> m_BlurTexture;
-
     Buffer* m_cBufferBlur = nullptr;
 
-    //Shadows
+                //Shadows
     //The Vertex Shader
     BaseVertexShader* m_vertexShaderShadow = nullptr;
     //The Pixel Shader
@@ -202,7 +193,7 @@ namespace giEngineSDK {
     //Camera
     SharedPtr<Camera> m_ShadowCamera;
 
-    //Light
+               //Light
     //The Vertex Shader
     BaseVertexShader* m_vertexShaderLight = nullptr;
     //The Pixel Shader

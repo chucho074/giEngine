@@ -33,7 +33,7 @@ namespace giEngineSDK {
      * @return    Returns if it can be readed.
      */
     virtual bool 
-    init(String inFileName,
+    init(wString inFileName,
          String inEntryPoint,
          String inShaderModel) = 0;
 

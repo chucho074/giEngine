@@ -36,5 +36,7 @@ namespace giEngineSDK {
    
     //Access to the DirectX Buffers
     ID3D11Buffer * m_buffer = nullptr;
+    //UAV
+    ID3D11UnorderedAccessView * m_UAV;
   };
 }
