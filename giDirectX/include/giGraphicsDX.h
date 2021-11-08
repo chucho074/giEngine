@@ -309,7 +309,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetShader(BaseShader * inPShader = nullptr) override;
+    psSetShader(BasePixelShader * inPShader = nullptr) override;
 
     /**
      * @brief    Pixel Shader Set Shader.

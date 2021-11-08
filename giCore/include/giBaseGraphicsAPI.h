@@ -357,7 +357,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    psSetShader(BaseShader * = nullptr) {};
+    psSetShader(BasePixelShader * = nullptr) {};
 
     /**
      * @brief    Pixel Shader Set Shader.
