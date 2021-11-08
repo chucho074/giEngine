@@ -651,6 +651,22 @@ namespace giEngineSDK {
     m_devContext->OMSetBlendState(tmpBlendState, inBlendFactor, inSampleMask);
   }
 
+  void 
+  CGraphicsDX::omSetDepthStencilState(DepthState* inDepthState, 
+                                      uint32 inStencilRef) {
+
+    ID3D11DepthStencilState* tmpDepthState;
+    tmpDepthState = static_cast<DepthStateDX*>(inDepthState)->m_State;
+    m_devContext->OMSetDepthStencilState(tmpDepthState, 0);
+  }
+
+  void 
+  CGraphicsDX::rsSetState(Rasterizer * inRaster) {
+    ID3D11RasterizerState* tmpRasterState;
+    tmpRasterState = static_cast<RasterizerDX*>(inRaster)->m_rasterizerState;
+    m_devContext->RSSetState(tmpRasterState);
+  }
+
   void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {

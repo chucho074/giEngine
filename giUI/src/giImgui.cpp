@@ -25,7 +25,7 @@ using giEngineSDK::BlendState;
 using giEngineSDK::GI_FORMAT::E;
 using giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E;
 
-// DirectX11 data
+// giEngine data
 struct ImGui_ImplGI_Data {
   
   SharedPtr<Buffer>           spVB;
@@ -109,6 +109,274 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   // Setup blend state
   const float blend_factor[4] = { 0.f, 0.f, 0.f, 0.f };
   gapi.omSetBlendState(bd->spBlendState.get(), blend_factor);
-  gapi.omSetDepthStencilState(bd->spDepthStencilState, 0);
-  gapi.RSSetState(bd->spRasterizerState);
+  gapi.omSetDepthStencilState(bd->spDepthStencilState.get(), 0);
+  gapi.rsSetState(bd->spRasterizerState.get());
+}
+
+// Render function
+void 
+ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
+  auto& gapi = g_graphicsAPI();
+  // Avoid rendering when minimized
+  if (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f) {
+    return;
+  }
+  
+  ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
+  
+  
+  // Create and grow vertex/index buffers if needed
+  if (!bd->spVB || bd->VertexBufferSize < draw_data->TotalVtxCount) {
+    if (bd->spVB) { 
+      bd->spVB->Release(); 
+      bd->spVB = NULL; 
+    }
+    bd->VertexBufferSize = draw_data->TotalVtxCount + 5000;
+
+    D3D11_BUFFER_DESC desc;
+    memset(&desc, 0, sizeof(D3D11_BUFFER_DESC));
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.ByteWidth = bd->VertexBufferSize * sizeof(ImDrawVert);
+    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
+    if (gapi.createBuffer(&desc, NULL, &bd->spVB) < 0) {
+      return;
+    }
+  }
+  if (!bd->spIB || bd->IndexBufferSize < draw_data->TotalIdxCount) {
+    if (bd->spIB) { 
+      bd->spIB->Release(); 
+      bd->spIB = NULL; 
+    }
+    bd->IndexBufferSize = draw_data->TotalIdxCount + 10000;
+    D3D11_BUFFER_DESC desc;
+    memset(&desc, 0, sizeof(D3D11_BUFFER_DESC));
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.ByteWidth = bd->IndexBufferSize * sizeof(ImDrawIdx);
+    desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    if (gapi.createBuffer(&desc, NULL, &bd->spIB) < 0) {
+      return;
+    }
+  }
+  
+  // Upload vertex/index data into a single contiguous GPU buffer
+  D3D11_MAPPED_SUBRESOURCE vtx_resource, idx_resource;
+  if (ctx->Map(bd->spVB, 
+      0, 
+      D3D11_MAP_WRITE_DISCARD, 
+      0, 
+      &vtx_resource) != S_OK) {
+    return;
+  }
+  if (ctx->Map(bd->spIB, 
+      0, 
+      D3D11_MAP_WRITE_DISCARD, 
+      0, 
+      &idx_resource) != S_OK) {
+    return;
+  }
+  ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource.pData;
+  ImDrawIdx* idx_dst = (ImDrawIdx*)idx_resource.pData;
+  for (int n = 0; n < draw_data->CmdListsCount; n++) {
+    const ImDrawList* cmd_list = draw_data->CmdLists[n];
+    memcpy(vtx_dst, 
+           cmd_list->VtxBuffer.Data, 
+           cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
+    memcpy(idx_dst, 
+           cmd_list->IdxBuffer.Data, 
+           cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+    vtx_dst += cmd_list->VtxBuffer.Size;
+    idx_dst += cmd_list->IdxBuffer.Size;
+  }
+  ctx->Unmap(bd->spVB, 0);
+  ctx->Unmap(bd->spIB, 0);
+  
+  // Setup orthographic projection matrix into our constant buffer
+  // Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
+  {
+    D3D11_MAPPED_SUBRESOURCE mapped_resource;
+    if (ctx->Map(bd->spVertexConstantBuffer, 
+        0, 
+        D3D11_MAP_WRITE_DISCARD, 
+        0, 
+        &mapped_resource) != S_OK) {
+      return;
+    }
+
+    VERTEX_CONSTANT_BUFFER* constant_buffer = (VERTEX_CONSTANT_BUFFER*)mapped_resource.pData;
+    float L = draw_data->DisplayPos.x;
+    float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x;
+    float T = draw_data->DisplayPos.y;
+    float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
+    float mvp[4][4] =
+    {
+        { 2.0f/(R-L),   0.0f,           0.0f,       0.0f },
+        { 0.0f,         2.0f/(T-B),     0.0f,       0.0f },
+        { 0.0f,         0.0f,           0.5f,       0.0f },
+        { (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
+    };
+    memcpy(&constant_buffer->mvp, mvp, sizeof(mvp));
+    ctx->Unmap(bd->spVertexConstantBuffer, 0);
+  }
+  
+  // Backup DX state that will be modified to restore it afterwards (unfortunately this is very ugly looking and verbose. Close your eyes!)
+  struct BACKUP_DX11_STATE {
+    uint32                    ScissorRectsCount, ViewportsCount;
+    D3D11_RECT                ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    D3D11_VIEWPORT            Viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    Rasterizer*               RS;
+    BlendState*               BlenState;
+    float                     BlendFactor[4];
+    uint32                    SampleMask;
+    uint32                    StencilRef;
+    DepthState*               DepthStencilState;
+    Texture2D*                PSShaderResource;
+    ID3D11SamplerState*       PSSampler;
+    BasePixelShader*          PS;
+    BaseVertexShader*         VS;
+    ID3D11GeometryShader*     GS;
+    uint32                    PSInstancesCount, VSInstancesCount, GSInstancesCount;
+    ID3D11ClassInstance *     PSInstances[256], *VSInstances[256], *GSInstances[256];   // 256 is max according to PSSetShader documentation
+    GI_PRIMITIVE_TOPOLOGY::E  PrimitiveTopology;
+    Buffer*                   IndexBuffer;
+    Buffer*                   VertexBuffer;
+    Buffer*                   VSConstantBuffer;
+    uint32                    IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
+    GI_FORMAT::E              IndexBufferFormat;
+    InputLayout*              InputL;
+  };
+
+  BACKUP_DX11_STATE old = {};
+  old.ScissorRectsCount = old.ViewportsCount = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+  gapi.rsGetScissorRects(&old.ScissorRectsCount, old.ScissorRects);
+  gapi.rsGetViewports(&old.ViewportsCount, old.Viewports);
+  gapi.rsGetState(&old.RS);
+  gapi.omGetBlendState(&old.BlendState, old.BlendFactor, &old.SampleMask);
+  gapi.omGetDepthStencilState(&old.DepthStencilState, &old.StencilRef);
+  gapi.psGetShaderResources(0, 1, &old.PSShaderResource);
+  gapi.psGetSamplers(0, 1, &old.PSSampler);
+  old.PSInstancesCount = old.VSInstancesCount = old.GSInstancesCount = 256;
+  gapi.psGetShader(&old.PS, old.PSInstances, &old.PSInstancesCount);
+  gapi.vsGetShader(&old.VS, old.VSInstances, &old.VSInstancesCount);
+  gapi.vsGetConstantBuffers(0, 1, &old.VSConstantBuffer);
+  gapi.gsGetShader(&old.GS, old.GSInstances, &old.GSInstancesCount);
+  
+  gapi.iaGetPrimitiveTopology(&old.PrimitiveTopology);
+  gapi.iaGetIndexBuffer(&old.IndexBuffer, &old.IndexBufferFormat, &old.IndexBufferOffset);
+  gapi.iaGetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset);
+  gapi.iaGetInputLayout(&old.InputLayout);
+  
+  // Setup desired DX state
+  ImGui_ImplGI_SetupRenderState(draw_data);
+  
+  // Render command lists
+  // (Because we merged all buffers into a single one, we maintain our own offset into them)
+  int global_idx_offset = 0;
+  int global_vtx_offset = 0;
+  ImVec2 clip_off = draw_data->DisplayPos;
+  for (int n = 0; n < draw_data->CmdListsCount; n++) {
+    const ImDrawList* cmd_list = draw_data->CmdLists[n];
+    for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
+      const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
+      if (pcmd->UserCallback != NULL) {
+        // User callback, registered via ImDrawList::AddCallback()
+        // (ImDrawCallback_ResetRenderState is a special callback value used 
+        // by the user to request the renderer to reset render state.)
+        if (pcmd->UserCallback == ImDrawCallback_ResetRenderState) {
+            ImGui_ImplGI_SetupRenderState(draw_data);
+        }
+        else {
+          pcmd->UserCallback(cmd_list, pcmd);
+        }
+      }
+      else {
+        // Project scissor/clipping rectangles into framebuffer space
+        ImVec2 clip_min(pcmd->ClipRect.x - clip_off.x, pcmd->ClipRect.y - clip_off.y);
+        ImVec2 clip_max(pcmd->ClipRect.z - clip_off.x, pcmd->ClipRect.w - clip_off.y);
+        if (clip_max.x < clip_min.x || clip_max.y < clip_min.y) {
+          continue;
+        }
+        // Apply scissor/clipping rectangle
+        const D3D11_RECT r = { (LONG)clip_min.x, 
+                               (LONG)clip_min.y, 
+                               (LONG)clip_max.x, 
+                               (LONG)clip_max.y };
+        gapi.rsSetScissorRects(1, &r);
+  
+        // Bind texture, Draw
+        SharedPtr<Texture2D> texture_srv = (ID3D11ShaderResourceView*)pcmd->GetTexID();
+        gapi.psSetShaderResources(0, 1, &texture_srv);
+        gapi.drawIndexed(pcmd->ElemCount, 
+                         pcmd->IdxOffset + global_idx_offset, 
+                         pcmd->VtxOffset + global_vtx_offset);
+      }
+    }
+    global_idx_offset += cmd_list->IdxBuffer.Size;
+    global_vtx_offset += cmd_list->VtxBuffer.Size;
+  }
+  
+  // Restore modified DX state
+  gapi.RSSetScissorRects(old.ScissorRectsCount, old.ScissorRects);
+  gapi.RSSetViewports(old.ViewportsCount, old.Viewports);
+  gapi.RSSetState(old.RS); 
+  if (old.RS) {
+    old.RS->Release();
+  }
+  gapi.OMSetBlendState(old.BlendState, old.BlendFactor, old.SampleMask); 
+  if (old.BlendState) {
+    old.BlendState->Release();
+  }
+  gapi.omSetDepthStencilState(old.DepthStencilState, old.StencilRef); 
+  if (old.DepthStencilState) {
+    old.DepthStencilState->Release();
+  }
+  gapi.psSetShaderResources(0, 1, &old.PSShaderResource); 
+  if (old.PSShaderResource) {
+    old.PSShaderResource->Release();
+  }
+  gapi.psSetSamplers(0, 1, &old.PSSampler); 
+  if (old.PSSampler) {
+    old.PSSampler->Release();
+  }
+  gapi.psSetShader(old.PS, old.PSInstances, old.PSInstancesCount); 
+  if (old.PS) {
+    old.PS->Release();
+  }
+  for (uint32 i = 0; i < old.PSInstancesCount; i++) { 
+    if (old.PSInstances[i]) {
+      old.PSInstances[i]->Release(); 
+    }
+  }
+  gapi.vsSetShader(old.VS, old.VSInstances, old.VSInstancesCount); 
+  if (old.VS) {
+    old.VS->Release();
+  }
+  gapi.vsSetConstantBuffer(0, 1, &old.VSConstantBuffer); 
+  if (old.VSConstantBuffer) {
+    old.VSConstantBuffer->Release();
+  }
+  gapi.gsSetShader(old.GS, old.GSInstances, old.GSInstancesCount); 
+  if (old.GS) { 
+    old.GS->Release();
+  }
+  for (uint32 i = 0; i < old.VSInstancesCount; i++) { 
+    if (old.VSInstances[i]) {
+      old.VSInstances[i]->Release();
+    }
+  }
+  gapi.iaSetPrimitiveTopology(old.PrimitiveTopology);
+  gapi.iaSetIndexBuffer(old.IndexBuffer, old.IndexBufferFormat, old.IndexBufferOffset); 
+  if (old.IndexBuffer) {
+    old.IndexBuffer->Release();
+  }
+  gapi.iaSetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset); 
+  if (old.VertexBuffer) {
+    old.VertexBuffer->Release();
+  }
+  gapi.iaSetInputLayout(old.InputLayout); 
+  if (old.InputLayout) {
+    old.InputLayout->Release();
+  }
 }

@@ -410,7 +410,23 @@ namespace giEngineSDK {
     omSetBlendState(BlendState *, 
                     const float[4], 
                     uint32 = 0xffffffff) {};
-    
+                    
+    /** 
+     * @brief    Set Blend State.
+     * @param    inDepthState   Pointer to a depth-state interface.
+     * @param    inStencilRef   The reference to the stencil.
+     * @bug      No known Bugs.
+     */
+    virtual void 
+    omSetDepthStencilState(DepthState *, 
+                           uint32) {};
+    /**
+     * @brief    Set the Rasterizer.
+     * @param    inRaster       The rasterizer state to set.
+     */
+    virtual void
+    rsSetState(Rasterizer *) {};
+
     /** 
      * @brief    Draw Index.
      * @param    inNumIndexes       The number of idexes to draw.
