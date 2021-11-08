@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4e5979e7-8e58-4c71-8906-931883e0b749}</ProjectGuid>
-    <RootNamespace>giCore</RootNamespace>
+    <ProjectGuid>{e9d7d124-b4f6-41d8-aaa1-7f9bb17b8040}</ProjectGuid>
+    <RootNamespace>giUI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -43,7 +43,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -96,17 +96,14 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(SolutionDir)giInput/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/ImGui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;giRenderer_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,36 +112,30 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(SolutionDir)giInput/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/ImGui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>giUtilities.lib;sfml-window.lib;sfml-system.lib;assimp-vc142-mt.lib;giRenderer.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;$(SolutionDir)giRenderer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(SolutionDir)giInput/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/ImGui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,66 +144,24 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(SolutionDir)giInput/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/ImGui/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>giUtilities.lib;sfml-window.lib;sfml-system.lib;assimp-vc142-mt.lib;giRenderer.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\giActor.cpp" />
-    <ClCompile Include="src\giBaseApp.cpp" />
-    <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
-    <ClCompile Include="src\giBaseInput.cpp" />
-    <ClCompile Include="src\giBaseRenderer.cpp" />
-    <ClCompile Include="src\giCamera.cpp" />
-    <ClCompile Include="src\giMesh.cpp" />
-    <ClCompile Include="src\giModel.cpp" />
-    <ClCompile Include="src\giSceneGraph.cpp" />
-    <ClCompile Include="src\giSceneNode.cpp" />
-    <ClCompile Include="src\giSkeletalMesh.cpp" />
-    <ClCompile Include="src\giStaticMesh.cpp" />
+    <ClCompile Include="src\giImgui.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\giBaseComputeShader.h" />
-    <ClInclude Include="include\giBaseInput.h" />
-    <ClInclude Include="include\giBaseRenderer.h" />
-    <ClInclude Include="include\giBlendState.h" />
-    <ClInclude Include="include\giComponent.h" />
-    <ClInclude Include="include\giActor.h" />
-    <ClInclude Include="include\giBaseApp.h" />
-    <ClInclude Include="include\giBaseGraphicsAPI.h" />
-    <ClInclude Include="include\giBasePixelShader.h" />
-    <ClInclude Include="include\giBaseShader.h" />
-    <ClInclude Include="include\giBaseVertexShader.h" />
-    <ClInclude Include="include\giBuffer.h" />
-    <ClInclude Include="include\giCamera.h" />
-    <ClInclude Include="include\giDepthState.h" />
-    <ClInclude Include="include\giDepthStencilView.h" />
-    <ClInclude Include="include\giInputLayout.h" />
-    <ClInclude Include="include\giMaterial.h" />
-    <ClInclude Include="include\giMesh.h" />
-    <ClInclude Include="include\giModel.h" />
-    <ClInclude Include="include\giObject.h" />
-    <ClInclude Include="include\giPrerequisitesCore.h" />
-    <ClInclude Include="include\giRasterizer.h" />
-    <ClInclude Include="include\giResource.h" />
-    <ClInclude Include="include\giSampler.h" />
-    <ClInclude Include="include\giSceneGraph.h" />
-    <ClInclude Include="include\giSceneNode.h" />
-    <ClInclude Include="include\giSkeletalMesh.h" />
-    <ClInclude Include="include\giStaticMesh.h" />
-    <ClInclude Include="include\giTexture2D.h" />
-    <ClInclude Include="include\giTextureManager.h" />
+    <ClInclude Include="include\giImGui.h" />
+    <ClInclude Include="include\giPrerequisitesUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

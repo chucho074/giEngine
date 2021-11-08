@@ -1,6 +1,6 @@
 /**
  * @file    giGraphicsDX.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   A basic description of the what do the doc.
@@ -24,6 +24,7 @@
 #include "giPixelShaderDX.h"
 #include "giRasterizerDX.h"
 #include "giDepthStateDX.h"
+#include "giBlendStateDX.h"
 #include "stb_image.h"
 
 
@@ -592,7 +593,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::vsSetShader(BaseShader* inVShader) {
+  CGraphicsDX::vsSetShader(BaseVertexShader* inVShader) {
     
     auto tmpShader = static_cast<VertexShaderDX*>(inVShader);
 
@@ -619,7 +620,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetShader(BaseShader* inPShader) {
+  CGraphicsDX::psSetShader(BasePixelShader* inPShader) {
 
     auto tmpShader = static_cast<PixelShaderDX*>(inPShader);
 
@@ -756,6 +757,16 @@ namespace giEngineSDK {
   }
 
   void 
+  CGraphicsDX::omSetBlendState(BlendState* inBlendState, 
+                               const float inBlendFactor[4],
+                               uint32 inSampleMask) {
+    
+    ID3D11BlendState * tmpBlendState;
+    tmpBlendState = static_cast<BlendStateDX*>(inBlendState)->m_blendState;
+    m_devContext->OMSetBlendState(tmpBlendState, inBlendFactor, inSampleMask);
+  }
+
+  void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
     m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);

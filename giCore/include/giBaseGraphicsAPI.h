@@ -1,6 +1,6 @@
 /**
  * @file     giBaseGraphicsAPI.h
- * @author   Jesús Alberto Del Moral Cupil
+ * @author   Jesï¿½s Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
  * @brief    Management of the graphics APIs.
@@ -28,6 +28,7 @@ namespace giEngineSDK {
   class Sampler;
   class Rasterizer;
   class DepthState;
+  class BlendState;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -228,9 +229,9 @@ namespace giEngineSDK {
     }
     
     /**
-     * @brief    Creates a Rasterizer.
-     * @param    inStencilEnable  The fill mode for the raster.
-     * @param    inDepthEnable    The cull mode for the raster.
+     * @brief    Creates a DepthState.
+     * @param    inStencilEnable  The Stencil for the DepthState.
+     * @param    inDepthEnable    The Depth  for the DepthState.
      */
     virtual DepthState *
     createDepthState(bool inStencilEnable,
@@ -338,7 +339,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    vsSetShader(BaseShader * = nullptr) {};
+    vsSetShader(BaseVertexShader * = nullptr) {};
     
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -438,7 +439,7 @@ namespace giEngineSDK {
     aiSetInputLayout(InputLayout *) {};
     
     /** 
-     * @brief    OM Set Render Targets.
+     * @brief    Set Render Targets.
      * @param    inRT    The Render Target texture.
      * @param    inDS    The Depth Stencil texture.
      * @bug      No known Bugs.
@@ -452,6 +453,19 @@ namespace giEngineSDK {
     virtual void
     unbindRenderTarget() {};
 
+
+    /** 
+     * @brief    Set Blend State.
+     * @param    inBlendState   Pointer to a blend-state interface. NULL for a default.
+     * @param    inBlendFactor  Array of blend factors, one for each RGBA component.
+     * @param    inSampleMask   32-bit sample coverage. The default value is 0xffffffff.
+     * @bug      No known Bugs.
+     */
+    virtual void 
+    omSetBlendState(BlendState *, 
+                    const float[4], 
+                    uint32 = 0xffffffff) {};
+    
     /** 
      * @brief    Draw Index.
      * @param    inNumIndexes       The number of idexes to draw.

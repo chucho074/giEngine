@@ -57,6 +57,9 @@
     <ClInclude Include="include\giVertexShaderDX.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="include\giBlendStateDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp">

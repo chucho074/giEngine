@@ -1,6 +1,6 @@
 /**
  * @file    CGraphicsDX.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Management of the graphics APIs.
@@ -291,7 +291,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    vsSetShader(BaseShader * inVShader = nullptr) override;
+    vsSetShader(BaseVertexShader * inVShader = nullptr) override;
     
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -401,6 +401,17 @@ namespace giEngineSDK {
 
     void
     unbindRenderTarget() override;
+    /** 
+     * @brief    Set Blend State.
+     * @param    inBlendState   Pointer to a blend-state interface. NULL for a default.
+     * @param    inBlendFactor  Array of blend factors, one for each RGBA component.
+     * @param    inSampleMask   32-bit sample coverage. The default value is 0xffffffff.
+     * @bug      No known Bugs.
+     */
+    void 
+    omSetBlendState(BlendState * inBlendState,
+                    const float inBlendFactor[4],
+                    uint32 inSampleMask = 0xffffffff) override;
      
     /** 
      * @brief    Draw Index.
