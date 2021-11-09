@@ -515,13 +515,27 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::setRasterizerState(RasterizerDX * inRaster) {
-    m_devContext->RSSetState(inRaster->m_rasterizerState);
+  CGraphicsDX::setRasterizerState(Rasterizer * inRaster) {
+    auto tmpRaster = static_cast<RasterizerDX*>(inRaster);
+
+    ID3D11RasterizerState * tmpRasterState = nullptr;
+    if (nullptr != tmpRaster) {
+      tmpRasterState = tmpRaster->m_rasterizerState;
+    }
+
+    m_devContext->RSSetState(tmpRasterState);
   }
 
   void
-  CGraphicsDX::setDepthState(DepthStateDX * inDepthState) {
-    m_devContext->OMSetDepthStencilState(inDepthState->m_State, 0);
+  CGraphicsDX::setDepthState(DepthState * inDepthState) {
+    auto tmpDepht = static_cast<DepthStateDX*>(inDepthState);
+
+    ID3D11DepthStencilState* tmpDepthState = nullptr;
+    if (nullptr != tmpDepht) {
+      tmpDepthState = tmpDepht->m_State;
+    }
+
+    m_devContext->OMSetDepthStencilState(tmpDepthState, 0);
   }
 
   void

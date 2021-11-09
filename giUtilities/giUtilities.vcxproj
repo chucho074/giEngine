@@ -175,6 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\giFileSystem.cpp" />
     <ClCompile Include="src\giLogger.cpp" />
     <ClCompile Include="src\giQuaternion.cpp" />
     <ClCompile Include="src\giDegrees.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="src\giVector4i.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giFileSystem.h" />
     <ClInclude Include="include\giLogger.h" />
     <ClInclude Include="include\giQuaternion.h" />
     <ClInclude Include="include\giDegrees.h" />

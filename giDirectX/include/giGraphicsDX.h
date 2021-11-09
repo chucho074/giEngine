@@ -221,10 +221,15 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setRasterizerState(RasterizerDX* inRaster);
+    setRasterizerState(Rasterizer* inRaster) override;
 
+    /**
+     * @brief    Set the Depth State.
+     * @param    inDepthState      The Depth State to set.
+     * @bug      No known Bugs.
+     */
     void 
-    setDepthState(DepthStateDX* inDepthState);
+    setDepthState(DepthState* inDepthState) override;
     
     /**
      * @brief   Set the Unordered Access Views.

@@ -15,7 +15,6 @@
 #include "giTexture2DOGL.h"
 #include "giInputLayoutOGL.h"
 
-
 namespace giEngineSDK {
   GraphicsOGL::GraphicsOGL() {
 
@@ -26,7 +25,7 @@ namespace giEngineSDK {
   }
 
   void 
-  GraphicsOGL::init(void* inWindow, int inWidth, int inHeight) {
+  GraphicsOGL::init(void* inWindow) {
     PIXELFORMATDESCRIPTOR desc = {
       sizeof(PIXELFORMATDESCRIPTOR),
       1,
@@ -57,14 +56,13 @@ namespace giEngineSDK {
 
 
     if (!gladLoadGL()) {
-      //Error boi
+      g_logger().SetError(ERROR_TYPE::kGraphicsInitialize, 
+                          "Can't initialize the graphics");
     }
   }
   
   bool 
-  GraphicsOGL::createDeviceAndSwpaChain(void* inWindow, 
-                                        int32 inWidth, 
-                                        int32 inHeight) {
+  GraphicsOGL::createDeviceAndSwpaChain(void* inWindow) {
     return false;
   }
 
@@ -133,14 +131,14 @@ namespace giEngineSDK {
 
   
   BaseVertexShader* 
-  GraphicsOGL::createVS(String inFileName, 
+  GraphicsOGL::createVS(wString inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
     return nullptr;
   }
   
   BasePixelShader* 
-  GraphicsOGL::createPS(String inFileName, 
+  GraphicsOGL::createPS(wString inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
     return nullptr;
@@ -156,10 +154,12 @@ namespace giEngineSDK {
   }
   
   Buffer* 
-  GraphicsOGL::createBuffer(uint32 inByteWidth, 
-                            uint32 inBindFlags, 
-                            uint32 inOffset, 
-                            void* inBufferData) {
+  GraphicsOGL::createBuffer(size_T inByteWidth,
+                            int32 inBindFlags,
+                            void* inBufferData,
+                            uint32 inStructureStride = 0,
+                            uint32 inNumElements = 0,
+                            GI_FORMAT::E inFormat) {
     //Create the buffer
     BufferOGL* tmpBuffer = new BufferOGL();
     //Create in OGL
@@ -298,7 +298,7 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::vsSetShader(BaseShader* inVShader) {
+  GraphicsOGL::vsSetShader(BaseVertexShader* inVShader) {
   
   }
   
@@ -308,7 +308,7 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::psSetShader(BaseShader* inPShader) {
+  GraphicsOGL::psSetShader(BasePixelShader* inPShader) {
 
   }
   
@@ -335,12 +335,14 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::omSetRenderTarget(Texture2D* inRT, Texture2D* inDS) {
+  GraphicsOGL::omSetRenderTarget(Vector<Texture2D*> inRT,
+                                 Texture2D* inDS) {
   
   }
   
   void 
-  GraphicsOGL::drawIndexed(uint32 inNumIndexes, uint32 inStartLocation) {
+  GraphicsOGL::drawIndexed(size_T inNumIndexes,
+                           uint32 inStartLocation) {
     glDrawElements(m_topology, inNumIndexes, GL_UNSIGNED_INT, 0);
   }
   

@@ -27,6 +27,9 @@ namespace giEngineSDK {
       kBufferCreation,
       kSamplerCreation,
       kUAVCreation,
+      kGraphicsInitialize,
+      kReadingFile,
+      kWritingFile,
       kCreation
     };
   }

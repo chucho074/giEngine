@@ -275,6 +275,22 @@ namespace giEngineSDK {
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
 
     /**
+     * @brief    Set the rasterizer State.
+     * @param    inRaster      The rasterizer to set.
+     * @bug      No known Bugs.
+     */
+    virtual void 
+    setRasterizerState(Rasterizer* inRaster) {};
+
+    /**
+     * @brief    Set the Depth State.
+     * @param    inDepthState      The Depth State to set.
+     * @bug      No known Bugs.
+     */
+    virtual void 
+    setDepthState(DepthState* inDepthState) {};
+
+    /**
      * @brief     Set Unordered Access View.
      * @param     inUAV     The Unordered Access View to set.
      * @bug       No known Bugs.

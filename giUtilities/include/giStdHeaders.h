@@ -19,6 +19,8 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <fstream>
+#include <sstream>
 
 //#include <codecvt>
 //#include <locale>
@@ -26,7 +28,7 @@
 namespace giEngineSDK {
   using String = std::string;
   using wString = std::wstring;
-
+  using inStream = std::ifstream;
   /**
    * @brief 
    * @param T 
