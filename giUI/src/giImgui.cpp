@@ -162,6 +162,7 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   }
   
   // Upload vertex/index data into a single contiguous GPU buffer
+  // Usar como buffers normales
   D3D11_MAPPED_SUBRESOURCE vtx_resource, idx_resource;
   if (ctx->Map(bd->spVB, 
       0, 
@@ -222,9 +223,9 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   }
   
   // Backup DX state that will be modified to restore it afterwards (unfortunately this is very ugly looking and verbose. Close your eyes!)
-  struct BACKUP_DX11_STATE {
+  struct BACKUP_GI_STATE {
     uint32                    ScissorRectsCount, ViewportsCount;
-    D3D11_RECT                ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    //D3D11_RECT                ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
     D3D11_VIEWPORT            Viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
     Rasterizer*               RS;
     BlendState*               BlenState;
@@ -236,9 +237,9 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
     ID3D11SamplerState*       PSSampler;
     BasePixelShader*          PS;
     BaseVertexShader*         VS;
-    ID3D11GeometryShader*     GS;
+    //ID3D11GeometryShader*     GS;
     uint32                    PSInstancesCount, VSInstancesCount, GSInstancesCount;
-    ID3D11ClassInstance *     PSInstances[256], *VSInstances[256], *GSInstances[256];   // 256 is max according to PSSetShader documentation
+    //ID3D11ClassInstance *     PSInstances[256], *VSInstances[256], *GSInstances[256];   // 256 is max according to PSSetShader documentation
     GI_PRIMITIVE_TOPOLOGY::E  PrimitiveTopology;
     Buffer*                   IndexBuffer;
     Buffer*                   VertexBuffer;
@@ -248,7 +249,7 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
     InputLayout*              InputL;
   };
 
-  BACKUP_DX11_STATE old = {};
+  BACKUP_GI_STATE old = {};
   old.ScissorRectsCount = old.ViewportsCount = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
   gapi.rsGetScissorRects(&old.ScissorRectsCount, old.ScissorRects);
   gapi.rsGetViewports(&old.ViewportsCount, old.Viewports);
