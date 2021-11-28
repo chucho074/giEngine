@@ -1,4 +1,5 @@
 #include <giVector2.h>
+#include <giVector4.h>
 #include <giTime.h>
 #include <giInputManager.h>
 
@@ -6,6 +7,7 @@
 #include <giBuffer.h>
 #include <giTexture2D.h>
 #include <giBlendState.h>
+
 
 #include "giImGui.h"
 
@@ -22,37 +24,12 @@ using giEngineSDK::uint32;
 using giEngineSDK::Rasterizer;
 using giEngineSDK::DepthState;
 using giEngineSDK::BlendState;
+using giEngineSDK::Vector2;
+using giEngineSDK::Vector4;
 using giEngineSDK::GI_FORMAT::E;
+using giEngineSDK::GI_BIND_FLAG::E;
 using giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E;
 
-// giEngine data
-struct ImGui_ImplGI_Data {
-  
-  SharedPtr<Buffer>           spVB;
-  SharedPtr<Buffer>           spIB;
-  SharedPtr<BaseVertexShader> spVertexShader;
-  SharedPtr<InputLayout>      spInputLayout;
-  SharedPtr<Buffer>           spVertexConstantBuffer;
-  SharedPtr<BasePixelShader>  spPixelShader;
-  SharedPtr<Sampler>          spFontSampler;
-  SharedPtr<Texture2D>        spFontTextureView;
-  SharedPtr<Rasterizer>       spRasterizerState;
-  SharedPtr<BlendState>       spBlendState;
-  SharedPtr<DepthState>       spDepthStencilState;
-  uint32                      VertexBufferSize;
-  uint32                      IndexBufferSize;
-
-  ImGui_ImplGI_Data() { 
-    memset(this, 0, sizeof(*this)); 
-    VertexBufferSize = 5000; 
-    IndexBufferSize = 10000; 
-  }
-};
-
-struct 
-VERTEX_CONSTANT_BUFFER {
-  float mvp[4][4];
-};
 
 // Backend data stored in io.BackendRendererUserData 
 // to allow support for multiple Dear ImGui contexts
@@ -128,105 +105,84 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   // Create and grow vertex/index buffers if needed
   if (!bd->spVB || bd->VertexBufferSize < draw_data->TotalVtxCount) {
     if (bd->spVB) { 
-      bd->spVB->Release(); 
+      //bd->spVB->Release(); 
       bd->spVB = NULL; 
     }
     bd->VertexBufferSize = draw_data->TotalVtxCount + 5000;
 
-    D3D11_BUFFER_DESC desc;
-    memset(&desc, 0, sizeof(D3D11_BUFFER_DESC));
-    desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = bd->VertexBufferSize * sizeof(ImDrawVert);
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags = 0;
-    if (gapi.createBuffer(&desc, NULL, &bd->spVB) < 0) {
+    if (gapi.createBuffer(bd->VertexBufferSize * sizeof(ImDrawVert), 
+                          giEngineSDK::GI_BIND_FLAG::E::kBIND_VERTEX_BUFFER,
+                          0,
+                          &bd->spVB) < 0) {
       return;
     }
   }
+
   if (!bd->spIB || bd->IndexBufferSize < draw_data->TotalIdxCount) {
     if (bd->spIB) { 
-      bd->spIB->Release(); 
       bd->spIB = NULL; 
     }
     bd->IndexBufferSize = draw_data->TotalIdxCount + 10000;
-    D3D11_BUFFER_DESC desc;
-    memset(&desc, 0, sizeof(D3D11_BUFFER_DESC));
-    desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = bd->IndexBufferSize * sizeof(ImDrawIdx);
-    desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    if (gapi.createBuffer(&desc, NULL, &bd->spIB) < 0) {
+    if (gapi.createBuffer(bd->IndexBufferSize * sizeof(ImDrawIdx),
+                          giEngineSDK::GI_BIND_FLAG::E::kBIND_INDEX_BUFFER, 
+                          0,
+                          &bd->spIB) < 0) {
       return;
     }
   }
   
   // Upload vertex/index data into a single contiguous GPU buffer
-  // Usar como buffers normales
-  D3D11_MAPPED_SUBRESOURCE vtx_resource, idx_resource;
-  if (ctx->Map(bd->spVB, 
-      0, 
-      D3D11_MAP_WRITE_DISCARD, 
-      0, 
-      &vtx_resource) != S_OK) {
-    return;
-  }
-  if (ctx->Map(bd->spIB, 
-      0, 
-      D3D11_MAP_WRITE_DISCARD, 
-      0, 
-      &idx_resource) != S_OK) {
-    return;
-  }
-  ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource.pData;
-  ImDrawIdx* idx_dst = (ImDrawIdx*)idx_resource.pData;
+  Texture2D * vtx_resource;
+  
+  Texture2D * idx_resource;
+  
+  ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource->pData;
+  ImDrawIdx* idx_dst  = (ImDrawIdx*)idx_resource->pData;
+
   for (int n = 0; n < draw_data->CmdListsCount; n++) {
     const ImDrawList* cmd_list = draw_data->CmdLists[n];
     memcpy(vtx_dst, 
            cmd_list->VtxBuffer.Data, 
            cmd_list->VtxBuffer.Size * sizeof(ImDrawVert));
+
     memcpy(idx_dst, 
            cmd_list->IdxBuffer.Data, 
            cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+
     vtx_dst += cmd_list->VtxBuffer.Size;
     idx_dst += cmd_list->IdxBuffer.Size;
+
+    gapi.updateSubresource(bd->spVB.get(), vtx_resource, 0);
+    gapi.updateSubresource(bd->spIB.get(), idx_resource, 0);
   }
-  ctx->Unmap(bd->spVB, 0);
-  ctx->Unmap(bd->spIB, 0);
   
   // Setup orthographic projection matrix into our constant buffer
-  // Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
+  // Our visible imgui space lies from draw_data->DisplayPos (top left) to 
+  // draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos 
+  // is (0,0) for single viewport apps.
   {
-    D3D11_MAPPED_SUBRESOURCE mapped_resource;
-    if (ctx->Map(bd->spVertexConstantBuffer, 
-        0, 
-        D3D11_MAP_WRITE_DISCARD, 
-        0, 
-        &mapped_resource) != S_OK) {
-      return;
-    }
-
-    VERTEX_CONSTANT_BUFFER* constant_buffer = (VERTEX_CONSTANT_BUFFER*)mapped_resource.pData;
+   
     float L = draw_data->DisplayPos.x;
     float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x;
     float T = draw_data->DisplayPos.y;
     float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
-    float mvp[4][4] =
-    {
+    float mvp[4][4] = {
         { 2.0f/(R-L),   0.0f,           0.0f,       0.0f },
         { 0.0f,         2.0f/(T-B),     0.0f,       0.0f },
         { 0.0f,         0.0f,           0.5f,       0.0f },
         { (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
     };
-    memcpy(&constant_buffer->mvp, mvp, sizeof(mvp));
-    ctx->Unmap(bd->spVertexConstantBuffer, 0);
+
+    gapi.updateSubresource(bd->spVertexConstantBuffer.get(), mvp, 0);
+
   }
   
-  // Backup DX state that will be modified to restore it afterwards (unfortunately this is very ugly looking and verbose. Close your eyes!)
+  // Backup DX state that will be modified to restore it afterwards 
+  // (unfortunately this is very ugly looking and verbose. Close your eyes!)
   struct BACKUP_GI_STATE {
     uint32                    ScissorRectsCount, ViewportsCount;
-    //D3D11_RECT                ScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-    D3D11_VIEWPORT            Viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    Vector4                   ScissorRects[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    Vector2                   Viewports[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
     Rasterizer*               RS;
     BlendState*               BlenState;
     float                     BlendFactor[4];
@@ -234,23 +190,23 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
     uint32                    StencilRef;
     DepthState*               DepthStencilState;
     Texture2D*                PSShaderResource;
-    ID3D11SamplerState*       PSSampler;
+    Sampler*                  PSSampler;
     BasePixelShader*          PS;
     BaseVertexShader*         VS;
     //ID3D11GeometryShader*     GS;
     uint32                    PSInstancesCount, VSInstancesCount, GSInstancesCount;
     //ID3D11ClassInstance *     PSInstances[256], *VSInstances[256], *GSInstances[256];   // 256 is max according to PSSetShader documentation
-    GI_PRIMITIVE_TOPOLOGY::E  PrimitiveTopology;
+    giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E  PrimitiveTopology;
     Buffer*                   IndexBuffer;
     Buffer*                   VertexBuffer;
     Buffer*                   VSConstantBuffer;
     uint32                    IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
-    GI_FORMAT::E              IndexBufferFormat;
+    giEngineSDK::GI_FORMAT::E IndexBufferFormat;
     InputLayout*              InputL;
   };
 
   BACKUP_GI_STATE old = {};
-  old.ScissorRectsCount = old.ViewportsCount = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+  old.ScissorRectsCount = old.ViewportsCount = GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
   gapi.rsGetScissorRects(&old.ScissorRectsCount, old.ScissorRects);
   gapi.rsGetViewports(&old.ViewportsCount, old.Viewports);
   gapi.rsGetState(&old.RS);
@@ -262,12 +218,12 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   gapi.psGetShader(&old.PS, old.PSInstances, &old.PSInstancesCount);
   gapi.vsGetShader(&old.VS, old.VSInstances, &old.VSInstancesCount);
   gapi.vsGetConstantBuffers(0, 1, &old.VSConstantBuffer);
-  gapi.gsGetShader(&old.GS, old.GSInstances, &old.GSInstancesCount);
+  //gapi.gsGetShader(&old.GS, old.GSInstances, &old.GSInstancesCount);
   
   gapi.iaGetPrimitiveTopology(&old.PrimitiveTopology);
   gapi.iaGetIndexBuffer(&old.IndexBuffer, &old.IndexBufferFormat, &old.IndexBufferOffset);
   gapi.iaGetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset);
-  gapi.iaGetInputLayout(&old.InputLayout);
+  gapi.iaGetInputLayout(&old.InputL);
   
   // Setup desired DX state
   ImGui_ImplGI_SetupRenderState(draw_data);
@@ -325,19 +281,19 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   if (old.RS) {
     old.RS->Release();
   }
-  gapi.OMSetBlendState(old.BlendState, old.BlendFactor, old.SampleMask); 
-  if (old.BlendState) {
-    old.BlendState->Release();
+  gapi.OMSetBlendState(old.BlenState, old.BlendFactor, old.SampleMask); 
+  if (old.BlenState) {
+    old.BlenState->Release();
   }
   gapi.omSetDepthStencilState(old.DepthStencilState, old.StencilRef); 
   if (old.DepthStencilState) {
     old.DepthStencilState->Release();
   }
-  gapi.psSetShaderResources(0, 1, &old.PSShaderResource); 
+  gapi.psSetShaderResource(0, 1, &old.PSShaderResource); 
   if (old.PSShaderResource) {
     old.PSShaderResource->Release();
   }
-  gapi.psSetSamplers(0, 1, &old.PSSampler); 
+  gapi.psSetSampler(0, 1, &old.PSSampler); 
   if (old.PSSampler) {
     old.PSSampler->Release();
   }

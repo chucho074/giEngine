@@ -46,9 +46,9 @@ namespace giEngineSDK {
 
   Vector<Texture>
   loadMaterialTextures(Model inModel,
-                              aiMaterial* mat, 
-                              aiTextureType type, 
-                              String typeName) {
+                       aiMaterial* mat, 
+                       aiTextureType type, 
+                       String typeName) {
 
     auto& GAPI = g_graphicsAPI();
     Vector<Texture> textures;

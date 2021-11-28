@@ -20,3 +20,31 @@
 #include <giInputManager.h>
 
 
+// giEngine data
+struct ImGui_ImplGI_Data {
+  
+  SharedPtr<Buffer>           spVB;
+  SharedPtr<Buffer>           spIB;
+  SharedPtr<BaseVertexShader> spVertexShader;
+  SharedPtr<InputLayout>      spInputLayout;
+  SharedPtr<Buffer>           spVertexConstantBuffer;
+  SharedPtr<BasePixelShader>  spPixelShader;
+  SharedPtr<Sampler>          spFontSampler;
+  SharedPtr<Texture2D>        spFontTextureView;
+  SharedPtr<Rasterizer>       spRasterizerState;
+  SharedPtr<BlendState>       spBlendState;
+  SharedPtr<DepthState>       spDepthStencilState;
+  uint32                      VertexBufferSize;
+  uint32                      IndexBufferSize;
+
+  ImGui_ImplGI_Data() { 
+    memset(this, 0, sizeof(*this)); 
+    VertexBufferSize = 5000; 
+    IndexBufferSize = 10000; 
+  }
+};
+
+struct 
+VERTEX_CONSTANT_BUFFER {
+  float mvp[4][4];
+};

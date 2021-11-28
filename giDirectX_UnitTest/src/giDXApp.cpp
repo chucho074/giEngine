@@ -12,6 +12,7 @@
  */
 #include <giDegrees.h>
 #include <giCamera.h>
+#include <giGraphicsDX.h>
 #include "giDXApp.h"
 
 DirectXApp::DirectXApp() {
@@ -87,12 +88,8 @@ DirectXApp::onCreate() {
                                                    0, 
                                                    nullptr);
 
-
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
-
-  
-  
 }
 
 
