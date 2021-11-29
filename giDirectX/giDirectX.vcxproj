@@ -201,6 +201,7 @@
     <ClInclude Include="include\giTexture2DDX.h" />
     <ClInclude Include="include\giUnorderedAccessViewDX.h" />
     <ClInclude Include="include\giVertexShaderDX.h" />
+    <ClInclude Include="include\giViewportDX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giComputeShaderDX.cpp" />

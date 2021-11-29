@@ -427,8 +427,63 @@ namespace giEngineSDK {
     virtual void
     rsSetState(Rasterizer *) {};
 
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual void
+    rsGetScissorRects(uint32, Vector4) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual void
+    rsGetViewports(uint32, void*) {};
+
+    /**
+     * @brief 
+     * @param  
+     */
+    virtual void
+    rsGetState(BaseRasterState) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     * @param  
+     */
+    virtual void 
+    omGetBlendState(BaseBlendState, float[4], uint32) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual void 
+    omGetDepthStencilState(BaseDepthStencilState, uint32) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     * @param  
+     */
+    virtual void
+    psGetShaderResources(uint32, uint32, Texture2D *) {};
+
+    
+    virtual void
+    psGetSamplers(uint32, uint32, );
+
+
+
     /** 
-     * @brief    Draw Index.
+     * @brief    Draw Indeux.
      * @param    inNumIndexes       The number of idexes to draw.
      * @param    inStartLocation    the start location to draw.
      * @bug      No known Bugs.

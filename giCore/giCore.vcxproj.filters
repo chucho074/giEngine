@@ -152,5 +152,8 @@
     <ClInclude Include="include\giBlendState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giBaseViewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -186,6 +186,7 @@
     <ClInclude Include="include\giBaseComputeShader.h" />
     <ClInclude Include="include\giBaseInput.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
+    <ClInclude Include="include\giBaseViewport.h" />
     <ClInclude Include="include\giBlendState.h" />
     <ClInclude Include="include\giComponent.h" />
     <ClInclude Include="include\giActor.h" />
