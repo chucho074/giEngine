@@ -216,7 +216,7 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   gapi.psGetSamplers(0, 1, &old.PSSampler);
   old.PSInstancesCount = old.VSInstancesCount = old.GSInstancesCount = 256;
   gapi.psGetShader(&old.PS, old.PSInstances, &old.PSInstancesCount);
-  gapi.pvsGetShader(&old.VS, old.VSInstances, &old.VSInstancesCount);
+  gapi.vsGetShader(&old.VS, old.VSInstances, &old.VSInstancesCount);
   gapi.vsGetConstantBuffers(0, 1, &old.VSConstantBuffer);
   //gapi.gsGetShader(&old.GS, old.GSInstances, &old.GSInstancesCount);
   

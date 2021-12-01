@@ -478,9 +478,19 @@ namespace giEngineSDK {
 
     
     virtual void
-    psGetSamplers(uint32, uint32, );
+    psGetSamplers(uint32, uint32, Sampler) {};
 
+    virtual void
+    psGetShader(BaseShader, int32) {};
 
+    virtual void
+    vsGetShader(BaseShader, int32){};
+
+    virtual void
+    vsGetConsantBuffers(int32, int32, Buffer) {};
+
+    virtual void
+    iaGetPrimitiveTopology() {};
 
     /** 
      * @brief    Draw Indeux.
