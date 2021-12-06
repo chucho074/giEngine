@@ -166,7 +166,7 @@ namespace giEngineSDK {
     /**
      * @brief    Create a Rasterizer.
      */
-    Rasterizer *
+    BaseRasterizerState *
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
                      bool inClockwise) override;
@@ -378,7 +378,7 @@ namespace giEngineSDK {
      * @param    inRaster       The rasterizer state to set.
      */
     void
-    rsSetState(Rasterizer * inRaster);
+    rsSetState(BaseRasterizerState * inRaster);
     
     /** 
      * @brief    Draw Index.

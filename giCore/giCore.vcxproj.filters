@@ -125,7 +125,7 @@
     <ClInclude Include="include\giStaticMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giRasterizer.h">
+    <ClInclude Include="include\giBaseRasterizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giDepthState.h">

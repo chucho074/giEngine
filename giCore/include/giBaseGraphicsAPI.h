@@ -14,6 +14,8 @@
 #include "giPrerequisitesCore.h"
 #include <giModule.h>
 #include "giSampler.h"
+#include "giBaseVertexShader.h"
+#include "giBasePixelShader.h"
 
 ///Forward declarations
 namespace giEngineSDK {
@@ -26,9 +28,9 @@ namespace giEngineSDK {
   class Buffer;
   class InputLayout;
   class Sampler;
-  class Rasterizer;
-  class DepthState;
-  class BlendState;
+  class BaseRasterizerState;
+  class BaseDepthStencilState;
+  class BaseBlendState;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -219,7 +221,7 @@ namespace giEngineSDK {
      * @param    inCullMode  The cull mode for the raster.
      * @param    inClockwise If the raster is in clockwise.
      */
-    virtual Rasterizer *
+    virtual BaseRasterizerState *
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
                      bool inClockwise) {
@@ -231,7 +233,7 @@ namespace giEngineSDK {
      * @param    inStencilEnable  The Stencil for the DepthState.
      * @param    inDepthEnable    The Depth  for the DepthState.
      */
-    virtual DepthState *
+    virtual BaseDepthStencilState *
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) {
       return nullptr;
@@ -407,7 +409,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    omSetBlendState(BlendState *, 
+    omSetBlendState(BaseBlendState *, 
                     const float[4], 
                     uint32 = 0xffffffff) {};
                     
@@ -418,14 +420,14 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    omSetDepthStencilState(DepthState *, 
+    omSetDepthStencilState(BaseDepthStencilState *, 
                            uint32) {};
     /**
      * @brief    Set the Rasterizer.
      * @param    inRaster       The rasterizer state to set.
      */
     virtual void
-    rsSetState(Rasterizer *) {};
+    rsSetState(BaseRasterizerState *) {};
 
     /**
      * @brief 
@@ -433,7 +435,7 @@ namespace giEngineSDK {
      * @param  
      */
     virtual void
-    rsGetScissorRects(uint32, Vector4) {};
+    rsGetScissorRects(uint32, Vector4[]) {};
 
     /**
      * @brief 
@@ -448,7 +450,7 @@ namespace giEngineSDK {
      * @param  
      */
     virtual void
-    rsGetState(BaseRasterState) {};
+    rsGetState(BaseRasterizerState *) {};
 
     /**
      * @brief 
@@ -457,7 +459,7 @@ namespace giEngineSDK {
      * @param  
      */
     virtual void 
-    omGetBlendState(BaseBlendState, float[4], uint32) {};
+    omGetBlendState(BaseBlendState *, float[4], uint32) {};
 
     /**
      * @brief 
@@ -465,7 +467,7 @@ namespace giEngineSDK {
      * @param  
      */
     virtual void 
-    omGetDepthStencilState(BaseDepthStencilState, uint32) {};
+    omGetDepthStencilState(BaseDepthStencilState *, uint32) {};
 
     /**
      * @brief 
@@ -476,21 +478,59 @@ namespace giEngineSDK {
     virtual void
     psGetShaderResources(uint32, uint32, Texture2D *) {};
 
-    
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     * @param  
+     */
     virtual void
-    psGetSamplers(uint32, uint32, Sampler) {};
+    psGetSamplers(uint32, uint32, Sampler *) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual void
+    psGetShader(BasePixelShader *, int32) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual void
+    vsGetShader(BaseVertexShader *, int32) {};
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     * @param  
+     */
+    virtual void
+    vsGetConstantBuffers(int32, int32, Buffer *) {};
+
+    /**
+     * @brief 
+     */
+    virtual void
+    iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
 
     virtual void
-    psGetShader(BaseShader, int32) {};
+    iaGetIndexBuffer(Buffer *, GI_FORMAT::E, uint32) {};
 
     virtual void
-    vsGetShader(BaseShader, int32){};
+    iaGetVertexBuffer(uint32, Buffer *, uint32, uint32) {};
 
     virtual void
-    vsGetConsantBuffers(int32, int32, Buffer) {};
+    iaGetInputLayout(InputLayout *) {};
 
-    virtual void
-    iaGetPrimitiveTopology() {};
+    virtual void 
+    rsSetScissorRects(uint32, Vector4) {};
+
+
 
     /** 
      * @brief    Draw Indeux.
@@ -508,8 +548,8 @@ namespace giEngineSDK {
      * @param    inThreadGroupY  The number of groups dispatched in the y direction.
      * @param    inThreadGroupZ  The number of groups dispatched in the z direction.
      */
-     virtual void
-     dispatch(uint32, uint32, uint32) {}
+    virtual void
+    dispatch(uint32, uint32, uint32) {}
          
     /**
      * @brief    Gets the default Render Target.

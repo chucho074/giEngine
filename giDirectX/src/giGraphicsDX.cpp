@@ -374,7 +374,7 @@ namespace giEngineSDK {
   }
 
 
-  Rasterizer *
+  BaseRasterizerState *
   CGraphicsDX::createRasterizer(FILLMODE::E inFillMode,
                                 CULLMODE::E inCullMode,
                                 bool inClockwise) {
@@ -661,7 +661,7 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::rsSetState(Rasterizer * inRaster) {
+  CGraphicsDX::rsSetState(BaseRasterizerState * inRaster) {
     ID3D11RasterizerState* tmpRasterState;
     tmpRasterState = static_cast<RasterizerDX*>(inRaster)->m_rasterizerState;
     m_devContext->RSSetState(tmpRasterState);

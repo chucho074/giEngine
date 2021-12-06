@@ -205,7 +205,7 @@
     <ClInclude Include="include\giModel.h" />
     <ClInclude Include="include\giObject.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
-    <ClInclude Include="include\giRasterizer.h" />
+    <ClInclude Include="include\giBaseRasterizer.h" />
     <ClInclude Include="include\giResource.h" />
     <ClInclude Include="include\giSampler.h" />
     <ClInclude Include="include\giSceneGraph.h" />

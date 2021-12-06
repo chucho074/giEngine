@@ -30,7 +30,7 @@ struct ImGui_ImplGI_Data {
   SharedPtr<BasePixelShader>  spPixelShader;
   SharedPtr<Sampler>          spFontSampler;
   SharedPtr<Texture2D>        spFontTextureView;
-  SharedPtr<Rasterizer>       spRasterizerState;
+  SharedPtr<BaseRasterizerState>       spRasterizerState;
   SharedPtr<BlendState>       spBlendState;
   SharedPtr<DepthState>       spDepthStencilState;
   uint32                      VertexBufferSize;

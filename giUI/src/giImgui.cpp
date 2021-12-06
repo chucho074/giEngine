@@ -21,9 +21,9 @@ using giEngineSDK::InputLayout;
 using giEngineSDK::Sampler;
 using giEngineSDK::Texture2D;
 using giEngineSDK::uint32;
-using giEngineSDK::Rasterizer;
-using giEngineSDK::DepthState;
-using giEngineSDK::BlendState;
+using giEngineSDK::BaseRasterizerState;
+using giEngineSDK::BaseDepthStencilState;
+using giEngineSDK::BaseBlendState;
 using giEngineSDK::Vector2;
 using giEngineSDK::Vector4;
 using giEngineSDK::GI_FORMAT::E;
@@ -180,50 +180,50 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   // Backup DX state that will be modified to restore it afterwards 
   // (unfortunately this is very ugly looking and verbose. Close your eyes!)
   struct BACKUP_GI_STATE {
-    uint32                    ScissorRectsCount, ViewportsCount;
-    Vector4                   ScissorRects[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-    Vector2                   Viewports[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-    Rasterizer*               RS;
-    BlendState*               BlenState;
-    float                     BlendFactor[4];
-    uint32                    SampleMask;
-    uint32                    StencilRef;
-    DepthState*               DepthStencilState;
-    Texture2D*                PSShaderResource;
-    Sampler*                  PSSampler;
-    BasePixelShader*          PS;
-    BaseVertexShader*         VS;
-    //ID3D11GeometryShader*     GS;
-    uint32                    PSInstancesCount, VSInstancesCount, GSInstancesCount;
+    uint32                     ScissorRectsCount, ViewportsCount;
+    Vector4                    ScissorRects[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    Vector2                    Viewports[GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    BaseRasterizerState*       RS;
+    BaseBlendState*            BlenState;
+    float                      BlendFactor[4];
+    uint32                     SampleMask;
+    uint32                     StencilRef;
+    BaseDepthStencilState*     DepthStencilState;
+    Texture2D*                 PSShaderResource;
+    Sampler*                   PSSampler;
+    SharedPtr<BasePixelShader>           PS;
+    SharedPtr<BaseVertexShader>          VS;
+    //Aqui iria el geometry shader... si tan solo lo tuvieras
+    uint32                     PSInstancesCount, VSInstancesCount, GSInstancesCount;
     //ID3D11ClassInstance *     PSInstances[256], *VSInstances[256], *GSInstances[256];   // 256 is max according to PSSetShader documentation
     giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E  PrimitiveTopology;
-    Buffer*                   IndexBuffer;
-    Buffer*                   VertexBuffer;
-    Buffer*                   VSConstantBuffer;
-    uint32                    IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
-    giEngineSDK::GI_FORMAT::E IndexBufferFormat;
-    InputLayout*              InputL;
+    SharedPtr<Buffer>                    IndexBuffer;
+    SharedPtr<Buffer>                    VertexBuffer;
+    SharedPtr<Buffer>                    VSConstantBuffer;
+    uint32                     IndexBufferOffset, VertexBufferStride, VertexBufferOffset;
+    giEngineSDK::GI_FORMAT::E  IndexBufferFormat;
+    SharedPtr<InputLayout>               InputL;
   };
 
   BACKUP_GI_STATE old = {};
   old.ScissorRectsCount = old.ViewportsCount = GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
-  gapi.rsGetScissorRects(&old.ScissorRectsCount, old.ScissorRects);
-  gapi.rsGetViewports(&old.ViewportsCount, old.Viewports);
-  gapi.rsGetState(&old.RS);
-  gapi.omGetBlendState(&old.BlendState, old.BlendFactor, &old.SampleMask);
-  gapi.omGetDepthStencilState(&old.DepthStencilState, &old.StencilRef);
-  gapi.psGetShaderResources(0, 1, &old.PSShaderResource);
-  gapi.psGetSamplers(0, 1, &old.PSSampler);
+  gapi.rsGetScissorRects(old.ScissorRectsCount, old.ScissorRects);
+  gapi.rsGetViewports(old.ViewportsCount, old.Viewports);
+  gapi.rsGetState(old.RS);
+  gapi.omGetBlendState(old.BlenState, old.BlendFactor, old.SampleMask);
+  gapi.omGetDepthStencilState(old.DepthStencilState, old.StencilRef);
+  gapi.psGetShaderResources(0, 1, old.PSShaderResource);
+  gapi.psGetSamplers(0, 1, old.PSSampler);
   old.PSInstancesCount = old.VSInstancesCount = old.GSInstancesCount = 256;
-  gapi.psGetShader(&old.PS, old.PSInstances, &old.PSInstancesCount);
-  gapi.vsGetShader(&old.VS, old.VSInstances, &old.VSInstancesCount);
-  gapi.vsGetConstantBuffers(0, 1, &old.VSConstantBuffer);
-  //gapi.gsGetShader(&old.GS, old.GSInstances, &old.GSInstancesCount);
+  gapi.psGetShader(old.PS.get(), old.PSInstancesCount);
+  gapi.vsGetShader(old.VS.get(), old.VSInstancesCount);
+  gapi.vsGetConstantBuffers(0, 1, old.VSConstantBuffer.get());
+  //Aqui iria el geometry shader... si tan solo lo tuvieras
   
-  gapi.iaGetPrimitiveTopology(&old.PrimitiveTopology);
-  gapi.iaGetIndexBuffer(&old.IndexBuffer, &old.IndexBufferFormat, &old.IndexBufferOffset);
-  gapi.iaGetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset);
-  gapi.iaGetInputLayout(&old.InputL);
+  gapi.iaGetPrimitiveTopology(old.PrimitiveTopology);
+  gapi.iaGetIndexBuffer(old.IndexBuffer.get(), old.IndexBufferFormat, old.IndexBufferOffset);
+  gapi.iaGetVertexBuffer(1, old.VertexBuffer.get(), old.VertexBufferStride, old.VertexBufferOffset);
+  gapi.iaGetInputLayout(old.InputL.get());
   
   // Setup desired DX state
   ImGui_ImplGI_SetupRenderState(draw_data);
@@ -256,15 +256,15 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
           continue;
         }
         // Apply scissor/clipping rectangle
-        const D3D11_RECT r = { (LONG)clip_min.x, 
-                               (LONG)clip_min.y, 
-                               (LONG)clip_max.x, 
-                               (LONG)clip_max.y };
-        gapi.rsSetScissorRects(1, &r);
+        Vector4 r = { (LONG)clip_min.x, 
+                      (LONG)clip_min.y, 
+                      (LONG)clip_max.x, 
+                      (LONG)clip_max.y };
+        gapi.rsSetScissorRects(1, r);
   
         // Bind texture, Draw
         SharedPtr<Texture2D> texture_srv = (ID3D11ShaderResourceView*)pcmd->GetTexID();
-        gapi.psSetShaderResources(0, 1, &texture_srv);
+        gapi.psSetShaderResource(0, texture_srv.get());
         gapi.drawIndexed(pcmd->ElemCount, 
                          pcmd->IdxOffset + global_idx_offset, 
                          pcmd->VtxOffset + global_vtx_offset);
@@ -275,65 +275,33 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
   }
   
   // Restore modified DX state
-  gapi.RSSetScissorRects(old.ScissorRectsCount, old.ScissorRects);
-  gapi.RSSetViewports(old.ViewportsCount, old.Viewports);
-  gapi.RSSetState(old.RS); 
-  if (old.RS) {
-    old.RS->Release();
-  }
-  gapi.OMSetBlendState(old.BlenState, old.BlendFactor, old.SampleMask); 
-  if (old.BlenState) {
-    old.BlenState->Release();
-  }
+  gapi.rsSetScissorRects(old.ScissorRectsCount, old.ScissorRects);
+
+  gapi.rsSetViewports(old.ViewportsCount, old.Viewports);
+  
+  gapi.rsSetState(old.RS); 
+  
+  gapi.omSetBlendState(old.BlenState, old.BlendFactor, old.SampleMask); 
+  
   gapi.omSetDepthStencilState(old.DepthStencilState, old.StencilRef); 
-  if (old.DepthStencilState) {
-    old.DepthStencilState->Release();
-  }
-  gapi.psSetShaderResource(0, 1, &old.PSShaderResource); 
-  if (old.PSShaderResource) {
-    old.PSShaderResource->Release();
-  }
-  gapi.psSetSampler(0, 1, &old.PSSampler); 
-  if (old.PSSampler) {
-    old.PSSampler->Release();
-  }
-  gapi.psSetShader(old.PS, old.PSInstances, old.PSInstancesCount); 
-  if (old.PS) {
-    old.PS->Release();
-  }
-  for (uint32 i = 0; i < old.PSInstancesCount; i++) { 
-    if (old.PSInstances[i]) {
-      old.PSInstances[i]->Release(); 
-    }
-  }
-  gapi.vsSetShader(old.VS, old.VSInstances, old.VSInstancesCount); 
-  if (old.VS) {
-    old.VS->Release();
-  }
+  
+  gapi.psSetShaderResource(0, old.PSShaderResource); 
+  
+  gapi.psSetSampler(0, 1, old.PSSampler); 
+  
+  gapi.psSetShader(old.PS.get()); 
+  
+  gapi.vsSetShader(old.VS.get()); 
+  
   gapi.vsSetConstantBuffer(0, 1, &old.VSConstantBuffer); 
-  if (old.VSConstantBuffer) {
-    old.VSConstantBuffer->Release();
-  }
-  gapi.gsSetShader(old.GS, old.GSInstances, old.GSInstancesCount); 
-  if (old.GS) { 
-    old.GS->Release();
-  }
-  for (uint32 i = 0; i < old.VSInstancesCount; i++) { 
-    if (old.VSInstances[i]) {
-      old.VSInstances[i]->Release();
-    }
-  }
-  gapi.iaSetPrimitiveTopology(old.PrimitiveTopology);
-  gapi.iaSetIndexBuffer(old.IndexBuffer, old.IndexBufferFormat, old.IndexBufferOffset); 
-  if (old.IndexBuffer) {
-    old.IndexBuffer->Release();
-  }
-  gapi.iaSetVertexBuffers(0, 1, &old.VertexBuffer, &old.VertexBufferStride, &old.VertexBufferOffset); 
-  if (old.VertexBuffer) {
-    old.VertexBuffer->Release();
-  }
-  gapi.iaSetInputLayout(old.InputLayout); 
-  if (old.InputLayout) {
-    old.InputLayout->Release();
-  }
+  
+  
+  gapi.setTopology(old.PrimitiveTopology);
+
+  gapi.setIndexBuffer(old.IndexBuffer.get(), old.IndexBufferFormat); 
+  
+  gapi.setVertexBuffer(old.VertexBuffer.get(), old.VertexBufferStride); 
+  
+  gapi.aiSetInputLayout(old.InputL.get());
+  
 }
