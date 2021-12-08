@@ -57,6 +57,9 @@
     <ClInclude Include="include\giVertexShaderDX.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="include\giParticleSystemDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giGraphicsDX.cpp">
@@ -76,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="src\giVertexShaderDX.cpp">
       <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giParticleSystemDX.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

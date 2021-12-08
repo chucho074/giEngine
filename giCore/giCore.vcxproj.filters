@@ -146,5 +146,8 @@
     <ClInclude Include="include\giBaseComputeShader.h">
       <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
+    <ClInclude Include="include\giParticleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
