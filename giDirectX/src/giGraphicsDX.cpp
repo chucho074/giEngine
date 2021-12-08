@@ -12,6 +12,7 @@
  */
 #include "giGraphicsDX.h"
 #include <intrin.h>
+#include <giVector4.h>
 
 #include "giTexture2DDX.h"
 #include "giInputLayoutDX.h"
@@ -315,7 +316,7 @@ namespace giEngineSDK {
   CGraphicsDX::createIL(Vector<InputLayoutDesc>& inDesc,
                         BaseShader* inShader) {
 
-    CInputLayoutDX* tempIL = new CInputLayoutDX();
+    InputLayoutDX* tempIL = new InputLayoutDX();
     tempIL->init(inDesc);
     auto tmpVS = static_cast<VertexShaderDX*>(inShader);
     if (FAILED(m_device->CreateInputLayout(tempIL->m_descriptors.data(),
@@ -337,7 +338,7 @@ namespace giEngineSDK {
                             void* inBufferData) {
 
     GI_UNREFERENCED_PARAMETER(inOffset);
-    CBufferDX* tmpBuffer = new CBufferDX();
+    BufferDX* tmpBuffer = new BufferDX();
     CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
@@ -361,7 +362,7 @@ namespace giEngineSDK {
 
   Sampler* 
   CGraphicsDX::createSampler(SamplerDesc inDesc) {
-    CSamplerDX* tmpSampler = new CSamplerDX();
+    SamplerDX* tmpSampler = new SamplerDX();
     tmpSampler->init(inDesc);
     if (FAILED(m_device->CreateSamplerState(&tmpSampler->m_desc, 
                                             &tmpSampler->m_sampler))) {
@@ -416,7 +417,7 @@ namespace giEngineSDK {
   }
 
 
-  DepthState *
+  BaseDepthStencilState *
   CGraphicsDX::createDepthState(bool inStencilEnable,
                                 bool inDepthEnable) {
     DepthStateDX * tmpState = new DepthStateDX();
@@ -443,7 +444,7 @@ namespace giEngineSDK {
     UINT offset = 0;
     m_devContext->IASetVertexBuffers(0, 
                                      1, 
-                                     &(static_cast<CBufferDX*>(inBuffer)->m_buffer),
+                                     &(static_cast<BufferDX*>(inBuffer)->m_buffer),
                                      &inStride, 
                                      &offset);
   }
@@ -452,7 +453,7 @@ namespace giEngineSDK {
   void 
   CGraphicsDX::setIndexBuffer(Buffer* inBuffer,
                               GI_FORMAT::E inFormat) {
-    m_devContext->IASetIndexBuffer(static_cast<CBufferDX*>(inBuffer)->m_buffer, 
+    m_devContext->IASetIndexBuffer(static_cast<BufferDX*>(inBuffer)->m_buffer, 
                                    static_cast<DXGI_FORMAT>(inFormat), 
                                    0);
   }
@@ -480,7 +481,7 @@ namespace giEngineSDK {
                                  void* inData,
                                  uint32 inPitch) {
 
-    auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
+    auto tmpBuffer = static_cast<BufferDX*>(inBuffer);
     m_devContext->UpdateSubresource(tmpBuffer->m_buffer, 
                                     0, 
                                     NULL, 
@@ -546,7 +547,7 @@ namespace giEngineSDK {
   CGraphicsDX::vsSetConstantBuffer(uint32 inSlot,
                                    Buffer* inBuffer) {
 
-    auto tmpBuffer = static_cast<CBufferDX*>(inBuffer);
+    auto tmpBuffer = static_cast<BufferDX*>(inBuffer);
 
     ID3D11Buffer* Buffer = nullptr;
     if (nullptr != inBuffer) {
@@ -576,7 +577,7 @@ namespace giEngineSDK {
 
     m_devContext->PSSetConstantBuffers(inSlot, 
                                        1, 
-                                       &static_cast<CBufferDX*>(inBuffer)->m_buffer);
+                                       &static_cast<BufferDX*>(inBuffer)->m_buffer);
   }
 
 
@@ -598,7 +599,7 @@ namespace giEngineSDK {
                             uint32 inNumSamplers,
                             Sampler* inSampler) {
 
-    auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
+    auto tmpSampler = static_cast<SamplerDX*>(inSampler);
 
     m_devContext->PSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_sampler);
   }
@@ -606,7 +607,7 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::aiSetInputLayout(InputLayout* inInputLayout) {
-    m_devContext->IASetInputLayout(static_cast<CInputLayoutDX*>(inInputLayout)->m_inputLayout);
+    m_devContext->IASetInputLayout(static_cast<InputLayoutDX*>(inInputLayout)->m_inputLayout);
   }
 
 
@@ -642,7 +643,7 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::omSetBlendState(BlendState* inBlendState, 
+  CGraphicsDX::omSetBlendState(BaseBlendState* inBlendState, 
                                const float inBlendFactor[4],
                                uint32 inSampleMask) {
     
@@ -652,7 +653,7 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::omSetDepthStencilState(DepthState* inDepthState, 
+  CGraphicsDX::omSetDepthStencilState(BaseDepthStencilState* inDepthState, 
                                       uint32 inStencilRef) {
 
     ID3D11DepthStencilState* tmpDepthState;
@@ -666,6 +667,132 @@ namespace giEngineSDK {
     tmpRasterState = static_cast<RasterizerDX*>(inRaster)->m_rasterizerState;
     m_devContext->RSSetState(tmpRasterState);
   }
+
+  void 
+  CGraphicsDX::rsGetScissorRects(uint32 inNumRects, Vector4 inRects[]) {
+    for (int i = 0; i < inNumRects; ++i) {
+       D3D11_RECT r = { inRects[i].x,
+                        inRects[i].y,
+                        inRects[i].z,
+                        inRects[i].w };
+
+      m_devContext->RSGetScissorRects(&inNumRects, &r);
+    }
+  }
+  
+  void 
+  CGraphicsDX::rsGetViewports(uint32 inNumViewports, void* inViewport) {
+    m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)inViewport);
+  }
+
+  void 
+  CGraphicsDX::rsGetState(BaseRasterizerState* inRasterState) {
+    RasterizerDX * tmpState = static_cast<RasterizerDX*>(inRasterState);
+    m_devContext->RSGetState(&tmpState->m_rasterizerState);
+  }
+
+  void 
+  CGraphicsDX::omGetBlendState(BaseBlendState* inBlendState, 
+                               float inBlendFactor[4], 
+                               uint32 inSampleMask) {
+    BlendStateDX * tmpBlend = static_cast<BlendStateDX*>(inBlendState);
+    m_devContext->OMGetBlendState(&tmpBlend->m_blendState, inBlendFactor, &inSampleMask);
+  }
+
+  void 
+  CGraphicsDX::omGetDepthStencilState(BaseDepthStencilState* inDepthStencilState, 
+                                      uint32 inStencilRef) {
+    DepthStateDX * tmpState = static_cast<DepthStateDX*>(inDepthStencilState);
+    m_devContext->OMGetDepthStencilState(&tmpState->m_State, &inStencilRef);
+  }
+
+  void 
+  CGraphicsDX::psGetShaderResources(uint32 inStartSlot, 
+                                    uint32 inNumViews, 
+                                    Texture2D* inShaderResource) {
+    Texture2DDX * tmpShaderResource = static_cast<Texture2DDX*>(inShaderResource);
+    m_devContext->PSGetShaderResources(inStartSlot, 
+                                       inNumViews, 
+                                       &tmpShaderResource->m_subResourceData);
+  }
+
+  void 
+  CGraphicsDX::psGetSamplers(uint32 inStartSlot, 
+                             uint32 inNumSamplers,
+                             Sampler* inSampler) {
+    SamplerDX * tmpSampler = static_cast<SamplerDX*>(inSampler);
+    m_devContext->PSGetSamplers(inStartSlot, 
+                                inNumSamplers, 
+                                &tmpSampler->m_sampler);
+  }
+
+  void 
+  CGraphicsDX::psGetShader(BasePixelShader* inPixelShader, int32 inNumClassInstances) {
+    PixelShaderDX * tmpShader = static_cast<PixelShaderDX*>(inPixelShader);
+    m_devContext->PSGetShader(&tmpShader->m_pixelShader, nullptr, nullptr);
+  }
+
+  void 
+  CGraphicsDX::vsGetShader(BaseVertexShader* inVertexShader, 
+                           int32 inNumClassInstances) {
+    VertexShaderDX * tmpShader = static_cast<VertexShaderDX*>(inVertexShader);
+    m_devContext->VSGetShader(&tmpShader->m_vertexShader, nullptr, nullptr);
+  }
+
+  void 
+  CGraphicsDX::vsGetConstantBuffers(int32 inStartSlot, 
+                                    int32 inNumBuffers, 
+                                    Buffer* inConstantBuffer) {
+    BufferDX * tmpBuffer = static_cast<BufferDX*>(inConstantBuffer);
+    m_devContext->VSGetConstantBuffers(inStartSlot, 
+                                       inNumBuffers, 
+                                       &tmpBuffer->m_buffer);
+  }
+
+  void 
+  CGraphicsDX::iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E inTopology) {
+    D3D11_PRIMITIVE_TOPOLOGY tmpTopology = (D3D11_PRIMITIVE_TOPOLOGY)inTopology;
+    m_devContext->IAGetPrimitiveTopology(&tmpTopology);
+  }
+
+  void 
+  CGraphicsDX::iaGetIndexBuffer(Buffer* inIndexBuffer, 
+                                GI_FORMAT::E inFormat, 
+                                uint32 inOffset) {
+    BufferDX * tmpBuffer = static_cast<BufferDX*>(inIndexBuffer);
+    DXGI_FORMAT tmpFormat = (DXGI_FORMAT)inFormat;
+    m_devContext->IAGetIndexBuffer(&tmpBuffer->m_buffer, &tmpFormat, &inOffset);
+  }
+
+  void 
+  CGraphicsDX::iaGetVertexBuffer(uint32 inStartSlot, 
+                                 Buffer* inVertexBuffer, 
+                                 uint32 inStride, 
+                                 uint32 inOffset) {
+    BufferDX * tmpBuffer = static_cast<BufferDX*>(inVertexBuffer);
+    m_devContext->IAGetVertexBuffers(inStartSlot, 
+                                     1, 
+                                     &tmpBuffer->m_buffer, 
+                                     &inStride, 
+                                     &inOffset);
+  }
+
+  void 
+  CGraphicsDX::iaGetInputLayout(InputLayout* inInputLayout) {
+    InputLayoutDX * tmpIL = static_cast<InputLayoutDX*>(inInputLayout);
+    m_devContext->IAGetInputLayout(&tmpIL->m_inputLayout);
+  }
+
+  void 
+  CGraphicsDX::rsSetScissorRects(uint32 inNumRects, Vector4* inRects) {
+    const D3D11_RECT tmpRect;
+    m_devContext->RSSetScissorRects(inNumRects, &tmpRect);
+    inRects->x = tmpRect.top;
+    inRects->y = tmpRect.left;
+    inRects->z = tmpRect.right;
+    inRects->w = tmpRect.bottom;
+  }
+  
 
   void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,

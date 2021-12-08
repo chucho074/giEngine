@@ -31,6 +31,7 @@ namespace giEngineSDK {
   class BaseRasterizerState;
   class BaseDepthStencilState;
   class BaseBlendState;
+  class Vector4;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -528,13 +529,14 @@ namespace giEngineSDK {
     iaGetInputLayout(InputLayout *) {};
 
     virtual void 
-    rsSetScissorRects(uint32, Vector4) {};
+    rsSetScissorRects(uint32, Vector4*) {};
 
-
+    /*virtual void 
+    rsSetViewports(uint32, ) {};*/
 
     /** 
      * @brief    Draw Indeux.
-     * @param    inNumIndexes       The number of idexes to draw.
+     * @param    inNumIndexes       The number of indexes to draw.
      * @param    inStartLocation    the start location to draw.
      * @bug      No known Bugs.
      */

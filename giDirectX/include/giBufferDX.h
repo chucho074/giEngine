@@ -1,5 +1,5 @@
 /**
- * @file    CBufferDX.h
+ * @file    giBufferDX.h
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
@@ -15,21 +15,21 @@
 #include <giBuffer.h>
 
 /**
- * @class    CBufferDX.
+ * @class    BufferDX.
  * @brief    A buffer interface for own buffers for DX.
  * @bug      No known Bugs.
  */
 namespace giEngineSDK {
-  class CBufferDX final : public Buffer
+  class BufferDX final : public Buffer
   {
    public:
     ///Specific constructor
-    CBufferDX() {
+    BufferDX() {
     
     };
   
     ///Destructor
-    ~CBufferDX() {
+    ~BufferDX() {
       SAFE_RELEASE(m_buffer);
     };
   

@@ -15,7 +15,7 @@
 #include "giPrerequisitesDX.h"
 
 namespace giEngineSDK {
-  class BlendStateDX : public BlendState
+  class BlendStateDX : public BaseBlendState
   {
    public:
     //Default Constructor

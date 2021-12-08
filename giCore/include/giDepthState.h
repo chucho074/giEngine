@@ -1,5 +1,5 @@
 /**
- * @file    giDepthState
+ * @file    giBaseDepthStencilState.h
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
@@ -15,14 +15,14 @@
 
 namespace giEngineSDK {
 
-  class DepthState
+  class BaseDepthStencilState
   {
   public:
     //Default constructor
-    DepthState() = default;
+    BaseDepthStencilState() = default;
 
     //Destructor
     virtual
-    ~DepthState() = default;
+    ~BaseDepthStencilState() = default;
   };
 }

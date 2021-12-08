@@ -15,7 +15,7 @@
 #include <giDepthState.h>
 namespace giEngineSDK {
 
-  class DepthStateDX final : public DepthState
+  class DepthStateDX final : public BaseDepthStencilState
   {
    public:
     //Default constructor

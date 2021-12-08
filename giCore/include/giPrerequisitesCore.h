@@ -54,6 +54,8 @@
 namespace giEngineSDK {
 #define ALIGN_ELEMENT (0xffffffff)
 #define SAFE_RELEASE(x) if(x != nullptr) x->Release(); x=nullptr;
+#define	GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE	( 16 )
+
 
   using wchar = wchar_t;
 

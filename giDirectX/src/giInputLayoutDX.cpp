@@ -14,16 +14,16 @@
 
 namespace giEngineSDK {
 
-  CInputLayoutDX::CInputLayoutDX() {
+  InputLayoutDX::InputLayoutDX() {
     m_inputLayout = nullptr;
   }
 
-  CInputLayoutDX::~CInputLayoutDX() {
+  InputLayoutDX::~InputLayoutDX() {
     SAFE_RELEASE(m_inputLayout);
   }
 
   void 
-  CInputLayoutDX::init(const Vector<InputLayoutDesc>& inDesc) {
+  InputLayoutDX::init(const Vector<InputLayoutDesc>& inDesc) {
     for (int i = 0; i < inDesc.size(); ++i) {
       D3D11_INPUT_ELEMENT_DESC layout;
       layout.SemanticName = inDesc[i].semanticName.c_str();

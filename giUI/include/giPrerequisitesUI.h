@@ -14,5 +14,3 @@
 #include <giPrerequisitesUtilities.h>
 #include <giPrerequisitesCore.h>
 #include <giBaseGraphicsAPI.h>
-
-#define	GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE	( 16 )

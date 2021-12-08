@@ -22,19 +22,19 @@
 // giEngine data
 struct ImGui_ImplGI_Data {
   
-  SharedPtr<Buffer>           spVB;
-  SharedPtr<Buffer>           spIB;
-  SharedPtr<BaseVertexShader> spVertexShader;
-  SharedPtr<InputLayout>      spInputLayout;
-  SharedPtr<Buffer>           spVertexConstantBuffer;
-  SharedPtr<BasePixelShader>  spPixelShader;
-  SharedPtr<Sampler>          spFontSampler;
-  SharedPtr<Texture2D>        spFontTextureView;
+  Buffer*                    spVB;
+  Buffer*                    spIB;
+  SharedPtr<BaseVertexShader>          spVertexShader;
+  SharedPtr<InputLayout>               spInputLayout;
+  SharedPtr<Buffer>                    spVertexConstantBuffer;
+  SharedPtr<BasePixelShader>           spPixelShader;
+  SharedPtr<Sampler>                   spFontSampler;
+  SharedPtr<Texture2D>                 spFontTextureView;
   SharedPtr<BaseRasterizerState>       spRasterizerState;
-  SharedPtr<BlendState>       spBlendState;
-  SharedPtr<DepthState>       spDepthStencilState;
-  uint32                      VertexBufferSize;
-  uint32                      IndexBufferSize;
+  SharedPtr<BaseBlendState>            spBlendState;
+  SharedPtr<BaseDepthStencilState>     spDepthStencilState;
+  uint32                               VertexBufferSize;
+  uint32                               IndexBufferSize;
 
   ImGui_ImplGI_Data() { 
     memset(this, 0, sizeof(*this)); 

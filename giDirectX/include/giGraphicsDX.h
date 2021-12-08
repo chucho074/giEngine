@@ -19,9 +19,9 @@
 
 namespace giEngineSDK {
   class BaseShader;
-  class CBufferDX;
-  class CInputLayoutDX;
-  class CSamplerDX;
+  class BufferDX;
+  class InputLayoutDX;
+  class SamplerDX;
   class RasterizerDX;
   class DepthStateDX;
 }
@@ -174,7 +174,7 @@ namespace giEngineSDK {
     /**
      * @brief    Create a Depth Stencil State.
      */
-    DepthState *
+    BaseDepthStencilState *
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) override;
 
@@ -359,7 +359,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetBlendState(BlendState * inBlendState,
+    omSetBlendState(BaseBlendState * inBlendState,
                     const float inBlendFactor[4],
                     uint32 inSampleMask = 0xffffffff) override;
     
@@ -370,7 +370,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetDepthStencilState(DepthState * inDepthState,
+    omSetDepthStencilState(BaseDepthStencilState * inDepthState,
                            uint32 inStencilRef) override;
      
     /**
@@ -378,7 +378,176 @@ namespace giEngineSDK {
      * @param    inRaster       The rasterizer state to set.
      */
     void
-    rsSetState(BaseRasterizerState * inRaster);
+    rsSetState(BaseRasterizerState * inRaster) override;
+
+    
+    /** 
+     * @brief    Set Blend State.
+     * @param    inBlendState   Pointer to a blend-state interface. NULL for a default.
+     * @param    inBlendFactor  Array of blend factors, one for each RGBA component.
+     * @param    inSampleMask   32-bit sample coverage. The default value is 0xffffffff.
+     * @bug      No known Bugs.
+     */
+    void 
+    omSetBlendState(BaseBlendState *, 
+                    const float[4], 
+                    uint32 = 0xffffffff) override;
+                    
+    /** 
+     * @brief    Set Blend State.
+     * @param    inDepthState   Pointer to a depth-state interface.
+     * @param    inStencilRef   The reference to the stencil.
+     * @bug      No known Bugs.
+     */
+    void 
+    omSetDepthStencilState(BaseDepthStencilState * inDepthState,
+                           uint32 inStencilRef) override;
+    /**
+     * @brief    Set the Rasterizer.
+     * @param    inRaster       The rasterizer state to set.
+     */
+    void
+    rsSetState(BaseRasterizerState * inRaster) override;
+
+    /**
+     * @brief 
+     * @param    inNumRects 
+     * @param    inRects 
+     */
+    void
+    rsGetScissorRects(uint32 inNumRects, Vector4 inRects[]) override;
+
+    /**
+     * @brief 
+     * @param    inNumViewports 
+     * @param    inViewport 
+     */
+    void
+    rsGetViewports(uint32 inNumViewports, void* inViewport) override;
+
+    /**
+     * @brief 
+     * @param    inRasterState 
+     */
+    void
+    rsGetState(BaseRasterizerState * inRasterState) override;
+
+    /**
+     * @brief 
+     * @param    inBlendState 
+     * @param    inBlendFactor 
+     * @param    inSampleMask 
+     */
+    void 
+    omGetBlendState(BaseBlendState * inBlendState, 
+                    float inBlendFactor[4], 
+                    uint32 inSampleMask) override;
+
+    /**
+     * @brief 
+     * @param    inDepthStencilState 
+     * @param    inStencilRef 
+     */
+    void 
+    omGetDepthStencilState(BaseDepthStencilState * inDepthStencilState, 
+                           uint32 inStencilRef) override;
+
+    /**
+     * @brief 
+     * @param    inStartSlot 
+     * @param    inNumViews 
+     * @param    inShaderResource 
+     */
+    void
+    psGetShaderResources(uint32 inStartSlot, 
+                         uint32 inNumViews, 
+                         Texture2D * inShaderResource) override;
+
+    /**
+     * @brief 
+     * @param    inStartSlot 
+     * @param    inNumSamplers 
+     * @param    inSampler 
+     */
+    void
+    psGetSamplers(uint32 inStartSlot, 
+                  uint32 inNumSamplers, 
+                  Sampler * inSampler) override;
+
+    /**
+     * @brief 
+     * @param    inPixelShader 
+     * @param    inNumClassInstances 
+     */
+    void
+    psGetShader(BasePixelShader * inPixelShader, 
+                int32 inNumClassInstances) override;
+
+    /**
+     * @brief 
+     * @param    inVertexShader 
+     * @param    inNumClassInstances 
+     */
+    void
+    vsGetShader(BaseVertexShader * inVertexShader, 
+                int32 inNumClassInstances) override;
+
+    /**
+     * @brief 
+     * @param    inStartSlot 
+     * @param    inNumBuffers 
+     * @param    inConstantBuffer 
+     */
+    void
+    vsGetConstantBuffers(int32 inStartSlot, 
+                         int32 inNumBuffers, 
+                         Buffer * inConstantBuffer) override;
+
+    /**
+     * @brief 
+     * @param    inTopology 
+     */
+    void
+    iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E inTopology) override;
+
+    /**
+     * @brief 
+     * @param    inIndexBuffer 
+     * @param    inFormat 
+     * @param    inOffset 
+     */
+    void
+    iaGetIndexBuffer(Buffer * inIndexBuffer, 
+                     GI_FORMAT::E inFormat, 
+                     uint32 inOffset) override;
+
+    /**
+     * @brief 
+     * @param    inStartSlot 
+     * @param    inVertexBuffer 
+     * @param    inStride 
+     * @param    inOffset 
+     */
+    void
+    iaGetVertexBuffer(uint32 inStartSlot, 
+                      Buffer * inVertexBuffer, 
+                      uint32 inStride, 
+                      uint32 inOffset) override;
+    
+    /**
+     * @brief 
+     * @param    inInputLayout 
+     */
+    void
+    iaGetInputLayout(InputLayout * inInputLayout) override;
+
+    /**
+     * @brief 
+     * @param    inNumRects 
+     * @param    inRects 
+     */
+    void 
+    rsSetScissorRects(uint32 inNumRects, Vector4* inRects) override;
     
     /** 
      * @brief    Draw Index.
@@ -396,10 +565,10 @@ namespace giEngineSDK {
      * @param    inThreadGroupY  The number of groups dispatched in the y direction.
      * @param    inThreadGroupZ  The number of groups dispatched in the z direction.
      */
-     void
-     dispatch(uint32 inThreadGroupX, 
-              uint32 inThreadGroupY, 
-              uint32 inThreadGroupZ) override;
+    void
+    dispatch(uint32 inThreadGroupX, 
+             uint32 inThreadGroupY, 
+             uint32 inThreadGroupZ) override;
     
     /**
      * @brief    Gets the default Render Target.
@@ -423,8 +592,8 @@ namespace giEngineSDK {
     
     /**
      * @brief 
-     * @param inString 
-     * @param inDirectory 
+     * @param    inString 
+     * @param    inDirectory 
      * @return 
      */
      Texture2D *
@@ -453,7 +622,7 @@ namespace giEngineSDK {
   };
   
   /**
-   * @brief   Create the gAPI with a dll.
+   * @brief      Create the gAPI with a dll.
    */
   extern "C" GI_PLUGIN_EXPORT CGraphicsDX *
   createGraphicsAPI() {
