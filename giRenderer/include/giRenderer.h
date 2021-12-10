@@ -81,6 +81,11 @@ namespace giEngineSDK {
     Vector3 Garbage;   //Just for the 16 magic
   };
 
+  struct HistogramBuffer {
+    Vector2 ImageSize;
+    Vector2 x;
+  };
+
 
   class Renderer : public BaseRenderer
   {
@@ -131,7 +136,8 @@ namespace giEngineSDK {
     dispatchData(Vector<Buffer*> inConstantBuffers,
                  BaseComputeShader * inCS,
                  Vector<Texture2D*> inShaderResources,
-                 Vector<Texture2D*> inUAVS,
+                 Vector<Texture2D*> inTextureUAVS,
+                 Vector<Buffer*> inBufferUAVS,
                  Sampler* inSampler,
                  Vector3 inDispatch);
     /**
@@ -158,13 +164,13 @@ namespace giEngineSDK {
     SharedPtr<Rasterizer> m_rasterGBuffer;
     Vector<Texture2D*> m_renderTargets;
 
-                //GBUFFER
+                 //GBUFFER
     //The Vertex shader
     BaseVertexShader* m_vertexShader = nullptr;
     //The Pixel Shader
     BasePixelShader* m_pixelShader = nullptr;
 
-                  //SSAO
+                 //SSAO
     //The Compute Shader
     BaseComputeShader* m_computeShaderSSAO = nullptr;
     Buffer* m_cBufferSSAO = nullptr;
@@ -173,7 +179,7 @@ namespace giEngineSDK {
     //SAQ
     SharedPtr<Model> m_SAQ;
 
-                  //Blur
+                 //Blur
     //The Compute Shader
     BaseComputeShader* m_csBlurH = nullptr;
     //The Compute Shader
@@ -181,7 +187,7 @@ namespace giEngineSDK {
     Vector<Texture2D*> m_BlurTexture;
     Buffer* m_cBufferBlur = nullptr;
 
-                //Shadows
+                 //Shadows
     //The Vertex Shader
     BaseVertexShader* m_vertexShaderShadow = nullptr;
     //The Pixel Shader
@@ -193,7 +199,7 @@ namespace giEngineSDK {
     //Camera
     SharedPtr<Camera> m_ShadowCamera;
 
-               //Light
+                 //Light
     //The Vertex Shader
     BaseVertexShader* m_vertexShaderLight = nullptr;
     //The Pixel Shader
@@ -202,6 +208,16 @@ namespace giEngineSDK {
     InputLayout* m_inputLayoutLight = nullptr;
     //The Constant Buffer
     Buffer* m_cBufferLight = nullptr;
+
+
+                 //Histogram
+    BaseComputeShader* m_computeShaderHist = nullptr;
+    Buffer* m_cBufferHist = nullptr;
+    Buffer* m_cBufferHistR = nullptr;
+    Buffer* m_cBufferHistG = nullptr;
+    Buffer* m_cBufferHistB = nullptr;
+    Vector<Texture2D*> m_HistTexture;
+
 
 
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha

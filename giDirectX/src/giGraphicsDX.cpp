@@ -524,11 +524,25 @@ namespace giEngineSDK {
   }
 
   void
-  CGraphicsDX::setUAV(int32 inStartSlot, Texture2D * inUAV) {
+  CGraphicsDX::setUAVTexture(int32 inStartSlot, Texture2D * inUAV) {
     ID3D11UnorderedAccessView * tmpUAV = nullptr;
 
     if (nullptr != inUAV) {
       tmpUAV = static_cast<Texture2DDX*>(inUAV)->m_UAV;
+      
+    }
+    m_devContext->CSSetUnorderedAccessViews(inStartSlot, 
+                                            1, 
+                                            &tmpUAV,
+                                            nullptr);
+  }
+
+  void
+  CGraphicsDX::setUAVBuffer(int32 inStartSlot, Buffer * inUAV) {
+    ID3D11UnorderedAccessView * tmpUAV = nullptr;
+
+    if (nullptr != inUAV) {
+      tmpUAV = static_cast<CBufferDX*>(inUAV)->m_UAV;
       
     }
     m_devContext->CSSetUnorderedAccessViews(inStartSlot, 
