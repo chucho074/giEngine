@@ -39,7 +39,7 @@ namespace giEngineSDK {
 
 
   CGraphicsDX::~CGraphicsDX() {
-    delete m_backBuffer;
+    
   }
 
 
@@ -112,7 +112,8 @@ namespace giEngineSDK {
       }
       
     }
-    m_backBuffer = new Texture2DDX();
+    m_backBuffer.reset();
+    //m_backBuffer = new Texture2DDX();
 
     //Get a texture from Swap Chain
     m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer->m_texture);
@@ -126,13 +127,13 @@ namespace giEngineSDK {
     }
 
 
-
+    
     //Create DSV
-    m_defaultDSV = static_cast<Texture2DDX*>(createTex2D(inWidth,
-                                             inHeight,
-                                             1,
-                                             GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT,
-                                             GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
+    m_defaultDSV = static_pointer_cast<Texture2DDX>(createTex2D(inWidth,
+                                                      inHeight,
+                                                      1,
+                                                      GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT,
+                                                      GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
     createVP(1, inWidth, inHeight, 0, 0);
@@ -146,14 +147,15 @@ namespace giEngineSDK {
   }
 
 
-  Texture2D*
+  SharedPtr<Texture2D>
   CGraphicsDX::createTex2D(int32 inWidth,
                            int32 inHeigh,
                            int32 inMipLevels,
                            GI_FORMAT::E inFormat,
                            int32 inBindFlags) {
 
-    Texture2DDX* temp = new Texture2DDX();
+    SharedPtr<Texture2DDX> temp;
+    temp.reset();
     CD3D11_TEXTURE2D_DESC tempDesc;
     memset(&tempDesc, 0, sizeof(tempDesc));
     tempDesc.Width = inWidth;
@@ -253,12 +255,13 @@ namespace giEngineSDK {
   }
 
 
-  BaseVertexShader* 
+  SharedPtr<BaseVertexShader>
   CGraphicsDX::createVS(String inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
 
-    VertexShaderDX* tempVS = new VertexShaderDX();
+    SharedPtr<VertexShaderDX> tempVS;
+    tempVS.reset();
     tempVS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_device->CreateVertexShader(tempVS->m_compiledVShader->GetBufferPointer(),
                                             tempVS->m_compiledVShader->GetBufferSize(),
@@ -274,11 +277,12 @@ namespace giEngineSDK {
   }
 
 
-  BasePixelShader* 
+  SharedPtr<BasePixelShader>
   CGraphicsDX::createPS(String inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
-    PixelShaderDX* tempPS = new PixelShaderDX();
+    SharedPtr<PixelShaderDX> tempPS;
+    tempPS.reset();
     tempPS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_device->CreatePixelShader(tempPS->m_compiledPShader->GetBufferPointer(),
                                            tempPS->m_compiledPShader->GetBufferSize(),
@@ -292,12 +296,12 @@ namespace giEngineSDK {
     return tempPS;
   }
 
-  BaseComputeShader* 
+  SharedPtr<BaseComputeShader>
   CGraphicsDX::createCS(String inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
 
-    ComputeShaderDX* tempCS = new ComputeShaderDX();
+    SharedPtr<ComputeShaderDX> tempCS;
     tempCS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_device->CreateComputeShader(tempCS->m_compiledCShader->GetBufferPointer(),
                                              tempCS->m_compiledCShader->GetBufferSize(),
@@ -312,17 +316,18 @@ namespace giEngineSDK {
   }
 
 
-  InputLayout* 
+  SharedPtr<InputLayout>
   CGraphicsDX::createIL(Vector<InputLayoutDesc>& inDesc,
-                        BaseShader* inShader) {
+                        SharedPtr<BaseShader> inShader) {
 
-    InputLayoutDX* tempIL = new InputLayoutDX();
+    SharedPtr<InputLayoutDX> tempIL;
+    tempIL.reset();
     tempIL->init(inDesc);
-    auto tmpVS = static_cast<VertexShaderDX*>(inShader);
+    auto tmpVS = static_pointer_cast<VertexShaderDX>(inShader);
     if (FAILED(m_device->CreateInputLayout(tempIL->m_descriptors.data(),
                                            static_cast<int32>(inDesc.size()),
-                                           tmpVS->m_compiledVShader->GetBufferPointer(),
-                                           static_cast<uint32>(tmpVS->m_compiledVShader->GetBufferSize()),
+                                           tmpVS.get()->m_compiledVShader->GetBufferPointer(),
+                                           static_cast<uint32>(tmpVS.get()->m_compiledVShader->GetBufferSize()),
                                            &tempIL->m_inputLayout))) {
       __debugbreak();
       return nullptr;
@@ -331,14 +336,14 @@ namespace giEngineSDK {
   }
 
 
-  Buffer* 
+  SharedPtr<Buffer>
   CGraphicsDX::createBuffer(size_T inByteWidth,
                             uint32 inBindFlags,
                             uint32 inOffset,
                             void* inBufferData) {
 
     GI_UNREFERENCED_PARAMETER(inOffset);
-    BufferDX* tmpBuffer = new BufferDX();
+    SharedPtr<BufferDX> tmpBuffer;
     CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
@@ -360,9 +365,9 @@ namespace giEngineSDK {
   }
 
 
-  Sampler* 
+  SharedPtr<Sampler>
   CGraphicsDX::createSampler(SamplerDesc inDesc) {
-    SamplerDX* tmpSampler = new SamplerDX();
+    SharedPtr<SamplerDX> tmpSampler;
     tmpSampler->init(inDesc);
     if (FAILED(m_device->CreateSamplerState(&tmpSampler->m_desc, 
                                             &tmpSampler->m_sampler))) {
@@ -375,11 +380,11 @@ namespace giEngineSDK {
   }
 
 
-  BaseRasterizerState *
+  SharedPtr<BaseRasterizerState>
   CGraphicsDX::createRasterizer(FILLMODE::E inFillMode,
                                 CULLMODE::E inCullMode,
                                 bool inClockwise) {
-    RasterizerDX* tmpRaster = new RasterizerDX();
+    SharedPtr<RasterizerDX> tmpRaster;
     D3D11_RASTERIZER_DESC tmpDesc;
     memset(&tmpDesc, 0, sizeof(tmpDesc));
     switch (inFillMode) {
@@ -417,10 +422,10 @@ namespace giEngineSDK {
   }
 
 
-  BaseDepthStencilState *
+  SharedPtr<BaseDepthStencilState>
   CGraphicsDX::createDepthState(bool inStencilEnable,
                                 bool inDepthEnable) {
-    DepthStateDX * tmpState = new DepthStateDX();
+    SharedPtr<DepthStateDX> tmpState;
 
     D3D11_DEPTH_STENCIL_DESC tmpDesc;
 
@@ -439,21 +444,21 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::setVertexBuffer(Buffer* inBuffer,
+  CGraphicsDX::setVertexBuffer(SharedPtr<Buffer> inBuffer,
                                uint32 inStride) {
     UINT offset = 0;
     m_devContext->IASetVertexBuffers(0, 
                                      1, 
-                                     &(static_cast<BufferDX*>(inBuffer)->m_buffer),
+                                     &(static_pointer_cast<BufferDX>(inBuffer)->m_buffer),
                                      &inStride, 
                                      &offset);
   }
 
 
   void 
-  CGraphicsDX::setIndexBuffer(Buffer* inBuffer,
+  CGraphicsDX::setIndexBuffer(SharedPtr<Buffer> inBuffer,
                               GI_FORMAT::E inFormat) {
-    m_devContext->IASetIndexBuffer(static_cast<BufferDX*>(inBuffer)->m_buffer, 
+    m_devContext->IASetIndexBuffer(static_pointer_cast<BufferDX>(inBuffer)->m_buffer,
                                    static_cast<DXGI_FORMAT>(inFormat), 
                                    0);
   }
@@ -466,22 +471,22 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::setRasterizerState(RasterizerDX * inRaster) {
+  CGraphicsDX::setRasterizerState(SharedPtr<RasterizerDX> inRaster) {
     m_devContext->RSSetState(inRaster->m_rasterizerState);
   }
 
   void
-  CGraphicsDX::setDepthState(DepthStateDX * inDepthState) {
+  CGraphicsDX::setDepthState(SharedPtr<DepthStateDX> inDepthState) {
     m_devContext->OMSetDepthStencilState(inDepthState->m_State, 0);
   }
 
 
   void 
-  CGraphicsDX::updateSubresource(Buffer* inBuffer,
+  CGraphicsDX::updateSubresource(SharedPtr<Buffer> inBuffer,
                                  void* inData,
                                  uint32 inPitch) {
 
-    auto tmpBuffer = static_cast<BufferDX*>(inBuffer);
+    auto tmpBuffer = static_pointer_cast<BufferDX>(inBuffer);
     m_devContext->UpdateSubresource(tmpBuffer->m_buffer, 
                                     0, 
                                     NULL, 
@@ -492,12 +497,12 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::updateTexture(Texture2D* inTexture,
+  CGraphicsDX::updateTexture(SharedPtr<Texture2D> inTexture,
                              const void* inData,
                              uint32 inPitch,
                              uint32 inDepthPitch) {
 
-    m_devContext->UpdateSubresource(static_cast<Texture2DDX*>(inTexture)->m_texture,
+    m_devContext->UpdateSubresource(static_pointer_cast<Texture2DDX>(inTexture)->m_texture,
                                     0,
                                     NULL,
                                     inData,
@@ -507,23 +512,23 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::clearBackTexture(float inColor[4]) {
-    clearRTV(static_cast<Texture2D*>(getDefaultRenderTarget()),
+    clearRTV(static_pointer_cast<Texture2D>(getDefaultRenderTarget()),
              inColor);
 
-    clearDSV(static_cast<Texture2D*>(getDefaultDephtStencil()));
+    clearDSV(static_pointer_cast<Texture2D>(getDefaultDephtStencil()));
   }
 
 
   void 
-  CGraphicsDX::clearRTV(Texture2D* inRTV, float inColor[4]) {
-    m_devContext->ClearRenderTargetView(static_cast<Texture2DDX*>(inRTV)->m_renderTargetView,
+  CGraphicsDX::clearRTV(SharedPtr<Texture2D> inRTV, float inColor[4]) {
+    m_devContext->ClearRenderTargetView(static_pointer_cast<Texture2DDX>(inRTV)->m_renderTargetView,
                                         inColor);
   }
 
 
   void 
-  CGraphicsDX::clearDSV(Texture2D* inDSV) {
-    m_devContext->ClearDepthStencilView(static_cast<Texture2DDX*>(inDSV)->m_depthStencilView,
+  CGraphicsDX::clearDSV(SharedPtr<Texture2D> inDSV) {
+    m_devContext->ClearDepthStencilView(static_pointer_cast<Texture2DDX>(inDSV)->m_depthStencilView,
                                         static_cast<D3D11_CLEAR_FLAG>(GI_CLEAR_FLAG::kCLEAR_DEPTH),
                                         1.0f,
                                         0);
@@ -531,9 +536,9 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::vsSetShader(BaseVertexShader* inVShader) {
+  CGraphicsDX::vsSetShader(SharedPtr<BaseVertexShader> inVShader) {
     
-    auto tmpShader = static_cast<VertexShaderDX*>(inVShader);
+    auto tmpShader = static_pointer_cast<VertexShaderDX>(inVShader);
 
     ID3D11VertexShader* tmpVShader = nullptr;
     if (nullptr != tmpShader) {
@@ -545,9 +550,9 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::vsSetConstantBuffer(uint32 inSlot,
-                                   Buffer* inBuffer) {
+                                   SharedPtr<Buffer> inBuffer) {
 
-    auto tmpBuffer = static_cast<BufferDX*>(inBuffer);
+    auto tmpBuffer = static_pointer_cast<BufferDX>(inBuffer);
 
     ID3D11Buffer* Buffer = nullptr;
     if (nullptr != inBuffer) {
@@ -558,9 +563,9 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::psSetShader(BasePixelShader* inPShader) {
+  CGraphicsDX::psSetShader(SharedPtr<BasePixelShader> inPShader) {
 
-    auto tmpShader = static_cast<PixelShaderDX*>(inPShader);
+    auto tmpShader = static_pointer_cast<PixelShaderDX>(inPShader);
 
     ID3D11PixelShader* tmpPShader = nullptr;
     if (nullptr != tmpShader) {
@@ -573,21 +578,21 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::psSetConstantBuffer(uint32 inSlot,
-                                   Buffer* inBuffer) {
+                                   SharedPtr<Buffer> inBuffer) {
 
     m_devContext->PSSetConstantBuffers(inSlot, 
                                        1, 
-                                       &static_cast<BufferDX*>(inBuffer)->m_buffer);
+                                       &static_pointer_cast<BufferDX>(inBuffer)->m_buffer);
   }
 
 
   void 
   CGraphicsDX::psSetShaderResource(uint32 inSlot,
-                                   Texture2D* inTexture) {
+                                   SharedPtr<Texture2D> inTexture) {
 
     ID3D11ShaderResourceView* tmpSRV = nullptr;
     if (nullptr != inTexture) {
-      tmpSRV = static_cast<Texture2DDX*>(inTexture)->getSRV();
+      tmpSRV = static_pointer_cast<Texture2DDX>(inTexture)->getSRV();
     }
 
     m_devContext->PSSetShaderResources(inSlot, 1, &tmpSRV);
@@ -597,23 +602,23 @@ namespace giEngineSDK {
   void 
   CGraphicsDX::psSetSampler(uint32 inSlot,
                             uint32 inNumSamplers,
-                            Sampler* inSampler) {
+                            SharedPtr<Sampler> inSampler) {
 
-    auto tmpSampler = static_cast<SamplerDX*>(inSampler);
+    auto tmpSampler = static_pointer_cast<SamplerDX>(inSampler);
 
     m_devContext->PSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_sampler);
   }
 
 
   void 
-  CGraphicsDX::aiSetInputLayout(InputLayout* inInputLayout) {
-    m_devContext->IASetInputLayout(static_cast<InputLayoutDX*>(inInputLayout)->m_inputLayout);
+  CGraphicsDX::aiSetInputLayout(SharedPtr<InputLayout> inInputLayout) {
+    m_devContext->IASetInputLayout(static_pointer_cast<InputLayoutDX>(inInputLayout)->m_inputLayout);
   }
 
 
   void 
-  CGraphicsDX::omSetRenderTarget(Vector<Texture2D*> inRTs,
-                                 Texture2D* inDS) {
+  CGraphicsDX::omSetRenderTarget(Vector<SharedPtr<Texture2D>> inRTs,
+                                 SharedPtr<Texture2D> inDS) {
 
     static ID3D11RenderTargetView* tmpRTV[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
     for (int32 i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
@@ -623,14 +628,14 @@ namespace giEngineSDK {
     ID3D11DepthStencilView* tmpDSV = nullptr;
 
     if (nullptr != inDS) {
-      tmpDSV = static_cast<Texture2DDX*>(inDS)->m_depthStencilView;
+      tmpDSV = static_pointer_cast<Texture2DDX>(inDS)->m_depthStencilView;
     }
 
     size_T tmpSize = inRTs.size();
 
     for (int32 i = 0; i < tmpSize; ++i) {
       if (nullptr != inRTs[i]) {
-        tmpRTV[i] = static_cast<Texture2DDX*>(inRTs[i])->m_renderTargetView;
+        tmpRTV[i] = static_pointer_cast<Texture2DDX>(inRTs[i])->m_renderTargetView;
       }
       else {
         break;
@@ -643,41 +648,43 @@ namespace giEngineSDK {
 
 
   void 
-  CGraphicsDX::omSetBlendState(BaseBlendState* inBlendState, 
+  CGraphicsDX::omSetBlendState(SharedPtr<BaseBlendState> inBlendState,
                                const float inBlendFactor[4],
                                uint32 inSampleMask) {
     
     ID3D11BlendState * tmpBlendState;
-    tmpBlendState = static_cast<BlendStateDX*>(inBlendState)->m_blendState;
+    tmpBlendState = static_pointer_cast<BlendStateDX>(inBlendState)->m_blendState;
     m_devContext->OMSetBlendState(tmpBlendState, inBlendFactor, inSampleMask);
   }
 
   void 
-  CGraphicsDX::omSetDepthStencilState(BaseDepthStencilState* inDepthState, 
+  CGraphicsDX::omSetDepthStencilState(SharedPtr<BaseDepthStencilState> inDepthState,
                                       uint32 inStencilRef) {
 
     ID3D11DepthStencilState* tmpDepthState;
-    tmpDepthState = static_cast<DepthStateDX*>(inDepthState)->m_State;
+    tmpDepthState = static_pointer_cast<DepthStateDX>(inDepthState)->m_State;
     m_devContext->OMSetDepthStencilState(tmpDepthState, 0);
   }
 
   void 
-  CGraphicsDX::rsSetState(BaseRasterizerState * inRaster) {
+  CGraphicsDX::rsSetState(SharedPtr<BaseRasterizerState> inRaster) {
     ID3D11RasterizerState* tmpRasterState;
-    tmpRasterState = static_cast<RasterizerDX*>(inRaster)->m_rasterizerState;
+    tmpRasterState = static_pointer_cast<RasterizerDX>(inRaster)->m_rasterizerState;
     m_devContext->RSSetState(tmpRasterState);
   }
 
-  void 
-  CGraphicsDX::rsGetScissorRects(uint32 inNumRects, Vector4 inRects[]) {
+  Vector4 * 
+  CGraphicsDX::rsGetScissorRects(uint32 inNumRects) {
+    Vector4 * tmpScissor;
     for (int i = 0; i < inNumRects; ++i) {
-       D3D11_RECT r = { inRects[i].x,
-                        inRects[i].y,
-                        inRects[i].z,
-                        inRects[i].w };
+       D3D11_RECT r = { tmpScissor[i].x,
+                        tmpScissor[i].y,
+                        tmpScissor[i].z,
+                        tmpScissor[i].w };
 
       m_devContext->RSGetScissorRects(&inNumRects, &r);
     }
+    return tmpScissor;
   }
   
   void 
@@ -685,102 +692,106 @@ namespace giEngineSDK {
     m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)inViewport);
   }
 
-  void 
-  CGraphicsDX::rsGetState(BaseRasterizerState* inRasterState) {
-    RasterizerDX * tmpState = static_cast<RasterizerDX*>(inRasterState);
+  SharedPtr<BaseRasterizerState>
+  CGraphicsDX::rsGetState() {
+    SharedPtr<RasterizerDX> tmpState;
     m_devContext->RSGetState(&tmpState->m_rasterizerState);
+    return tmpState;
   }
 
-  void 
-  CGraphicsDX::omGetBlendState(BaseBlendState* inBlendState, 
-                               float inBlendFactor[4], 
+  SharedPtr<BaseBlendState>
+  CGraphicsDX::omGetBlendState(float inBlendFactor[4], 
                                uint32 inSampleMask) {
-    BlendStateDX * tmpBlend = static_cast<BlendStateDX*>(inBlendState);
+    SharedPtr<BlendStateDX> tmpBlend;
     m_devContext->OMGetBlendState(&tmpBlend->m_blendState, inBlendFactor, &inSampleMask);
+    return tmpBlend;
   }
 
-  void 
-  CGraphicsDX::omGetDepthStencilState(BaseDepthStencilState* inDepthStencilState, 
-                                      uint32 inStencilRef) {
-    DepthStateDX * tmpState = static_cast<DepthStateDX*>(inDepthStencilState);
+  SharedPtr<BaseDepthStencilState>
+  CGraphicsDX::omGetDepthStencilState(uint32 inStencilRef) {
+    SharedPtr<DepthStateDX> tmpState;
     m_devContext->OMGetDepthStencilState(&tmpState->m_State, &inStencilRef);
+    return tmpState;
   }
 
-  void 
+  SharedPtr<Texture2D>
   CGraphicsDX::psGetShaderResources(uint32 inStartSlot, 
-                                    uint32 inNumViews, 
-                                    Texture2D* inShaderResource) {
-    Texture2DDX * tmpShaderResource = static_cast<Texture2DDX*>(inShaderResource);
+                                    uint32 inNumViews) {
+    SharedPtr<Texture2DDX> tmpShaderResource;
     m_devContext->PSGetShaderResources(inStartSlot, 
                                        inNumViews, 
                                        &tmpShaderResource->m_subResourceData);
+    return tmpShaderResource;
   }
 
-  void 
+  SharedPtr<Sampler>
   CGraphicsDX::psGetSamplers(uint32 inStartSlot, 
-                             uint32 inNumSamplers,
-                             Sampler* inSampler) {
-    SamplerDX * tmpSampler = static_cast<SamplerDX*>(inSampler);
+                             uint32 inNumSamplers) {
+    SharedPtr<SamplerDX> tmpSampler;
     m_devContext->PSGetSamplers(inStartSlot, 
                                 inNumSamplers, 
                                 &tmpSampler->m_sampler);
+    return tmpSampler;
   }
 
-  void 
-  CGraphicsDX::psGetShader(BasePixelShader* inPixelShader, int32 inNumClassInstances) {
-    PixelShaderDX * tmpShader = static_cast<PixelShaderDX*>(inPixelShader);
+  SharedPtr<BasePixelShader>
+  CGraphicsDX::psGetShader(int32 inNumClassInstances) {
+    SharedPtr<PixelShaderDX> tmpShader;
     m_devContext->PSGetShader(&tmpShader->m_pixelShader, nullptr, nullptr);
+    return tmpShader;
   }
 
-  void 
-  CGraphicsDX::vsGetShader(BaseVertexShader* inVertexShader, 
-                           int32 inNumClassInstances) {
-    VertexShaderDX * tmpShader = static_cast<VertexShaderDX*>(inVertexShader);
+  SharedPtr<BaseVertexShader>
+  CGraphicsDX::vsGetShader(int32 inNumClassInstances) {
+    SharedPtr<VertexShaderDX> tmpShader;
     m_devContext->VSGetShader(&tmpShader->m_vertexShader, nullptr, nullptr);
+    return tmpShader;
   }
 
-  void 
+  SharedPtr<Buffer>
   CGraphicsDX::vsGetConstantBuffers(int32 inStartSlot, 
-                                    int32 inNumBuffers, 
-                                    Buffer* inConstantBuffer) {
-    BufferDX * tmpBuffer = static_cast<BufferDX*>(inConstantBuffer);
+                                    int32 inNumBuffers) {
+    SharedPtr<BufferDX> tmpBuffer;
     m_devContext->VSGetConstantBuffers(inStartSlot, 
                                        inNumBuffers, 
                                        &tmpBuffer->m_buffer);
+    return tmpBuffer;
   }
 
-  void 
-  CGraphicsDX::iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E inTopology) {
-    D3D11_PRIMITIVE_TOPOLOGY tmpTopology = (D3D11_PRIMITIVE_TOPOLOGY)inTopology;
+  GI_PRIMITIVE_TOPOLOGY::E
+  CGraphicsDX::iaGetPrimitiveTopology() {
+    D3D11_PRIMITIVE_TOPOLOGY tmpTopology;
     m_devContext->IAGetPrimitiveTopology(&tmpTopology);
+    return (GI_PRIMITIVE_TOPOLOGY::E)tmpTopology;
   }
 
-  void 
-  CGraphicsDX::iaGetIndexBuffer(Buffer* inIndexBuffer, 
-                                GI_FORMAT::E inFormat, 
+  SharedPtr<Buffer>
+  CGraphicsDX::iaGetIndexBuffer(GI_FORMAT::E inFormat, 
                                 uint32 inOffset) {
-    BufferDX * tmpBuffer = static_cast<BufferDX*>(inIndexBuffer);
+    SharedPtr<BufferDX> tmpBuffer;
     DXGI_FORMAT tmpFormat = (DXGI_FORMAT)inFormat;
     m_devContext->IAGetIndexBuffer(&tmpBuffer->m_buffer, &tmpFormat, &inOffset);
+    return tmpBuffer;
   }
 
-  void 
+  SharedPtr<Buffer>
   CGraphicsDX::iaGetVertexBuffer(uint32 inStartSlot, 
-                                 Buffer* inVertexBuffer, 
                                  uint32 inStride, 
                                  uint32 inOffset) {
-    BufferDX * tmpBuffer = static_cast<BufferDX*>(inVertexBuffer);
+    SharedPtr<BufferDX> tmpBuffer;
     m_devContext->IAGetVertexBuffers(inStartSlot, 
                                      1, 
                                      &tmpBuffer->m_buffer, 
                                      &inStride, 
                                      &inOffset);
+    return tmpBuffer;
   }
 
-  void 
-  CGraphicsDX::iaGetInputLayout(InputLayout* inInputLayout) {
-    InputLayoutDX * tmpIL = static_cast<InputLayoutDX*>(inInputLayout);
+  SharedPtr<InputLayout>
+  CGraphicsDX::iaGetInputLayout() {
+    SharedPtr<InputLayoutDX> tmpIL;
     m_devContext->IAGetInputLayout(&tmpIL->m_inputLayout);
+    return tmpIL;
   }
 
   void 
@@ -807,7 +818,7 @@ namespace giEngineSDK {
     m_devContext->Dispatch(inThreadGroupX, inThreadGroupY, inThreadGroupZ);
   }
 
-  Texture2D* 
+  SharedPtr<Texture2D>
   CGraphicsDX::TextureFromFile(String inString, String inDirectory) {
     int32 width, height, nrChannels;
     inString = inString.substr(inString.find_last_of('/') + 1, inString.length());
@@ -816,7 +827,7 @@ namespace giEngineSDK {
                             &height, 
                             &nrChannels, 4);
     if (data) {
-      Texture2DDX* temp = new Texture2DDX();
+      SharedPtr<Texture2DDX> temp;
       CD3D11_TEXTURE2D_DESC tempDesc;
       memset(&tempDesc, 0, sizeof(tempDesc));
       tempDesc.Width = width;

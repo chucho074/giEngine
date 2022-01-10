@@ -108,7 +108,7 @@ namespace giEngineSDK {
      * @param    inBindFlags    The bind flags of the texture.
      * @bug      No known Bugs.
      */
-    virtual Texture2D * 
+    virtual SharedPtr<Texture2D>
     createTex2D(int32,
                 int32,
                 int32,
@@ -140,7 +140,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    virtual BaseVertexShader * 
+    virtual SharedPtr<BaseVertexShader>
     createVS(String,
              String,
              String) { 
@@ -155,7 +155,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    virtual BasePixelShader * 
+    virtual SharedPtr<BasePixelShader>
     createPS(String,
              String,
              String){ 
@@ -169,7 +169,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    virtual BaseComputeShader * 
+    virtual SharedPtr<BaseComputeShader>
     createCS(String,
              String,
              String){ 
@@ -183,9 +183,9 @@ namespace giEngineSDK {
      * @return   Returns   The Input layout.
      * @bug      No known Bugs.
      */
-    virtual InputLayout * 
+    virtual SharedPtr<InputLayout>
     createIL(Vector<InputLayoutDesc> &, 
-             BaseShader *) { 
+             SharedPtr<BaseShader>) { 
       return nullptr; 
     };
 
@@ -198,7 +198,7 @@ namespace giEngineSDK {
      * @return   Returns the buffer.
      * @bug      No known Bugs.
      */
-    virtual Buffer * 
+    virtual SharedPtr<Buffer>
     createBuffer(size_T, 
                  uint32, 
                  uint32, 
@@ -211,7 +211,7 @@ namespace giEngineSDK {
      * @param    inDesc   The descriptor of the sampler.
      * @bug      No known Bugs.
      */
-    virtual Sampler * 
+    virtual SharedPtr<Sampler>
     createSampler(SamplerDesc) { 
       return nullptr; 
     };
@@ -222,7 +222,7 @@ namespace giEngineSDK {
      * @param    inCullMode  The cull mode for the raster.
      * @param    inClockwise If the raster is in clockwise.
      */
-    virtual BaseRasterizerState *
+    virtual SharedPtr<BaseRasterizerState>
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
                      bool inClockwise) {
@@ -234,7 +234,7 @@ namespace giEngineSDK {
      * @param    inStencilEnable  The Stencil for the DepthState.
      * @param    inDepthEnable    The Depth  for the DepthState.
      */
-    virtual BaseDepthStencilState *
+    virtual SharedPtr<BaseDepthStencilState>
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) {
       return nullptr;
@@ -254,7 +254,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    setVertexBuffer(Buffer *, 
+    setVertexBuffer(SharedPtr<Buffer>,
                     uint32 ) {};
     
     /**
@@ -264,13 +264,13 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    setIndexBuffer(Buffer *, 
+    setIndexBuffer(SharedPtr<Buffer>,
                    GI_FORMAT::E) {};
     
     /**
-     * @brief     Set PrimitiveTopology.
-     * @param     inTopology   The type of topology to set.
-     * @bug       No known Bugs.
+     * @brief    Set PrimitiveTopology.
+     * @param    inTopology   The type of topology to set.
+     * @bug      No known Bugs.
      */
     virtual void 
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
@@ -283,7 +283,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    updateSubresource(Buffer *, 
+    updateSubresource(SharedPtr<Buffer>,
                       void *, 
                       uint32) {};
     
@@ -296,7 +296,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    updateTexture(Texture2D *, 
+    updateTexture(SharedPtr<Texture2D>,
                   const void *, 
                   uint32, 
                   uint32) {};
@@ -316,7 +316,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    clearRTV(Texture2D*, float [4]) {};
+    clearRTV(SharedPtr<Texture2D>, float [4]) {};
     
     /**
      * @brief    Clear Depth Stencil View.
@@ -324,7 +324,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    clearDSV(Texture2D*) {};
+    clearDSV(SharedPtr<Texture2D>) {};
     
     /**
      * @brief    Vertex Shader Set Shader.
@@ -332,7 +332,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    vsSetShader(BaseVertexShader * = nullptr) {};
+    vsSetShader(SharedPtr<BaseVertexShader> = nullptr) {};
     
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -342,7 +342,7 @@ namespace giEngineSDK {
      */
     virtual void 
     vsSetConstantBuffer(uint32, 
-                        Buffer * = nullptr) {};
+                        SharedPtr<Buffer> = nullptr) {};
     
     /**
      * @brief    Pixel Shader Set Shader.
@@ -350,7 +350,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    psSetShader(BasePixelShader * = nullptr) {};
+    psSetShader(SharedPtr<BasePixelShader> = nullptr) {};
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -360,7 +360,7 @@ namespace giEngineSDK {
      */
     virtual void 
     psSetConstantBuffer(uint32, 
-                        Buffer *) {};
+                        SharedPtr<Buffer>) {};
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
@@ -370,7 +370,7 @@ namespace giEngineSDK {
      */
     virtual void 
     psSetShaderResource(uint32, 
-                        Texture2D * = nullptr) {};
+                        SharedPtr<Texture2D> = nullptr) {};
     
     /**
      * @brief    Pixel Shader Set Samplers.
@@ -382,7 +382,7 @@ namespace giEngineSDK {
     virtual void 
     psSetSampler(uint32, 
                  uint32, 
-                 Sampler *) {};
+                 SharedPtr<Sampler>) {};
     
     /** 
      * @brief    IA Set Input Layout.
@@ -390,7 +390,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    aiSetInputLayout(InputLayout *) {};
+    aiSetInputLayout(SharedPtr<InputLayout>) {};
     
     /** 
      * @brief    Set Render Targets.
@@ -399,8 +399,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    omSetRenderTarget(Vector<Texture2D *>, 
-                      Texture2D * = nullptr) {};
+    omSetRenderTarget(Vector<SharedPtr<Texture2D>>,
+                      SharedPtr<Texture2D> = nullptr) {};
 
     /** 
      * @brief    Set Blend State.
@@ -410,7 +410,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    omSetBlendState(BaseBlendState *, 
+    omSetBlendState(SharedPtr<BaseBlendState>,
                     const float[4], 
                     uint32 = 0xffffffff) {};
                     
@@ -421,22 +421,23 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    omSetDepthStencilState(BaseDepthStencilState *, 
+    omSetDepthStencilState(SharedPtr<BaseDepthStencilState>,
                            uint32) {};
     /**
      * @brief    Set the Rasterizer.
      * @param    inRaster       The rasterizer state to set.
      */
     virtual void
-    rsSetState(BaseRasterizerState *) {};
+    rsSetState(SharedPtr<BaseRasterizerState>) {};
 
     /**
-     * @brief 
-     * @param  
-     * @param  
+     * @brief    .
+     * @param    inScissorRectCount   The number of the scissor rects.
      */
-    virtual void
-    rsGetScissorRects(uint32, Vector4[]) {};
+    virtual Vector4 *
+    rsGetScissorRects(uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
@@ -450,8 +451,10 @@ namespace giEngineSDK {
      * @brief 
      * @param  
      */
-    virtual void
-    rsGetState(BaseRasterizerState *) {};
+    virtual SharedPtr<BaseRasterizerState>
+    rsGetState() {
+      return nullptr;
+    };
 
     /**
      * @brief 
@@ -459,25 +462,20 @@ namespace giEngineSDK {
      * @param  
      * @param  
      */
-    virtual void 
-    omGetBlendState(BaseBlendState *, float[4], uint32) {};
+    virtual SharedPtr<BaseBlendState>
+    omGetBlendState(float[4], uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
      * @param  
      * @param  
      */
-    virtual void 
-    omGetDepthStencilState(BaseDepthStencilState *, uint32) {};
-
-    /**
-     * @brief 
-     * @param  
-     * @param  
-     * @param  
-     */
-    virtual void
-    psGetShaderResources(uint32, uint32, Texture2D *) {};
+    virtual SharedPtr<BaseDepthStencilState>
+    omGetDepthStencilState(uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
@@ -485,24 +483,10 @@ namespace giEngineSDK {
      * @param  
      * @param  
      */
-    virtual void
-    psGetSamplers(uint32, uint32, Sampler *) {};
-
-    /**
-     * @brief 
-     * @param  
-     * @param  
-     */
-    virtual void
-    psGetShader(BasePixelShader *, int32) {};
-
-    /**
-     * @brief 
-     * @param  
-     * @param  
-     */
-    virtual void
-    vsGetShader(BaseVertexShader *, int32) {};
+    virtual SharedPtr<Texture2D>
+    psGetShaderResources(uint32, uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
@@ -510,23 +494,64 @@ namespace giEngineSDK {
      * @param  
      * @param  
      */
-    virtual void
-    vsGetConstantBuffers(int32, int32, Buffer *) {};
+    virtual SharedPtr<Sampler>
+    psGetSamplers(uint32, uint32) {
+      return nullptr;
+    };
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual SharedPtr<BasePixelShader>
+    psGetShader(int32) {
+      return nullptr;
+    };
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     */
+    virtual SharedPtr<BaseVertexShader>
+    vsGetShader(int32) {
+      return nullptr;
+    };
+
+    /**
+     * @brief 
+     * @param  
+     * @param  
+     * @param  
+     */
+    virtual SharedPtr<Buffer>
+    vsGetConstantBuffers(int32, int32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
      */
-    virtual void
-    iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
+    virtual GI_PRIMITIVE_TOPOLOGY::E
+    iaGetPrimitiveTopology() {
+      return GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_UNDEFINED;
+    };
 
-    virtual void
-    iaGetIndexBuffer(Buffer *, GI_FORMAT::E, uint32) {};
+    virtual SharedPtr<Buffer>
+    iaGetIndexBuffer(GI_FORMAT::E, uint32) {
+      return nullptr;
+    };
 
-    virtual void
-    iaGetVertexBuffer(uint32, Buffer *, uint32, uint32) {};
+    virtual SharedPtr<Buffer>
+    iaGetVertexBuffer(uint32, uint32, uint32) {
+      return nullptr;
+    };
 
-    virtual void
-    iaGetInputLayout(InputLayout *) {};
+    virtual SharedPtr<InputLayout>
+    iaGetInputLayout() {
+      return nullptr;
+    };
 
     virtual void 
     rsSetScissorRects(uint32, Vector4*) {};
@@ -557,7 +582,7 @@ namespace giEngineSDK {
      * @brief    Gets the default Render Target.
      * @return   Returns the back Buffer texture.
      */
-    virtual Texture2D * 
+    virtual SharedPtr<Texture2D>
     getDefaultRenderTarget() { 
       return nullptr; 
     };
@@ -566,7 +591,7 @@ namespace giEngineSDK {
      * @brief    Gets the default Depth Stencil.
      * @return   Returns the Depth Stencil View texutre.
      */
-    virtual Texture2D*
+    virtual SharedPtr<Texture2D>
     getDefaultDephtStencil() { 
       return nullptr; 
     };
@@ -577,7 +602,7 @@ namespace giEngineSDK {
      * @param    inDirectory  The directory of the texture to read.
      * @return   Returns the texture readed from a file.
      */
-    virtual Texture2D *
+    virtual SharedPtr<Texture2D>
     TextureFromFile(String inString, String inDirectory) { 
       return nullptr;
     };

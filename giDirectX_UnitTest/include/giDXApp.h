@@ -110,16 +110,16 @@ class DirectXApp : public BaseApp {
  private:
 
   //The Sampler
-  Sampler * m_sampler = nullptr;
+  SharedPtr<Sampler> m_sampler = nullptr;
 
   //The Constant Buffer (Never Change)
-  Buffer * m_cBufferCamera = nullptr;
+  SharedPtr<Buffer> m_cBufferCamera = nullptr;
 
   //The Constant Buffer (Change on Resize)
   //Buffer * m_cBufferChangeOnResize = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  Buffer * m_cBufferChangeEveryFrame = nullptr;
+  SharedPtr<Buffer> m_cBufferChangeEveryFrame = nullptr;
 
   //The World Matrix
   Matrix4 m_world;

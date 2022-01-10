@@ -22,8 +22,8 @@
 // giEngine data
 struct ImGui_ImplGI_Data {
   
-  Buffer*                    spVB;
-  Buffer*                    spIB;
+  SharedPtr<Buffer>                    spVB;
+  SharedPtr<Buffer>                    spIB;
   SharedPtr<BaseVertexShader>          spVertexShader;
   SharedPtr<InputLayout>               spInputLayout;
   SharedPtr<Buffer>                    spVertexConstantBuffer;

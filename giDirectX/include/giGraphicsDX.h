@@ -70,7 +70,7 @@ namespace giEngineSDK {
      * @param    inBindFlags    The bind flags of the texture.
      * @bug      No known Bugs.
      */
-    Texture2D * 
+    SharedPtr<Texture2D>
     createTex2D(int32 inWidth,
                 int32 inHeigh,
                 int32 inMipLevels,
@@ -100,7 +100,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    BaseVertexShader * 
+    SharedPtr<BaseVertexShader>
     createVS(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
@@ -112,7 +112,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    BasePixelShader * 
+    SharedPtr<BasePixelShader>
     createPS(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
@@ -124,7 +124,7 @@ namespace giEngineSDK {
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
-    BaseComputeShader * 
+    SharedPtr<BaseComputeShader>
     createCS(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
@@ -136,9 +136,9 @@ namespace giEngineSDK {
      * @return   Returns   The Input layout.
      * @bug      No known Bugs.
      */
-    InputLayout * 
+    SharedPtr<InputLayout>
     createIL(Vector<InputLayoutDesc> & inDesc, 
-             BaseShader * inShader) override;
+             SharedPtr<BaseShader> inShader) override;
 
     /**
      * @brief    Creates a buffer.
@@ -149,7 +149,7 @@ namespace giEngineSDK {
      * @return   Returns the buffer.
      * @bug      No known Bugs.
      */
-    Buffer * 
+    SharedPtr<Buffer>
     createBuffer(size_T inByteWidth, 
                  uint32 inBindFlags, 
                  uint32 inOffset, 
@@ -160,13 +160,13 @@ namespace giEngineSDK {
      * @param    inDesc   The descriptor of the sampler.
      * @bug      No known Bugs.
      */
-    Sampler * 
+    SharedPtr<Sampler>
     createSampler(SamplerDesc inDesc) override;
     
     /**
      * @brief    Create a Rasterizer.
      */
-    BaseRasterizerState *
+    SharedPtr<BaseRasterizerState>
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
                      bool inClockwise) override;
@@ -174,7 +174,7 @@ namespace giEngineSDK {
     /**
      * @brief    Create a Depth Stencil State.
      */
-    BaseDepthStencilState *
+    SharedPtr<BaseDepthStencilState>
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable) override;
 
@@ -192,7 +192,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setVertexBuffer(Buffer * inBuffer, 
+    setVertexBuffer(SharedPtr<Buffer> inBuffer,
                     uint32 inStride) override;
     
     /**
@@ -202,7 +202,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setIndexBuffer(Buffer * inBuffer, 
+    setIndexBuffer(SharedPtr<Buffer> inBuffer,
                    GI_FORMAT::E inFormat) override;
     
     /**
@@ -219,10 +219,10 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setRasterizerState(RasterizerDX* inRaster);
+    setRasterizerState(SharedPtr<RasterizerDX> inRaster);
 
     void 
-    setDepthState(DepthStateDX* inDepthState);
+    setDepthState(SharedPtr<DepthStateDX> inDepthState);
     
     /**
      * @brief    Update Subresource.
@@ -232,7 +232,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    updateSubresource(Buffer * inBuffer, 
+    updateSubresource(SharedPtr<Buffer> inBuffer,
                       void * inData, 
                       uint32 inPitch) override;
     
@@ -245,7 +245,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    updateTexture(Texture2D * inTexture, 
+    updateTexture(SharedPtr<Texture2D> inTexture,
                   const void * inData, 
                   uint32 inPitch, 
                   uint32 inDepthPitch) override;
@@ -265,7 +265,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    clearRTV(Texture2D* inRTV, float inColor[4]) override;
+    clearRTV(SharedPtr<Texture2D> inRTV, float inColor[4]) override;
     
     /**
      * @brief    Clear Depth Stencil View.
@@ -273,7 +273,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    clearDSV(Texture2D* inDSV) override;
+    clearDSV(SharedPtr<Texture2D> inDSV) override;
     
     /**
      * @brief    Vertex Shader Set Shader.
@@ -281,7 +281,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    vsSetShader(BaseVertexShader * inVShader = nullptr) override;
+    vsSetShader(SharedPtr<BaseVertexShader> inVShader = nullptr) override;
     
     /**
      * @brief    Vertex Shader Set Constant Buffer.
@@ -291,7 +291,7 @@ namespace giEngineSDK {
      */
     void 
     vsSetConstantBuffer(uint32 inSlot, 
-                        Buffer * inBuffer = nullptr) override;
+                        SharedPtr<Buffer>inBuffer = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Shader.
@@ -299,7 +299,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetShader(BasePixelShader * inPShader = nullptr) override;
+    psSetShader(SharedPtr<BasePixelShader> inPShader = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -309,7 +309,7 @@ namespace giEngineSDK {
      */
     void 
     psSetConstantBuffer(uint32 inSlot, 
-                        Buffer * inBuffer) override;
+                        SharedPtr<Buffer> inBuffer) override;
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
@@ -319,7 +319,7 @@ namespace giEngineSDK {
      */
     void 
     psSetShaderResource(uint32 inSlot, 
-                        Texture2D * inTexture = nullptr) override;
+                        SharedPtr<Texture2D> inTexture = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Samplers.
@@ -331,7 +331,7 @@ namespace giEngineSDK {
     void 
     psSetSampler(uint32 inSlot, 
                  uint32 inNumSamplers, 
-                 Sampler * inSampler) override;
+                 SharedPtr<Sampler> inSampler) override;
     
     /** 
      * @brief    IA Set Input Layout.
@@ -339,7 +339,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    aiSetInputLayout(InputLayout * inInputLayout) override;
+    aiSetInputLayout(SharedPtr<InputLayout> inInputLayout) override;
     
     /** 
      * @brief    OM Set Render Targets.
@@ -348,8 +348,8 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetRenderTarget(Vector<Texture2D *> inRT, 
-                      Texture2D * inDS = nullptr) override;
+    omSetRenderTarget(Vector<SharedPtr<Texture2D>> inRT,
+                      SharedPtr<Texture2D> inDS = nullptr) override;
 
     /** 
      * @brief    Set Blend State.
@@ -359,7 +359,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetBlendState(BaseBlendState * inBlendState,
+    omSetBlendState(SharedPtr<BaseBlendState> inBlendState,
                     const float inBlendFactor[4],
                     uint32 inSampleMask = 0xffffffff) override;
     
@@ -370,7 +370,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetDepthStencilState(BaseDepthStencilState * inDepthState,
+    omSetDepthStencilState(SharedPtr<BaseDepthStencilState> inDepthState,
                            uint32 inStencilRef) override;
      
     /**
@@ -378,44 +378,15 @@ namespace giEngineSDK {
      * @param    inRaster       The rasterizer state to set.
      */
     void
-    rsSetState(BaseRasterizerState * inRaster) override;
-
-    
-    /** 
-     * @brief    Set Blend State.
-     * @param    inBlendState   Pointer to a blend-state interface. NULL for a default.
-     * @param    inBlendFactor  Array of blend factors, one for each RGBA component.
-     * @param    inSampleMask   32-bit sample coverage. The default value is 0xffffffff.
-     * @bug      No known Bugs.
-     */
-    void 
-    omSetBlendState(BaseBlendState *, 
-                    const float[4], 
-                    uint32 = 0xffffffff) override;
-                    
-    /** 
-     * @brief    Set Blend State.
-     * @param    inDepthState   Pointer to a depth-state interface.
-     * @param    inStencilRef   The reference to the stencil.
-     * @bug      No known Bugs.
-     */
-    void 
-    omSetDepthStencilState(BaseDepthStencilState * inDepthState,
-                           uint32 inStencilRef) override;
-    /**
-     * @brief    Set the Rasterizer.
-     * @param    inRaster       The rasterizer state to set.
-     */
-    void
-    rsSetState(BaseRasterizerState * inRaster) override;
+    rsSetState(SharedPtr<BaseRasterizerState> inRaster) override;
 
     /**
      * @brief 
      * @param    inNumRects 
      * @param    inRects 
      */
-    void
-    rsGetScissorRects(uint32 inNumRects, Vector4 inRects[]) override;
+    Vector4 *
+    rsGetScissorRects(uint32 inNumRects) override;
 
     /**
      * @brief 
@@ -429,8 +400,8 @@ namespace giEngineSDK {
      * @brief 
      * @param    inRasterState 
      */
-    void
-    rsGetState(BaseRasterizerState * inRasterState) override;
+    SharedPtr<BaseRasterizerState>
+    rsGetState() override;
 
     /**
      * @brief 
@@ -438,9 +409,8 @@ namespace giEngineSDK {
      * @param    inBlendFactor 
      * @param    inSampleMask 
      */
-    void 
-    omGetBlendState(BaseBlendState * inBlendState, 
-                    float inBlendFactor[4], 
+    SharedPtr<BaseBlendState>
+    omGetBlendState(float inBlendFactor[4], 
                     uint32 inSampleMask) override;
 
     /**
@@ -448,9 +418,8 @@ namespace giEngineSDK {
      * @param    inDepthStencilState 
      * @param    inStencilRef 
      */
-    void 
-    omGetDepthStencilState(BaseDepthStencilState * inDepthStencilState, 
-                           uint32 inStencilRef) override;
+    SharedPtr<BaseDepthStencilState>
+    omGetDepthStencilState(uint32 inStencilRef) override;
 
     /**
      * @brief 
@@ -458,10 +427,9 @@ namespace giEngineSDK {
      * @param    inNumViews 
      * @param    inShaderResource 
      */
-    void
+    SharedPtr<Texture2D>
     psGetShaderResources(uint32 inStartSlot, 
-                         uint32 inNumViews, 
-                         Texture2D * inShaderResource) override;
+                         uint32 inNumViews) override;
 
     /**
      * @brief 
@@ -469,28 +437,25 @@ namespace giEngineSDK {
      * @param    inNumSamplers 
      * @param    inSampler 
      */
-    void
+    SharedPtr<Sampler>
     psGetSamplers(uint32 inStartSlot, 
-                  uint32 inNumSamplers, 
-                  Sampler * inSampler) override;
+                  uint32 inNumSamplers) override;
 
     /**
      * @brief 
      * @param    inPixelShader 
      * @param    inNumClassInstances 
      */
-    void
-    psGetShader(BasePixelShader * inPixelShader, 
-                int32 inNumClassInstances) override;
+    SharedPtr<BasePixelShader>
+    psGetShader(int32 inNumClassInstances) override;
 
     /**
      * @brief 
      * @param    inVertexShader 
      * @param    inNumClassInstances 
      */
-    void
-    vsGetShader(BaseVertexShader * inVertexShader, 
-                int32 inNumClassInstances) override;
+    SharedPtr<BaseVertexShader>
+    vsGetShader(int32 inNumClassInstances) override;
 
     /**
      * @brief 
@@ -498,17 +463,16 @@ namespace giEngineSDK {
      * @param    inNumBuffers 
      * @param    inConstantBuffer 
      */
-    void
+    SharedPtr<Buffer>
     vsGetConstantBuffers(int32 inStartSlot, 
-                         int32 inNumBuffers, 
-                         Buffer * inConstantBuffer) override;
+                         int32 inNumBuffers) override;
 
     /**
      * @brief 
      * @param    inTopology 
      */
-    void
-    iaGetPrimitiveTopology(GI_PRIMITIVE_TOPOLOGY::E inTopology) override;
+    GI_PRIMITIVE_TOPOLOGY::E
+    iaGetPrimitiveTopology() override;
 
     /**
      * @brief 
@@ -516,9 +480,8 @@ namespace giEngineSDK {
      * @param    inFormat 
      * @param    inOffset 
      */
-    void
-    iaGetIndexBuffer(Buffer * inIndexBuffer, 
-                     GI_FORMAT::E inFormat, 
+    SharedPtr<Buffer>
+    iaGetIndexBuffer(GI_FORMAT::E inFormat, 
                      uint32 inOffset) override;
 
     /**
@@ -528,18 +491,17 @@ namespace giEngineSDK {
      * @param    inStride 
      * @param    inOffset 
      */
-    void
+    SharedPtr<Buffer>
     iaGetVertexBuffer(uint32 inStartSlot, 
-                      Buffer * inVertexBuffer, 
                       uint32 inStride, 
                       uint32 inOffset) override;
     
     /**
      * @brief 
-     * @param    inInputLayout 
+     * @return   inInputLayout 
      */
-    void
-    iaGetInputLayout(InputLayout * inInputLayout) override;
+    SharedPtr<InputLayout>
+    iaGetInputLayout() override;
 
     /**
      * @brief 
@@ -575,7 +537,7 @@ namespace giEngineSDK {
      * @return   Returns the back Buffer texture.
      * @bug      No known Bugs.
      */
-    Texture2D * 
+    SharedPtr<Texture2D>
     getDefaultRenderTarget() { 
       return m_backBuffer; 
     }
@@ -585,7 +547,7 @@ namespace giEngineSDK {
      * @return   Returns the Depth Stencil View texutre.
      * @bug      No known Bugs.
      */
-    Texture2D * 
+    SharedPtr<Texture2D>
     getDefaultDephtStencil() { 
       return m_defaultDSV;
     }
@@ -596,9 +558,9 @@ namespace giEngineSDK {
      * @param    inDirectory 
      * @return 
      */
-     Texture2D *
-     TextureFromFile(String inString, 
-                     String inDirectory);
+    SharedPtr<Texture2D>
+    TextureFromFile(String inString, 
+                    String inDirectory);
 
   
    private:
@@ -613,10 +575,10 @@ namespace giEngineSDK {
     IDXGISwapChain * m_swapChain;
   
     ///Reference to the defautl Render Target
-    Texture2DDX * m_backBuffer = nullptr;
+    SharedPtr<Texture2DDX> m_backBuffer = nullptr;
   
     ///Reference to the default Depth Stencil
-    Texture2DDX * m_defaultDSV = nullptr;
+    SharedPtr<Texture2DDX> m_defaultDSV = nullptr;
    
 
   };

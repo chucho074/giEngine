@@ -65,7 +65,7 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   unsigned int stride = sizeof(ImDrawVert);
   unsigned int offset = 0;
   //Set Input Layout
-  gapi.aiSetInputLayout(bd->spInputLayout.get());
+  gapi.aiSetInputLayout(bd->spInputLayout);
   //Set Vertex Buffer
   gapi.setVertexBuffer(bd->spVB, stride);
   //Set Index Buffer
@@ -75,19 +75,19 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   //Set Topology
   gapi.setTopology(giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
   //Set Vertex Shader
-  gapi.vsSetShader(bd->spVertexShader.get());
+  gapi.vsSetShader(bd->spVertexShader);
   //Set Set Constant Buffer
-  gapi.vsSetConstantBuffer(0, bd->spVertexConstantBuffer.get());
+  gapi.vsSetConstantBuffer(0, bd->spVertexConstantBuffer);
   //Set Pixel Shader
-  gapi.psSetShader(bd->spPixelShader.get());
+  gapi.psSetShader(bd->spPixelShader);
   //Set Sampler
-  gapi.psSetSampler(0, 1, bd->spFontSampler.get());
+  gapi.psSetSampler(0, 1, bd->spFontSampler);
 
   // Setup blend state
   const float blend_factor[4] = { 0.f, 0.f, 0.f, 0.f };
-  gapi.omSetBlendState(bd->spBlendState.get(), blend_factor);
-  gapi.omSetDepthStencilState(bd->spDepthStencilState.get(), 0);
-  gapi.rsSetState(bd->spRasterizerState.get());
+  gapi.omSetBlendState(bd->spBlendState, blend_factor);
+  gapi.omSetDepthStencilState(bd->spDepthStencilState, 0);
+  gapi.rsSetState(bd->spRasterizerState);
 }
 
 // Render function
@@ -168,7 +168,7 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
         { (R+L)/(L-R),  (T+B)/(B-T),    0.5f,       1.0f },
     };
 
-    gapi.updateSubresource(bd->spVertexConstantBuffer.get(), mvp, 0);
+    gapi.updateSubresource(bd->spVertexConstantBuffer, mvp, 0);
 
   }
   
@@ -202,23 +202,23 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
 
   BACKUP_GI_STATE old = {};
   old.ScissorRectsCount = old.ViewportsCount = GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
-  gapi.rsGetScissorRects(old.ScissorRectsCount, old.ScissorRects);
+  old.ScissorRects = gapi.rsGetScissorRects(old.ScissorRectsCount);
   //gapi.rsGetViewports(old.ViewportsCount, old.Viewports);
-  gapi.rsGetState(old.RS.get());
-  gapi.omGetBlendState(old.BlenState.get(), old.BlendFactor, old.SampleMask);
-  gapi.omGetDepthStencilState(old.DepthStencilState.get(), old.StencilRef);
-  gapi.psGetShaderResources(0, 1, old.PSShaderResource.get());
-  gapi.psGetSamplers(0, 1, old.PSSampler.get());
+  old.RS = gapi.rsGetState();
+  old.BlenState = gapi.omGetBlendState(old.BlendFactor, old.SampleMask);
+  old.DepthStencilState = gapi.omGetDepthStencilState(old.StencilRef);
+  old.PSShaderResource = gapi.psGetShaderResources(0, 1);
+  old.PSSampler = gapi.psGetSamplers(0, 1);
   old.PSInstancesCount = old.VSInstancesCount = old.GSInstancesCount = 256;
-  gapi.psGetShader(old.PS.get(), old.PSInstancesCount);
-  gapi.vsGetShader(old.VS.get(), old.VSInstancesCount);
-  gapi.vsGetConstantBuffers(0, 1, old.VSConstantBuffer.get());
+  old.PS = gapi.psGetShader(old.PSInstancesCount);
+  old.VS = gapi.vsGetShader(old.VSInstancesCount);
+  old.VSConstantBuffer = gapi.vsGetConstantBuffers(0, 1);
   //Aqui iria el geometry shader... si tan solo lo tuvieras
   
-  gapi.iaGetPrimitiveTopology(old.PrimitiveTopology);
-  gapi.iaGetIndexBuffer(old.IndexBuffer.get(), old.IndexBufferFormat, old.IndexBufferOffset);
-  gapi.iaGetVertexBuffer(1, old.VertexBuffer.get(), old.VertexBufferStride, old.VertexBufferOffset);
-  gapi.iaGetInputLayout(old.InputL.get());
+  old.PrimitiveTopology = gapi.iaGetPrimitiveTopology();
+  old.IndexBuffer = gapi.iaGetIndexBuffer(old.IndexBufferFormat, old.IndexBufferOffset);
+  old.VertexBuffer = gapi.iaGetVertexBuffer(1, old.VertexBufferStride, old.VertexBufferOffset);
+  old.InputL = gapi.iaGetInputLayout();
   
   // Setup desired DX state
   ImGui_ImplGI_SetupRenderState(draw_data);
@@ -273,30 +273,446 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
 
   //gapi.rsSetViewports(old.ViewportsCount, old.Viewports);
   
-  gapi.rsSetState(old.RS.get()); 
+  gapi.rsSetState(old.RS); 
   
-  gapi.omSetBlendState(old.BlenState.get(), old.BlendFactor, old.SampleMask); 
+  gapi.omSetBlendState(old.BlenState, old.BlendFactor, old.SampleMask); 
   
-  gapi.omSetDepthStencilState(old.DepthStencilState.get(), old.StencilRef); 
+  gapi.omSetDepthStencilState(old.DepthStencilState, old.StencilRef); 
   
-  gapi.psSetShaderResource(0, old.PSShaderResource.get()); 
+  gapi.psSetShaderResource(0, old.PSShaderResource); 
   
-  gapi.psSetSampler(0, 1, old.PSSampler.get()); 
+  gapi.psSetSampler(0, 1, old.PSSampler); 
   
-  gapi.psSetShader(old.PS.get()); 
+  gapi.psSetShader(old.PS); 
   
-  gapi.vsSetShader(old.VS.get()); 
+  gapi.vsSetShader(old.VS); 
   
-  gapi.vsSetConstantBuffer(0, old.VSConstantBuffer.get()); 
+  gapi.vsSetConstantBuffer(0, old.VSConstantBuffer); 
   
   
   gapi.setTopology(old.PrimitiveTopology);
 
-  gapi.setIndexBuffer(old.IndexBuffer.get(), old.IndexBufferFormat); 
+  gapi.setIndexBuffer(old.IndexBuffer, old.IndexBufferFormat); 
   
-  gapi.setVertexBuffer(old.VertexBuffer.get(), old.VertexBufferStride); 
+  gapi.setVertexBuffer(old.VertexBuffer, old.VertexBufferStride); 
   
-  gapi.aiSetInputLayout(old.InputL.get());
+  gapi.aiSetInputLayout(old.InputL);
   
 }
 
+static void 
+ImGui_ImplGI_CreateFontsTexture() {
+  auto& gapi = g_graphicsAPI();
+  // Build texture atlas
+  ImGuiIO& io = ImGui::GetIO();
+  ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
+  unsigned char* pixels;
+  int width, height;
+  io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+
+  // Upload texture to graphics system
+  {
+   SharedPtr<Texture2D> tmpTex;
+   tmpTex = gapi.createTex2D(width, 
+                             height, 
+                             1, 
+                             giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM, 
+                             giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
+
+    
+
+    D3D11_SUBRESOURCE_DATA subResource;
+    subResource.pSysMem = pixels;
+    subResource.SysMemPitch = desc.Width * 4;
+    subResource.SysMemSlicePitch = 0;
+    gapi.createTex2D(&desc, &subResource, &pTexture);
+    IM_ASSERT(pTexture != NULL);
+
+    // Create texture view
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    ZeroMemory(&srvDesc, sizeof(srvDesc));
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = desc.MipLevels;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    bd->pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &bd->pFontTextureView);
+    pTexture->Release();
+  }
+
+  // Store our identifier
+  io.Fonts->SetTexID((ImTextureID)bd->pFontTextureView);
+
+  // Create texture sampler
+  {
+    D3D11_SAMPLER_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    desc.MipLODBias = 0.f;
+    desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    desc.MinLOD = 0.f;
+    desc.MaxLOD = 0.f;
+    bd->pd3dDevice->CreateSamplerState(&desc, &bd->pFontSampler);
+  }
+}
+
+bool    ImGui_ImplDX11_CreateDeviceObjects()
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  if (!bd->pd3dDevice)
+    return false;
+  if (bd->pFontSampler)
+    ImGui_ImplDX11_InvalidateDeviceObjects();
+
+  // By using D3DCompile() from <d3dcompiler.h> / d3dcompiler.lib, we introduce 
+  // a dependency to a given version of d3dcompiler_XX.dll (see D3DCOMPILER_DLL_A)
+  // If you would like to use this DX11 sample code but remove this dependency you can:
+  //  1) compile once, save the compiled shader blobs into a file or source code 
+  // and pass them to CreateVertexShader()/CreatePixelShader() [preferred solution]
+  //  2) use code to detect any version of the DLL and grab a pointer to D3DCompile from the DLL.
+  // See https://github.com/ocornut/imgui/pull/638 for sources and details.
+
+  // Create the vertex shader
+  {
+    static const char* vertexShader =
+      "cbuffer vertexBuffer : register(b0) \
+            {\
+              float4x4 ProjectionMatrix; \
+            };\
+            struct VS_INPUT\
+            {\
+              float2 pos : POSITION;\
+              float4 col : COLOR0;\
+              float2 uv  : TEXCOORD0;\
+            };\
+            \
+            struct PS_INPUT\
+            {\
+              float4 pos : SV_POSITION;\
+              float4 col : COLOR0;\
+              float2 uv  : TEXCOORD0;\
+            };\
+            \
+            PS_INPUT main(VS_INPUT input)\
+            {\
+              PS_INPUT output;\
+              output.pos = mul( ProjectionMatrix, float4(input.pos.xy, 0.f, 1.f));\
+              output.col = input.col;\
+              output.uv  = input.uv;\
+              return output;\
+            }";
+
+    ID3DBlob* vertexShaderBlob;
+    if (FAILED(D3DCompile(vertexShader, strlen(vertexShader), NULL, NULL, NULL, "main", "vs_4_0", 0, 0, &vertexShaderBlob, NULL)))
+      return false; // NB: Pass ID3DBlob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
+    if (bd->pd3dDevice->CreateVertexShader(vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(), NULL, &bd->pVertexShader) != S_OK)
+    {
+      vertexShaderBlob->Release();
+      return false;
+    }
+
+    // Create the input layout
+    D3D11_INPUT_ELEMENT_DESC local_layout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,   0, (UINT)IM_OFFSETOF(ImDrawVert, pos), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,   0, (UINT)IM_OFFSETOF(ImDrawVert, uv),  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, (UINT)IM_OFFSETOF(ImDrawVert, col), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+    if (bd->pd3dDevice->CreateInputLayout(local_layout, 3, vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(), &bd->pInputLayout) != S_OK)
+    {
+      vertexShaderBlob->Release();
+      return false;
+    }
+    vertexShaderBlob->Release();
+
+    // Create the constant buffer
+    {
+      D3D11_BUFFER_DESC desc;
+      desc.ByteWidth = sizeof(VERTEX_CONSTANT_BUFFER);
+      desc.Usage = D3D11_USAGE_DYNAMIC;
+      desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+      desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+      desc.MiscFlags = 0;
+      bd->pd3dDevice->CreateBuffer(&desc, NULL, &bd->pVertexConstantBuffer);
+    }
+  }
+
+  // Create the pixel shader
+  {
+    static const char* pixelShader =
+      "struct PS_INPUT\
+            {\
+            float4 pos : SV_POSITION;\
+            float4 col : COLOR0;\
+            float2 uv  : TEXCOORD0;\
+            };\
+            sampler sampler0;\
+            Texture2D texture0;\
+            \
+            float4 main(PS_INPUT input) : SV_Target\
+            {\
+            float4 out_col = input.col * texture0.Sample(sampler0, input.uv); \
+            return out_col; \
+            }";
+
+    ID3DBlob* pixelShaderBlob;
+    if (FAILED(D3DCompile(pixelShader, strlen(pixelShader), NULL, NULL, NULL, "main", "ps_4_0", 0, 0, &pixelShaderBlob, NULL)))
+      return false; // NB: Pass ID3DBlob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
+    if (bd->pd3dDevice->CreatePixelShader(pixelShaderBlob->GetBufferPointer(), pixelShaderBlob->GetBufferSize(), NULL, &bd->pPixelShader) != S_OK)
+    {
+      pixelShaderBlob->Release();
+      return false;
+    }
+    pixelShaderBlob->Release();
+  }
+
+  // Create the blending setup
+  {
+    D3D11_BLEND_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.AlphaToCoverageEnable = false;
+    desc.RenderTarget[0].BlendEnable = true;
+    desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    bd->pd3dDevice->CreateBlendState(&desc, &bd->pBlendState);
+  }
+
+  // Create the rasterizer state
+  {
+    D3D11_RASTERIZER_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.FillMode = D3D11_FILL_SOLID;
+    desc.CullMode = D3D11_CULL_NONE;
+    desc.ScissorEnable = true;
+    desc.DepthClipEnable = true;
+    bd->pd3dDevice->CreateRasterizerState(&desc, &bd->pRasterizerState);
+  }
+
+  // Create depth-stencil State
+  {
+    D3D11_DEPTH_STENCIL_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.DepthEnable = false;
+    desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    desc.StencilEnable = false;
+    desc.FrontFace.StencilFailOp = desc.FrontFace.StencilDepthFailOp = desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    desc.BackFace = desc.FrontFace;
+    bd->pd3dDevice->CreateDepthStencilState(&desc, &bd->pDepthStencilState);
+  }
+
+  ImGui_ImplDX11_CreateFontsTexture();
+
+  return true;
+}
+
+void    ImGui_ImplDX11_InvalidateDeviceObjects()
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  if (!bd->pd3dDevice)
+    return;
+
+  if (bd->pFontSampler) { bd->pFontSampler->Release(); bd->pFontSampler = NULL; }
+  if (bd->pFontTextureView) { bd->pFontTextureView->Release(); bd->pFontTextureView = NULL; ImGui::GetIO().Fonts->SetTexID(NULL); } // We copied data->pFontTextureView to io.Fonts->TexID so let's clear that as well.
+  if (bd->pIB) { bd->pIB->Release(); bd->pIB = NULL; }
+  if (bd->pVB) { bd->pVB->Release(); bd->pVB = NULL; }
+  if (bd->pBlendState) { bd->pBlendState->Release(); bd->pBlendState = NULL; }
+  if (bd->pDepthStencilState) { bd->pDepthStencilState->Release(); bd->pDepthStencilState = NULL; }
+  if (bd->pRasterizerState) { bd->pRasterizerState->Release(); bd->pRasterizerState = NULL; }
+  if (bd->pPixelShader) { bd->pPixelShader->Release(); bd->pPixelShader = NULL; }
+  if (bd->pVertexConstantBuffer) { bd->pVertexConstantBuffer->Release(); bd->pVertexConstantBuffer = NULL; }
+  if (bd->pInputLayout) { bd->pInputLayout->Release(); bd->pInputLayout = NULL; }
+  if (bd->pVertexShader) { bd->pVertexShader->Release(); bd->pVertexShader = NULL; }
+}
+
+bool    ImGui_ImplDX11_Init(ID3D11Device* device, ID3D11DeviceContext* device_context)
+{
+  ImGuiIO& io = ImGui::GetIO();
+  IM_ASSERT(io.BackendRendererUserData == NULL && "Already initialized a renderer backend!");
+
+  // Setup backend capabilities flags
+  ImGui_ImplDX11_Data* bd = IM_NEW(ImGui_ImplDX11_Data)();
+  io.BackendRendererUserData = (void*)bd;
+  io.BackendRendererName = "imgui_impl_dx11";
+  io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
+  io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;  // We can create multi-viewports on the Renderer side (optional)
+
+  // Get factory from device
+  IDXGIDevice* pDXGIDevice = NULL;
+  IDXGIAdapter* pDXGIAdapter = NULL;
+  IDXGIFactory* pFactory = NULL;
+
+  if (device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice)) == S_OK)
+    if (pDXGIDevice->GetParent(IID_PPV_ARGS(&pDXGIAdapter)) == S_OK)
+      if (pDXGIAdapter->GetParent(IID_PPV_ARGS(&pFactory)) == S_OK)
+      {
+        bd->pd3dDevice = device;
+        bd->pd3dDeviceContext = device_context;
+        bd->pFactory = pFactory;
+      }
+  if (pDXGIDevice) pDXGIDevice->Release();
+  if (pDXGIAdapter) pDXGIAdapter->Release();
+  bd->pd3dDevice->AddRef();
+  bd->pd3dDeviceContext->AddRef();
+
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    ImGui_ImplDX11_InitPlatformInterface();
+
+  return true;
+}
+
+void ImGui_ImplDX11_Shutdown()
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  IM_ASSERT(bd != NULL && "No renderer backend to shutdown, or already shutdown?");
+  ImGuiIO& io = ImGui::GetIO();
+
+  ImGui_ImplDX11_ShutdownPlatformInterface();
+  ImGui_ImplDX11_InvalidateDeviceObjects();
+  if (bd->pFactory) { bd->pFactory->Release(); }
+  if (bd->pd3dDevice) { bd->pd3dDevice->Release(); }
+  if (bd->pd3dDeviceContext) { bd->pd3dDeviceContext->Release(); }
+  io.BackendRendererName = NULL;
+  io.BackendRendererUserData = NULL;
+  IM_DELETE(bd);
+}
+
+void ImGui_ImplDX11_NewFrame()
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  IM_ASSERT(bd != NULL && "Did you call ImGui_ImplDX11_Init()?");
+
+  if (!bd->pFontSampler)
+    ImGui_ImplDX11_CreateDeviceObjects();
+}
+
+//--------------------------------------------------------------------------------------------------------
+// MULTI-VIEWPORT / PLATFORM INTERFACE SUPPORT
+// This is an _advanced_ and _optional_ feature, allowing the backend to create and handle multiple viewports simultaneously.
+// If you are new to dear imgui or creating a new binding for dear imgui, it is recommended that you completely ignore this section first..
+//--------------------------------------------------------------------------------------------------------
+
+// Helper structure we store in the void* RenderUserData field of each ImGuiViewport to easily retrieve our backend data.
+struct ImGui_ImplDX11_ViewportData
+{
+  IDXGISwapChain* SwapChain;
+  ID3D11RenderTargetView* RTView;
+
+  ImGui_ImplDX11_ViewportData() { SwapChain = NULL; RTView = NULL; }
+  ~ImGui_ImplDX11_ViewportData() { IM_ASSERT(SwapChain == NULL && RTView == NULL); }
+};
+
+static void ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  ImGui_ImplDX11_ViewportData* vd = IM_NEW(ImGui_ImplDX11_ViewportData)();
+  viewport->RendererUserData = vd;
+
+  // PlatformHandleRaw should always be a HWND, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
+  // Some backend will leave PlatformHandleRaw NULL, in which case we assume PlatformHandle will contain the HWND.
+  HWND hwnd = viewport->PlatformHandleRaw ? (HWND)viewport->PlatformHandleRaw : (HWND)viewport->PlatformHandle;
+  IM_ASSERT(hwnd != 0);
+
+  // Create swap chain
+  DXGI_SWAP_CHAIN_DESC sd;
+  ZeroMemory(&sd, sizeof(sd));
+  sd.BufferDesc.Width = (UINT)viewport->Size.x;
+  sd.BufferDesc.Height = (UINT)viewport->Size.y;
+  sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+  sd.SampleDesc.Count = 1;
+  sd.SampleDesc.Quality = 0;
+  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  sd.BufferCount = 1;
+  sd.OutputWindow = hwnd;
+  sd.Windowed = TRUE;
+  sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+  sd.Flags = 0;
+
+  IM_ASSERT(vd->SwapChain == NULL && vd->RTView == NULL);
+  bd->pFactory->CreateSwapChain(bd->pd3dDevice, &sd, &vd->SwapChain);
+
+  // Create the render target
+  if (vd->SwapChain)
+  {
+    ID3D11Texture2D* pBackBuffer;
+    vd->SwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+    bd->pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &vd->RTView);
+    pBackBuffer->Release();
+  }
+}
+
+static void ImGui_ImplDX11_DestroyWindow(ImGuiViewport* viewport)
+{
+  // The main viewport (owned by the application) will always have RendererUserData == NULL since we didn't create the data for it.
+  if (ImGui_ImplDX11_ViewportData* vd = (ImGui_ImplDX11_ViewportData*)viewport->RendererUserData)
+  {
+    if (vd->SwapChain)
+      vd->SwapChain->Release();
+    vd->SwapChain = NULL;
+    if (vd->RTView)
+      vd->RTView->Release();
+    vd->RTView = NULL;
+    IM_DELETE(vd);
+  }
+  viewport->RendererUserData = NULL;
+}
+
+static void ImGui_ImplDX11_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  ImGui_ImplDX11_ViewportData* vd = (ImGui_ImplDX11_ViewportData*)viewport->RendererUserData;
+  if (vd->RTView)
+  {
+    vd->RTView->Release();
+    vd->RTView = NULL;
+  }
+  if (vd->SwapChain)
+  {
+    ID3D11Texture2D* pBackBuffer = NULL;
+    vd->SwapChain->ResizeBuffers(0, (UINT)size.x, (UINT)size.y, DXGI_FORMAT_UNKNOWN, 0);
+    vd->SwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+    if (pBackBuffer == NULL) { fprintf(stderr, "ImGui_ImplDX11_SetWindowSize() failed creating buffers.\n"); return; }
+    bd->pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &vd->RTView);
+    pBackBuffer->Release();
+  }
+}
+
+static void ImGui_ImplDX11_RenderWindow(ImGuiViewport* viewport, void*)
+{
+  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  ImGui_ImplDX11_ViewportData* vd = (ImGui_ImplDX11_ViewportData*)viewport->RendererUserData;
+  ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+  bd->pd3dDeviceContext->OMSetRenderTargets(1, &vd->RTView, NULL);
+  if (!(viewport->Flags & ImGuiViewportFlags_NoRendererClear))
+    bd->pd3dDeviceContext->ClearRenderTargetView(vd->RTView, (float*)&clear_color);
+  ImGui_ImplDX11_RenderDrawData(viewport->DrawData);
+}
+
+static void ImGui_ImplDX11_SwapBuffers(ImGuiViewport* viewport, void*)
+{
+  ImGui_ImplDX11_ViewportData* vd = (ImGui_ImplDX11_ViewportData*)viewport->RendererUserData;
+  vd->SwapChain->Present(0, 0); // Present without vsync
+}
+
+static void ImGui_ImplDX11_InitPlatformInterface()
+{
+  ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+  platform_io.Renderer_CreateWindow = ImGui_ImplDX11_CreateWindow;
+  platform_io.Renderer_DestroyWindow = ImGui_ImplDX11_DestroyWindow;
+  platform_io.Renderer_SetWindowSize = ImGui_ImplDX11_SetWindowSize;
+  platform_io.Renderer_RenderWindow = ImGui_ImplDX11_RenderWindow;
+  platform_io.Renderer_SwapBuffers = ImGui_ImplDX11_SwapBuffers;
+}
+
+static void ImGui_ImplDX11_ShutdownPlatformInterface()
+{
+  ImGui::DestroyPlatformWindows();
+}

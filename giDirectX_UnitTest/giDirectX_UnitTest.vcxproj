@@ -31,6 +31,7 @@
     <ProjectGuid>{f3af756a-7689-44c6-ad12-7c7de34e8b63}</ProjectGuid>
     <RootNamespace>giDirectXUnitTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>giEditor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

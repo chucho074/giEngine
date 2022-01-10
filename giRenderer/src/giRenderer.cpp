@@ -393,7 +393,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/
-    Vector<Buffer*> tmpGbufferConstants;
+    Vector<SharedPtr<Buffer>> tmpGbufferConstants;
 
     tmpGbufferConstants.push_back(m_cBufferCamera);
     tmpGbufferConstants.push_back(m_cBufferChangeEveryFrame);
@@ -409,9 +409,9 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           SSAO                                       */
     /************************************************************************/
-    Vector<Buffer*> tmpSSAOConstants;
+    Vector<SharedPtr<Buffer>> tmpSSAOConstants;
     tmpSSAOConstants.push_back(m_cBufferSSAO);
-    Vector<Texture2D*> tmpSSAOShaderResources;
+    Vector<SharedPtr<Texture2D>> tmpSSAOShaderResources;
     tmpSSAOShaderResources.push_back(m_renderTargets[0]);
     tmpSSAOShaderResources.push_back(m_renderTargets[1]);
 
@@ -428,7 +428,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           BlurH                                      */
     /************************************************************************/
-    Vector<Buffer*> tmpBlurHConstants;
+    Vector<SharedPtr<Buffer>> tmpBlurHConstants;
     tmpBlurHConstants.push_back(m_cBufferBlur);
 
     renderData(m_BlurTexture,
@@ -444,7 +444,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           BlurV                                      */
     /************************************************************************/
-    Vector<Buffer*> tmpBlurVConstants;
+    Vector<SharedPtr<Buffer>> tmpBlurVConstants;
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
     renderData(m_SSAOTexture,
@@ -461,7 +461,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           Shadow                                     */
     /************************************************************************/
-    Vector<Buffer*> tmpShadowConstants;
+    Vector<SharedPtr<Buffer>> tmpShadowConstants;
     tmpShadowConstants.push_back(m_cBufferShadow);
 
     renderData(m_ShadowTexture,
@@ -476,15 +476,15 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           Light                                      */
     /************************************************************************/
-    Vector<Texture2D*> tmpVector;
+    Vector<SharedPtr<Texture2D>> tmpVector;
     tmpVector.push_back(gapi.getDefaultRenderTarget());
-    Vector<Buffer*> tmpLightConstants;
+    Vector<SharedPtr<Buffer>> tmpLightConstants;
     tmpLightConstants.push_back(m_cBufferCamera);
     tmpLightConstants.push_back(m_cBufferShadow);
     tmpLightConstants.push_back(m_cBufferChangeEveryFrame);
     tmpLightConstants.push_back(m_cBufferLight);
 
-    Vector<Texture2D*> tmpLightShaderResources;
+    Vector<SharedPtr<Texture2D>> tmpLightShaderResources;
     for(auto RT : m_renderTargets) {
       tmpLightShaderResources.push_back(RT);
     }
@@ -504,14 +504,14 @@ namespace giEngineSDK {
   }
 
   void
-  Renderer::renderData(Vector<Texture2D*> inRenderTarget,
-                       Texture2D * inDS, 
-                       InputLayout * inInputLayout,
-                       BaseVertexShader * inVertexShader,
-                       BasePixelShader * inPixelShader,
-                       Sampler * inSampler, 
-                       Vector<Buffer*> inConstantBuffers,
-                       Vector<Texture2D*> inShaderResources,
+  Renderer::renderData(Vector<SharedPtr<Texture2D>> inRenderTarget,
+                       SharedPtr<Texture2D> inDS, 
+                       SharedPtr<InputLayout> inInputLayout,
+                       SharedPtr<BaseVertexShader> inVertexShader,
+                       SharedPtr<BasePixelShader> inPixelShader,
+                       SharedPtr<Sampler> inSampler, 
+                       Vector<SharedPtr<Buffer>> inConstantBuffers,
+                       Vector<SharedPtr<Texture2D>> inShaderResources,
                        bool inDrawSAQ, 
                        bool inClear) {
 
