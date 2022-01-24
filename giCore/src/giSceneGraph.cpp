@@ -12,7 +12,10 @@
  */
 #include "giSceneGraph.h"
 
+
 namespace giEngineSDK {
+
+
   SceneGraph::SceneGraph() {
     m_numActors = 0;
     SharedPtr<Actor> sceneActor;
@@ -73,6 +76,7 @@ namespace giEngineSDK {
     m_root->render();
   }
 
+  
   SceneGraph&
     g_sceneGraph() {
     return SceneGraph::instance();

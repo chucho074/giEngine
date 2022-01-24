@@ -30,21 +30,21 @@ BaseApp::run() {
   //Send message to device
   onCreate();
 
-  m_inputManager->init();
+  //m_inputManager->init();
 
   renderer.create();
 
   //App Loop
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
-    m_inputManager->update();
+    //m_inputManager->update();
     MSG msg;
     Event eventsWnd;
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
 
-      m_inputManager->sendEvent(msg);
+      //m_inputManager->sendEvent(msg);
       
       m_window.pollEvent(eventsWnd);
       if (eventsWnd.type == Event::Closed) {
@@ -55,7 +55,7 @@ BaseApp::run() {
       //Eventos propios
       event(msg);
     }
-    m_inputManager->runEvents();
+    //m_inputManager->runEvents();
     //Update Time
     m_time->update();
     float deltaTime = g_time().getTime();

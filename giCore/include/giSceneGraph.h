@@ -15,6 +15,7 @@
 #include "giSceneNode.h"
 #include <giModule.h>
 
+
 namespace giEngineSDK {
 
   /**
@@ -80,6 +81,7 @@ namespace giEngineSDK {
      */
     void 
     draw();
+
 
    private:
 

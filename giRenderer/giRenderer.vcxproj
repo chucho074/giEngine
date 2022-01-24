@@ -139,7 +139,7 @@
       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
