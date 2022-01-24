@@ -1,6 +1,6 @@
 /**
  * @file    CGraphicsDX.h
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Management of the graphics APIs.
@@ -11,8 +11,8 @@
  * @include
  */
 #pragma once
-#include "giPrerequisitesDX.h"
 #include <giBaseGraphicsAPI.h>
+#include "giPrerequisitesDX.h"
 #include "giTexture2DDX.h"
 
 #define STB_IMAGE_IMPLEMENTATION

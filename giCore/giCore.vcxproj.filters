@@ -57,6 +57,9 @@
     <ClCompile Include="src\giBaseInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giBaseOmniverse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giTexture2D.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files\BaseShaders</Filter>
     </ClInclude>
     <ClInclude Include="include\giBlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseOmniverse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

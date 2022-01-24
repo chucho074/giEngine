@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
- * @brief   A basic description of the what do the doc.
+ * @brief   A basic conection to Nvidia Omniverse Service.
  * @bug     No known Bugs.
  */
  
@@ -11,15 +11,18 @@
  * @include
  */
 #pragma once
+#include <giBaseOmniverse.h>
+#include <giSceneGraph.h>
 #include "giPrerequisitesOmniverse.h"
+
 
 namespace giEngineSDK {
   /**
    * @class    Omni.
-   * @brief    .
+   * @brief    A conection to Nvidia Omniverse.
    * @bug      No known Bugs.
    */
-  class Omni
+  class Omni : public BaseOmni
   {
    public:
     //Default Constructor.
@@ -28,10 +31,16 @@ namespace giEngineSDK {
     ~Omni() = default;
     
     /**
-     * @brief    .
+     * @brief    Creates the USD file.
      */
     void
-    createUSD();
+    createUSD() override;
+
+    /**
+     * @brief    Get the data from the Scene Graph.
+     */
+    UsdGeomMesh
+    getData();
    
   };
 

@@ -155,6 +155,17 @@ BaseApp::initSystems() {
     
   }
 
+  //Start the Omniverse
+  if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
+    auto createOmniverse = reinterpret_cast<funCreateOmniverse>(m_loaderOmniverse.getProcedureByName("createOmniverse"));
+
+    BaseOmni::startUp();
+    BaseOmni* ov = createOmniverse();
+    g_omniverse().setObject(ov);
+    m_omniverse = &g_omniverse();
+    m_omniverse->createUSD();
+  }
+
   //Start the time
   Time::startUp();
   m_time = &g_time();
@@ -166,6 +177,8 @@ BaseApp::initSystems() {
   //Start the Scene Graph
   SceneGraph::startUp();
   m_sceneGraph = &g_sceneGraph();
+
+  
 
   //Activate the console only on Debug
 #ifdef DEBUG

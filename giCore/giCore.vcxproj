@@ -146,7 +146,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>giUtilities_d.lib;giOmniverse_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -176,6 +176,7 @@
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
     <ClCompile Include="src\giBaseInput.cpp" />
+    <ClCompile Include="src\giBaseOmniverse.cpp" />
     <ClCompile Include="src\giBaseRenderer.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="include\giBaseComputeShader.h" />
     <ClInclude Include="include\giBaseInput.h" />
+    <ClInclude Include="include\giBaseOmniverse.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
     <ClInclude Include="include\giBlendState.h" />
     <ClInclude Include="include\giComponent.h" />

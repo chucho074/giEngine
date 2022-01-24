@@ -14,6 +14,11 @@
 #include "giPrerequisitesUtilities.h"
 #include <Windows.h>
 
+#include <iostream>
+
+using std::cout;
+
+
 namespace giEngineSDK {
 
   /**
@@ -61,7 +66,8 @@ namespace giEngineSDK {
   LibraryLoader::loadPlugin(const String& inName) {
     m_instance = LoadLibraryExA(inName.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
     if (!m_instance) {
-      //DWORD err = GetLastError();
+      DWORD err = GetLastError();
+      cout<<err;
       destroy();
       return false;
     }

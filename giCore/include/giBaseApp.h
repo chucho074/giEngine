@@ -21,11 +21,7 @@
 #include "giBaseRenderer.h"
 #include "giSceneGraph.h"
 #include "giBaseInput.h"
-
-
-//#include <iostream>         //Delete this
-//#include <io.h>             //Delete this
-//#include <fcntl.h>          //Delete this
+#include "giBaseOmniverse.h"
 
 using namespace giEngineSDK;
 
@@ -171,6 +167,8 @@ class GI_CORE_EXPORT BaseApp
 
   LibraryLoader m_loaderInput;
 
+  LibraryLoader m_loaderOmniverse;
+
   GraphicsAPI* m_gapi = nullptr;
 
   BaseRenderer* m_renderer = nullptr;
@@ -182,4 +180,6 @@ class GI_CORE_EXPORT BaseApp
   Logger * m_logger = nullptr;
 
   BaseInput * m_inputManager = nullptr;
+
+  BaseOmni * m_omniverse = nullptr;
 };
