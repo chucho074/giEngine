@@ -34,6 +34,8 @@ namespace giEngineSDK {
     void
     setModel(SharedPtr<Model> inModel);
 
+    SharedPtr<Model>
+    getModel();
 
    private:
 

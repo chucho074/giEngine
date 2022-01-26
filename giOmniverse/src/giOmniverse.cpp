@@ -12,60 +12,8 @@
  */
 
 #include "giOmniverse.h"
-
-#include <mutex>
-#include <memory>
-#include <map>
-#include <condition_variable>
-
-#include <OmniClient.h>
-#include <OmniUsdLive.h>
-#include <pxr/usd/usd/stage.h>
-#include <pxr/usd/usdGeom/mesh.h>
-#include <pxr/usd/usdGeom/metrics.h>
-#include <pxr/base/gf/matrix4f.h>
-#include <pxr/base/gf/vec2f.h>
-#include <pxr/usd/usdUtils/pipeline.h>
-#include <pxr/usd/usdUtils/sparseValueWriter.h>
-#include <pxr/usd/usdShade/material.h>
-#include <pxr/usd/usd/prim.h>
-#include <pxr/usd/usd/primRange.h>
-#include <pxr/usd/usdGeom/primvar.h>
-#include <pxr/usd/usdShade/input.h>
-#include <pxr/usd/usdShade/output.h>
-#include <pxr/usd/usdGeom/xform.h>
-#include <pxr/usd/usdShade/materialBindingAPI.h>
-#include <pxr/usd/usdLux/distantLight.h>
-#include <pxr/usd/usdLux/domeLight.h>
-#include <pxr/usd/usdShade/shader.h>
-#include <pxr/usd/usd/modelAPI.h>
-
-PXR_NAMESPACE_USING_DIRECTIVE
-
-// Private tokens for building up SdfPaths. We recommend
-// constructing SdfPaths via tokens, as there is a performance
-// cost to constructing them directly via strings (effectively,
-// a table lookup per path element). Similarly, any API which
-// takes a token as input should use a predefined token
-// rather than one created on the fly from a string.
-TF_DEFINE_PRIVATE_TOKENS(
-  _tokens,
-  (box)
-  (Light)
-  (Looks)
-  (Root)
-  (Shader)
-  (st)
-
-// Globals for Omniverse Connection and base Stage
-static UsdStageRefPtr gStage;
-
-// Omniverse logging is noisy, only enable it if verbose mode (-v)
-static bool gOmniverseLoggingEnabled = false;
-
-// Global for making the logging reasonable
-static std::mutex gLogMutex;
-
+#include "giStaticMesh.h"
+#include <giSceneGraph.h>
 
 namespace giEngineSDK {
 
@@ -303,16 +251,16 @@ namespace giEngineSDK {
       printConnectedUsername(stageUrl);
 
       // Create box geometry in the model
-      tmpMesh = ();
+      tmpMesh = getData();
 
-      //checkpointFile(stageUrl, "Add box and nothing else");
+      checkpointFile(stageUrl, "Add a Model and nothing else");
 
       // Create lights in the scene
       //createDistantLight();
       //createDomeLight("./Materials/kloofendal_48d_partly_cloudy.hdr");
 
       // Add a Nucleus Checkpoint to the stage
-      checkpointFile(stageUrl, "Add lights to stage");
+      //checkpointFile(stageUrl, "Add lights to stage");
 
       // Upload a material and textures to the Omniverse server
       //uploadMaterial(destinationPath);
@@ -321,7 +269,7 @@ namespace giEngineSDK {
       //createMaterial(boxMesh);
 
       // Add a Nucleus Checkpoint to the stage
-      checkpointFile(stageUrl, "Add material to the box");
+      //checkpointFile(stageUrl, "Add material to the box");
 
       // Create an empty folder, just as an example
       createEmptyFolder(destinationPath + "/EmptyFolder");
@@ -343,57 +291,101 @@ namespace giEngineSDK {
 
   UsdGeomMesh
   Omni::getData() {
+    
+    auto& sgraph = SceneGraph::instance();
+
     // Keep the model contained inside of "Root", only need to do this once per model
     SdfPath rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(_tokens->Root);
     UsdGeomXform::Define(gStage, rootPrimPath);
 
+
     // Create the geometry inside of "Root"
-    String boxName("box_");
-    boxName.append(std::to_string(boxNumber));
+    String boxName("model_");
+    boxName.append(std::to_string(0));
     SdfPath boxPrimPath = rootPrimPath.AppendChild(TfToken(boxName));//_tokens->box);
     UsdGeomMesh mesh = UsdGeomMesh::Define(gStage, boxPrimPath);
 
-    if (!mesh)
+    if (!mesh) {
       return mesh;
+    }
 
     // Set orientation
     mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->rightHanded));
 
+    // Get the model data
+    // TODO: 
+    // Get the meshes and get the data of every one and set it in a single list
+    // USDgeo = meshes
+    //Get the actor from the Scene Graph
+    auto tmpActor = sgraph.getActorByName("Vela");
+    //Get the Static Mesh component
+    SharedPtr<StaticMesh> tmpMesh = static_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
+    //Get the Model
+    auto tmpModel = tmpMesh->getModel();
+
+    //Get the num of vertex
+    int num_vertices = tmpModel->m_meshes.at(0).m_vertexVector.size();
+    //Get the vertex
+    Vector<Vector3> vertex;
+    vertex.reserve(num_vertices);
+    for(int i = 0; i < num_vertices; i++) { 
+      vertex.push_back(tmpModel->m_meshes.at(0).m_vertexVector.at(i).Pos);
+    }
+
+
+    //Get the index
+    auto tmpIndex = tmpModel->m_meshes.at(0).m_facesList;
+
+    //Get Normals
+    Vector<Vector3> Normals;
+    Normals.reserve(num_vertices);
+    for (int i = 0; i < num_vertices; i++) {
+      Normals.push_back(tmpModel->m_meshes.at(0).m_vertexVector.at(i).Nor);
+    }
+
+    //Get UVs
+    Vector<Vector2> uvs;
+    uvs.reserve(num_vertices);
+    for (int i = 0; i < num_vertices; i++) {
+      uvs.push_back(tmpModel->m_meshes.at(0).m_vertexVector.at(i).Tex);
+    }
+    
+
     // Add all of the vertices
-    int num_vertices = HW_ARRAY_COUNT(gBoxPoints);
     VtArray<GfVec3f> points;
     points.resize(num_vertices);
-    for (int i = 0; i < num_vertices; i++)
-    {
-      points[i] = GfVec3f(gBoxPoints[i][0], gBoxPoints[i][1], gBoxPoints[i][2]);
+    for (int i = 0; i < num_vertices; i++) {
+      points[i] = GfVec3f(vertex.at(i).x, vertex.at(i).y, vertex.at(i).z);
     }
     mesh.CreatePointsAttr(VtValue(points));
 
+
     // Calculate indices for each triangle
-    int num_indices = HW_ARRAY_COUNT(gBoxVertexIndices); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
+    int num_indices = HW_ARRAY_COUNT(tmpIndex); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
     VtArray<int> vecIndices;
     vecIndices.resize(num_indices);
-    for (int i = 0; i < num_indices; i++)
-    {
-      vecIndices[i] = gBoxVertexIndices[i];
+    for (int i = 0; i < num_indices; i++) {
+      vecIndices[i] = tmpIndex[i];
     }
     mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
 
+
     // Add vertex normals
-    int num_normals = HW_ARRAY_COUNT(gBoxNormals);
+    int num_normals = HW_ARRAY_COUNT(Normals);
     VtArray<GfVec3f> meshNormals;
     meshNormals.resize(num_vertices);
-    for (int i = 0; i < num_vertices; i++)
-    {
-      meshNormals[i] = GfVec3f((float)gBoxNormals[i][0], (float)gBoxNormals[i][1], (float)gBoxNormals[i][2]);
+    for (int i = 0; i < num_vertices; i++) {
+      meshNormals[i] = GfVec3f((float)Normals[i].x, (float)Normals[i].y, (float)Normals[i].z);
     }
     mesh.CreateNormalsAttr(VtValue(meshNormals));
+
 
     // Add face vertex count
     VtArray<int> faceVertexCounts;
     faceVertexCounts.resize(12); // 2 Triangles per face * 6 faces
     std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
     mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
+
 
     // Set the color on the mesh
     UsdPrim meshPrim = mesh.GetPrim();
@@ -405,20 +397,21 @@ namespace giEngineSDK {
       displayColorAttr.Set(valueArray);
     }
 
+
     // Set the UV (st) values for this mesh
     UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
     {
-      int uv_count = HW_ARRAY_COUNT(gBoxUV);
+      int uv_count = HW_ARRAY_COUNT(uvs);
       VtVec2fArray valueArray;
       valueArray.resize(uv_count);
-      for (int i = 0; i < uv_count; ++i)
-      {
-        valueArray[i].Set(gBoxUV[i]);
+      for (int i = 0; i < uv_count; ++i){
+        valueArray[i].Set(uvs[i].x, uvs[i].y);
       }
 
       bool status = attr2.Set(valueArray);
     }
     attr2.SetInterpolation(UsdGeomTokens->vertex);
+
 
     // Commit the changes to the USD
     gStage->Save();

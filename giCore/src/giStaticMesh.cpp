@@ -28,4 +28,9 @@ namespace giEngineSDK {
   StaticMesh::setModel(SharedPtr<Model> inModel) {
     m_model = inModel;
   }
+  
+  SharedPtr<Model> 
+  StaticMesh::getModel() {
+      return m_model;
+  }
 }

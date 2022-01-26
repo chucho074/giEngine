@@ -78,7 +78,7 @@ namespace giEngineSDK {
     drawMesh();
 
 
-   protected:
+   //protected:
 
     //The vertex buffer for the mesh
     Buffer * m_vertexBuffer = nullptr;

@@ -57,7 +57,6 @@ namespace giEngineSDK {
 
   SharedPtr<Component>& 
   Actor::getComponent(COMPONENT_TYPE::E inComponent) {
-    // TODO: insert return statement here
     auto tmp = m_components.find(inComponent);
     return tmp->second;
   }

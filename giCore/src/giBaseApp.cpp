@@ -72,7 +72,7 @@ BaseApp::run() {
 
   //Write the logs
   m_logger->SendToFile();
-
+  m_omniverse->createUSD();
 
   //Destroy the resources
   onDestroy();
@@ -163,7 +163,6 @@ BaseApp::initSystems() {
     BaseOmni* ov = createOmniverse();
     g_omniverse().setObject(ov);
     m_omniverse = &g_omniverse();
-    m_omniverse->createUSD();
   }
 
   //Start the time
@@ -177,6 +176,8 @@ BaseApp::initSystems() {
   //Start the Scene Graph
   SceneGraph::startUp();
   m_sceneGraph = &g_sceneGraph();
+
+
 
   
 

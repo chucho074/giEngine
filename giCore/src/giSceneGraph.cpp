@@ -78,7 +78,7 @@ namespace giEngineSDK {
 
   
   SceneGraph&
-    g_sceneGraph() {
+  g_sceneGraph() {
     return SceneGraph::instance();
   }
 }
