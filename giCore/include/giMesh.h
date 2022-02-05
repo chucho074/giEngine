@@ -18,9 +18,6 @@
 #include <giVector3.h>
 #include <giTransform.h>
 
-
-
-
 namespace giEngineSDK {
 
   /**
@@ -29,7 +26,7 @@ namespace giEngineSDK {
    */
   struct SimpleVertex {
     Vector3 Pos;
-    Vector2 Tex;
+    Vector2 Tex;  //UV
     Vector3 Nor;
     Vector3 Tang;
     Vector3 BiNor;

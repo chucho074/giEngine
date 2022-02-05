@@ -26,6 +26,8 @@ DirectXApp::DirectXApp() {
 void 
 DirectXApp::onCreate() {
 
+
+  auto& omni = g_omniverse();
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
   mainCamera->init(Degrees(75.0f).getRadians(),
@@ -39,7 +41,9 @@ DirectXApp::onCreate() {
 
   //Sets Vela's model
   SharedPtr<Model> tmpModel = make_shared<Model>();
-  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  //tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  tmpModel->loadFromFile("Resources/Models/BattleDroid.fbx");
+  //tmpModel = omni.modelFromUSD();
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
   modelComponent->setModel(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
@@ -48,14 +52,14 @@ DirectXApp::onCreate() {
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
   //Sets plane model
-  SharedPtr<Model> tmpModelPlane = make_shared<Model>();
-  tmpModelPlane->loadFromFile("Resources/Models/plano.fbx");
-  SharedPtr<StaticMesh> modelComponentPlane = make_shared<StaticMesh>();
-  modelComponentPlane->setModel(tmpModelPlane);
-  SharedPtr<Actor> tmpActorPlane = make_shared<Actor>();
-  tmpActorPlane->addComponent(modelComponentPlane, COMPONENT_TYPE::kStaticMesh);
-  tmpActorPlane->m_actorName = "Plane";
-  m_sceneGraph->addActor(tmpActorPlane, m_sceneGraph->getRoot());
+  //SharedPtr<Model> tmpModelPlane = make_shared<Model>();
+  //tmpModelPlane->loadFromFile("Resources/Models/plano.fbx");
+  //SharedPtr<StaticMesh> modelComponentPlane = make_shared<StaticMesh>();
+  //modelComponentPlane->setModel(tmpModelPlane);
+  //SharedPtr<Actor> tmpActorPlane = make_shared<Actor>();
+  //tmpActorPlane->addComponent(modelComponentPlane, COMPONENT_TYPE::kStaticMesh);
+  //tmpActorPlane->m_actorName = "Plane";
+  //m_sceneGraph->addActor(tmpActorPlane, m_sceneGraph->getRoot());
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();

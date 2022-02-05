@@ -37,7 +37,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -46,11 +46,11 @@
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -75,11 +75,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(DEVLIBS)/Omniverse/includes/winsdk/shared;$(DEVLIBS)/Omniverse/includes/winsdk/um;$(DEVLIBS)/Omniverse/includes/vc/;$(DEVLIBS)/Omniverse/includes/winsdk/winrt;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DEVLIBS)/Omniverse/libs/vc/onecore/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/ucrt/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/um/$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DEVLIBS)/Omniverse/includes/winsdk/shared;$(DEVLIBS)/Omniverse/includes/winsdk/um;$(DEVLIBS)/Omniverse/includes/vc/;$(DEVLIBS)/Omniverse/includes/winsdk/winrt;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DEVLIBS)/Omniverse/libs/vc/onecore/x64/;$(DEVLIBS)/Omniverse/libs/winsdk/ucrt/x64;$(DEVLIBS)/Omniverse/libs/winsdk/um/x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DEVLIBS)/Omniverse/libs/vc/onecore/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/ucrt/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/um/$(PlatformTarget);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
@@ -87,6 +90,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(DEVLIBS)/Omniverse/includes/winsdk/shared;$(DEVLIBS)/Omniverse/includes/winsdk/um;$(DEVLIBS)/Omniverse/includes/vc/;$(DEVLIBS)/Omniverse/includes/winsdk/winrt;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DEVLIBS)/Omniverse/libs/vc/onecore/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/ucrt/$(PlatformTarget);$(DEVLIBS)/Omniverse/libs/winsdk/um/$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
+    <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,6 +122,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/lib;$(DEVLIBS)/Omniverse/target-deps/python/lib;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,7 +133,6 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./include;$(SolutionDir)giUtilities/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(SolutionDir)giCore/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,12 +151,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/lib;$(DEVLIBS)/Omniverse/target-deps/python/lib;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

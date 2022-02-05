@@ -16,6 +16,7 @@
 
 
 namespace giEngineSDK {
+  class Model;
   /**
    * @class    BaseOmni.
    * @brief    .
@@ -35,6 +36,11 @@ namespace giEngineSDK {
      */
     virtual void
     createUSD() { }
+
+    virtual SharedPtr<Model>
+    modelFromUSD() { 
+      return nullptr;
+    }
    
   };
 

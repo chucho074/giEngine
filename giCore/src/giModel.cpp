@@ -46,9 +46,9 @@ namespace giEngineSDK {
 
   Vector<Texture>
   loadMaterialTextures(Model inModel,
-                              aiMaterial* mat, 
-                              aiTextureType type, 
-                              String typeName) {
+                       aiMaterial* mat, 
+                       aiTextureType type, 
+                       String typeName) {
 
     auto& GAPI = g_graphicsAPI();
     Vector<Texture> textures;
@@ -182,6 +182,7 @@ namespace giEngineSDK {
 
   Mesh 
   processMesh(Model &inModel, aiMesh* mesh, const aiScene* scene) {
+    auto& GAPI = g_graphicsAPI();
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
     Vector<Texture> textures;
@@ -317,6 +318,12 @@ namespace giEngineSDK {
 
       textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
 
+    }
+    else {
+      
+      Texture texture;
+      texture.texture = GAPI.TextureFromFile("Resources/", "missingtexture.png");
+      textures.push_back(texture);
     }
 
     return Mesh(vertices, 

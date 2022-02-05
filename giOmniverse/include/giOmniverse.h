@@ -17,6 +17,9 @@
 
 
 namespace giEngineSDK {
+
+  class Model;
+
   /**
    * @class    Omni.
    * @brief    A conection to Nvidia Omniverse.
@@ -42,6 +45,12 @@ namespace giEngineSDK {
     UsdGeomMesh
     getData();
    
+    /**
+     * @brief    .
+     */
+    SharedPtr<Model>
+    modelFromUSD() override;
+
   };
 
   /**
