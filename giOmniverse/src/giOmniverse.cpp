@@ -96,7 +96,7 @@ namespace giEngineSDK {
   // Create a new connection for this model in Omniverse, returns the created stage URL
   static String 
   createOmniverseModel(const String& destinationPath) {
-    String stageUrl = destinationPath + "/Vela.usd";
+    String stageUrl = destinationPath + "/Cube.usd";
 
     // Delete the old version of this file on Omniverse and wait for the operation to complete
     {
