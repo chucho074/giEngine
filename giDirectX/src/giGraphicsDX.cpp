@@ -873,4 +873,52 @@ namespace giEngineSDK {
     }
     return nullptr;
   }
+
+  SharedPtr<Texture2D>
+  CGraphicsDX::TextureFromMem(uint8 * inData, int32 inWidth, int32 inHeight){ 
+    if (inData) {
+      SharedPtr<Texture2DDX> temp;
+      CD3D11_TEXTURE2D_DESC tempDesc;
+      memset(&tempDesc, 0, sizeof(tempDesc));
+      tempDesc.Width = inWidth;
+      tempDesc.Height = inHeight;
+      tempDesc.MipLevels = 1;
+      tempDesc.ArraySize = 1;
+      tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8G8B8A8_UNORM;
+      tempDesc.SampleDesc.Count = 1;
+      tempDesc.SampleDesc.Quality = 0;
+      tempDesc.Usage = D3D11_USAGE_DEFAULT;
+      tempDesc.BindFlags = (D3D11_BIND_FLAG)GI_BIND_FLAG::kBIND_SHADER_RESOURCE;
+      tempDesc.CPUAccessFlags = 0;
+      tempDesc.MiscFlags = 0;
+
+      D3D11_SUBRESOURCE_DATA srdata;
+      memset(&srdata, 0, sizeof(srdata));
+      srdata.pSysMem = inData;
+      srdata.SysMemPitch = inWidth * 4;
+      srdata.SysMemSlicePitch = 0;
+
+      if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &temp->m_texture))) {
+        //Send error message
+        //Pone un breakpoint cuando llegue aqui
+        __debugbreak();
+        return nullptr;
+      }
+
+      D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+      memset(&srvDesc, 0, sizeof(srvDesc));
+      srvDesc.Format = tempDesc.Format;
+      srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
+      srvDesc.Texture2D.MipLevels = 0;
+      srvDesc.Texture2D.MostDetailedMip = 0;
+
+      if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
+        __debugbreak();
+        return nullptr;
+      }
+
+      return temp;
+    }
+    return nullptr;
+  }
 }

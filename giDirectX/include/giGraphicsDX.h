@@ -560,7 +560,18 @@ namespace giEngineSDK {
      */
     SharedPtr<Texture2D>
     TextureFromFile(String inString, 
-                    String inDirectory);
+                    String inDirectory) override;
+
+
+    /**
+     * @brief    Load a texture from memory.
+     * @param    inData
+     * @param    inWidth
+     * @param    inHeight
+     * @return   Returns a texture 2D.
+     */
+    SharedPtr<Texture2D>
+    TextureFromMem(uint8* inData, int32 inWidth, int32 inHeight) override;
 
   
    private:

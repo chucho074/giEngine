@@ -11,6 +11,7 @@
 
 #include "giImGui.h"
 
+using giEngineSDK::uint8;
 using giEngineSDK::GraphicsAPI;
 using giEngineSDK::g_graphicsAPI;
 using giEngineSDK::SharedPtr;
@@ -19,6 +20,7 @@ using giEngineSDK::BaseVertexShader;
 using giEngineSDK::BasePixelShader;
 using giEngineSDK::InputLayout;
 using giEngineSDK::Sampler;
+using giEngineSDK::SamplerDesc;
 using giEngineSDK::Texture2D;
 using giEngineSDK::uint32;
 using giEngineSDK::BaseRasterizerState;
@@ -43,8 +45,11 @@ ImGui_ImplGI_Data* ImGui_ImplGI_GetBackendData() {
 }
 
 // Forward Declarations
-static void ImGui_ImplGI_InitPlatformInterface();
-static void ImGui_ImplGI_ShutdownPlatformInterface();
+static void 
+ImGui_ImplGI_InitPlatformInterface();
+
+static void 
+ImGui_ImplGI_ShutdownPlatformInterface();
 
 // Functions
 static void 
@@ -202,7 +207,7 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
 
   BACKUP_GI_STATE old = {};
   old.ScissorRectsCount = old.ViewportsCount = GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
-  old.ScissorRects = gapi.rsGetScissorRects(old.ScissorRectsCount);
+  //old.ScissorRects = gapi.rsGetScissorRects(old.ScissorRectsCount);
   //gapi.rsGetViewports(old.ViewportsCount, old.Viewports);
   old.RS = gapi.rsGetState();
   old.BlenState = gapi.omGetBlendState(old.BlendFactor, old.SampleMask);
@@ -258,7 +263,8 @@ ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data) {
         gapi.rsSetScissorRects(1, &r);
   
         // Bind texture, Draw
-        Texture2D * texture_srv = (Texture2D*)pcmd->GetTexID();
+        SharedPtr<Texture2D> texture_srv;
+        texture_srv.reset(pcmd->GetTexID());
         gapi.psSetShaderResource(0, texture_srv);
         gapi.drawIndexed(pcmd->ElemCount, 
                          pcmd->VtxOffset + global_vtx_offset);
@@ -306,37 +312,21 @@ ImGui_ImplGI_CreateFontsTexture() {
   // Build texture atlas
   ImGuiIO& io = ImGui::GetIO();
   ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
-  unsigned char* pixels;
+  uint8* pixels;
   int width, height;
   io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
   // Upload texture to graphics system
   {
-   SharedPtr<Texture2D> tmpTex;
-   tmpTex = gapi.createTex2D(width, 
-                             height, 
-                             1, 
-                             giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM, 
-                             giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
-
+    SharedPtr<Texture2D> tmpTex;
+    tmpTex = gapi.createTex2D(width, 
+                              height, 
+                              1, 
+                              giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM, 
+                              giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
     
+    gapi.TextureFromMem(pixels, width, height);
 
-    D3D11_SUBRESOURCE_DATA subResource;
-    subResource.pSysMem = pixels;
-    subResource.SysMemPitch = desc.Width * 4;
-    subResource.SysMemSlicePitch = 0;
-    gapi.createTex2D(&desc, &subResource, &pTexture);
-    IM_ASSERT(pTexture != NULL);
-
-    // Create texture view
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    ZeroMemory(&srvDesc, sizeof(srvDesc));
-    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = desc.MipLevels;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    bd->pd3dDevice->CreateShaderResourceView(pTexture, &srvDesc, &bd->pFontTextureView);
-    pTexture->Release();
   }
 
   // Store our identifier
@@ -344,21 +334,23 @@ ImGui_ImplGI_CreateFontsTexture() {
 
   // Create texture sampler
   {
-    D3D11_SAMPLER_DESC desc;
+    SamplerDesc desc;
     ZeroMemory(&desc, sizeof(desc));
-    desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    desc.MipLODBias = 0.f;
-    desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-    desc.MinLOD = 0.f;
-    desc.MaxLOD = 0.f;
-    bd->pd3dDevice->CreateSamplerState(&desc, &bd->pFontSampler);
+    desc.filter = giEngineSDK::GI_FILTER::kFILTER_MIN_MAG_MIP_LINEAR;
+    desc.addressU = giEngineSDK::GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    desc.addressV = giEngineSDK::GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    desc.addressW = giEngineSDK::GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    //desc.mipLODBias = 0.f;
+    desc.comparisonFunc = kCOMPARISON_ALWAYS;
+    desc.minLOD = 0.f;
+    desc.maxLOD = 0.f;
+
+    gapi.createSampler(&desc, &bd->pFontSampler);
   }
 }
 
-bool    ImGui_ImplDX11_CreateDeviceObjects()
+bool    
+ImGui_ImplDX11_CreateDeviceObjects()
 {
   ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
   if (!bd->pd3dDevice)
@@ -514,7 +506,8 @@ bool    ImGui_ImplDX11_CreateDeviceObjects()
   return true;
 }
 
-void    ImGui_ImplDX11_InvalidateDeviceObjects()
+void    
+ImGui_ImplDX11_InvalidateDeviceObjects()
 {
   ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
   if (!bd->pd3dDevice)
@@ -533,13 +526,13 @@ void    ImGui_ImplDX11_InvalidateDeviceObjects()
   if (bd->pVertexShader) { bd->pVertexShader->Release(); bd->pVertexShader = NULL; }
 }
 
-bool    ImGui_ImplDX11_Init(ID3D11Device* device, ID3D11DeviceContext* device_context)
-{
+bool
+ImGui_ImplDX11_Init() {
   ImGuiIO& io = ImGui::GetIO();
   IM_ASSERT(io.BackendRendererUserData == NULL && "Already initialized a renderer backend!");
 
   // Setup backend capabilities flags
-  ImGui_ImplDX11_Data* bd = IM_NEW(ImGui_ImplDX11_Data)();
+  ImGui_ImplGI_Data* bd = IM_NEW(ImGui_ImplGI_Data)();
   io.BackendRendererUserData = (void*)bd;
   io.BackendRendererName = "imgui_impl_dx11";
   io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
@@ -569,7 +562,8 @@ bool    ImGui_ImplDX11_Init(ID3D11Device* device, ID3D11DeviceContext* device_co
   return true;
 }
 
-void ImGui_ImplDX11_Shutdown()
+void 
+ImGui_ImplDX11_Shutdown()
 {
   ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
   IM_ASSERT(bd != NULL && "No renderer backend to shutdown, or already shutdown?");
@@ -585,7 +579,8 @@ void ImGui_ImplDX11_Shutdown()
   IM_DELETE(bd);
 }
 
-void ImGui_ImplDX11_NewFrame()
+void 
+ImGui_ImplDX11_NewFrame()
 {
   ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
   IM_ASSERT(bd != NULL && "Did you call ImGui_ImplDX11_Init()?");
@@ -606,13 +601,19 @@ struct ImGui_ImplDX11_ViewportData
   IDXGISwapChain* SwapChain;
   ID3D11RenderTargetView* RTView;
 
-  ImGui_ImplDX11_ViewportData() { SwapChain = NULL; RTView = NULL; }
-  ~ImGui_ImplDX11_ViewportData() { IM_ASSERT(SwapChain == NULL && RTView == NULL); }
+  ImGui_ImplDX11_ViewportData() { 
+    SwapChain = NULL; 
+    RTView = NULL; 
+  }
+  ~ImGui_ImplDX11_ViewportData() { 
+    IM_ASSERT(SwapChain == NULL && RTView == NULL); 
+  }
 };
 
-static void ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
+static void 
+ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
 {
-  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
+  ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
   ImGui_ImplDX11_ViewportData* vd = IM_NEW(ImGui_ImplDX11_ViewportData)();
   viewport->RendererUserData = vd;
 

@@ -88,7 +88,7 @@ BaseApp::createWindow() {
     return;
   }
   
-  String tmpTitle = "Changos wapos";
+  String tmpTitle = "giEngine";
 
   m_window.create(VideoMode(m_width, m_height),
                   tmpTitle.c_str(),
@@ -127,7 +127,7 @@ BaseApp::initSystems() {
     auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loaderGAPI.getProcedureByName("createGraphicsAPI"));
 
     GraphicsAPI::startUp();
-    GraphicsAPI* GAPI = createGraphicsAPI();
+    GraphicsAPI * GAPI = createGraphicsAPI();
     g_graphicsAPI().setObject(GAPI);
     m_gapi = &g_graphicsAPI();
     //Initialize the Graphics API

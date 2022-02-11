@@ -606,6 +606,16 @@ namespace giEngineSDK {
     TextureFromFile(String inString, String inDirectory) { 
       return nullptr;
     };
+
+    /**
+     * @brief    Load a texture from memory.
+     * @param    inData
+     * @param    inWidth
+     * @param    inHeight
+     * @return   Returns a texture 2D.
+     */
+    virtual SharedPtr<Texture2D>
+    TextureFromMem(uint8* inData, int32 inWidth, int32 inHeight) {};
   
     /**
      * @brief    Set the object of the Graphics API.
