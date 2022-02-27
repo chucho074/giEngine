@@ -1,17 +1,17 @@
 /**
  * @file    giGraphicsDX.cpp
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   The Graphics API in charge to use DX11.
  * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
-#include "giGraphicsDX.h"
 #include <intrin.h>
+#include "giGraphicsDX.h"
 
 #include "giTexture2DDX.h"
 #include "giInputLayoutDX.h"
@@ -783,6 +783,16 @@ namespace giEngineSDK {
   CGraphicsDX::TextureFromFile(String inString, String inDirectory) {
     int32 width, height, nrChannels;
     inString = inString.substr(inString.find_last_of('/') + 1, inString.length());
+
+    size_T formatPos = inString.find(".");
+    String tmpFormat = inString.substr(formatPos);
+
+    // Texture with Ambient Oclussion, Metal & Rougness in RGB Channels
+    if("giTexAOMROG" == tmpFormat) {  
+      
+    }
+
+
     uint8* data = stbi_load((inDirectory + inString).c_str(), 
                             &width, 
                             &height, 

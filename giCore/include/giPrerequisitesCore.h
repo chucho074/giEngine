@@ -266,6 +266,7 @@ namespace giEngineSDK {
       kCLEAR_STENCIL = 0x2L
     };
   }
+
   namespace GI_INPUT_CLASSIFICATION {
     enum E {
       kINPUT_PER_VERTEX_DATA = 0,
