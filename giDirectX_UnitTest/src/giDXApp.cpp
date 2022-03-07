@@ -28,6 +28,7 @@ DirectXApp::onCreate() {
 
 
   auto& omni = g_omniverse();
+  auto& gapi = g_graphicsAPI();
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
   mainCamera->init(Degrees(75.0f).getRadians(),
@@ -93,6 +94,8 @@ DirectXApp::onCreate() {
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
 
+  SharedPtr<Texture2D> tmpTex;
+  tmpTex.reset(gapi.TextureFromFile());
   
   
 }
