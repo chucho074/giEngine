@@ -136,7 +136,7 @@ namespace giEngineSDK {
                                                       GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
-    createVP(1, inWidth, inHeight, 0, 0);
+    createViewport(1, inWidth, inHeight, 0, 0);
 
     if (S_OK == hr) {
       return true;
@@ -239,7 +239,7 @@ namespace giEngineSDK {
 
 
   void
-  CGraphicsDX::createVP(uint32 inNumVP, 
+  CGraphicsDX::createViewport(uint32 inNumVP, 
                         int32 inWidth, 
                         int32 inHeight, 
                         int32 inTopX, 
@@ -256,7 +256,7 @@ namespace giEngineSDK {
 
 
   SharedPtr<BaseVertexShader>
-  CGraphicsDX::createVS(String inFileName,
+  CGraphicsDX::createVShaderFromFile(String inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
 
@@ -278,7 +278,7 @@ namespace giEngineSDK {
 
 
   SharedPtr<BasePixelShader>
-  CGraphicsDX::createPS(String inFileName,
+  CGraphicsDX::createPShaderFromFile(String inFileName,
                         String inEntryPoint,
                         String inShaderModel) {
     SharedPtr<PixelShaderDX> tempPS;
@@ -297,7 +297,7 @@ namespace giEngineSDK {
   }
 
   SharedPtr<BaseComputeShader>
-  CGraphicsDX::createCS(String inFileName, 
+  CGraphicsDX::createCShaderFromFile(String inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
 
@@ -315,10 +315,68 @@ namespace giEngineSDK {
     return tempCS;
   }
 
+  SharedPtr<BaseVertexShader> 
+  CGraphicsDX::createVShaderFromMem(const char* inShaderRaw, 
+                                    String inEntryPoint) {
+    SharedPtr<VertexShaderDX> tmpVShader;
+    
+    if (FAILED(D3DCompile(inShaderRaw, 
+                          strlen(inShaderRaw), 
+                          NULL, 
+                          NULL, 
+                          NULL, 
+                          inEntryPoint.c_str(), 
+                          "vs_4_0", 
+                          0, 
+                          0, 
+                          &tmpVShader->m_compiledVShader,
+                          NULL))) {
+      return SharedPtr<BaseVertexShader>();
+    }
+
+    if (m_device->CreateVertexShader(tmpVShader->m_compiledVShader->GetBufferPointer(), 
+                                     tmpVShader->m_compiledVShader->GetBufferSize(),
+                                     NULL, 
+                                     &tmpVShader->m_vertexShader) != S_OK) {
+      tmpVShader->m_compiledVShader->Release();
+      return SharedPtr<BaseVertexShader>();
+    }
+    tmpVShader->m_compiledVShader->Release();
+    return SharedPtr<BaseVertexShader>();
+  }
+
+  SharedPtr<BasePixelShader>
+  CGraphicsDX::createPShaderFromMem(const char* inShaderRaw,
+                                    String inEntryPoint) {
+    SharedPtr<PixelShaderDX> tmpPShader;
+    if (FAILED(D3DCompile(inShaderRaw, 
+                          strlen(inShaderRaw), 
+                          NULL, 
+                          NULL, 
+                          NULL, 
+                          inEntryPoint.c_str(), 
+                          "ps_4_0", 
+                          0, 
+                          0, 
+                          &tmpPShader->m_compiledPShader,
+                          NULL))) {
+      return false; 
+    }
+    if (m_device->CreatePixelShader(tmpPShader->m_compiledPShader->GetBufferPointer(), 
+                                          tmpPShader->m_compiledPShader->GetBufferSize(), 
+                                          NULL, 
+                                          &tmpPShader->m_pixelShader) != S_OK) {
+      tmpPShader->m_compiledPShader->Release();
+      return false;
+    }
+    tmpPShader->m_compiledPShader->Release();
+  }
+  
+
 
   SharedPtr<InputLayout>
-  CGraphicsDX::createIL(Vector<InputLayoutDesc>& inDesc,
-                        SharedPtr<BaseShader> inShader) {
+  CGraphicsDX::createInputLayout(Vector<InputLayoutDesc>& inDesc,
+                                 SharedPtr<BaseShader> inShader) {
 
     SharedPtr<InputLayoutDX> tempIL;
     tempIL.reset();

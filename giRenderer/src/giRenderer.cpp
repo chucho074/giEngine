@@ -113,10 +113,10 @@ namespace giEngineSDK {
 
 
     //Create Vertex Shader 
-    m_vertexShader = gapi.createVS("Resources/gBuffer.hlsl", "VS_GBUFFER", "vs_4_0");
+    m_vertexShader = gapi.createVShaderFromFile("Resources/gBuffer.hlsl", "VS_GBUFFER", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShader = gapi.createPS("Resources/gBuffer.hlsl", "PS_GBUFFER", "ps_4_0");
+    m_pixelShader = gapi.createPShaderFromFile("Resources/gBuffer.hlsl", "PS_GBUFFER", "ps_4_0");
     
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDesc;
@@ -172,7 +172,7 @@ namespace giEngineSDK {
     layoutDesc[4].instanceDataStepRate = 0;
     
     //Create the Input Layout
-    m_inputLayout = gapi.createIL(layoutDesc, m_vertexShader);
+    m_inputLayout = gapi.createInputLayout(layoutDesc, m_vertexShader);
     
     
     //Create the textures
@@ -204,10 +204,10 @@ namespace giEngineSDK {
     /*                               SSAO                                   */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderSSAO = gapi.createVS("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
+    m_vertexShaderSSAO = gapi.createVShaderFromFile("Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderSSAO = gapi.createPS("Resources/SSAO.hlsl", "PS_SSAO", "ps_4_0");
+    m_pixelShaderSSAO = gapi.createPShaderFromFile("Resources/SSAO.hlsl", "PS_SSAO", "ps_4_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescSSAO;
@@ -236,7 +236,7 @@ namespace giEngineSDK {
     layoutDescSSAO[1].instanceDataStepRate = 0;
 
     //Create the Input Layout
-    m_inputLayoutSSAO = gapi.createIL(layoutDescSSAO, m_vertexShaderSSAO);
+    m_inputLayoutSSAO = gapi.createInputLayout(layoutDescSSAO, m_vertexShaderSSAO);
 
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
@@ -265,13 +265,13 @@ namespace giEngineSDK {
     /*                               BLUR                                   */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderBlur = gapi.createVS("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
+    m_vertexShaderBlur = gapi.createVShaderFromFile("Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderBlurH = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurH", "ps_4_0");
+    m_pixelShaderBlurH = gapi.createPShaderFromFile("Resources/Blur.hlsl", "ps_gaussian_blurH", "ps_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderBlurV = gapi.createPS("Resources/Blur.hlsl", "ps_gaussian_blurV", "ps_4_0");
+    m_pixelShaderBlurV = gapi.createPShaderFromFile("Resources/Blur.hlsl", "ps_gaussian_blurV", "ps_4_0");
 
 
     //Create the texture
@@ -296,10 +296,10 @@ namespace giEngineSDK {
     /*                              SHADOWS                                 */
     /************************************************************************/
     //Create Vertex Shader
-    m_vertexShaderShadow = gapi.createVS("Resources/Shadow.hlsl", "vs_Shadow", "vs_4_0");
+    m_vertexShaderShadow = gapi.createVShaderFromFile("Resources/Shadow.hlsl", "vs_Shadow", "vs_4_0");
     
     //Create Pixel Shader
-    m_pixelShaderShadow = gapi.createPS("Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
+    m_pixelShaderShadow = gapi.createPShaderFromFile("Resources/Shadow.hlsl", "ps_Shadow", "ps_4_0");
 
     //Create the texture
     m_ShadowTexture.push_back(gapi.createTex2D(1024, 
@@ -319,10 +319,10 @@ namespace giEngineSDK {
     /*                               LIGHT                                  */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderLight = gapi.createVS("Resources/Light.hlsl", "vs_main", "vs_4_0");
+    m_vertexShaderLight = gapi.createVShaderFromFile("Resources/Light.hlsl", "vs_main", "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderLight = gapi.createPS("Resources/Light.hlsl", "ps_main", "ps_4_0");
+    m_pixelShaderLight = gapi.createPShaderFromFile("Resources/Light.hlsl", "ps_main", "ps_4_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescLight;
@@ -349,7 +349,7 @@ namespace giEngineSDK {
     layoutDescLight[1].instanceDataStepRate = 0;
 
     //Create the Input Layout
-    m_inputLayoutLight = gapi.createIL(layoutDescLight, m_vertexShaderLight);
+    m_inputLayoutLight = gapi.createInputLayout(layoutDescLight, m_vertexShaderLight);
 
     //Create the texture
    /* m_BlurTexture.push_back(gapi.createTex2D(1280,

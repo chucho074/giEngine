@@ -127,54 +127,76 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    createVP(uint32,
-             int32,
-             int32,
-             int32,
-             int32) {};
+    createViewport(uint32,
+                   int32,
+                   int32,
+                   int32,
+                   int32) {};
     
     /**
-     * @brief    Create the Vertex Shader.
+     * @brief    Create the Vertex Shader from a file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BaseVertexShader>
-    createVS(String,
-             String,
-             String) { 
+    createVShaderFromFile(String,
+                          String,
+                          String) { 
 
       return nullptr;
     };
     
     /**
-     * @brief    Create the Pixel Shader.
+     * @brief    Create the Pixel Shader from file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BasePixelShader>
-    createPS(String,
-             String,
-             String){ 
+    createPShaderFromFile(String,
+                          String,
+                          String){ 
       return nullptr; 
     };
 
     /**
-     * @brief    Create the Pixel Shader.
+     * @brief    Create the Pixel Shader from file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
      * @param    inShaderModel The model in the shader.
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BaseComputeShader>
-    createCS(String,
-             String,
-             String){ 
+    createCShaderFromFile(String,
+                          String,
+                          String){ 
       return nullptr; 
-    };
+    }
+
+    /**
+     * @brief    The Shader to compile.
+     * @param    inShaderRaw   The shader data in Raw.
+     * @param    inEntryPoint  The entry point of the shader.
+     * @bug      No known Bugs.
+     */
+    virtual SharedPtr<BaseVertexShader>
+    createVShaderFromMem(const char*, String) {
+      return nullptr;
+    }
+
+    /**
+     * @brief    Create the Pixel Shader from Memory.
+     * @param    inShaderRaw   The shader data in Raw.
+     * @param    inEntryPoint  The entry point of the shader.
+     * @bug      No known Bugs.
+     */
+    virtual SharedPtr<BasePixelShader>
+    createPShaderFromMem(const char*, String) {
+      return nullptr;
+    }
 
     /**
      * @brief    Creates the Input Layout.
@@ -184,7 +206,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual SharedPtr<InputLayout>
-    createIL(Vector<InputLayoutDesc> &, 
+    createInputLayout(Vector<InputLayoutDesc> &, 
              SharedPtr<BaseShader>) { 
       return nullptr; 
     };
@@ -445,7 +467,8 @@ namespace giEngineSDK {
      * @param  
      */
     virtual void
-    rsGetViewports(uint32, void*) {};
+    rsGetViewports(uint32, 
+                   void*) {};
 
     /**
      * @brief 
@@ -463,7 +486,8 @@ namespace giEngineSDK {
      * @param  
      */
     virtual SharedPtr<BaseBlendState>
-    omGetBlendState(float[4], uint32) {
+    omGetBlendState(float[4], 
+                    uint32) {
       return nullptr;
     };
 
@@ -484,7 +508,8 @@ namespace giEngineSDK {
      * @param  
      */
     virtual SharedPtr<Texture2D>
-    psGetShaderResources(uint32, uint32) {
+    psGetShaderResources(uint32, 
+                         uint32) {
       return nullptr;
     };
 
@@ -495,7 +520,8 @@ namespace giEngineSDK {
      * @param  
      */
     virtual SharedPtr<Sampler>
-    psGetSamplers(uint32, uint32) {
+    psGetSamplers(uint32, 
+                  uint32) {
       return nullptr;
     };
 
@@ -526,7 +552,8 @@ namespace giEngineSDK {
      * @param  
      */
     virtual SharedPtr<Buffer>
-    vsGetConstantBuffers(int32, int32) {
+    vsGetConstantBuffers(int32, 
+                         int32) {
       return nullptr;
     };
 
@@ -539,12 +566,15 @@ namespace giEngineSDK {
     };
 
     virtual SharedPtr<Buffer>
-    iaGetIndexBuffer(GI_FORMAT::E, uint32) {
+    iaGetIndexBuffer(GI_FORMAT::E, 
+                     uint32) {
       return nullptr;
     };
 
     virtual SharedPtr<Buffer>
-    iaGetVertexBuffer(uint32, uint32, uint32) {
+    iaGetVertexBuffer(uint32, 
+                      uint32,  
+                      uint32) {
       return nullptr;
     };
 
@@ -554,10 +584,8 @@ namespace giEngineSDK {
     };
 
     virtual void 
-    rsSetScissorRects(uint32, Vector4*) {};
-
-    /*virtual void 
-    rsSetViewports(uint32, ) {};*/
+    rsSetScissorRects(uint32, 
+                      Vector4*) {};
 
     /** 
      * @brief    Draw Indeux.
@@ -576,7 +604,9 @@ namespace giEngineSDK {
      * @param    inThreadGroupZ  The number of groups dispatched in the z direction.
      */
     virtual void
-    dispatch(uint32, uint32, uint32) {}
+    dispatch(uint32, 
+             uint32, 
+             uint32) {}
          
     /**
      * @brief    Gets the default Render Target.
@@ -603,7 +633,8 @@ namespace giEngineSDK {
      * @return   Returns the texture readed from a file.
      */
     virtual SharedPtr<Texture2D>
-    TextureFromFile(String inString, String inDirectory) { 
+    TextureFromFile(String inString, 
+                    String inDirectory) { 
       return nullptr;
     };
 
@@ -615,16 +646,9 @@ namespace giEngineSDK {
      * @return   Returns a texture 2D.
      */
     virtual SharedPtr<Texture2D>
-    TextureFromMem(uint8* inData, int32 inWidth, int32 inHeight) {};
-  
-    /**
-     * @brief    Set the object of the Graphics API.
-     * @param    inAPI   The api to set.
-     */
-   /* void
-    setObject(GraphicsAPI * inAPI) {
-       GraphicsAPI::_instance() = inAPI;
-    }*/
+    TextureFromMem(uint8* inData, 
+                   int32 inWidth, 
+                   int32 inHeight) {};
   };
   
   GI_CORE_EXPORT GraphicsAPI& 
@@ -632,4 +656,6 @@ namespace giEngineSDK {
 
   //For load the DLL
   using funCreateGraphicsAPI = GraphicsAPI * (*)();
+
+
 }

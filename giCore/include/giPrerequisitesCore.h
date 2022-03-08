@@ -326,5 +326,18 @@ namespace giEngineSDK {
       kTEXTURE_ADDRESS_MIRROR_ONCE = 5
     };
   }
+
+  namespace GI_COMPARATION_FUNC {
+    enum E {
+      kCOMPARISON_NEVER = 1,
+      kCOMPARISON_LESS = 2,
+      kCOMPARISON_EQUAL = 3,
+      kCOMPARISON_LESS_EQUAL = 4,
+      kCOMPARISON_GREATER = 5,
+      kCOMPARISON_NOT_EQUAL = 6,
+      kCOMPARISON_GREATER_EQUAL = 7,
+      kCOMPARISON_ALWAYS = 8
+    };
+  }
 }
 

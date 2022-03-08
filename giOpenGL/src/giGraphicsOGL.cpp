@@ -121,7 +121,7 @@ namespace giEngineSDK {
   }
   
   void
-  GraphicsOGL::createVP(uint32 inNumVP, 
+  GraphicsOGL::createViewport(uint32 inNumVP, 
                         int32 inWidth, 
                         int32 inHeight, 
                         int32 inTopX, 
@@ -133,21 +133,21 @@ namespace giEngineSDK {
 
   
   BaseVertexShader* 
-  GraphicsOGL::createVS(String inFileName, 
+  GraphicsOGL::createVShaderFromFile(String inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
     return nullptr;
   }
   
   BasePixelShader* 
-  GraphicsOGL::createPS(String inFileName, 
+  GraphicsOGL::createPShaderFromFile(String inFileName, 
                         String inEntryPoint, 
                         String inShaderModel) {
     return nullptr;
   }
   
   InputLayout*
-  GraphicsOGL::createIL(Vector<InputLayoutDesc>& inDesc, BaseShader* inShader) {
+  GraphicsOGL::createInputLayout(Vector<InputLayoutDesc>& inDesc, BaseShader* inShader) {
     InputLayoutOGL* tmpLayout = new InputLayoutOGL();
     glGenVertexArrays(1, &tmpLayout->m_vao);
     glBindVertexArray(tmpLayout->m_vao);

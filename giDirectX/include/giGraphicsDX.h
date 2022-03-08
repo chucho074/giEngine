@@ -87,7 +87,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    createVP(uint32 inNumVP,
+    createViewport(uint32 inNumVP,
              int32 inWidth,
              int32 inHeight,
              int32 inTopX,
@@ -101,7 +101,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BaseVertexShader>
-    createVS(String inFileName,
+    createVShaderFromFile(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
     
@@ -113,7 +113,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BasePixelShader>
-    createPS(String inFileName,
+    createPShaderFromFile(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
              
@@ -125,9 +125,23 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BaseComputeShader>
-    createCS(String inFileName,
+    createCShaderFromFile(String inFileName,
              String inEntryPoint,
              String inShaderModel) override;
+
+    /**
+     * @brief    The Shader to compile.
+     * @param    inShaderRaw   The shader data in Raw.
+     * @param    inEntryPoint  The entry point of the shader.
+     * @bug      No known Bugs.
+     */
+    SharedPtr<BaseVertexShader>
+    createVShaderFromMem(const char*inShaderRaw, 
+                         String inEntryPoint) override;
+
+    SharedPtr<BasePixelShader>
+    createPShaderFromMem(const char* inShaderRaw,
+                         String inEntryPoint);
 
     /**
      * @brief    Creates the Input Layout.
@@ -137,7 +151,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<InputLayout>
-    createIL(Vector<InputLayoutDesc> & inDesc, 
+    createInputLayout(Vector<InputLayoutDesc> & inDesc, 
              SharedPtr<BaseShader> inShader) override;
 
     /**

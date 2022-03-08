@@ -68,7 +68,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    createVP(uint32 inNumVP,
+    createViewport(uint32 inNumVP,
              int32 inWidth,
              int32 inHeight,
              int32 inTopX,
@@ -79,7 +79,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BaseVertexShader * 
-    createVS(String inFileName,
+    createVShaderFromFile(String inFileName,
              String inEntryPoint,
              String inShaderModel);
   
@@ -88,7 +88,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     BasePixelShader * 
-    createPS(String inFileName,
+    createPShaderFromFile(String inFileName,
              String inEntryPoint,
              String inShaderModel);
   
@@ -97,7 +97,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     InputLayout * 
-    createIL(Vector<InputLayoutDesc> & inDesc, BaseShader * inShader);
+    createInputLayout(Vector<InputLayoutDesc> & inDesc, BaseShader * inShader);
   
     /**
      * @brief    Creates a buffer.

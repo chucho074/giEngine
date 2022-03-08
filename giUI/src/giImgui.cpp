@@ -60,7 +60,7 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
 
   // Setup viewport
-  gapi.createVP(1,
+  gapi.createViewport(1,
                 draw_data->DisplaySize.x, 
                 draw_data->DisplaySize.y,
                 0, 
@@ -330,7 +330,7 @@ ImGui_ImplGI_CreateFontsTexture() {
   }
 
   // Store our identifier
-  io.Fonts->SetTexID((ImTextureID)bd->pFontTextureView);
+  io.Fonts->SetTexID((ImTextureID*)bd->spFontTextureView);
 
   // Create texture sampler
   {
@@ -341,34 +341,27 @@ ImGui_ImplGI_CreateFontsTexture() {
     desc.addressV = giEngineSDK::GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     desc.addressW = giEngineSDK::GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     //desc.mipLODBias = 0.f;
-    desc.comparisonFunc = kCOMPARISON_ALWAYS;
+    desc.comparisonFunc = giEngineSDK::GI_COMPARATION_FUNC::kCOMPARISON_ALWAYS;
     desc.minLOD = 0.f;
     desc.maxLOD = 0.f;
 
-    gapi.createSampler(&desc, &bd->pFontSampler);
+    bd->spFontSampler = gapi.createSampler(desc);
   }
 }
 
 bool    
-ImGui_ImplDX11_CreateDeviceObjects()
-{
-  ImGui_ImplDX11_Data* bd = ImGui_ImplDX11_GetBackendData();
-  if (!bd->pd3dDevice)
-    return false;
-  if (bd->pFontSampler)
-    ImGui_ImplDX11_InvalidateDeviceObjects();
+ImGui_ImplDX11_CreateDeviceObjects() {
+  auto& gapi = g_graphicsAPI();
 
-  // By using D3DCompile() from <d3dcompiler.h> / d3dcompiler.lib, we introduce 
-  // a dependency to a given version of d3dcompiler_XX.dll (see D3DCOMPILER_DLL_A)
-  // If you would like to use this DX11 sample code but remove this dependency you can:
-  //  1) compile once, save the compiled shader blobs into a file or source code 
-  // and pass them to CreateVertexShader()/CreatePixelShader() [preferred solution]
-  //  2) use code to detect any version of the DLL and grab a pointer to D3DCompile from the DLL.
-  // See https://github.com/ocornut/imgui/pull/638 for sources and details.
+  ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
+  
+  if (bd->spFontSampler) {
+    ImGui_ImplGI_InvalidateDeviceObjects();
+  }
 
   // Create the vertex shader
   {
-    static const char* vertexShader =
+    const char* vertexShader =
       "cbuffer vertexBuffer : register(b0) \
             {\
               float4x4 ProjectionMatrix; \
@@ -396,14 +389,9 @@ ImGui_ImplDX11_CreateDeviceObjects()
               return output;\
             }";
 
-    ID3DBlob* vertexShaderBlob;
-    if (FAILED(D3DCompile(vertexShader, strlen(vertexShader), NULL, NULL, NULL, "main", "vs_4_0", 0, 0, &vertexShaderBlob, NULL)))
-      return false; // NB: Pass ID3DBlob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
-    if (bd->pd3dDevice->CreateVertexShader(vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(), NULL, &bd->pVertexShader) != S_OK)
-    {
-      vertexShaderBlob->Release();
-      return false;
-    }
+    gapi.createVShaderFromMem(vertexShader, "main");
+
+    
 
     // Create the input layout
     D3D11_INPUT_ELEMENT_DESC local_layout[] =
@@ -412,12 +400,13 @@ ImGui_ImplDX11_CreateDeviceObjects()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,   0, (UINT)IM_OFFSETOF(ImDrawVert, uv),  D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR",    0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, (UINT)IM_OFFSETOF(ImDrawVert, col), D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    if (bd->pd3dDevice->CreateInputLayout(local_layout, 3, vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(), &bd->pInputLayout) != S_OK)
-    {
-      vertexShaderBlob->Release();
+    if (bd->pd3dDevice->CreateInputLayout(local_layout, 
+                                          3, 
+                                          vertexShaderBlob->GetBufferPointer(), 
+                                          vertexShaderBlob->GetBufferSize(), 
+                                          &bd->pInputLayout) != S_OK) {
       return false;
     }
-    vertexShaderBlob->Release();
 
     // Create the constant buffer
     {
@@ -449,6 +438,7 @@ ImGui_ImplDX11_CreateDeviceObjects()
             return out_col; \
             }";
 
+    gapi.createPShaderFromMem(pixelShader, "main");
     ID3DBlob* pixelShaderBlob;
     if (FAILED(D3DCompile(pixelShader, strlen(pixelShader), NULL, NULL, NULL, "main", "ps_4_0", 0, 0, &pixelShaderBlob, NULL)))
       return false; // NB: Pass ID3DBlob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
@@ -588,27 +578,6 @@ ImGui_ImplDX11_NewFrame()
   if (!bd->pFontSampler)
     ImGui_ImplDX11_CreateDeviceObjects();
 }
-
-//--------------------------------------------------------------------------------------------------------
-// MULTI-VIEWPORT / PLATFORM INTERFACE SUPPORT
-// This is an _advanced_ and _optional_ feature, allowing the backend to create and handle multiple viewports simultaneously.
-// If you are new to dear imgui or creating a new binding for dear imgui, it is recommended that you completely ignore this section first..
-//--------------------------------------------------------------------------------------------------------
-
-// Helper structure we store in the void* RenderUserData field of each ImGuiViewport to easily retrieve our backend data.
-struct ImGui_ImplDX11_ViewportData
-{
-  IDXGISwapChain* SwapChain;
-  ID3D11RenderTargetView* RTView;
-
-  ImGui_ImplDX11_ViewportData() { 
-    SwapChain = NULL; 
-    RTView = NULL; 
-  }
-  ~ImGui_ImplDX11_ViewportData() { 
-    IM_ASSERT(SwapChain == NULL && RTView == NULL); 
-  }
-};
 
 static void 
 ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
