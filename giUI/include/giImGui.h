@@ -56,8 +56,7 @@ VERTEX_CONSTANT_BUFFER {
 //--------------------------------------------------------------------------------------------------------
 
 // Helper structure we store in the void* RenderUserData field of each ImGuiViewport to easily retrieve our backend data.
-struct ImGui_ImplGI_ViewportData
-{
+struct ImGui_ImplGI_ViewportData {
   IDXGISwapChain* SwapChain;
   ID3D11RenderTargetView* RTView;
 
@@ -71,11 +70,23 @@ struct ImGui_ImplGI_ViewportData
 };
 
 
-IMGUI_IMPL_API bool     ImGui_ImplGI_Init();
-IMGUI_IMPL_API void     ImGui_ImplGI_Shutdown();
-IMGUI_IMPL_API void     ImGui_ImplGI_NewFrame();
-IMGUI_IMPL_API void     ImGui_ImplGI_RenderDrawData(ImDrawData* draw_data);
+IMGUI_IMPL_API bool     
+ImGui_ImplGI_Init();
+
+IMGUI_IMPL_API void     
+ImGui_ImplGI_Shutdown();
+
+IMGUI_IMPL_API void     
+ImGui_ImplGI_NewFrame();
+
+IMGUI_IMPL_API void     
+ImGui_ImplGI_RenderDrawData(ImDrawData* draw_data);
+
 
 // Use if you want to reset your rendering device without losing Dear ImGui state.
-IMGUI_IMPL_API void     ImGui_ImplGI_InvalidateDeviceObjects();
-IMGUI_IMPL_API bool     ImGui_ImplGI_CreateDeviceObjects();
+IMGUI_IMPL_API void     
+ImGui_ImplGI_InvalidateDeviceObjects();
+
+IMGUI_IMPL_API bool     
+ImGui_ImplGI_CreateDeviceObjects();
+
