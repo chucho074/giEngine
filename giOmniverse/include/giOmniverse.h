@@ -54,7 +54,7 @@ namespace giEngineSDK {
   };
 
   /**
-   * @brief   Create the gAPI with a dll.
+   * @brief   Create the omniverse with a dll.
    */
   extern "C" GI_PLUGIN_EXPORT Omni *
     createOmniverse() {
