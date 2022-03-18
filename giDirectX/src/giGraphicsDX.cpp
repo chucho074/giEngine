@@ -344,6 +344,7 @@ namespace giEngineSDK {
                                            tmpVS->m_compiledVShader->GetBufferPointer(),
                                            static_cast<uint32>(tmpVS->m_compiledVShader->GetBufferSize()),
                                            &tempIL->m_inputLayout))) {
+      //Add error
       __debugbreak();
       return nullptr;
     }
@@ -891,7 +892,7 @@ namespace giEngineSDK {
         }
 
         //G Channel
-        tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_G8_UNORM;
+        tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8_UNORM;
         if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &tempG->m_texture))) {
           //Send error message
           //Pone un breakpoint cuando llegue aqui
@@ -912,7 +913,7 @@ namespace giEngineSDK {
         }
 
         //B Channel
-        tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_B8_UNORM;
+        tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8_UNORM;
         if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &tempB->m_texture))) {
           //Send error message
           //Pone un breakpoint cuando llegue aqui

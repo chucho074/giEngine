@@ -23,6 +23,9 @@
     <Filter Include="Source Files\Logger">
       <UniqueIdentifier>{4e6f450c-ae6c-483b-b4b9-7feb7d11b429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\FileSystem">
+      <UniqueIdentifier>{31f40f7a-7d9b-469e-9471-d881671dabbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giRadians.cpp">
@@ -140,6 +143,12 @@
     </ClInclude>
     <ClInclude Include="include\giLogger.h">
       <Filter>Source Files\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giFile.h">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giFileSystem.h">
+      <Filter>Source Files\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

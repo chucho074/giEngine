@@ -260,10 +260,10 @@
 
 #define GI_UNREFERENCED_PARAMETER(x) (void)x
 
-
 #if GI_COMPILER == GI_COMPILER_MSVC
 #  pragma warning(disable : 4251)   //DLL interface warning
 #  pragma warning(disable : 4275)   //DLL interface warning
 #  pragma warning(disable : 4005)   //DX warning
 #  pragma warning(disable : 26812)  //Enum class warning
 #endif
+
