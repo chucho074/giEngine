@@ -524,7 +524,7 @@ ImGui_ImplDX11_Init() {
   // Setup backend capabilities flags
   ImGui_ImplGI_Data* bd = IM_NEW(ImGui_ImplGI_Data)();
   io.BackendRendererUserData = (void*)bd;
-  io.BackendRendererName = "imgui_impl_dx11";
+  io.BackendRendererName = "imgui_impl_GI";
   io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
   io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;  // We can create multi-viewports on the Renderer side (optional)
 
@@ -535,8 +535,7 @@ ImGui_ImplDX11_Init() {
 
   if (device->QueryInterface(IID_PPV_ARGS(&pDXGIDevice)) == S_OK)
     if (pDXGIDevice->GetParent(IID_PPV_ARGS(&pDXGIAdapter)) == S_OK)
-      if (pDXGIAdapter->GetParent(IID_PPV_ARGS(&pFactory)) == S_OK)
-      {
+      if (pDXGIAdapter->GetParent(IID_PPV_ARGS(&pFactory)) == S_OK) {
         bd->pd3dDevice = device;
         bd->pd3dDeviceContext = device_context;
         bd->pFactory = pFactory;
