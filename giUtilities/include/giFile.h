@@ -45,10 +45,17 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor.
-    FILE();
+    FILE() {
+      //Saves the path as m_path
+      //Reads the path and finds the period.
+      //Saves the characters before the period as the m_name.
+      //Checks if the characters after the period are equal to a 
+      //extension than can be use in the engine and saves it as m_extension.
+      
+    };
 
     //Destructor.
-    ~FILE();
+    ~FILE() = default;
 
    protected:
 
