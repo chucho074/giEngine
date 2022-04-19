@@ -41,6 +41,8 @@ namespace giEngineSDK {
     modelFromUSD() { 
       return nullptr;
     }
+
+    bool m_liveEditActivation = true;
    
   };
 

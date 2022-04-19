@@ -94,8 +94,8 @@ DirectXApp::onCreate() {
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
 
-  SharedPtr<Texture2D> tmpTex;
-  tmpTex.reset(gapi.TextureFromFile());
+  /*SharedPtr<Texture2D> tmpTex;
+  tmpTex.reset(gapi.TextureFromFile());*/
   
   
 }
