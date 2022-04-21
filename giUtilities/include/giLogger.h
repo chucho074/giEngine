@@ -3,7 +3,7 @@
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   A log creator for the engine.
  * @bug     No known Bugs.
  */
  
@@ -22,6 +22,7 @@ namespace giEngineSDK {
     enum E {
       kModelLoading = 0,
       kWindowCreation,
+      kPluginLoading,
       kAnimationLoading,
       kTextureCreation,
       kBufferCreation,
@@ -42,37 +43,43 @@ namespace giEngineSDK {
     ~Logger() = default;
 
     /**
-     * @brief 
-     * @param inProcess 
-     * @param inError 
+     * @brief    .
+     * @param    inProcess     . 
+     * @param    inError       .
      */
     void
     SetError(ERROR_TYPE::E inProcess, String inError);
 
     /**
-     * @brief 
+     * @brief    .
      */
     void
     SendToFile();
 
+    /**
+     * @brief    .
+     */
+    void
+    sendToConsole();
+
    private:
     /**
-     * @brief 
+     * @brief    .
      */
     String m_logId;
     
     /**
-     * @brief  The path to save the file.
+     * @brief    The path to save the file.
      */
     String m_path = ("Log/LogDefault.txt");
 
     /**
-     * @brief  The number of errors.
+     * @brief    The number of errors.
      */
     uint32 m_numErrors = 0;
 
     /**
-     * @brief  Errors by type.
+     * @brief    Errors by type.
      */
     Map<ERROR_TYPE::E, String> m_errors;
   };

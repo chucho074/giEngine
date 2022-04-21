@@ -42,7 +42,8 @@ namespace giEngineSDK {
       return nullptr;
     }
 
-    bool m_liveEditActivation = true;
+    bool 
+    m_liveEditActivation = true;
    
   };
 

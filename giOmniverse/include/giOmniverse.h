@@ -16,7 +16,6 @@
 #include "giPrerequisitesOmniverse.h"
 #include <iostream>
 
-using std::cout;
 using std::endl;
 
 namespace giEngineSDK {
@@ -53,7 +52,9 @@ namespace giEngineSDK {
      */
     SharedPtr<Model>
     modelFromUSD() override;
-
+   private:
+    void 
+    liveEdit(UsdGeomMesh meshIn);
   };
 
   /**
@@ -86,7 +87,7 @@ namespace giEngineSDK {
       if (!op) {
         op = xForm.AddXformOp(opType, precision);
         std::unique_lock<std::mutex> lk(gLogMutex);
-        cout << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
+        ConsoleOut << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
       }
 
       if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat) {
@@ -96,7 +97,7 @@ namespace giEngineSDK {
         op.Set(value);
       }
       std::unique_lock<std::mutex> lk(gLogMutex);
-      cout << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
+      ConsoleOut << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
     }
   };
 

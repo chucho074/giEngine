@@ -1,16 +1,16 @@
-#include "..\include\giLogger.h"
 /**
  * @file    giLogger.cpp
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2021
- * @brief   A basic description of the what do the doc.
+ * @brief   A log creator for the engine.
  * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
+#include "giLogger.h"
 
 namespace giEngineSDK {
   Logger::Logger() {
@@ -28,8 +28,17 @@ namespace giEngineSDK {
   Logger::SetError(ERROR_TYPE::E inProcess, String inError) {
     ++m_numErrors;
     m_errors.insert(m_errors.end(), 
-                    std::pair<ERROR_TYPE::E, String>(inProcess, inError));
+                    Pair<ERROR_TYPE::E, 
+                    String>(inProcess, inError));
     
+  }
+  
+  void 
+  Logger::sendToConsole() {
+    ConsoleOut << "> The number of errors in total is: " + m_numErrors << "\n";
+    for (auto errors : m_errors) {
+      ConsoleOut << errors.second << "\n";
+    }
   }
 
   void 
@@ -40,6 +49,7 @@ namespace giEngineSDK {
     for(auto errors : m_errors) {
       fs << errors.second;
     }
+    sendToConsole();
   }
 
   Logger&

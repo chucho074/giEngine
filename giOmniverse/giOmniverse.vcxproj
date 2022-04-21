@@ -139,8 +139,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/lib;$(DEVLIBS)/Omniverse/target-deps/python/lib;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>giUtilities_d.lib;giCore_d.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;omniclient.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>
-      </ImportLibrary>
+      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

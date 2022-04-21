@@ -182,14 +182,14 @@ namespace giEngineSDK {
   }
 
   // Perform a live edit on the box
-  static void 
-  liveEdit(UsdGeomMesh meshIn) {
+  void 
+  Omni::liveEdit(UsdGeomMesh meshIn) {
 
     // Process any updates that may have happened to the stage from another client
     omniUsdLiveWaitForPendingUpdates();
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      cout << "Begin Live Edit ";
+      ConsoleOut << "Begin Live Edit\n";
     }
 
     bool wait = true;
@@ -198,7 +198,7 @@ namespace giEngineSDK {
       // Process any updates that may have happened to the stage from another client
       omniUsdLiveWaitForPendingUpdates();
 
-      if(Omni::instance().m_liveEditActivation) {
+      if(m_liveEditActivation) {
       double angle = 0;
         if (angle >= 360) {
           angle = 0;
@@ -266,7 +266,7 @@ namespace giEngineSDK {
       //escape or 'q'
       if(!Omni::instance().m_liveEditActivation) {
         wait = false;
-        cout << "Live Edit complete\n";
+        ConsoleOut << "Live Edit complete\n";
         break;
       }
     }

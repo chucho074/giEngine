@@ -119,6 +119,14 @@ BaseApp::event(MSG inMsg) {
 void 
 BaseApp::initSystems() {
 
+  //Start the time
+  Time::startUp();
+  m_time = &g_time();
+
+  //Start the Logger
+  Logger::startUp();
+  m_logger = &g_logger();
+
   //Get the window handle
   WindowHandle handle = m_window.getSystemHandle();
 
@@ -144,16 +152,6 @@ BaseApp::initSystems() {
     m_renderer = &g_renderer();
     
   }
-  //Start the inputManager
-  if (m_loaderInput.loadPlugin("giInput_d.dll")) {
-    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
-
-    BaseInput::startUp();
-    BaseInput * input = createInputManager();
-    g_inputManager().setObject(input);
-    m_inputManager = &g_inputManager();
-    
-  }
 
   //Start the Omniverse
   if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
@@ -165,26 +163,23 @@ BaseApp::initSystems() {
     m_omniverse = &g_omniverse();
   }
 
-  //Start the time
-  Time::startUp();
-  m_time = &g_time();
+  //Start the inputManager
+  if (m_loaderInput.loadPlugin("giInput_d.dll")) {
+    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
 
-  //Start the Logger
-  Logger::startUp();
-  m_logger = &g_logger();
+    BaseInput::startUp();
+    BaseInput * input = createInputManager();
+    g_inputManager().setObject(input);
+    m_inputManager = &g_inputManager();
+    
+  }
+
+ 
 
   //Start the Scene Graph
   SceneGraph::startUp();
   m_sceneGraph = &g_sceneGraph();
 
-
-
-  
-
-  //Activate the console only on Debug
-#ifdef DEBUG
-  activateConsole();
-#endif
 }
 
 void 

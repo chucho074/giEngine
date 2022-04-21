@@ -12,11 +12,9 @@
   */
 #pragma once
 #include "giPrerequisitesUtilities.h"
+#include <giLogger.h>
 #include <Windows.h>
-
 #include <iostream>
-
-using std::cout;
 
 
 namespace giEngineSDK {
@@ -30,12 +28,13 @@ namespace giEngineSDK {
   public:
     //Default Constructor.
     LibraryLoader() = default;
+
     //Destructor.
     ~LibraryLoader() = default;
 
     /**
      * @brief    Load the library.
-     * @param    inName   Name of the library.
+     * @param    inName        Name of the library.
      * @return
      */
     bool
@@ -43,7 +42,7 @@ namespace giEngineSDK {
 
     /**
      * @brief    Get the library with the name.
-     * @param    inName   Nmae of the library.
+     * @param    inName        Name of the library.
      * @return
      */
     void*
@@ -66,8 +65,9 @@ namespace giEngineSDK {
   LibraryLoader::loadPlugin(const String& inName) {
     m_instance = LoadLibraryExA(inName.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
     if (!m_instance) {
-      DWORD err = GetLastError();
-      cout<<err;
+      ConsoleOut << GetLastError();
+      Logger::instance().SetError(ERROR_TYPE::kPluginLoading,
+                                  "Error to load a dll: " + inName);
       destroy();
       return false;
     }
@@ -79,7 +79,8 @@ namespace giEngineSDK {
     auto func = GetProcAddress(reinterpret_cast<HINSTANCE>(m_instance), inName.c_str());
     
     if (!func) {
-      //Failed to load
+      Logger::instance().SetError(ERROR_TYPE::kPluginLoading,
+                                  "Error to load a dll: " + inName);
     }
     return func;
   }
