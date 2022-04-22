@@ -30,6 +30,15 @@ namespace giEngineSDK {
 
     //Destructor.
     ~BaseOmni() = default;
+
+    /**
+     * @brief 
+     */
+    virtual void
+    update() { }
+
+    virtual void
+    destroy() { }
     
     /**
      * @brief    .
@@ -37,6 +46,17 @@ namespace giEngineSDK {
     virtual void
     createUSD() { }
 
+    /**
+     * @brief    Create an empty USD in Omniverse Nucleus/Users/giProjects.
+     * @param    inProjectName The name of the current project.
+     */
+    virtual void
+    createEmptyUSD(String inProjectName) { }
+
+    /**
+     * @brief 
+     * @return 
+     */
     virtual SharedPtr<Model>
     modelFromUSD() { 
       return nullptr;
@@ -45,6 +65,12 @@ namespace giEngineSDK {
     bool 
     m_liveEditActivation = true;
    
+    String
+    m_existingStage;
+
+    String 
+    m_destinationPath = "omniverse://localhost/Users/giProjects/";
+
   };
 
   GI_CORE_EXPORT BaseOmni& 

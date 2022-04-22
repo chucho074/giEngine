@@ -32,14 +32,29 @@ namespace giEngineSDK {
    public:
     //Default Constructor.
     Omni() = default;
+
     //Destructor.
     ~Omni() = default;
+
+    void
+    update() override;
+
+    void 
+    destroy() override;
+
     
     /**
      * @brief    Creates the USD file.
      */
     void
     createUSD() override;
+
+    /**
+     * @brief    Create an empty USD in Omniverse Nucleus/Users/giProjects.
+     * @param    inProjectName The name of the current project.
+     */
+    void
+    createEmptyUSD(String inProjectName) override;
 
     /**
      * @brief    Get the data from the Scene Graph.
@@ -52,9 +67,17 @@ namespace giEngineSDK {
      */
     SharedPtr<Model>
     modelFromUSD() override;
+
    private:
+    
+    /**
+     * @brief    Make a syncronization between the engine and NVIDIA Omniverse tool.
+     * @param    meshIn        .
+     */
     void 
     liveEdit(UsdGeomMesh meshIn);
+
+
   };
 
   /**

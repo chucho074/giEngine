@@ -30,21 +30,26 @@ BaseApp::run() {
   //Send message to device
   onCreate();
 
-  //m_inputManager->init();
+  //Initialize the inputs
+  m_inputManager->init();
 
+  //Create the renderer
   renderer.create();
+
+  //Create a USD for the scene
+  m_omniverse->createUSD();
 
   //App Loop
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
-    //m_inputManager->update();
+    m_inputManager->update();
     MSG msg;
     Event eventsWnd;
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
 
-      //m_inputManager->sendEvent(msg);
+      m_inputManager->sendEvent(msg);
       
       m_window.pollEvent(eventsWnd);
       if (eventsWnd.type == Event::Closed) {
@@ -55,7 +60,7 @@ BaseApp::run() {
       //Eventos propios
       event(msg);
     }
-    //m_inputManager->runEvents();
+    m_inputManager->runEvents();
     //Update Time
     m_time->update();
     float deltaTime = g_time().getTime();
@@ -72,11 +77,9 @@ BaseApp::run() {
 
   //Write the logs
   m_logger->SendToFile();
-  m_omniverse->createUSD();
 
   //Destroy the resources
   onDestroy();
-
 
   return 0;
 }
@@ -112,7 +115,6 @@ BaseApp::render() {
 
 void 
 BaseApp::event(MSG inMsg) {
-  
   onEvent(inMsg);
 }
 
@@ -129,6 +131,17 @@ BaseApp::initSystems() {
 
   //Get the window handle
   WindowHandle handle = m_window.getSystemHandle();
+
+  //Start the inputManager
+  if (m_loaderInput.loadPlugin("giInput_d.dll")) {
+    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
+
+    BaseInput::startUp();
+    BaseInput* input = createInputManager();
+    g_inputManager().setObject(input);
+    m_inputManager = &g_inputManager();
+
+  }
 
   //Start the Graphics
   if (m_loaderGAPI.loadPlugin("giDirectX_d.dll")) {
@@ -153,6 +166,10 @@ BaseApp::initSystems() {
     
   }
 
+  //Start the Scene Graph
+  SceneGraph::startUp();
+  m_sceneGraph = &g_sceneGraph();
+
   //Start the Omniverse
   if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
     auto createOmniverse = reinterpret_cast<funCreateOmniverse>(m_loaderOmniverse.getProcedureByName("createOmniverse"));
@@ -163,31 +180,15 @@ BaseApp::initSystems() {
     m_omniverse = &g_omniverse();
   }
 
-  //Start the inputManager
-  if (m_loaderInput.loadPlugin("giInput_d.dll")) {
-    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
-
-    BaseInput::startUp();
-    BaseInput * input = createInputManager();
-    g_inputManager().setObject(input);
-    m_inputManager = &g_inputManager();
-    
-  }
-
- 
-
-  //Start the Scene Graph
-  SceneGraph::startUp();
-  m_sceneGraph = &g_sceneGraph();
-
 }
 
 void 
 BaseApp::destroySystems() {
   m_window.close();
-  GraphicsAPI::shutDown();
   BaseRenderer::shutDown();
+  GraphicsAPI::shutDown();
+  SceneGraph::shutDown();
+  BaseOmni::shutDown();
   Time::shutDown();
   Logger::shutDown();
-  SceneGraph::shutDown();
 }

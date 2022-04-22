@@ -181,97 +181,6 @@ namespace giEngineSDK {
     omniClientShutdown();
   }
 
-  // Perform a live edit on the box
-  void 
-  Omni::liveEdit(UsdGeomMesh meshIn) {
-
-    // Process any updates that may have happened to the stage from another client
-    omniUsdLiveWaitForPendingUpdates();
-    {
-      std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Begin Live Edit\n";
-    }
-
-    bool wait = true;
-    while (wait) {
-
-      // Process any updates that may have happened to the stage from another client
-      omniUsdLiveWaitForPendingUpdates();
-
-      if(m_liveEditActivation) {
-      double angle = 0;
-        if (angle >= 360) {
-          angle = 0;
-        }
-        double radians = angle * Math::PI / 180.0;
-        double x = sin(radians) * 100;
-        double y = cos(radians) * 100;
-
-        // Get the transform on the mesh
-        UsdGeomXformable xForm = meshIn;
-
-        // Define storage for the different xform ops that Omniverse Kit likes to use
-        UsdGeomXformOp translateOp;
-        UsdGeomXformOp rotateOp;
-        UsdGeomXformOp scaleOp;
-        GfVec3d position(0);
-        GfVec3f rotZYX(0);
-        GfVec3f scale(1);
-
-        // Get the xform ops stack
-        bool resetXformStack = false;
-        Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
-
-        // Get the current xform op values
-        for (size_T i = 0; i < xFormOps.size(); i++) {
-          switch (xFormOps[i].GetOpType()) {
-            case UsdGeomXformOp::TypeTranslate: {
-              translateOp = xFormOps[i];
-              translateOp.Get(&position);
-              break;
-            }
-            case UsdGeomXformOp::TypeRotateZYX: {
-              rotateOp = xFormOps[i];
-              rotateOp.Get(&rotZYX);
-              break;
-            }
-            case UsdGeomXformOp::TypeScale: {
-              scaleOp = xFormOps[i];
-              scaleOp.Get(&scale);
-              break;
-            }
-          }
-        }
-
-        // Move/Rotate the existing position/rotation - this works for Y-up stages
-        position += GfVec3d(x, 0, y);
-        rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
-
-        SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
-        SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
-        SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
-
-        // Make sure the xform op order is correct (translate, rotate, scale)
-        Vector<UsdGeomXformOp> xFormOpsReordered;
-        xFormOpsReordered.push_back(translateOp);
-        xFormOpsReordered.push_back(rotateOp);
-        xFormOpsReordered.push_back(scaleOp);
-        xForm.SetXformOpOrder(xFormOpsReordered);
-
-        // Commit the change to USD
-        gStage->Save();
-        break;
-      }
-
-      //escape or 'q'
-      if(!Omni::instance().m_liveEditActivation) {
-        wait = false;
-        ConsoleOut << "Live Edit complete\n";
-        break;
-      }
-    }
-  }
-
   static void 
   failNotify(const char* msg, const char* detail = nullptr, ...) {
     std::unique_lock<std::mutex> lk(gLogMutex);
@@ -322,6 +231,40 @@ namespace giEngineSDK {
 
 
   void 
+  Omni::update() {
+    UsdGeomMesh tmpMesh;
+    if (!startOmniverse(m_liveEditActivation)) {
+      exit(1);
+    }
+
+    if (m_existingStage.empty()) {
+      // Create the USD model in Omniverse
+      const String stageUrl = createOmniverseModel(m_destinationPath);
+
+      // Print the username for the server
+      printConnectedUsername(stageUrl);
+
+      // Create box geometry in the model
+      tmpMesh = getData();
+
+      checkpointFile(stageUrl, "Add a Model and nothing else");
+    }
+    else {
+      // Find a UsdGeomMesh in the existing stage
+      tmpMesh = findGeomMesh(m_existingStage);
+    }
+    // Do a live edit session moving the box around, changing a material
+    if (m_liveEditActivation) {
+      liveEdit(tmpMesh);
+    }
+  }
+
+  void 
+  Omni::destroy() {
+    
+  }
+
+  void
   Omni::createUSD() {
     bool doLiveEdit = true;
     String existingStage;
@@ -376,6 +319,107 @@ namespace giEngineSDK {
     // All done, shut down our connection to Omniverse
     shutdownOmniverse();
 
+  }
+
+  // Perform a live edit on the box
+  void
+  Omni::liveEdit(UsdGeomMesh meshIn) {
+
+    // Process any updates that may have happened to the stage from another client
+    omniUsdLiveWaitForPendingUpdates();
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Begin Live Edit\n";
+    }
+
+    bool wait = true;
+    while (wait) {
+
+      // Process any updates that may have happened to the stage from another client
+      omniUsdLiveWaitForPendingUpdates();
+
+      if (m_liveEditActivation) {
+        double angle = 0;
+        if (angle >= 360) {
+          angle = 0;
+        }
+        double radians = angle * Math::PI / 180.0;
+        double x = sin(radians) * 100;
+        double y = cos(radians) * 100;
+
+        // Get the transform on the mesh
+        UsdGeomXformable xForm = meshIn;
+
+        // Define storage for the different xform ops that Omniverse Kit likes to use
+        UsdGeomXformOp translateOp;
+        UsdGeomXformOp rotateOp;
+        UsdGeomXformOp scaleOp;
+        GfVec3d position(0);
+        GfVec3f rotZYX(0);
+        GfVec3f scale(1);
+
+        // Get the xform ops stack
+        bool resetXformStack = false;
+        Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
+
+        // Get the current xform op values
+        for (size_T i = 0; i < xFormOps.size(); i++) {
+          switch (xFormOps[i].GetOpType()) {
+          case UsdGeomXformOp::TypeTranslate: {
+            translateOp = xFormOps[i];
+            translateOp.Get(&position);
+            break;
+          }
+          case UsdGeomXformOp::TypeRotateZYX: {
+            rotateOp = xFormOps[i];
+            rotateOp.Get(&rotZYX);
+            break;
+          }
+          case UsdGeomXformOp::TypeScale: {
+            scaleOp = xFormOps[i];
+            scaleOp.Get(&scale);
+            break;
+          }
+          }
+        }
+
+        // Move/Rotate the existing position/rotation - this works for Y-up stages
+        position += GfVec3d(x, 0, y);
+        rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
+
+        SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
+        SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+        SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+
+        // Make sure the xform op order is correct (translate, rotate, scale)
+        Vector<UsdGeomXformOp> xFormOpsReordered;
+        xFormOpsReordered.push_back(translateOp);
+        xFormOpsReordered.push_back(rotateOp);
+        xFormOpsReordered.push_back(scaleOp);
+        xForm.SetXformOpOrder(xFormOpsReordered);
+
+        // Commit the change to USD
+        gStage->Save();
+        break;
+      }
+
+      //escape or 'q'
+      if (!Omni::instance().m_liveEditActivation) {
+        wait = false;
+        ConsoleOut << "Live Edit complete\n";
+        break;
+      }
+    }
+  }
+
+
+  void 
+  Omni::createEmptyUSD(String inProjectName) {
+    
+    // Create an empty folder, just as an example
+    createEmptyFolder(m_destinationPath + inProjectName);
+    // Saving the new existing stage
+    m_existingStage = m_destinationPath + inProjectName;
   }
 
   UsdGeomMesh
