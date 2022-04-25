@@ -64,7 +64,7 @@ namespace giEngineSDK {
     getRoot();
 
     /**
-     * @brief   Delete that actor, asign the childs to the parent.
+     * @brief    Delete that actor, asign the childs to the parent.
      */
     void
     deleteActor(const SharedPtr<Actor>& inActor);
@@ -90,11 +90,13 @@ namespace giEngineSDK {
      */
     SharedPtr<SceneNode> m_root;
 
+   protected:
     /**
      * @brief    The number of the actors.
      */
     uint32 m_numActors;
 
+    friend class Omni;
     
   };
 

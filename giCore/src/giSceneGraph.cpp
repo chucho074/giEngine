@@ -27,7 +27,7 @@ namespace giEngineSDK {
 
   void 
   SceneGraph::addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent) {
-
+    m_numActors++;
     inActor->m_actorId = m_numActors;
     SharedPtr<SceneNode> tmpNode = make_shared<SceneNode>();
     tmpNode->m_actor = inActor;

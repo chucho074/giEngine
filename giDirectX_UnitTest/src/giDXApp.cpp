@@ -42,9 +42,8 @@ DirectXApp::onCreate() {
 
   //Sets Vela's model
   SharedPtr<Model> tmpModel = make_shared<Model>();
-  //tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
-  tmpModel->loadFromFile("Resources/Models/cube.fbx");
-  //tmpModel = omni.modelFromUSD();
+  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  //tmpModel->loadFromFile("Resources/Models/cube.fbx");
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
   modelComponent->setModel(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();

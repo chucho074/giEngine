@@ -36,18 +36,31 @@ namespace giEngineSDK {
     //Destructor.
     ~Omni() = default;
 
+    /**
+     * @brief    Function in charge to decide if it needs to create a new USD for the
+     *           actual project or syncronize data from omniverse.
+     */
+    void 
+    startConection();
+
+    /**
+     * @brief    Update the data.
+     */
     void
     update() override;
 
+    /**
+     * @brief    Delete/destroy the information.
+     */
     void 
     destroy() override;
 
     
     /**
-     * @brief    Creates the USD file.
+     * @brief    Creates the USD file from the Scene Graph.
      */
     void
-    createUSD() override;
+    createUSDFromSG() override;
 
     /**
      * @brief    Create an empty USD in Omniverse Nucleus/Users/giProjects.
@@ -55,6 +68,14 @@ namespace giEngineSDK {
      */
     void
     createEmptyUSD(String inProjectName) override;
+
+    /**
+     * @brief    Creates / Sets data in the Scene Graph from an existent 
+     *           USD file.
+     * @param    inMesh        USD data obtained.
+     */
+    void
+    createSGFromUSD(UsdGeomMesh inMesh);
 
     /**
      * @brief    Get the data from the Scene Graph.
@@ -72,16 +93,15 @@ namespace giEngineSDK {
     
     /**
      * @brief    Make a syncronization between the engine and NVIDIA Omniverse tool.
-     * @param    meshIn        .
+     * @param    inMesh        The mesh to syncronize.
      */
     void 
-    liveEdit(UsdGeomMesh meshIn);
-
+    liveEdit(UsdGeomMesh inMesh);
 
   };
 
   /**
-   * @brief   Create the omniverse with a dll.
+   * @brief      Create the omniverse with a dll.
    */
   extern "C" GI_PLUGIN_EXPORT Omni *
     createOmniverse() {

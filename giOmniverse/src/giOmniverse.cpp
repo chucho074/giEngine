@@ -13,12 +13,10 @@
 
 #include "giOmniverse.h"
 #include "giStaticMesh.h"
-//#include "giMesh.h"
 #include <giSceneGraph.h>
 #include <giMath.h>
 
-
-
+//#include "giMesh.h"
 
 namespace giEngineSDK {
 
@@ -41,17 +39,19 @@ namespace giEngineSDK {
     // Let's just print this regardless
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Connection Status: " << omniClientGetConnectionStatusString(status) << " [" << url << "]" << std::endl;
     }
     if (status == eOmniClientConnectionStatus_ConnectError) {
       // We shouldn't just exit here - we should clean up a bit, but we're going to do it anyway
-      g_logger().SetError(ERROR_TYPE::kOmniConection, "Failed connection");
+      ConsoleOut << "[ERROR] Failed connection, exiting." << std::endl;
+      g_logger().SetError(ERROR_TYPE::kOmniConnection, "Failed connection");
       exit(-1);
     }
   }
 
   // Startup Omniverse 
   static bool 
-  startOmniverse(bool doLiveEdit) noexcept{
+  startOmniverse(bool doLiveEdit) noexcept {
   	// Register a function to be called whenever the library wants to print something to a log
   	omniClientSetLogCallback(logCallback);
   
@@ -73,7 +73,7 @@ namespace giEngineSDK {
   	return true;
   }
 
-  // Stage URL really only needs to contain the server in the URL.  eg. omniverse://ov-prod
+  // Stage URL really only needs to contain the server in the URL.
   static void 
   printConnectedUsername(const String& stageUrl) {
     // Get the username for the connection
@@ -90,32 +90,37 @@ namespace giEngineSDK {
       }));
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Connected username: " << userName << std::endl;
     }
   }
 
   // Create a new connection for this model in Omniverse, returns the created stage URL
   static String 
   createOmniverseModel(const String& destinationPath) {
-    String stageUrl = destinationPath + "/Cube.usd";
+    String stageUrl = destinationPath + "/scene.usd";
 
     // Delete the old version of this file on Omniverse and wait for the operation to complete
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Waiting for " << stageUrl << " to delete... " << std::endl;
     }
     omniClientWait(omniClientDelete(stageUrl.c_str(), nullptr, nullptr));
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "finished" << std::endl;
     }
 
     // Create this file in Omniverse cleanly
     gStage = UsdStage::CreateNew(stageUrl);
     if (!gStage) {
-      g_logger().SetError(ERROR_TYPE::kOmniConection, "Failure to create model in Omniverse");
+      g_logger().SetError(ERROR_TYPE::kOmniConnection, 
+                          "Failure to create model in Omniverse");
       return String();
     }
 
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "New stage created: " << stageUrl << std::endl;
     }
 
     // Always a good idea to declare your up-ness
@@ -199,17 +204,21 @@ namespace giEngineSDK {
     gStage = UsdStage::Open(existingStage);
     if (!gStage) {
       failNotify("Failure to open stage in Omniverse:", existingStage.c_str());
+
+      g_logger().SetError(ERROR_TYPE::kOmniConnection,
+                          "Failure to open stage in Omniverse:" + existingStage);
       return UsdGeomMesh();
     }
 
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      std::cout << "Existing stage opened: " << existingStage << std::endl;
+      ConsoleOut << "Existing stage opened: " << existingStage << std::endl;
     }
 
     if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      std::cout << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " << UsdGeomGetStageUpAxis(gStage) << "-up" << std::endl;
+      ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " 
+                 << UsdGeomGetStageUpAxis(gStage) << "-up" << std::endl;
     }
 
     // Traverse the stage and return the first UsdGeomMesh we find
@@ -218,22 +227,76 @@ namespace giEngineSDK {
       if (node.IsA<UsdGeomMesh>()) {
         {
           std::unique_lock<std::mutex> lk(gLogMutex);
-          std::cout << "Found UsdGeomMesh: " << node.GetName() << std::endl;
+          ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << std::endl;
         }
         return UsdGeomMesh(node);
       }
     }
 
-    // No UsdGeomMesh found in stage (what kind of stage is this anyway!?)
-    std::cout << "ERROR: No UsdGeomMesh found in stage: " << existingStage << std::endl;
+    // No UsdGeomMesh found in stage.
+    // (what kind of stage is this anyway!?) - idk man, just in case.
+    ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << std::endl;
+    g_logger().SetError(ERROR_TYPE::kOmniConnection,
+                        "ERROR: No UsdGeomMesh found in stage: " + existingStage);
     return UsdGeomMesh();
+  }
+
+  // Returns true if the provided maybeURL contains a host and path
+  static bool 
+  isValidOmniURL(const std::string& maybeURL) {
+    bool isValidURL = false;
+    OmniClientUrl* url = omniClientBreakUrl(maybeURL.c_str());
+    if (url->host && url->path &&
+      (std::string(url->scheme) == std::string("omniverse") ||
+        std::string(url->scheme) == std::string("omni")))
+    {
+      isValidURL = true;
+    }
+    omniClientFreeUrl(url);
+    return isValidURL;
   }
 
 
   void 
+  Omni::startConection() {
+    //Get the instance of the SceneGraph
+    auto& sgraph = SceneGraph::instance();
+
+    if (m_existingStage.empty()) {
+  //> Case of need to create a new USD from Scene Graph.
+      //Verify if the sceneGraph haves information.
+      if(sgraph.m_numActors > 0 ) {
+        //In case than the sgraph have information, create the USD from it.
+        createEmptyUSD("giTestProject");
+        //Sets the information from the Scene Graph.
+        createUSDFromSG();
+      }
+  //> Case of there is no info (new project) - Actives the live Sync by default.
+      else if (sgraph.m_numActors == 0) {
+        //In case than the sgraph have information, create the USD from it.
+        createEmptyUSD("giTestProject");
+        // Create the USD model in Omniverse
+        createOmniverseModel(m_destinationPath);
+        //Actives the live Edit
+        m_liveEditActivation = true;
+      }
+    }
+
+  //> Case of gets the Scene info from Omniverse USD.
+    else {
+      // Find a UsdGeomMesh in the existing stage
+      createSGFromUSD(findGeomMesh(m_existingStage));
+    }
+  
+  }
+
+  void
   Omni::update() {
     UsdGeomMesh tmpMesh;
+    
     if (!startOmniverse(m_liveEditActivation)) {
+      Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
+                                  "Error creating the conection with NVIDIA Omniverse");
       exit(1);
     }
 
@@ -243,17 +306,18 @@ namespace giEngineSDK {
 
       // Print the username for the server
       printConnectedUsername(stageUrl);
-
-      // Create box geometry in the model
+       
+      // Get the geometry from the Scene Graph
       tmpMesh = getData();
 
       checkpointFile(stageUrl, "Add a Model and nothing else");
     }
+
     else {
       // Find a UsdGeomMesh in the existing stage
       tmpMesh = findGeomMesh(m_existingStage);
     }
-    // Do a live edit session moving the box around, changing a material
+     // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
       liveEdit(tmpMesh);
     }
@@ -261,69 +325,55 @@ namespace giEngineSDK {
 
   void 
   Omni::destroy() {
-    
+    shutdownOmniverse();
   }
 
   void
-  Omni::createUSD() {
-    bool doLiveEdit = true;
-    String existingStage;
-    String destinationPath = "omniverse://localhost/Users/giTest";
-
+  Omni::createUSDFromSG() {
+    
     UsdGeomMesh tmpMesh;
 
-    if (!startOmniverse(doLiveEdit)) {
+    if (!startOmniverse(m_liveEditActivation)) {
+      Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
+                                  "Error creating the conection with NVIDIA Omniverse");
       exit(1);
     }
+    
+    // Create the USD model in Omniverse
+    const String stageUrl = createOmniverseModel(m_destinationPath);
 
-    if (existingStage.empty()) {
-      // Create the USD model in Omniverse
-      const String stageUrl = createOmniverseModel(destinationPath);
+    // Print the username for the server
+    printConnectedUsername(stageUrl);
 
-      // Print the username for the server
-      printConnectedUsername(stageUrl);
+    // Get the geometry from the Scene Graph
+    tmpMesh = getData();
 
-      // Create box geometry in the model
-      tmpMesh = getData();
+    // Adding a checkpoint for the added models
+    checkpointFile(stageUrl, "Added a Model(s) from the Scene Graph existans info.");
 
-      checkpointFile(stageUrl, "Add a Model and nothing else");
-
-      // Create lights in the scene
+    // Create lights in the scene
       //createDistantLight();
       //createDomeLight("./Materials/kloofendal_48d_partly_cloudy.hdr");
 
-      // Add a Nucleus Checkpoint to the stage
+    // Add a Nucleus Checkpoint to the stage
       //checkpointFile(stageUrl, "Add lights to stage");
 
-      // Upload a material and textures to the Omniverse server
+    // Upload a material and textures to the Omniverse server
       //uploadMaterial(destinationPath);
 
-      // Add a material to the box
+    // Add a material to the box
       //createMaterial(boxMesh);
 
-      // Add a Nucleus Checkpoint to the stage
+    // Add a Nucleus Checkpoint to the stage
       //checkpointFile(stageUrl, "Add material to the box");
 
-      // Create an empty folder, just as an example
-      createEmptyFolder(destinationPath + "/EmptyFolder");
-    }
-    else {
-      // Find a UsdGeomMesh in the existing stage
-      tmpMesh = findGeomMesh(existingStage);
-    }
-
-    // Do a live edit session moving the box around, changing a material
-    if (doLiveEdit) {
-      liveEdit(tmpMesh);
-    }
     // All done, shut down our connection to Omniverse
     shutdownOmniverse();
 
   }
 
-  // Perform a live edit on the box
   void
-  Omni::liveEdit(UsdGeomMesh meshIn) {
+  Omni::liveEdit(UsdGeomMesh inMesh) {
 
     // Process any updates that may have happened to the stage from another client
     omniUsdLiveWaitForPendingUpdates();
@@ -332,86 +382,76 @@ namespace giEngineSDK {
       ConsoleOut << "Begin Live Edit\n";
     }
 
-    bool wait = true;
-    while (wait) {
+    // Process any updates that may have happened to the stage from another client
+    omniUsdLiveWaitForPendingUpdates();
 
-      // Process any updates that may have happened to the stage from another client
-      omniUsdLiveWaitForPendingUpdates();
+    if (m_liveEditActivation) {
+      double angle = 0;
+      if (angle >= 360) {
+        angle = 0;
+      }
+      double radians = angle * Math::PI / 180.0;
+      double x = sin(radians) * 100;
+      double y = cos(radians) * 100;
 
-      if (m_liveEditActivation) {
-        double angle = 0;
-        if (angle >= 360) {
-          angle = 0;
+      // Get the transform on the mesh
+      UsdGeomXformable xForm = inMesh;
+
+      // Define storage for the different xform ops that Omniverse Kit likes to use
+      UsdGeomXformOp translateOp;
+      UsdGeomXformOp rotateOp;
+      UsdGeomXformOp scaleOp;
+      GfVec3d position(0);
+      GfVec3f rotZYX(0);
+      GfVec3f scale(1);
+
+      // Get the xform ops stack
+      bool resetXformStack = false;
+      Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
+
+      // Get the current xform op values
+      for (size_T i = 0; i < xFormOps.size(); i++) {
+        switch (xFormOps[i].GetOpType()) {
+        case UsdGeomXformOp::TypeTranslate: {
+          translateOp = xFormOps[i];
+          translateOp.Get(&position);
+          break;
         }
-        double radians = angle * Math::PI / 180.0;
-        double x = sin(radians) * 100;
-        double y = cos(radians) * 100;
-
-        // Get the transform on the mesh
-        UsdGeomXformable xForm = meshIn;
-
-        // Define storage for the different xform ops that Omniverse Kit likes to use
-        UsdGeomXformOp translateOp;
-        UsdGeomXformOp rotateOp;
-        UsdGeomXformOp scaleOp;
-        GfVec3d position(0);
-        GfVec3f rotZYX(0);
-        GfVec3f scale(1);
-
-        // Get the xform ops stack
-        bool resetXformStack = false;
-        Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
-
-        // Get the current xform op values
-        for (size_T i = 0; i < xFormOps.size(); i++) {
-          switch (xFormOps[i].GetOpType()) {
-          case UsdGeomXformOp::TypeTranslate: {
-            translateOp = xFormOps[i];
-            translateOp.Get(&position);
-            break;
-          }
-          case UsdGeomXformOp::TypeRotateZYX: {
-            rotateOp = xFormOps[i];
-            rotateOp.Get(&rotZYX);
-            break;
-          }
-          case UsdGeomXformOp::TypeScale: {
-            scaleOp = xFormOps[i];
-            scaleOp.Get(&scale);
-            break;
-          }
-          }
+        case UsdGeomXformOp::TypeRotateZYX: {
+          rotateOp = xFormOps[i];
+          rotateOp.Get(&rotZYX);
+          break;
         }
-
-        // Move/Rotate the existing position/rotation - this works for Y-up stages
-        position += GfVec3d(x, 0, y);
-        rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
-
-        SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
-        SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
-        SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
-
-        // Make sure the xform op order is correct (translate, rotate, scale)
-        Vector<UsdGeomXformOp> xFormOpsReordered;
-        xFormOpsReordered.push_back(translateOp);
-        xFormOpsReordered.push_back(rotateOp);
-        xFormOpsReordered.push_back(scaleOp);
-        xForm.SetXformOpOrder(xFormOpsReordered);
-
-        // Commit the change to USD
-        gStage->Save();
-        break;
+        case UsdGeomXformOp::TypeScale: {
+          scaleOp = xFormOps[i];
+          scaleOp.Get(&scale);
+          break;
+        }
+        }
       }
 
-      //escape or 'q'
-      if (!Omni::instance().m_liveEditActivation) {
-        wait = false;
-        ConsoleOut << "Live Edit complete\n";
-        break;
-      }
+      // Move/Rotate the existing position/rotation - this works for Y-up stages
+      //position += GfVec3d(x, 0, y);
+      //rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
+
+      SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
+      SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+      SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+
+      // Make sure the xform op order is correct (translate, rotate, scale)
+      Vector<UsdGeomXformOp> xFormOpsReordered;
+      xFormOpsReordered.push_back(translateOp);
+      xFormOpsReordered.push_back(rotateOp);
+      xFormOpsReordered.push_back(scaleOp);
+      xForm.SetXformOpOrder(xFormOpsReordered);
+
+      // Commit the change to USD
+      gStage->Save();
+
     }
-  }
 
+    
+  }
 
   void 
   Omni::createEmptyUSD(String inProjectName) {
@@ -420,6 +460,15 @@ namespace giEngineSDK {
     createEmptyFolder(m_destinationPath + inProjectName);
     // Saving the new existing stage
     m_existingStage = m_destinationPath + inProjectName;
+    // Saving the destination path with the projectName
+    m_destinationPath = m_existingStage;
+  }
+
+  void 
+  Omni::createSGFromUSD(UsdGeomMesh inMesh) {
+    auto& sgraph = SceneGraph::instance();
+
+
   }
 
   UsdGeomMesh

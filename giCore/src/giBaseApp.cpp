@@ -37,7 +37,8 @@ BaseApp::run() {
   renderer.create();
 
   //Create a USD for the scene
-  m_omniverse->createUSD();
+  m_omniverse->startConection();
+
 
   //App Loop
   HWND hWnd = m_window.getSystemHandle();

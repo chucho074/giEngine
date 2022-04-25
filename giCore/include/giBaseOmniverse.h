@@ -32,6 +32,13 @@ namespace giEngineSDK {
     ~BaseOmni() = default;
 
     /**
+     * @brief    Function in charge to decide if it needs to create a new USD for the 
+     *           actual project or syncronize data from omniverse.
+     */
+    virtual void
+    startConection() { }
+
+    /**
      * @brief 
      */
     virtual void
@@ -44,7 +51,8 @@ namespace giEngineSDK {
      * @brief    .
      */
     virtual void
-    createUSD() { }
+    createUSDFromSG() { }
+
 
     /**
      * @brief    Create an empty USD in Omniverse Nucleus/Users/giProjects.
@@ -65,9 +73,18 @@ namespace giEngineSDK {
     bool 
     m_liveEditActivation = true;
    
+    /**
+     * @brief    If reads a configuration project file and have's omniverse config
+     *           and an existen USD stage, writes the stage here.
+     */
     String
     m_existingStage;
 
+    /**
+     * @brief    .
+     * @todo     Chage for a global variable in project settings, if is not another, 
+     *           use this as a default.
+     */
     String 
     m_destinationPath = "omniverse://localhost/Users/giProjects/";
 

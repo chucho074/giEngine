@@ -28,7 +28,7 @@ namespace giEngineSDK {
       kBufferCreation,
       kSamplerCreation,
       kUAVCreation,
-      kOmniConection
+      kOmniConnection
     };
   }
 
