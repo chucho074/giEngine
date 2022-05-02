@@ -579,10 +579,12 @@ ImGui_ImplDX11_NewFrame()
 }
 
 static void 
-ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
-{
+ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport) {
+
+  auto& gapi = g_graphicsAPI();
+
   ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
-  ImGui_ImplDX11_ViewportData* vd = IM_NEW(ImGui_ImplDX11_ViewportData)();
+  ImGui_ImplGI_ViewportData* vd = IM_NEW(ImGui_ImplGI_ViewportData)();
   viewport->RendererUserData = vd;
 
   // PlatformHandleRaw should always be a HWND, whereas PlatformHandle might be a higher-level handle (e.g. GLFWWindow*, SDL_Window*).
@@ -591,6 +593,8 @@ ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
   IM_ASSERT(hwnd != 0);
 
   // Create swap chain
+  gapi.
+
   DXGI_SWAP_CHAIN_DESC sd;
   ZeroMemory(&sd, sizeof(sd));
   sd.BufferDesc.Width = (UINT)viewport->Size.x;
@@ -611,9 +615,9 @@ ImGui_ImplDX11_CreateWindow(ImGuiViewport* viewport)
   // Create the render target
   if (vd->SwapChain)
   {
-    ID3D11Texture2D* pBackBuffer;
+    Texture2D* pBackBuffer;
     vd->SwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-    bd->pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &vd->RTView);
+    bd->m_device->CreateRenderTargetView(pBackBuffer, NULL, &vd->RTView);
     pBackBuffer->Release();
   }
 }
