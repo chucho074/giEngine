@@ -155,5 +155,8 @@
     <ClInclude Include="include\giBaseOmniverse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giCodecDecoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

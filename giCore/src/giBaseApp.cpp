@@ -106,6 +106,7 @@ BaseApp::createWindow() {
 void 
 BaseApp::update(float inDeltaTime) {
   onUpdate(inDeltaTime);
+  m_omniverse->update();
 }
 
 void 

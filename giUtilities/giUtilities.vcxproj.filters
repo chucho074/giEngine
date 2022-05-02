@@ -73,6 +73,9 @@
     <ClCompile Include="src\giTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giFile.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giPlatformDefines.h">

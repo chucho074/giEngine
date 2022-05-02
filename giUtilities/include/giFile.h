@@ -12,7 +12,6 @@
  */
 #pragma once
 #include "giPrerequisitesUtilities.h"
-#include "giStdHeaders.h"
 
 namespace giEngineSDK {
 
@@ -29,9 +28,11 @@ namespace giEngineSDK {
         kHLSL,
         kgiTEX2D,
         kgiModel,
-        kgiShade,
+        kgiShader,
         kgiProject,
         kgiFile,
+        kgiSettings,
+        kUnknown,
         kTotalExtansions
     };
   }
@@ -45,25 +46,33 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor.
-    FILE() {
-      //Saves the path as m_path
-      //Reads the path and finds the period.
-      //Saves the characters before the period as the m_name.
-      //Checks if the characters after the period are equal to a 
-      //extension than can be use in the engine and saves it as m_extension.
+    FILE(Path inPath) : m_path(inPath) {
+      //Saves the path as m_path.
+      //Gets the extension and evaluates for m_extension.
+      evaluateExtension(m_path.extension());
+      //Saves the name of the file as the m_name.
+      m_name = m_path.stem().string();
       
     };
 
     //Destructor.
     ~FILE() = default;
 
+   private:
+    /**
+     * @brief    
+     * @param    inExtension   .
+     */
+    void
+    evaluateExtension(wString inExtension);
+
    protected:
 
-    String m_path;
+    Path m_path;
 
     String m_name;
 
-    EXTENSION_TYPE::E m_extension;
+    EXTENSION_TYPE::E m_extension = EXTENSION_TYPE::E::kUnknown;
 
   };
 }

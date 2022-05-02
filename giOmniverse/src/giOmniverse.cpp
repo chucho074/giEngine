@@ -98,7 +98,6 @@ namespace giEngineSDK {
   static String 
   createOmniverseModel(const String& destinationPath) {
     String stageUrl = destinationPath + "/scene.usd";
-
     // Delete the old version of this file on Omniverse and wait for the operation to complete
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
@@ -304,6 +303,7 @@ namespace giEngineSDK {
       // Create the USD model in Omniverse
       const String stageUrl = createOmniverseModel(m_destinationPath);
 
+      m_existingStage = m_existingStage +"/scene.usd";
       // Print the username for the server
       printConnectedUsername(stageUrl);
        
@@ -315,6 +315,8 @@ namespace giEngineSDK {
 
     else {
       // Find a UsdGeomMesh in the existing stage
+      m_existingStage = m_existingStage +"/scene.usd";
+      
       tmpMesh = findGeomMesh(m_existingStage);
     }
      // Do a live edit session moving the box around, changing a material.

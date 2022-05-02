@@ -1,6 +1,6 @@
 /**
  * @file    giStdHeaders.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/04/2021
  * @brief   .
@@ -19,10 +19,10 @@
 #include <list>
 #include <map>
 #include <memory>
-
-#include <codecvt>
 #include <locale>
+#include <filesystem>
 #include <iostream>
+//#include <Windows.h>
 
 namespace giEngineSDK {
   using String = std::string;
@@ -112,23 +112,24 @@ namespace giEngineSDK {
   //Making shared 
   using std::make_shared;
 
+  using Path = std::filesystem::path;
+
   //Wstring & String converters functions
-  //using convert_t = std::codecvt_utf8<wchar_t>;
+ /* String 
+  to_string(wString wstr) {
+    int count = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
+    std::string str(count, 0);
+    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], count, NULL, NULL);
+    return str;
+  }
 
-  ////wString to String Function
-  //String 
-  //to_string(wString wstr) {
-  //  
-  //  std::wstring_convert<convert_t, wchar_t> strConverter;
-  //  return strConverter.to_bytes(wstr);
-  //}
-
-  ////String to wString Function
-  //wString 
-  //to_wstring(String str) {
-  //  std::wstring_convert<convert_t, wchar_t> strConverter;
-  //  return strConverter.from_bytes(str);
-  //}
+  wString 
+  to_wstring(String str) {
+    int count = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), NULL, 0);
+    std::wstring wstr(count, 0);
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], count);
+    return wstr;
+  }*/
 
   //Console output
   #define ConsoleOut std::cout

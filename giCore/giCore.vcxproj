@@ -190,6 +190,7 @@
     <ClInclude Include="include\giBaseOmniverse.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
     <ClInclude Include="include\giBlendState.h" />
+    <ClInclude Include="include\giCodecDecoder.h" />
     <ClInclude Include="include\giComponent.h" />
     <ClInclude Include="include\giActor.h" />
     <ClInclude Include="include\giBaseApp.h" />
