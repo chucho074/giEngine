@@ -336,7 +336,7 @@ namespace giEngineSDK {
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
                                   "Error creating the conection with NVIDIA Omniverse");
-      exit(1);
+      //exit(1);
     }
     
     // Create the USD model in Omniverse
