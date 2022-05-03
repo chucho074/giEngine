@@ -115,7 +115,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
   auto& camera = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 
   if(camera) {
-    camera;
+    //static_cast<Camera>();
   }
 
   m_sceneGraph->update(inDeltaTime);

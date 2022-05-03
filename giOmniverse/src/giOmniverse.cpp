@@ -199,6 +199,8 @@ namespace giEngineSDK {
   // Opens an existing stage and finds the first UsdGeomMesh
   static UsdGeomMesh 
   findGeomMesh(const String& existingStage) {
+    
+    omniUsdLiveWaitForPendingUpdates();
     // Open this file from Omniverse
     gStage = UsdStage::Open(existingStage);
     if (!gStage) {
@@ -433,8 +435,8 @@ namespace giEngineSDK {
       }
 
       // Move/Rotate the existing position/rotation - this works for Y-up stages
-      //position += GfVec3d(x, 0, y);
-      //rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
+      position += GfVec3d(x, 0, y);
+      rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
 
       SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
       SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
