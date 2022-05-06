@@ -13,11 +13,10 @@
 #include <giVector2.h>
 #include <giVector4.h>
 #include <giTime.h>
-#include <giInputManager.h>
+#include <giBaseInput.h>
 #include <giInputLayout.h>
 #include <giMatrix4.h>
-
-#include <giPrerequisitesCore.h>
+#include <giTexture2D.h>
 #include <giBaseGraphicsAPI.h>
 #include <giBuffer.h>
 #include <giTexture2D.h>
@@ -26,10 +25,11 @@
 
 #include "giImGui.h"
 
+
 using giEngineSDK::uint8;
 using giEngineSDK::int32;
 using giEngineSDK::GraphicsAPI;
-using giEngineSDK::g_graphicsAPI;
+//using giEngineSDK::g_graphicsAPI;
 using giEngineSDK::SharedPtr;
 using giEngineSDK::Buffer;
 using giEngineSDK::BaseVertexShader;
@@ -46,11 +46,64 @@ using giEngineSDK::BaseBlendState;
 using giEngineSDK::Vector;
 using giEngineSDK::Vector2;
 using giEngineSDK::Vector4;
-using giEngineSDK::Matrix4;
+using giEngineSDK::Matrix4;/*
 using giEngineSDK::GI_FORMAT::E;
 using giEngineSDK::GI_BIND_FLAG::E;
-using giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E;
+using giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E;*/
 
+// giEngine data
+struct ImGui_ImplGI_Data {
+
+  SharedPtr<Buffer>                    spVB;
+  SharedPtr<Buffer>                    spIB;
+  SharedPtr<BaseVertexShader>          spVertexShader;
+  SharedPtr<BasePixelShader>           spPixelShader;
+  SharedPtr<InputLayout>               spInputLayout;
+  SharedPtr<Buffer>                    spVertexConstantBuffer;
+  SharedPtr<SamplerState>              spFontSampler;
+  SharedPtr<BaseRasterizerState>       spRasterizerState;
+  SharedPtr<BaseDepthStencilState>     spDepthStencilState;
+  SharedPtr<BaseBlendState>            spBlendState;
+  SharedPtr<Texture2D>                 spFontTextureView;
+  uint32                               VertexBufferSize;
+  uint32                               IndexBufferSize;
+
+  ImGui_ImplGI_Data() {
+    memset(this, 0, sizeof(*this));
+    VertexBufferSize = 5000;
+    IndexBufferSize = 10000;
+  }
+};
+
+//Backup state that will be modified to restore it later
+struct BACKUP_STATE {
+  SharedPtr<BaseRasterizerState>        spRasterState;
+  SharedPtr<BaseBlendState>             spBlendState;
+  SharedPtr<BaseDepthStencilState>      spDepthState;
+  SharedPtr<SamplerState>               spSamplerState;
+  SharedPtr<BaseVertexShader>           spVertexShader;
+  SharedPtr<BasePixelShader>            spPixelShader;
+  SharedPtr<Buffer>                     spIndexBuffer;
+  SharedPtr<Buffer>                     spVertexBuffer;
+  SharedPtr<Buffer>                     spVertexCB;
+  SharedPtr<InputLayout>                spInputLayout;
+  SharedPtr<Texture2D>                  spShaderResource;
+  uint32 vertexStride = 0;
+  uint32 vertexOffset = 0;
+};
+
+struct
+  VERTEX_CONSTANT_BUFFER {
+  float mvp[4][4];
+};
+
+
+
+
+struct ImGui_MouseData {
+  bool MouseTracked;
+  ImGuiMouseCursor LastMouseCursor;
+};
 
 
 static
@@ -70,7 +123,7 @@ ImGui_ImplGI_Data* ImGui_ImplGI_GetBackendData() {
 static void
 ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
 
-  auto& gapi = g_graphicsAPI();
+  auto& gapi = giEngineSDK::g_graphicsAPI();
 
   ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
 
@@ -112,21 +165,21 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
 namespace ImGui {
 
   static ImGui_MouseData*
-    ImGui_MouseData_GetBackendData() {
+  ImGui_MouseData_GetBackendData() {
     return ImGui::GetCurrentContext() ?
       static_cast<ImGui_MouseData*>(ImGui::GetIO().BackendPlatformUserData) :
       nullptr;
   }
 
   static ImGui_ImplGI_Data*
-    ImGui_ImplGI_GetBackendData() {
+  ImGui_ImplGI_GetBackendData() {
     return ImGui::GetCurrentContext() ?
       static_cast<ImGui_ImplGI_Data*>(ImGui::GetIO().BackendRendererUserData) :
       nullptr;
   }
 
   void
-    init(void* inWindow) {
+  init(void* inWindow) {
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -157,7 +210,7 @@ namespace ImGui {
     io.BackendRendererUserData = static_cast<void*>(tmpData);
     io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
 
-    auto& gapi = g_graphicsAPI();
+    auto& gapi = giEngineSDK::g_graphicsAPI();
 
     const char* vertexShader = {
       "cbuffer vertexBuffer : register(b0) \
@@ -251,25 +304,27 @@ namespace ImGui {
       0,
       nullptr);
     //Create Blend State
+    Vector4 tmpkk = { 0.f, 0.f, 0.f, 0.f };
     tmpData->spBlendState = gapi.createBlendState(true,
-      giEngineSDK::BLEND_TYPE::src_alpha,
-      giEngineSDK::BLEND_TYPE::inv_src_alpha,
-      giEngineSDK::BLEND_OP::add,
-      giEngineSDK::BLEND_TYPE::one,
-      giEngineSDK::BLEND_TYPE::inv_src_alpha,
-      giEngineSDK::BLEND_OP::add,
-      Vector4(0.f, 0.f, 0.f, 0.f));
+                                                  giEngineSDK::BLEND_TYPE::src_alpha,
+                                                  giEngineSDK::BLEND_TYPE::inv_src_alpha,
+                                                  giEngineSDK::BLEND_OP::add,
+                                                  giEngineSDK::BLEND_TYPE::one,
+                                                  giEngineSDK::BLEND_TYPE::inv_src_alpha,
+                                                  giEngineSDK::BLEND_OP::add,
+                                                  //Vector4(0.f, 0.f, 0.f, 0.f));
+                                                  tmpkk);
 
     //Create raster state
     tmpData->spRasterizerState = gapi.createRasterizer(giEngineSDK::FILLMODE::kSolid,
-      giEngineSDK::CULLMODE::kNone,
-      false,
-      true);
+                                                       giEngineSDK::CULLMODE::kNone,
+                                                       false,
+                                                       true);
 
     //Create Depth stencil state
     tmpData->spDepthStencilState = gapi.createDepthState(false,
-      false,
-      giEngineSDK::GI_COMPARATION_FUNC::kCOMPARISON_ALWAYS);
+                                                         false,
+                                                         giEngineSDK::GI_COMPARATION_FUNC::kCOMPARISON_ALWAYS);
 
     //Build Texture Atlas
     uint8* tmpPixels;
@@ -281,10 +336,10 @@ namespace ImGui {
       SharedPtr<Texture2D> tmpTex;
 
       tmpTex = gapi.TextureFromMem(tmpPixels,
-        tmpWidth,
-        tmpHeight,
-        giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-        giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
+                                   tmpWidth,
+                                   tmpHeight,
+                                   giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                   giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
 
     }
 
@@ -309,7 +364,7 @@ namespace ImGui {
   }
 
   void
-    update(void* inWindow, float inDT) {
+  update(void* inWindow, float inDT) {
     ImGuiIO& io = ImGui::GetIO();
 
     ImGui_MouseData* tmpData = ImGui_MouseData_GetBackendData();
@@ -333,7 +388,7 @@ namespace ImGui {
     io.MousePos = ImVec2((float)mouseScreenPos.x, (float)mouseScreenPos.y);
     //Update OS mouse cursor with the cursor requested by imgui.
     ImGuiMouseCursor mouseCursor = io.MouseDrawCursor ? ImGuiMouseCursor_None :
-      ImGui::GetMouseCursor();
+                                   ImGui::GetMouseCursor();
     if (tmpData->LastMouseCursor != mouseCursor) {
       tmpData->LastMouseCursor = mouseCursor;
       if (io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) {
@@ -394,7 +449,7 @@ namespace ImGui {
   }
 
   void
-    render() {
+  render() {
     ImGui::Render();
     ImDrawData* data = ImGui::GetDrawData();
     if (0 == data->CmdListsCount) {
@@ -411,7 +466,7 @@ namespace ImGui {
     data->ScaleClipRects(io.DisplayFramebufferScale);
     ImGui_ImplGI_Data* tmpData = ImGui_ImplGI_GetBackendData();
 
-    auto& gapi = g_graphicsAPI();
+    auto& gapi = giEngineSDK::g_graphicsAPI();
 
     //Create and grow vertex/index buffer if needed
     if (!tmpData->spVB || tmpData->VertexBufferSize < data->TotalVtxCount) {
@@ -430,9 +485,9 @@ namespace ImGui {
       }
       tmpData->IndexBufferSize = data->TotalIdxCount;
       tmpData->spIB = gapi.createBuffer(tmpData->IndexBufferSize * sizeof(ImDrawIdx),
-        giEngineSDK::GI_BIND_FLAG::kBIND_INDEX_BUFFER,
-        0,
-        nullptr);
+                                        giEngineSDK::GI_BIND_FLAG::kBIND_INDEX_BUFFER,
+                                        0,
+                                        nullptr);
     }
     //Upload vertex/index data
     Vector<ImDrawVert> vertices;
@@ -510,18 +565,18 @@ namespace ImGui {
             continue;
           }
           // Apply scissor/clipping rectangle
-          Vector4 r = { (LONG)clip_min.x,
-                        (LONG)clip_min.y,
-                        (LONG)clip_max.x,
-                        (LONG)clip_max.y };
+          Vector4 r = { clip_min.x,
+                        clip_min.y,
+                        clip_max.x,
+                        clip_max.y };
           gapi.rsSetScissorRects(1, &r);
 
           // Bind texture, Draw
-          SharedPtr<Texture2D> texture_srv;
-          texture_srv.reset(pcmd->GetTexID());
-          gapi.psSetShaderResource(0, texture_srv);
+          SharedPtr<Texture2D>* texture_srv = static_cast<SharedPtr<Texture2D>*>(pcmd->GetTexID());
+          //texture_srv.reset(pcmd->GetTexID());
+          gapi.psSetShaderResource(0, *texture_srv);
           gapi.drawIndexed(pcmd->ElemCount,
-            pcmd->VtxOffset + global_vtx_offset);
+                           pcmd->VtxOffset + global_vtx_offset);
         }
       }
       global_idx_offset += cmd_list->IdxBuffer.Size;
@@ -549,7 +604,7 @@ namespace ImGui {
     //gapi.setTopology(old.spPrimitiveTopology);
 
     gapi.setIndexBuffer(old.spIndexBuffer,
-      giEngineSDK::GI_FORMAT::kFORMAT_R16_UINT);
+                        giEngineSDK::GI_FORMAT::kFORMAT_R16_UINT);
 
     gapi.setVertexBuffer(old.spVertexBuffer, old.vertexStride);
 
@@ -557,7 +612,7 @@ namespace ImGui {
   }
 
   void
-    shutDown() {
+  shutDown() {
     ImGui_MouseData* be = ImGui_MouseData_GetBackendData();
     IM_ASSERT(be != nullptr && "No platform backend to shutdown, or already shutdown?");
     ImGui_ImplGI_Data* bd = ImGui_ImplGI_GetBackendData();
@@ -575,7 +630,7 @@ namespace ImGui {
   }
 
   void
-    callBack() {
+  callBack() {
     ImGuiIO& io = ImGui::GetIO();
     //Mouse Pressed case
     {

@@ -17,6 +17,7 @@
 #include "giBaseVertexShader.h"
 #include "giBasePixelShader.h"
 #include "giBaseRasterizer.h"
+#include "giVector4.h"
 
 ///Forward declarations
 namespace giEngineSDK {
@@ -32,7 +33,6 @@ namespace giEngineSDK {
   class BaseRasterizerState;
   class BaseDepthStencilState;
   class BaseBlendState;
-  class Vector4;
 
   struct TextureDesc;
   struct DepthStencilViewDesc;
@@ -318,6 +318,17 @@ namespace giEngineSDK {
      */
     virtual void 
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
+
+    /**
+     * @brief    Set the rasterizer State.
+     * @param    inRaster      The rasterizer to set.
+     * @bug      No known Bugs.
+     */
+    virtual void 
+    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {};
+
+    virtual void 
+    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {};
     
     /**
      * @brief    Update Subresource.
@@ -683,7 +694,9 @@ namespace giEngineSDK {
                    int32 inWidth,
                    int32 inHeight,
                    GI_FORMAT::E inFormat,
-                   GI_BIND_FLAG::E inBindFlags) {};
+                   GI_BIND_FLAG::E inBindFlags) {
+      return nullptr;
+    };
   };
   
   GI_CORE_EXPORT GraphicsAPI& 

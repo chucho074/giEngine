@@ -11,9 +11,28 @@
  * @include
  */
 #include <giDegrees.h>
+//#include <giGraphicsDX.h>
 #include <giCamera.h>
-#include <giGraphicsDX.h>
+#include <giMatrix4.h>
+#include <giVector4.h>
+#include <giVector3.h>
+#include <giVector2.h>
+#include <giTexture2D.h>
+#include <giDepthStencilView.h>
+#include <giRenderTargetView.h>
+#include <giVertexShaderDX.h>
+#include <giPixelShaderDX.h>
+#include <giBuffer.h>
+#include <giInputLayout.h>
+#include <giSampler.h>
+#include <giMesh.h>
+#include <giModel.h>
+#include <giStaticMesh.h>
+#include <giSceneGraph.h>
+#include <SFML/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
 #include "giDXApp.h"
+#include "giImGui.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -26,6 +45,8 @@ DirectXApp::DirectXApp() {
 
 void 
 DirectXApp::onCreate() {
+
+  ImGui::init(&m_window);
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -95,7 +116,7 @@ DirectXApp::onCreate() {
 
 void 
 DirectXApp::onDestroy() {
-
+  ImGui::shutDown();
 }
 
 
@@ -105,6 +126,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
   //World rotation
   //m_world = XMMatrixRotationY(inDeltaTime);
 
+
   auto& camera = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 
   if(camera) {
@@ -112,11 +134,18 @@ DirectXApp::onUpdate(float inDeltaTime) {
   }
 
   m_sceneGraph->update(inDeltaTime);
+  
+  ImGui::NewFrame();
+  ImGui::update(&m_window, inDeltaTime);
+  ImGui::ShowDemoWindow();
+
 }
 
 
 void 
 DirectXApp::onRender() {
+
+  ImGui::render();
 
   //Update variables that change once per frame
   //CBChangesEveryFrame cb;
@@ -153,6 +182,8 @@ void
 DirectXApp::onEvent(MSG inMsg) {
   
   g_inputManager().sendEvent(inMsg);
+
+  ImGui::callBack();
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {

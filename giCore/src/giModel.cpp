@@ -72,10 +72,10 @@ namespace giEngineSDK {
         texture.path = path;
 
         SamplerDesc sampDesc;
-        sampDesc.filter = 21;
-        sampDesc.addressU = 1;
-        sampDesc.addressV = 1;
-        sampDesc.addressW = 1;
+        sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+        sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+        sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+        sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
         sampDesc.comparisonFunc = 1;
         sampDesc.minLOD = 0;
         sampDesc.maxLOD = 3.402823466e+38f;

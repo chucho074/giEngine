@@ -21,6 +21,11 @@
   <ItemGroup>
     <ClCompile Include="src\giDXApp.cpp" />
     <ClCompile Include="src\giImGui.cpp" />
+    <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +162,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;$(DEVLIBS)/ImGui/;DXUT\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/ImGui/;$(DEVLIBS)/GaInput/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;DXUT\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

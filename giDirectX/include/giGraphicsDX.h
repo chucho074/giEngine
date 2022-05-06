@@ -207,14 +207,14 @@ namespace giEngineSDK {
      * @return   The blend state.
     */
     SharedPtr<BaseBlendState>
-    createBlendState(bool inEnable,
-                     BLEND_TYPE::E inSource,
+    createBlendState(bool inEnable, 
+                     BLEND_TYPE::E inSource, 
                      BLEND_TYPE::E inDest,
                      BLEND_OP::E inOp,
-                     BLEND_TYPE::E inAlphaSource,
+                     BLEND_TYPE::E inAlplhaSource,
                      BLEND_TYPE::E inAlphaDest,
                      BLEND_OP::E inAlphaOp,
-                     Vector4 inBlendFactor);
+                     Vector4 inBlendFactor) override;
 
     /**
      * @brief    Present.
@@ -257,10 +257,10 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    setRasterizerState(SharedPtr<RasterizerDX> inRaster);
+    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) override;
 
     void 
-    setDepthState(SharedPtr<DepthStateDX> inDepthState);
+    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) override;
     
     /**
      * @brief    Update Subresource.
