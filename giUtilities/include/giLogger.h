@@ -25,6 +25,8 @@ namespace giEngineSDK {
       kAnimationLoading,
       kTextureCreation,
       kBufferCreation,
+      kBlendStateCreation,
+      kDepthStencilStateCreation,
       kSamplerCreation,
       kUAVCreation,
       kCreation

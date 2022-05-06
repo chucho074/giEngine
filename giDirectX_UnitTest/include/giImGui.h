@@ -6,22 +6,22 @@
  * @brief   A basic description of the what do the doc.
  * @bug     No known Bugs.
  */
- 
-/**
- * @include
- */
+
+ /**
+  * @include
+  */
 #pragma once
 #include <imgui.h>
-#include "giPrerequisitesUI.h"
+#include <giPrerequisitesCore.h>
 
 #include <giVector2.h>
 #include <giTime.h>
 #include <giInputManager.h>
 
 
-// giEngine data
+  // giEngine data
 struct ImGui_ImplGI_Data {
-  
+
   SharedPtr<Buffer>                    spVB;
   SharedPtr<Buffer>                    spIB;
   SharedPtr<BaseVertexShader>          spVertexShader;
@@ -36,10 +36,10 @@ struct ImGui_ImplGI_Data {
   uint32                               VertexBufferSize;
   uint32                               IndexBufferSize;
 
-  ImGui_ImplGI_Data() { 
-    memset(this, 0, sizeof(*this)); 
-    VertexBufferSize = 5000; 
-    IndexBufferSize = 10000; 
+  ImGui_ImplGI_Data() {
+    memset(this, 0, sizeof(*this));
+    VertexBufferSize = 5000;
+    IndexBufferSize = 10000;
   }
 };
 
@@ -60,23 +60,10 @@ struct BACKUP_STATE {
   uint32 vertexOffset = 0;
 };
 
-struct 
-VERTEX_CONSTANT_BUFFER {
+struct
+  VERTEX_CONSTANT_BUFFER {
   float mvp[4][4];
 };
-
-//struct ImGui_ImplGI_ViewportData {
-//  IDXGISwapChain* SwapChain;
-//  ID3D11RenderTargetView* RTView;
-//
-//  ImGui_ImplGI_ViewportData() {
-//    SwapChain = NULL;
-//    RTView = NULL;
-//  }
-//  ~ImGui_ImplGI_ViewportData() {
-//    IM_ASSERT(SwapChain == NULL && RTView == NULL);
-//  }
-//};
 
 struct ImGui_MouseData {
   bool MouseTracked;
@@ -86,19 +73,19 @@ struct ImGui_MouseData {
 namespace ImGui {
 
   void
-  init(void* inWindow);
+    init(void* inWindow);
 
   void
-  update(void* inWindow, float inDT);
+    update(void* inWindow, float inDT);
 
   void
-  render();
+    render();
 
   void
-  shutDown();
+    shutDown();
 
   void
-  callBack();
+    callBack();
 
 
 }

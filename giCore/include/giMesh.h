@@ -43,7 +43,7 @@ namespace giEngineSDK {
     String type;
     String path;
     SharedPtr<Texture2D> texture;
-    SharedPtr<Sampler> samplerState;
+    SharedPtr<SamplerState> samplerState;
   };
 
   /**

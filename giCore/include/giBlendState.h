@@ -14,6 +14,7 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
+
   class GI_CORE_EXPORT BaseBlendState
   {
    public:

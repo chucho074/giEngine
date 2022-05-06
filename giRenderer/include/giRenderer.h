@@ -117,7 +117,7 @@ namespace giEngineSDK {
                SharedPtr<InputLayout> inInputLayout,
                SharedPtr<BaseVertexShader> inVertexShader,
                SharedPtr<BasePixelShader> inPixelShader,
-               SharedPtr<Sampler> inSampler,
+               SharedPtr<SamplerState> inSampler,
                Vector<SharedPtr<Buffer>> inConstantBuffers,
                Vector<SharedPtr<Texture2D>> inShaderResources = Vector<SharedPtr<Texture2D>>(),
                bool inDrawSAQ = false, 
@@ -141,8 +141,8 @@ namespace giEngineSDK {
     //The input Layout
     SharedPtr<InputLayout> m_inputLayout;
 
-    //The Sampler
-    SharedPtr<Sampler> m_sampler;
+    //The SamplerState
+    SharedPtr<SamplerState> m_sampler;
 
     //The color For the mesh
     Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };

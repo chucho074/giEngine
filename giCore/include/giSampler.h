@@ -16,7 +16,7 @@
 namespace giEngineSDK {
   /**
    * @struct   SamplerDesc.
-   * @brief    Manage the information for the Sampler.
+   * @brief    Manage the information for the SamplerState.
    * @bug      No known Bugs.
    */
   struct SamplerDesc {
@@ -30,18 +30,18 @@ namespace giEngineSDK {
   };
   
   /**
-   * @class    Sampler.
-   * @brief    Manage the Sampler State.
+   * @class    SamplerState.
+   * @brief    Manage the SamplerState State.
    * @bug      No known Bugs.
    */
-  class Sampler {
+  class SamplerState {
    public:
      //Constructor
-     Sampler() = default;
+     SamplerState() = default;
 
      //Destructor  
      virtual
-     ~Sampler() = default;
+     ~SamplerState() = default;
   
      /**
       * @brief     Initialize the sampler.

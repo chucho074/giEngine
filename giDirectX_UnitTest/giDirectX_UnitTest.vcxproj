@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giDXApp.cpp" />
+    <ClCompile Include="src\giImGui.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDXApp.h" />
+    <ClInclude Include="include\giImGui.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -155,7 +157,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core;$(SolutionDir)giRenderer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;$(DEVLIBS)/ImGui/;DXUT\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

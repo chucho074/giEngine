@@ -26,7 +26,7 @@ namespace giEngineSDK {
     String type;            //The type of the texture.
     String path;            //The path of the file.
     Texture2D * texture;    //The texture.
-    Sampler * samplerState; //The sampler for the texture.
+    SamplerState * samplerState; //The sampler for the texture.
   };
   
   /**

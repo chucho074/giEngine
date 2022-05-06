@@ -170,11 +170,11 @@ namespace giEngineSDK {
                  void * inBufferData) override;
     
     /**
-     * @brief    Creates a Sampler.
+     * @brief    Creates a SamplerState.
      * @param    inDesc   The descriptor of the sampler.
      * @bug      No known Bugs.
      */
-    SharedPtr<Sampler>
+    SharedPtr<SamplerState>
     createSampler(SamplerDesc inDesc) override;
     
     /**
@@ -183,14 +183,38 @@ namespace giEngineSDK {
     SharedPtr<BaseRasterizerState>
     createRasterizer(FILLMODE::E inFillMode,
                      CULLMODE::E inCullMode,
-                     bool inClockwise) override;
+                     bool inClockwise,
+                     bool inScissorEnable) override;
 
     /**
      * @brief    Create a Depth Stencil State.
      */
     SharedPtr<BaseDepthStencilState>
     createDepthState(bool inStencilEnable,
-                     bool inDepthEnable) override;
+                     bool inDepthEnable, 
+                     GI_COMPARATION_FUNC::E inCompar) override;
+
+    /**
+     * @brief    Create a new Blend State.
+     * @param    inEnable      .
+     * @param    inSource      .
+     * @param    inDest        .
+     * @param    inOp          .
+     * @param    inAlphaSource .
+     * @param    inAlphaDest   .
+     * @param    inAlphaOp     .
+     * @param    inBlendFactor .
+     * @return   The blend state.
+    */
+    SharedPtr<BaseBlendState>
+    createBlendState(bool inEnable,
+                     BLEND_TYPE::E inSource,
+                     BLEND_TYPE::E inDest,
+                     BLEND_OP::E inOp,
+                     BLEND_TYPE::E inAlphaSource,
+                     BLEND_TYPE::E inAlphaDest,
+                     BLEND_OP::E inAlphaOp,
+                     Vector4 inBlendFactor);
 
     /**
      * @brief    Present.
@@ -343,9 +367,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetSampler(uint32 inSlot, 
+    psSetSamplerState(uint32 inSlot, 
                  uint32 inNumSamplers, 
-                 SharedPtr<Sampler> inSampler) override;
+                 SharedPtr<SamplerState> inSampler) override;
     
     /** 
      * @brief    IA Set Input Layout.
@@ -373,9 +397,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetBlendState(SharedPtr<BaseBlendState> inBlendState,
-                    const float inBlendFactor[4],
-                    uint32 inSampleMask = 0xffffffff) override;
+    omSetBlendState(SharedPtr<BaseBlendState> inBlendState) override;
     
     /** 
      * @brief    Set Blend State.
@@ -384,15 +406,14 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    omSetDepthStencilState(SharedPtr<BaseDepthStencilState> inDepthState,
-                           uint32 inStencilRef) override;
+    omSetDepthStencilState(SharedPtr<BaseDepthStencilState> inDepthState) override;
      
     /**
      * @brief    Set the Rasterizer.
      * @param    inRaster       The rasterizer state to set.
      */
     void
-    rsSetState(SharedPtr<BaseRasterizerState> inRaster) override;
+    rsSetRasterizerState(SharedPtr<BaseRasterizerState> inRaster) override;
 
     /**
      * @brief 
@@ -424,8 +445,7 @@ namespace giEngineSDK {
      * @param    inSampleMask 
      */
     SharedPtr<BaseBlendState>
-    omGetBlendState(float inBlendFactor[4], 
-                    uint32 inSampleMask) override;
+    omGetBlendState() override;
 
     /**
      * @brief 
@@ -433,13 +453,12 @@ namespace giEngineSDK {
      * @param    inStencilRef 
      */
     SharedPtr<BaseDepthStencilState>
-    omGetDepthStencilState(uint32 inStencilRef) override;
+    omGetDepthStencilState() override;
 
     /**
      * @brief 
      * @param    inStartSlot 
      * @param    inNumViews 
-     * @param    inShaderResource 
      */
     SharedPtr<Texture2D>
     psGetShaderResources(uint32 inStartSlot, 
@@ -451,7 +470,7 @@ namespace giEngineSDK {
      * @param    inNumSamplers 
      * @param    inSampler 
      */
-    SharedPtr<Sampler>
+    SharedPtr<SamplerState>
     psGetSamplers(uint32 inStartSlot, 
                   uint32 inNumSamplers) override;
 
@@ -461,7 +480,7 @@ namespace giEngineSDK {
      * @param    inNumClassInstances 
      */
     SharedPtr<BasePixelShader>
-    psGetShader(int32 inNumClassInstances) override;
+    psGetShader() override;
 
     /**
      * @brief 
@@ -469,7 +488,7 @@ namespace giEngineSDK {
      * @param    inNumClassInstances 
      */
     SharedPtr<BaseVertexShader>
-    vsGetShader(int32 inNumClassInstances) override;
+    vsGetShader() override;
 
     /**
      * @brief 
@@ -495,8 +514,7 @@ namespace giEngineSDK {
      * @param    inOffset 
      */
     SharedPtr<Buffer>
-    iaGetIndexBuffer(GI_FORMAT::E inFormat, 
-                     uint32 inOffset) override;
+    iaGetIndexBuffer() override;
 
     /**
      * @brief 
@@ -585,7 +603,11 @@ namespace giEngineSDK {
      * @return   Returns a texture 2D.
      */
     SharedPtr<Texture2D>
-    TextureFromMem(uint8* inData, int32 inWidth, int32 inHeight) override;
+    TextureFromMem(uint8* inData, 
+                   int32 inWidth, 
+                   int32 inHeight, 
+                   GI_FORMAT::E inFormat,
+                   GI_BIND_FLAG::E inBindFlags) override;
 
   
    private:

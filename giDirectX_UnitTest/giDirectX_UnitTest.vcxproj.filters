@@ -21,9 +21,15 @@
     <ClCompile Include="src\giDXApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giImGui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDXApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giImGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

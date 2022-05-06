@@ -339,5 +339,38 @@ namespace giEngineSDK {
       kCOMPARISON_ALWAYS = 8
     };
   }
+
+  namespace BLEND_TYPE {
+    enum E {
+      zero = 1,
+      one,
+      src_color,
+      inv_src_color,
+      src_alpha,
+      inv_src_alpha,
+      dest_alpha,
+      inv_dest_alpha,
+      dest_color,
+      inv_dest_color,
+      src_alpha_sat,
+      blend_factor = 14,
+      inv_blend_factor,
+      src1_color,
+      inv_src1_color,
+      src1_alpha,
+      inv_src1_alpha
+    };
+
+  }
+
+  namespace BLEND_OP {
+    enum E {
+      add = 1,
+      substract,
+      rev_substract,
+      min,
+      max
+    };
+  }
 }
 

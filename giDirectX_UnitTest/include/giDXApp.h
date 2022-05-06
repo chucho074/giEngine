@@ -109,8 +109,8 @@ class DirectXApp : public BaseApp {
 
  private:
 
-  //The Sampler
-  SharedPtr<Sampler> m_sampler = nullptr;
+  //The SamplerState
+  SharedPtr<SamplerState> m_sampler = nullptr;
 
   //The Constant Buffer (Never Change)
   SharedPtr<Buffer> m_cBufferCamera = nullptr;

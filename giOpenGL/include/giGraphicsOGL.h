@@ -110,10 +110,10 @@ namespace giEngineSDK {
                  void * inBufferData);
     
     /**
-     * @brief    Creates a Sampler.
+     * @brief    Creates a SamplerState.
      * @bug      No known Bugs.
      */
-    Sampler * 
+    SamplerState * 
     createSampler(SamplerDesc inDesc);
   
     /**
@@ -224,9 +224,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    psSetSampler(uint32 inSlot, 
+    psSetSamplerState(uint32 inSlot, 
                  uint32 inNumSamplers, 
-                 Sampler * inSampler);
+                 SamplerState * inSampler);
   
     /** 
      * @brief    IA Set Input Layout.

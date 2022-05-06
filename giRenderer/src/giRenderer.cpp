@@ -35,7 +35,7 @@ namespace giEngineSDK {
     auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
     m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
-    //Create Sampler
+    //Create SamplerState
     SamplerDesc sampDesc;
     sampDesc.filter = 21;
     sampDesc.addressU = 1;
@@ -509,7 +509,7 @@ namespace giEngineSDK {
                        SharedPtr<InputLayout> inInputLayout,
                        SharedPtr<BaseVertexShader> inVertexShader,
                        SharedPtr<BasePixelShader> inPixelShader,
-                       SharedPtr<Sampler> inSampler, 
+                       SharedPtr<SamplerState> inSampler, 
                        Vector<SharedPtr<Buffer>> inConstantBuffers,
                        Vector<SharedPtr<Texture2D>> inShaderResources,
                        bool inDrawSAQ, 
@@ -542,7 +542,7 @@ namespace giEngineSDK {
     }
 
     if(nullptr != inSampler) {
-      gapi.psSetSampler(0, 1, inSampler);
+      gapi.psSetSamplerState(0, 1, inSampler);
     }
 
     for (int i = 0; i < inConstantBuffers.size(); ++i) {

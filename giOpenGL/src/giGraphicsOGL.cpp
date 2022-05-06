@@ -194,7 +194,7 @@ namespace giEngineSDK {
 
   }
   
-  Sampler* 
+  SamplerState* 
   GraphicsOGL::createSampler(SamplerDesc inDesc) {
     return nullptr;
   }
@@ -323,9 +323,9 @@ namespace giEngineSDK {
   }
   
   void 
-  GraphicsOGL::psSetSampler(uint32 inSlot, 
+  GraphicsOGL::psSetSamplerState(uint32 inSlot, 
                             uint32 inNumSamplers, 
-                            Sampler* inSampler) {
+                            SamplerState* inSampler) {
   
   }
   
