@@ -141,9 +141,7 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   //Set Vertex Buffer
   gapi.setVertexBuffer(bd->spVB, stride);
   //Set Index Buffer
-  gapi.setIndexBuffer(bd->spIB, sizeof(ImDrawIdx) == 2
-                      ? giEngineSDK::GI_FORMAT::E::kFORMAT_R16_UINT
-                      : giEngineSDK::GI_FORMAT::E::kFORMAT_R32_UINT);
+  gapi.setIndexBuffer(bd->spIB, giEngineSDK::GI_FORMAT::E::kFORMAT_R16_UINT);
   //Set Topology
   //gapi.setTopology(giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
   //Set Vertex Shader
@@ -196,6 +194,8 @@ namespace ImGui {
     mainViewport->PlatformHandle = mainViewport->PlatformHandleRaw = inWindow;           //Si falla soy yo xd
 
     //Inputs
+
+
     io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
 
     ImGui::StyleColorsDark();
