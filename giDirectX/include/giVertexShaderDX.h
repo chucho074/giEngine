@@ -32,7 +32,7 @@ namespace giEngineSDK {
      * @return   .
      */
     bool
-    init(String inFileName,
+    init(wString inFileName,
          String inEntryPoint,
          String inShaderModel) override;
 
@@ -45,7 +45,7 @@ namespace giEngineSDK {
      * @return   .
      */
     bool 
-    CompileShaderFromFile(String szFileName,
+    CompileShaderFromFile(wString szFileName,
                           String szEntryPoint,
                           String szShaderModel,
                           ID3DBlob** ppBlobOut);

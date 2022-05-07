@@ -64,9 +64,9 @@ BaseApp::run() {
     update(deltaTime);
     
     //Render Frame
+    renderer.render();
     render();
 
-    renderer.render();
     
   }
 

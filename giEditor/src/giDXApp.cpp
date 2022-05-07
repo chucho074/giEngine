@@ -46,7 +46,9 @@ DirectXApp::DirectXApp() {
 void 
 DirectXApp::onCreate() {
 
-  ImGui::init(&m_window);
+  Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
+
+  ImGui::init(&m_window, tmpSize);
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -136,9 +138,8 @@ DirectXApp::onUpdate(float inDeltaTime) {
   m_sceneGraph->update(inDeltaTime);
   
   ImGui::NewFrame();
-  ImGui::update(&m_window, inDeltaTime);
+  ImGui::update(m_window.getSystemHandle(), inDeltaTime);
   ImGui::ShowDemoWindow();
-
 }
 
 

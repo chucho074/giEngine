@@ -88,10 +88,10 @@ namespace giEngineSDK {
      */
     void 
     createViewport(uint32 inNumVP,
-             int32 inWidth,
-             int32 inHeight,
-             int32 inTopX,
-             int32 inTopY) override;
+                   int32 inWidth,
+                   int32 inHeight,
+                   int32 inTopX,
+                   int32 inTopY) override;
     
     /**
      * @brief    Create the Vertex Shader.
@@ -101,9 +101,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BaseVertexShader>
-    createVShaderFromFile(String inFileName,
-             String inEntryPoint,
-             String inShaderModel) override;
+    createVShaderFromFile(wString inFileName,
+                          String inEntryPoint,
+                          String inShaderModel) override;
     
     /**
      * @brief    Create the Pixel Shader.
@@ -113,9 +113,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BasePixelShader>
-    createPShaderFromFile(String inFileName,
-             String inEntryPoint,
-             String inShaderModel) override;
+    createPShaderFromFile(wString inFileName,
+                          String inEntryPoint,
+                          String inShaderModel) override;
              
     /**
      * @brief    Create the Compute Shader.
@@ -125,9 +125,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     SharedPtr<BaseComputeShader>
-    createCShaderFromFile(String inFileName,
-             String inEntryPoint,
-             String inShaderModel) override;
+    createCShaderFromFile(wString inFileName,
+                          String inEntryPoint,
+                          String inShaderModel) override;
 
     /**
      * @brief    The Shader to compile.

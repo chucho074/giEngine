@@ -10,7 +10,7 @@
 /**
   * @include
   */
-#include <giVector2.h>
+
 #include <giVector4.h>
 #include <giTime.h>
 #include <giBaseInput.h>
@@ -44,7 +44,6 @@ using giEngineSDK::BaseRasterizerState;
 using giEngineSDK::BaseDepthStencilState;
 using giEngineSDK::BaseBlendState;
 using giEngineSDK::Vector;
-using giEngineSDK::Vector2;
 using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;/*
 using giEngineSDK::GI_FORMAT::E;
@@ -129,10 +128,10 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
 
   // Setup viewport
   gapi.createViewport(1,
-    draw_data->DisplaySize.x,
-    draw_data->DisplaySize.y,
-    0,
-    0);
+                      draw_data->DisplaySize.x,
+                      draw_data->DisplaySize.y,
+                      0,
+                      0);
 
   // Setup shader and vertex buffers
   unsigned int stride = sizeof(ImDrawVert);
@@ -143,8 +142,8 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   gapi.setVertexBuffer(bd->spVB, stride);
   //Set Index Buffer
   gapi.setIndexBuffer(bd->spIB, sizeof(ImDrawIdx) == 2
-    ? giEngineSDK::GI_FORMAT::E::kFORMAT_R16_UINT
-    : giEngineSDK::GI_FORMAT::E::kFORMAT_R32_UINT);
+                      ? giEngineSDK::GI_FORMAT::E::kFORMAT_R16_UINT
+                      : giEngineSDK::GI_FORMAT::E::kFORMAT_R32_UINT);
   //Set Topology
   //gapi.setTopology(giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
   //Set Vertex Shader
@@ -179,7 +178,7 @@ namespace ImGui {
   }
 
   void
-  init(void* inWindow) {
+  init(void* inWindow, Vector2 inWindowSize) {
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -197,11 +196,7 @@ namespace ImGui {
     mainViewport->PlatformHandle = mainViewport->PlatformHandleRaw = inWindow;           //Si falla soy yo xd
 
     //Inputs
-
-    RECT rc;
-    GetClientRect(static_cast<HWND>(inWindow), &rc);
-    io.DisplaySize = ImVec2(static_cast<float>(rc.right),
-      static_cast<float>(rc.bottom));
+    io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
 
     ImGui::StyleColorsDark();
 
@@ -264,7 +259,7 @@ namespace ImGui {
     Vector<InputLayoutDesc> layoutDesc;
 
     //Set the size for the inputLayout
-    layoutDesc.resize(5);
+    layoutDesc.resize(3);
 
     //Sets the input Layout values
 
@@ -287,22 +282,22 @@ namespace ImGui {
     layoutDesc[1].instanceDataStepRate = 0;
 
     //color
-    layoutDesc[1].semanticName = "COLOR";
-    layoutDesc[1].semanticIndex = 0;
-    layoutDesc[1].format = giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM;
-    layoutDesc[1].inputSlot = 0;
-    layoutDesc[1].alignedByteOffset = IM_OFFSETOF(ImDrawVert, col);;
-    layoutDesc[1].inputSlotClass = giEngineSDK::GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
-    layoutDesc[1].instanceDataStepRate = 0;
+    layoutDesc[2].semanticName = "COLOR";
+    layoutDesc[2].semanticIndex = 0;
+    layoutDesc[2].format = giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM;
+    layoutDesc[2].inputSlot = 0;
+    layoutDesc[2].alignedByteOffset = IM_OFFSETOF(ImDrawVert, col);;
+    layoutDesc[2].inputSlotClass = giEngineSDK::GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDesc[2].instanceDataStepRate = 0;
 
     //Create the Input Layout
     tmpData->spInputLayout = gapi.createInputLayout(layoutDesc, tmpData->spVertexShader);
 
     //
-    tmpData->spVB = gapi.createBuffer(sizeof(Matrix4),
-      giEngineSDK::GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
-      0,
-      nullptr);
+    tmpData->spVertexConstantBuffer = gapi.createBuffer(sizeof(Matrix4),
+                                                        giEngineSDK::GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                                        0,
+                                                        nullptr);
     //Create Blend State
     Vector4 tmpkk = { 0.f, 0.f, 0.f, 0.f };
     tmpData->spBlendState = gapi.createBlendState(true,
@@ -340,7 +335,8 @@ namespace ImGui {
                                    tmpHeight,
                                    giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                    giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
-
+  
+      tmpData->spFontTextureView = tmpTex;
     }
 
     // Store our identifier

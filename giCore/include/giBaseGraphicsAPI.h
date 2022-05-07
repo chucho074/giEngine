@@ -136,7 +136,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BaseVertexShader>
-    createVShaderFromFile(String,
+    createVShaderFromFile(wString,
                           String,
                           String) { 
 
@@ -151,7 +151,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BasePixelShader>
-    createPShaderFromFile(String,
+    createPShaderFromFile(wString,
                           String,
                           String){ 
       return nullptr; 
@@ -165,7 +165,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual SharedPtr<BaseComputeShader>
-    createCShaderFromFile(String,
+    createCShaderFromFile(wString,
                           String,
                           String){ 
       return nullptr; 
@@ -327,6 +327,10 @@ namespace giEngineSDK {
     virtual void 
     setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {};
 
+    /**
+     * @brief 
+     * @param inDepthState 
+     */
     virtual void 
     setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {};
     

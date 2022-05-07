@@ -24,7 +24,7 @@ namespace giEngineSDK {
   }
 
   bool
-  PixelShaderDX::init(String inFileName,
+  PixelShaderDX::init(wString inFileName,
                       String inEntryPoint,
                       String inShaderModel) {
 
@@ -35,7 +35,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  PixelShaderDX::CompileShaderFromFile(String szFileName,
+  PixelShaderDX::CompileShaderFromFile(wString szFileName,
                                        String szEntryPoint, 
                                        String szShaderModel, 
                                        ID3DBlob** ppBlobOut) {
@@ -51,17 +51,15 @@ namespace giEngineSDK {
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DX11CompileFromFile(szFileName.c_str(),
+    hr = D3DCompileFromFile(szFileName.c_str(),
                                NULL,
                                NULL,
                                szEntryPoint.c_str(),
                                szShaderModel.c_str(),
                                dwShaderFlags,
                                0,
-                               NULL,
                                ppBlobOut,
-                               &pErrorBlob,
-                               NULL);
+                               &pErrorBlob);
 
     if (FAILED(hr)) {
       if (pErrorBlob != NULL) {

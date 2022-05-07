@@ -256,12 +256,12 @@ namespace giEngineSDK {
 
 
   SharedPtr<BaseVertexShader>
-  CGraphicsDX::createVShaderFromFile(String inFileName,
-                        String inEntryPoint,
-                        String inShaderModel) {
+  CGraphicsDX::createVShaderFromFile(wString inFileName,
+                                     String inEntryPoint,
+                                     String inShaderModel) {
 
     SharedPtr<VertexShaderDX> tempVS;
-    tempVS.reset();
+    tempVS.reset(new VertexShaderDX);
     tempVS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_device->CreateVertexShader(tempVS->m_compiledVShader->GetBufferPointer(),
                                             tempVS->m_compiledVShader->GetBufferSize(),
@@ -278,11 +278,11 @@ namespace giEngineSDK {
 
 
   SharedPtr<BasePixelShader>
-  CGraphicsDX::createPShaderFromFile(String inFileName,
-                        String inEntryPoint,
-                        String inShaderModel) {
+  CGraphicsDX::createPShaderFromFile(wString inFileName,
+                                     String inEntryPoint,
+                                     String inShaderModel) {
     SharedPtr<PixelShaderDX> tempPS;
-    tempPS.reset();
+    tempPS.reset(new PixelShaderDX);
     tempPS->init(inFileName, inEntryPoint, inShaderModel);
     if (FAILED(m_device->CreatePixelShader(tempPS->m_compiledPShader->GetBufferPointer(),
                                            tempPS->m_compiledPShader->GetBufferSize(),
@@ -297,9 +297,9 @@ namespace giEngineSDK {
   }
 
   SharedPtr<BaseComputeShader>
-  CGraphicsDX::createCShaderFromFile(String inFileName, 
-                        String inEntryPoint, 
-                        String inShaderModel) {
+  CGraphicsDX::createCShaderFromFile(wString inFileName,
+                                     String inEntryPoint, 
+                                     String inShaderModel) {
 
     SharedPtr<ComputeShaderDX> tempCS;
     tempCS->init(inFileName, inEntryPoint, inShaderModel);
@@ -320,7 +320,7 @@ namespace giEngineSDK {
                                     String inEntryPoint) {
     SharedPtr<VertexShaderDX> tmpVShader;
     tmpVShader.reset(new VertexShaderDX);
-
+    //Compile the shader.
     if (FAILED(D3DCompile(inShaderRaw, 
                           strlen(inShaderRaw), 
                           NULL, 
@@ -332,24 +332,26 @@ namespace giEngineSDK {
                           0, 
                           &tmpVShader->m_compiledVShader,
                           NULL))) {
-      return SharedPtr<BaseVertexShader>();
+      return nullptr;
     }
-
+    //Create the vertex shader with the compiled data.
     if (m_device->CreateVertexShader(tmpVShader->m_compiledVShader->GetBufferPointer(), 
                                      tmpVShader->m_compiledVShader->GetBufferSize(),
                                      NULL, 
                                      &tmpVShader->m_vertexShader) != S_OK) {
-      tmpVShader->m_compiledVShader->Release();
-      return SharedPtr<BaseVertexShader>();
+      
+      return nullptr;
     }
-    tmpVShader->m_compiledVShader->Release();
-    return SharedPtr<BaseVertexShader>();
+    //If the shader can be created.
+    return tmpVShader;
   }
 
   SharedPtr<BasePixelShader>
   CGraphicsDX::createPShaderFromMem(const char* inShaderRaw,
                                     String inEntryPoint) {
     SharedPtr<PixelShaderDX> tmpPShader;
+    tmpPShader.reset(new PixelShaderDX);
+    //Compile the data.
     if (FAILED(D3DCompile(inShaderRaw, 
                           strlen(inShaderRaw), 
                           NULL, 
@@ -363,14 +365,15 @@ namespace giEngineSDK {
                           NULL))) {
       return nullptr; 
     }
+    //Create the pixel shader with the compiled data.
     if (m_device->CreatePixelShader(tmpPShader->m_compiledPShader->GetBufferPointer(), 
-                                          tmpPShader->m_compiledPShader->GetBufferSize(), 
-                                          NULL, 
-                                          &tmpPShader->m_pixelShader) != S_OK) {
-      tmpPShader->m_compiledPShader->Release();
+                                    tmpPShader->m_compiledPShader->GetBufferSize(), 
+                                    NULL, 
+                                    &tmpPShader->m_pixelShader) != S_OK) {
       return nullptr;
     }
-    tmpPShader->m_compiledPShader->Release();
+    //If the shader can't be created.
+    return tmpPShader;
   }
   
 
@@ -380,9 +383,9 @@ namespace giEngineSDK {
                                  SharedPtr<BaseShader> inShader) {
 
     SharedPtr<InputLayoutDX> tempIL;
-    tempIL.reset();
+    tempIL.reset(new InputLayoutDX);
     tempIL->init(inDesc);
-    auto tmpVS = static_pointer_cast<VertexShaderDX>(inShader);
+    SharedPtr<VertexShaderDX> tmpVS = static_pointer_cast<VertexShaderDX>(inShader);
     if (FAILED(m_device->CreateInputLayout(tempIL->m_descriptors.data(),
                                            static_cast<int32>(inDesc.size()),
                                            tmpVS.get()->m_compiledVShader->GetBufferPointer(),
@@ -403,6 +406,8 @@ namespace giEngineSDK {
 
     GI_UNREFERENCED_PARAMETER(inOffset);
     SharedPtr<BufferDX> tmpBuffer;
+    tmpBuffer.reset(new BufferDX);
+
     CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
@@ -427,6 +432,7 @@ namespace giEngineSDK {
   SharedPtr<SamplerState>
   CGraphicsDX::createSampler(SamplerDesc inDesc) {
     SharedPtr<SamplerDX> tmpSampler;
+    tmpSampler.reset(new SamplerDX);
     tmpSampler->init(inDesc);
     if (FAILED(m_device->CreateSamplerState(&tmpSampler->m_desc, 
                                             &tmpSampler->m_sampler))) {
@@ -445,6 +451,7 @@ namespace giEngineSDK {
                                 bool inClockwise,
                                 bool inScissorEnable) {
     SharedPtr<RasterizerDX> tmpRaster;
+    tmpRaster.reset(new RasterizerDX);
     D3D11_RASTERIZER_DESC tmpDesc;
     memset(&tmpDesc, 0, sizeof(tmpDesc));
     switch (inFillMode) {
@@ -490,7 +497,7 @@ namespace giEngineSDK {
                                 bool inDepthEnable,
                                 GI_COMPARATION_FUNC::E inCompar) {
     SharedPtr<DepthStateDX> tmpState;
-
+    tmpState.reset(new DepthStateDX);
     D3D11_DEPTH_STENCIL_DESC tmpDesc;
 
     tmpDesc.StencilEnable = inStencilEnable;
@@ -532,11 +539,11 @@ namespace giEngineSDK {
     desc.RenderTarget[0].BlendEnable = inEnable;
     desc.RenderTarget[0].SrcBlend = static_cast<D3D11_BLEND>(inSource);
     desc.RenderTarget[0].DestBlend = static_cast<D3D11_BLEND>(inDest);
-    desc.RenderTarget[0].BlendEnable = static_cast<D3D11_BLEND_OP>(inOp);
-    desc.RenderTarget[0].BlendEnable = static_cast<D3D11_BLEND>(inAlphaSource);
-    desc.RenderTarget[0].BlendEnable = static_cast<D3D11_BLEND>(inAlphaDest);
-    desc.RenderTarget[0].BlendEnable = static_cast<D3D11_BLEND_OP>(inAlphaOp);
-    desc.RenderTarget[0].BlendEnable = D3D11_COLOR_WRITE_ENABLE_ALL;
+    desc.RenderTarget[0].BlendOp = static_cast<D3D11_BLEND_OP>(inOp);
+    desc.RenderTarget[0].SrcBlendAlpha = static_cast<D3D11_BLEND>(inAlphaSource);
+    desc.RenderTarget[0].DestBlendAlpha = static_cast<D3D11_BLEND>(inAlphaDest);
+    desc.RenderTarget[0].BlendOpAlpha = static_cast<D3D11_BLEND_OP>(inAlphaOp);
+    desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
     SharedPtr<BlendStateDX> tmpBS(new BlendStateDX);
     tmpBS->m_blendFactor = inBlendFactor;
@@ -602,7 +609,7 @@ namespace giEngineSDK {
                                  void* inData,
                                  uint32 inPitch) {
 
-    auto tmpBuffer = static_pointer_cast<BufferDX>(inBuffer);
+    SharedPtr<BufferDX> tmpBuffer = static_pointer_cast<BufferDX>(inBuffer);
     m_devContext->UpdateSubresource(tmpBuffer->m_buffer, 
                                     0, 
                                     NULL, 
@@ -708,7 +715,7 @@ namespace giEngineSDK {
     
     SharedPtr<Texture2DDX> tmpTexture = static_pointer_cast<Texture2DDX>(inTexture);
     ID3D11ShaderResourceView* tmpSRV = nullptr;
-    if (nullptr != inTexture) {
+    if (nullptr != tmpTexture) {
       tmpSRV = tmpTexture->getSRV();
     }
 
@@ -811,7 +818,7 @@ namespace giEngineSDK {
 
   SharedPtr<BaseRasterizerState>
   CGraphicsDX::rsGetState() {
-    SharedPtr<RasterizerDX> tmpState;
+    SharedPtr<RasterizerDX> tmpState(new RasterizerDX);
     m_devContext->RSGetState(&tmpState->m_rasterizerState);
     return tmpState;
   }
@@ -819,6 +826,7 @@ namespace giEngineSDK {
   SharedPtr<BaseBlendState>
   CGraphicsDX::omGetBlendState() {
     SharedPtr<BlendStateDX> tmpBlend;
+    tmpBlend.reset(new BlendStateDX);
     float tmpFactor[4];
     uint32 tmpMask;
 
@@ -836,6 +844,7 @@ namespace giEngineSDK {
   SharedPtr<BaseDepthStencilState>
   CGraphicsDX::omGetDepthStencilState() {
     SharedPtr<DepthStateDX> tmpState;
+    tmpState.reset(new DepthStateDX);
     m_devContext->OMGetDepthStencilState(&tmpState->m_State, nullptr);
     return tmpState;
   }
@@ -844,6 +853,7 @@ namespace giEngineSDK {
   CGraphicsDX::psGetShaderResources(uint32 inStartSlot, 
                                     uint32 inNumViews) {
     SharedPtr<Texture2DDX> tmpShaderResource;
+    tmpShaderResource.reset(new Texture2DDX);
     m_devContext->PSGetShaderResources(inStartSlot, 
                                        inNumViews, 
                                        &tmpShaderResource->m_subResourceData);
@@ -853,7 +863,7 @@ namespace giEngineSDK {
   SharedPtr<SamplerState>
   CGraphicsDX::psGetSamplers(uint32 inStartSlot, 
                              uint32 inNumSamplers) {
-    SharedPtr<SamplerDX> tmpSampler;
+    SharedPtr<SamplerDX> tmpSampler(new SamplerDX);
     m_devContext->PSGetSamplers(inStartSlot, 
                                 inNumSamplers, 
                                 &tmpSampler->m_sampler);
@@ -862,14 +872,14 @@ namespace giEngineSDK {
 
   SharedPtr<BasePixelShader>
   CGraphicsDX::psGetShader() {
-    SharedPtr<PixelShaderDX> tmpShader;
+    SharedPtr<PixelShaderDX> tmpShader(new PixelShaderDX);
     m_devContext->PSGetShader(&tmpShader->m_pixelShader, nullptr, nullptr);
     return tmpShader;
   }
 
   SharedPtr<BaseVertexShader>
   CGraphicsDX::vsGetShader() {
-    SharedPtr<VertexShaderDX> tmpShader;
+    SharedPtr<VertexShaderDX> tmpShader(new VertexShaderDX);
     m_devContext->VSGetShader(&tmpShader->m_vertexShader, nullptr, nullptr);
     return tmpShader;
   }
@@ -877,7 +887,7 @@ namespace giEngineSDK {
   SharedPtr<Buffer>
   CGraphicsDX::vsGetConstantBuffers(int32 inStartSlot, 
                                     int32 inNumBuffers) {
-    SharedPtr<BufferDX> tmpBuffer;
+    SharedPtr<BufferDX> tmpBuffer(new BufferDX);
     m_devContext->VSGetConstantBuffers(inStartSlot, 
                                        inNumBuffers, 
                                        &tmpBuffer->m_buffer);
@@ -893,7 +903,7 @@ namespace giEngineSDK {
 
   SharedPtr<Buffer>
   CGraphicsDX::iaGetIndexBuffer() {
-    SharedPtr<BufferDX> tmpBuffer;
+    SharedPtr<BufferDX> tmpBuffer(new BufferDX);
     m_devContext->IAGetIndexBuffer(&tmpBuffer->m_buffer, nullptr, nullptr);
     return tmpBuffer;
   }
@@ -902,7 +912,7 @@ namespace giEngineSDK {
   CGraphicsDX::iaGetVertexBuffer(uint32 inStartSlot, 
                                  uint32 inStride, 
                                  uint32 inOffset) {
-    SharedPtr<BufferDX> tmpBuffer;
+    SharedPtr<BufferDX> tmpBuffer(new BufferDX);
     m_devContext->IAGetVertexBuffers(inStartSlot, 
                                      1, 
                                      &tmpBuffer->m_buffer, 
@@ -913,7 +923,7 @@ namespace giEngineSDK {
 
   SharedPtr<InputLayout>
   CGraphicsDX::iaGetInputLayout() {
-    SharedPtr<InputLayoutDX> tmpIL;
+    SharedPtr<InputLayoutDX> tmpIL(new InputLayoutDX);
     m_devContext->IAGetInputLayout(&tmpIL->m_inputLayout);
     return tmpIL;
   }
@@ -952,6 +962,7 @@ namespace giEngineSDK {
                             &nrChannels, 4);
     if (data) {
       SharedPtr<Texture2DDX> temp;
+      temp.reset(new Texture2DDX);
       CD3D11_TEXTURE2D_DESC tempDesc;
       memset(&tempDesc, 0, sizeof(tempDesc));
       tempDesc.Width = width;
@@ -1006,6 +1017,7 @@ namespace giEngineSDK {
                               GI_BIND_FLAG::E inBindFlags) { 
     if (inData) {
       SharedPtr<Texture2DDX> temp;
+      temp.reset(new Texture2DDX);
       CD3D11_TEXTURE2D_DESC tempDesc;
       memset(&tempDesc, 0, sizeof(tempDesc));
       tempDesc.Width = inWidth;

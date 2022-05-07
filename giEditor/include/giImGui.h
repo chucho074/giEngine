@@ -12,16 +12,16 @@
   */
 #pragma once
 #include <imgui.h>
+#include <giVector2.h>
 //#include <giPrerequisitesCore.h>
 
-
-
+using giEngineSDK::Vector2;
 
 
 namespace ImGui {
 
   void
-  init(void* inWindow);
+  init(void* inWindow, Vector2 inWindowSize);
 
   void
   update(void* inWindow, float inDT);
@@ -34,6 +34,5 @@ namespace ImGui {
 
   void
   callBack();
-
 
 }
