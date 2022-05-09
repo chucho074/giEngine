@@ -24,7 +24,7 @@
 
 
 #include "giImGui.h"
-
+#include <iostream>
 
 using giEngineSDK::uint8;
 using giEngineSDK::int32;
@@ -45,10 +45,9 @@ using giEngineSDK::BaseDepthStencilState;
 using giEngineSDK::BaseBlendState;
 using giEngineSDK::Vector;
 using giEngineSDK::Vector4;
-using giEngineSDK::Matrix4;/*
-using giEngineSDK::GI_FORMAT::E;
-using giEngineSDK::GI_BIND_FLAG::E;
-using giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E;*/
+using giEngineSDK::Matrix4;
+
+using std::cout;
 
 // giEngine data
 struct ImGui_ImplGI_Data {
@@ -92,11 +91,9 @@ struct BACKUP_STATE {
 };
 
 struct
-  VERTEX_CONSTANT_BUFFER {
+VERTEX_CONSTANT_BUFFER {
   float mvp[4][4];
 };
-
-
 
 
 struct ImGui_MouseData {
@@ -194,7 +191,6 @@ namespace ImGui {
     mainViewport->PlatformHandle = mainViewport->PlatformHandleRaw = inWindow;           //Si falla soy yo xd
 
     //Inputs
-
 
     io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
 
