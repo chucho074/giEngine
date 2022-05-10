@@ -112,6 +112,8 @@ namespace giEngineSDK {
   //Making shared 
   using std::make_shared;
 
+  namespace fsys = std::filesystem;
+
   using Path = std::filesystem::path;
 
   //Wstring & String converters functions

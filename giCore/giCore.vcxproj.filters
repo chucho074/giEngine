@@ -19,6 +19,9 @@
     <Filter Include="Header Files\BaseShaders">
       <UniqueIdentifier>{872d37e8-0090-45e0-b678-a0d7c8592fed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceManager">
+      <UniqueIdentifier>{be3dadc5-bee7-46eb-96b6-ece44faf7798}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giBaseApp.cpp">
@@ -59,6 +62,18 @@
     </ClCompile>
     <ClCompile Include="src\giBaseOmniverse.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giResourceManager.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="include\giEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giEncoder.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giBaseConfig.cpp">
+      <Filter>BaseApp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,8 +170,14 @@
     <ClInclude Include="include\giBaseOmniverse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\giCodecDecoder.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\giEncoder.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giResourceManager.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseConfig.h">
+      <Filter>BaseApp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

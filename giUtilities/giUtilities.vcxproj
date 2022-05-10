@@ -176,6 +176,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\giFile.cpp" />
+    <ClCompile Include="src\giFileSystem.cpp" />
     <ClCompile Include="src\giLogger.cpp" />
     <ClCompile Include="src\giQuaternion.cpp" />
     <ClCompile Include="src\giDegrees.cpp" />

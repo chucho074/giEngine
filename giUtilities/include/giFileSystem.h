@@ -17,35 +17,43 @@
 namespace giEngineSDK {
   /**
    * @class    FileSystem.
-   * @brief    .
+   * @brief    File Writer and reader.
    * @bug      No known Bugs.
    */
   class FileSystem
   {
    public:
     //Default Constructor.
-    FileSystem();
+    FileSystem() = default;
 
-    //Destructor.
-    ~FileSystem();
+    //Default Destructor.
+    ~FileSystem() = default;
     
-
-
+    /**
+     * @brief    Write the info from a file with the given data.
+     * @param    inFile        The file information needed to write.
+     * @return   Returns true if the file can be created and writed correctly.
+     */
     bool
     writeFile(FILE inFile);
     
-
+    /**
+     * @brief    Read a file with an given path.
+     * @param    inPath        The path to read the file.
+     * @return   Returns the file information in a FILE object.
+     */
     FILE
-    readFile(String inPath);
+    readFile(Path inPath);
 
+    /**
+     * @brief    Evaluates if a file exist.
+     * @param    inPath        The path of the file to evaluate if exists.
+     * @return   Returns a true if the file exists.
+     */
     bool
-    exist(String inPath);
-   protected:
-    
-   
-   private:
-   
+    exist(Path inPath);
+
+
+    friend class FILE;
   };
-  
-  
 }

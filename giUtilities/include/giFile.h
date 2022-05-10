@@ -55,13 +55,13 @@ namespace giEngineSDK {
       
     };
 
-    //Destructor.
+    //Default destructor.
     ~FILE() = default;
 
    private:
     /**
-     * @brief    
-     * @param    inExtension   .
+     * @brief    Evaluates the extension and sets the value in m_extension.
+     * @param    inExtension   The string of the extension to evaluate.
      */
     void
     evaluateExtension(wString inExtension);
@@ -72,7 +72,12 @@ namespace giEngineSDK {
 
     String m_name;
 
+    String m_data;
+
     EXTENSION_TYPE::E m_extension = EXTENSION_TYPE::E::kUnknown;
 
+
+    friend class FileSystem;
+    friend class Encoder;
   };
 }

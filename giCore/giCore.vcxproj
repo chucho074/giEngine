@@ -170,15 +170,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\giEncoder.cpp" />
     <ClCompile Include="src\giActor.cpp" />
     <ClCompile Include="src\giBaseApp.cpp" />
+    <ClCompile Include="src\giBaseConfig.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
     <ClCompile Include="src\giBaseInput.cpp" />
     <ClCompile Include="src\giBaseOmniverse.cpp" />
     <ClCompile Include="src\giBaseRenderer.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
+    <ClCompile Include="src\giEncoder.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
+    <ClCompile Include="src\giResourceManager.cpp" />
     <ClCompile Include="src\giSceneGraph.cpp" />
     <ClCompile Include="src\giSceneNode.cpp" />
     <ClCompile Include="src\giSkeletalMesh.cpp" />
@@ -186,11 +190,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giBaseComputeShader.h" />
+    <ClInclude Include="include\giBaseConfig.h" />
     <ClInclude Include="include\giBaseInput.h" />
     <ClInclude Include="include\giBaseOmniverse.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
     <ClInclude Include="include\giBlendState.h" />
-    <ClInclude Include="include\giCodecDecoder.h" />
     <ClInclude Include="include\giComponent.h" />
     <ClInclude Include="include\giActor.h" />
     <ClInclude Include="include\giBaseApp.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="include\giCamera.h" />
     <ClInclude Include="include\giDepthState.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
+    <ClInclude Include="include\giEncoder.h" />
     <ClInclude Include="include\giInputLayout.h" />
     <ClInclude Include="include\giMaterial.h" />
     <ClInclude Include="include\giMesh.h" />
@@ -210,6 +215,7 @@
     <ClInclude Include="include\giPrerequisitesCore.h" />
     <ClInclude Include="include\giRasterizer.h" />
     <ClInclude Include="include\giResource.h" />
+    <ClInclude Include="include\giResourceManager.h" />
     <ClInclude Include="include\giSampler.h" />
     <ClInclude Include="include\giSceneGraph.h" />
     <ClInclude Include="include\giSceneNode.h" />
