@@ -20,12 +20,12 @@
 
 namespace giEngineSDK {
 
-// Omniverse Log callback
+  // Omniverse Log callback
   static void 
   logCallback(const char* threadName,
-                          const char* component, 
-                          OmniClientLogLevel level, 
-                          const char* message) noexcept{
+              const char* component, 
+              OmniClientLogLevel level, 
+              const char* message) noexcept{
     std::unique_lock<std::mutex> lk(gLogMutex);
     if (gOmniverseLoggingEnabled) {
       puts(message);
@@ -39,11 +39,14 @@ namespace giEngineSDK {
     // Let's just print this regardless
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Connection Status: " << omniClientGetConnectionStatusString(status) << " [" << url << "]" << std::endl;
+      ConsoleOut << "Connection Status: " 
+                 << omniClientGetConnectionStatusString(status) 
+                 << " [" << url << "]" << ConsoleLine;
     }
     if (status == eOmniClientConnectionStatus_ConnectError) {
-      // We shouldn't just exit here - we should clean up a bit, but we're going to do it anyway
-      ConsoleOut << "[ERROR] Failed connection, exiting." << std::endl;
+      // We shouldn't just exit here - we should clean up a bit, 
+      // but we're going to do it anyway
+      ConsoleOut << "[ERROR] Failed connection, exiting." << ConsoleLine;
       g_logger().SetError(ERROR_TYPE::kOmniConnection, "Failed connection");
       exit(-1);
     }
@@ -90,23 +93,24 @@ namespace giEngineSDK {
       }));
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Connected username: " << userName << std::endl;
+      ConsoleOut << "Connected username: " << userName << ConsoleLine;
     }
   }
 
-  // Create a new connection for this model in Omniverse, returns the created stage URL
+  // Create a new connection for this model in Omniverse, 
+  // returns the created stage URL.
   static String 
   createOmniverseModel(const String& destinationPath) {
     String stageUrl = destinationPath + "/scene.usd";
     // Delete the old version of this file on Omniverse and wait for the operation to complete
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Waiting for " << stageUrl << " to delete... " << std::endl;
+      ConsoleOut << "Waiting for " << stageUrl << " to delete... " << ConsoleLine;
     }
     omniClientWait(omniClientDelete(stageUrl.c_str(), nullptr, nullptr));
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "finished" << std::endl;
+      ConsoleOut << "finished" << ConsoleLine;
     }
 
     // Create this file in Omniverse cleanly
@@ -119,7 +123,7 @@ namespace giEngineSDK {
 
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "New stage created: " << stageUrl << std::endl;
+      ConsoleOut << "New stage created: " << stageUrl << ConsoleLine;
     }
 
     // Always a good idea to declare your up-ness
@@ -156,15 +160,13 @@ namespace giEngineSDK {
     omniClientWait(omniClientGetServerInfo(stageUrl.c_str(), &bCheckpointsSupported,
       [](void* UserData, OmniClientResult Result, OmniClientServerInfo const* Info) noexcept
       {
-        if (Result == eOmniClientResult_Ok && Info && UserData)
-        {
+        if (Result == eOmniClientResult_Ok && Info && UserData) {
           bool* bCheckpointsSupported = static_cast<bool*>(UserData);
           *bCheckpointsSupported = Info->checkpointsEnabled;
         }
       }));
 
-    if (bCheckpointsSupported)
-    {
+    if (bCheckpointsSupported) {
       const bool bForceCheckpoint = true;
       omniClientWait(omniClientCreateCheckpoint(stageUrl.c_str(), comment, bForceCheckpoint, nullptr,
         [](void* userData, OmniClientResult result, char const* checkpointQuery) noexcept
@@ -213,13 +215,13 @@ namespace giEngineSDK {
 
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Existing stage opened: " << existingStage << std::endl;
+      ConsoleOut << "Existing stage opened: " << existingStage << ConsoleLine;
     }
 
     if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
       std::unique_lock<std::mutex> lk(gLogMutex);
       ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " 
-                 << UsdGeomGetStageUpAxis(gStage) << "-up" << std::endl;
+                 << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
     }
 
     // Traverse the stage and return the first UsdGeomMesh we find
@@ -228,7 +230,7 @@ namespace giEngineSDK {
       if (node.IsA<UsdGeomMesh>()) {
         {
           std::unique_lock<std::mutex> lk(gLogMutex);
-          ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << std::endl;
+          ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
         }
         return UsdGeomMesh(node);
       }
@@ -236,7 +238,7 @@ namespace giEngineSDK {
 
     // No UsdGeomMesh found in stage.
     // (what kind of stage is this anyway!?) - idk man, just in case.
-    ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << std::endl;
+    ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << ConsoleLine;
     g_logger().SetError(ERROR_TYPE::kOmniConnection,
                         "ERROR: No UsdGeomMesh found in stage: " + existingStage);
     return UsdGeomMesh();
@@ -244,22 +246,27 @@ namespace giEngineSDK {
 
   // Returns true if the provided maybeURL contains a host and path
   static bool 
-  isValidOmniURL(const std::string& maybeURL) {
+  isValidOmniURL(const String& maybeURL) {
     bool isValidURL = false;
     OmniClientUrl* url = omniClientBreakUrl(maybeURL.c_str());
     if (url->host && url->path &&
-      (std::string(url->scheme) == std::string("omniverse") ||
-        std::string(url->scheme) == std::string("omni")))
-    {
+      (String(url->scheme) == String("omniverse") ||
+        String(url->scheme) == String("omni"))) {
       isValidURL = true;
     }
     omniClientFreeUrl(url);
     return isValidURL;
   }
 
-
   void 
   Omni::startConection() {
+
+    if (!startOmniverse(m_liveEditActivation)) {
+      Logger::instance().SetError(ERROR_TYPE::kOmniConnection,
+        "Error creating the conection with NVIDIA Omniverse");
+      exit(1);
+    }
+
     //Get the instance of the SceneGraph
     auto& sgraph = SceneGraph::instance();
 
@@ -286,7 +293,7 @@ namespace giEngineSDK {
   //> Case of gets the Scene info from Omniverse USD.
     else {
       // Find a UsdGeomMesh in the existing stage
-      createSGFromUSD(findGeomMesh(m_existingStage));
+      createSGFromUSD();
     }
   
   }
@@ -310,7 +317,7 @@ namespace giEngineSDK {
       printConnectedUsername(stageUrl);
        
       // Get the geometry from the Scene Graph
-      tmpMesh = getData();
+      tmpMesh = getDataFromSG();
 
       checkpointFile(stageUrl, "Add a Model and nothing else");
     }
@@ -350,7 +357,7 @@ namespace giEngineSDK {
     printConnectedUsername(stageUrl);
 
     // Get the geometry from the Scene Graph
-    tmpMesh = getData();
+    tmpMesh = getDataFromSG();
 
     // Adding a checkpoint for the added models
     checkpointFile(stageUrl, "Added a Model(s) from the Scene Graph existans info.");
@@ -449,6 +456,8 @@ namespace giEngineSDK {
       xFormOpsReordered.push_back(scaleOp);
       xForm.SetXformOpOrder(xFormOpsReordered);
 
+      ConsoleOut << rotZYX;
+      
       // Commit the change to USD
       gStage->Save();
 
@@ -469,14 +478,149 @@ namespace giEngineSDK {
   }
 
   void 
-  Omni::createSGFromUSD(UsdGeomMesh inMesh) {
+  Omni::createSGFromUSD() {
+
     auto& sgraph = SceneGraph::instance();
 
+    omniUsdLiveWaitForPendingUpdates();
 
+    // Open this file from Omniverse.
+    gStage = UsdStage::Open(m_existingStage);
+    if (!gStage) {
+      failNotify("Failure to open stage in Omniverse:", m_existingStage.c_str());
+
+      g_logger().SetError(ERROR_TYPE::kOmniConnection,
+                          "Failure to open stage in Omniverse:" + m_existingStage);
+      return;
+    }
+
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Existing stage opened: " << m_existingStage << ConsoleLine;
+    }
+
+    if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is "
+                 << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
+    }
+
+    
+
+    Vector<Vector3> tmpVertexModel;
+    Vector<Vector3> tmpNormalsModel;
+    Vector<uint32>  tmpFacesModel;
+
+    // Traverse the stage and return the first UsdGeomMesh we find.
+    auto range = gStage->Traverse();
+    for (const auto& node : range) {
+      if (node.IsA<UsdGeomMesh>()) {
+          std::unique_lock<std::mutex> lk(gLogMutex);
+
+          SharedPtr<Actor> tmpActor;
+
+          SharedPtr<Model> tmpModel;
+
+          UsdPrim parent = node.GetParent();
+          if ("Root" != parent.GetName()) {
+            ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
+
+            UsdGeomMesh geoMesh(node);
+
+            //Get the information.
+            UsdAttribute tmpVertex = geoMesh.GetPointsAttr();
+            UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
+            UsdAttribute tmpFaces = geoMesh.GetFaceVertexCountsAttr();
+            
+            //Points / Vertex.
+            VtArray<GfVec3f> tmpPointArray;
+            tmpVertex.Get(&tmpPointArray);
+            
+            Vector<GfVec3f> pointArray;
+            
+            uint32 size = tmpPointArray.size();
+            auto tmpStart = reinterpret_cast<GfVec3f*>(tmpPointArray.data());
+            auto tmpEnd = tmpStart + size;
+            pointArray.reserve(size);
+            pointArray.insert(pointArray.end(), tmpStart, tmpEnd);
+            
+            for (int i = 0; i < size; ++i) {
+              tmpVertexModel.push_back(Vector3(pointArray[i].GetArray()[0],
+                                               pointArray[i].GetArray()[1],
+                                               pointArray[i].GetArray()[2]));
+            }
+            
+            //Normals.
+            VtArray<GfVec3f> tmpNormalArray;
+            tmpNormals.Get(&tmpNormalArray);
+            
+            Vector<GfVec3f> norArray;
+            
+            uint32 sizeNor = tmpNormalArray.size();
+            auto tmpStartNor = reinterpret_cast<GfVec3f*>(tmpNormalArray.data());
+            auto tmpEndNor = tmpStartNor + sizeNor;
+            norArray.reserve(sizeNor);
+            norArray.insert(norArray.end(), tmpStartNor, tmpEndNor);
+            
+            for (int i = 0; i < size; ++i) {
+              tmpNormalsModel.push_back(Vector3(norArray[i].GetArray()[0],
+                                                norArray[i].GetArray()[1],
+                                                norArray[i].GetArray()[2]));
+            }
+            
+            //Faces.
+            VtArray<GfVec3f> tmpFacesArray;
+            tmpFaces.Get(&tmpFacesArray);
+            
+            Vector<GfVec3f> faceArray;
+            
+            uint32 sizeFace = tmpFacesArray.size();
+            auto tmpStartFaces = reinterpret_cast<GfVec3f*>(tmpFacesArray.data());
+            auto tmpEndFaces = tmpStartFaces + sizeFace;
+            faceArray.reserve(sizeFace);
+            faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
+            
+            for (int i = 0; i < size; ++i) {
+              tmpFacesModel.push_back(faceArray[i].GetArray()[0]);
+            }
+            
+            //Create the mesh.
+            Mesh tmpMesh;
+            //Set the vertex data to the Vector.
+            for (int i = 0; i < size; ++i) {
+              //Create the vertex.
+              SimpleVertex tmpVertex;
+              //Set positions.
+              tmpVertex.Pos = tmpVertexModel[i];
+              //Set UVs.
+            
+              //Set Normals.
+              tmpVertex.Nor = tmpNormalsModel[i];
+            
+              //Set to the list.
+              tmpMesh.m_vertexVector.push_back(tmpVertex);
+            }
+            //Set the index.
+            tmpMesh.m_facesList = tmpFacesModel;
+            
+            //Set in the meshes.
+            tmpModel->m_meshes.push_back(tmpMesh);
+            
+            //Set the actor model to the Root in SG.
+            tmpActor->m_actorName = node.GetName();
+            SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
+            modelComponent->setModel(tmpModel);
+            tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+            
+            sgraph.addActor(tmpActor, sgraph.getRoot());
+
+          }
+      }
+    }
   }
 
   UsdGeomMesh
-  Omni::getData() {
+  Omni::getDataFromSG() {
     
     auto& sgraph = SceneGraph::instance();
 

@@ -139,4 +139,7 @@ namespace giEngineSDK {
   //Console input
   #define ConsoleIn std::cin;
 
+  //Console line
+  #define ConsoleLine std::endl;
+
 }

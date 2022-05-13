@@ -12,7 +12,7 @@
  */
 #pragma once
 #include <giModule.h>
-#include <giVector2.h>
+#include <giVector2i.h>
 #include <giStdHeaders.h>
 
 using namespace giEngineSDK;
@@ -35,11 +35,11 @@ namespace GIPLUGINS {
   };
 }
 
-class EngineConfigs : public Module<EngineConfigs> 
+class EngineConfigs : public Module<EngineConfigs>
 {
  public:
   //Basic App Configs
-  static Vector2 s_resolution;
+  static Vector2i s_resolution;
   static bool s_fullscreen;
   static String s_projectName;
   static GIENGINE_API::E s_activeGraphicApi;
@@ -47,10 +47,11 @@ class EngineConfigs : public Module<EngineConfigs>
 
 
   //Plugins
-  static Map<int32, GIPLUGINS::E> s_activePlugins;
+  static Map<GIPLUGINS::E, bool> s_activePlugins;
 
   //Omniverse settings
   static String s_existingStage;
+  static String s_destinationPath;
 
 };
 

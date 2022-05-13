@@ -31,6 +31,12 @@ namespace giEngineSDK {
     //Destructor.
     ~BaseOmni() = default;
 
+    void
+    init(String inStage, String inDestination) { 
+      m_existingStage = inStage;
+      m_destinationPath = inDestination;
+    }
+
     /**
      * @brief    Function in charge to decide if it needs to create a new USD for the 
      *           actual project or syncronize data from omniverse.
@@ -39,16 +45,19 @@ namespace giEngineSDK {
     startConection() { }
 
     /**
-     * @brief 
+     * @brief    Update the data of the class.
      */
     virtual void
     update() { }
 
+    /**
+     * @brief    Destroy the data of the class.
+     */
     virtual void
     destroy() { }
     
     /**
-     * @brief    .
+     * @brief    Create a USD with the information of the SceneGraph.
      */
     virtual void
     createUSDFromSG() { }
@@ -62,31 +71,23 @@ namespace giEngineSDK {
     createEmptyUSD(String inProjectName) { }
 
     /**
-     * @brief 
-     * @return 
+     * @brief    .
+     * @return   Returns .
      */
     virtual SharedPtr<Model>
     modelFromUSD() { 
       return nullptr;
     }
 
+
     bool 
     m_liveEditActivation = true;
-   
-    /**
-     * @brief    If reads a configuration project file and have's omniverse config
-     *           and an existen USD stage, writes the stage here.
-     */
+
+    String 
+    m_destinationPath;
+
     String
     m_existingStage;
-
-    /**
-     * @brief    .
-     * @todo     Chage for a global variable in project settings, if is not another, 
-     *           use this as a default.
-     */
-    String 
-    m_destinationPath = "omniverse://localhost/Users/giProjects/";
 
   };
 

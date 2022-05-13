@@ -60,6 +60,10 @@ namespace giEngineSDK {
     List<SharedPtr<SceneNode>>&
     getNodesByParent(WeakPtr<SceneNode> inParent);
 
+    /**
+     * @brief    .
+     * @return   Returns .
+     */
     SharedPtr<SceneNode>
     getRoot();
 

@@ -1,6 +1,6 @@
 /**
  * @file    giModule.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    26/03/2021
  * @brief   A basic description of the what do the doc.
@@ -11,13 +11,13 @@
  * @include
  */
 #pragma once
-
+#include <iostream>
 
 namespace giEngineSDK {
   /**
    * @brief  Represents one engine module. Essentially it is a specialized type
-   *        of singleton. Module must be manually started up and shut down
-   *        before and after use.
+   *         of singleton. Module must be manually started up and shut down
+   *         before and after use.
    */
   template<class T>
   class Module
@@ -44,7 +44,7 @@ namespace giEngineSDK {
 
     /**
      * @brief  Returns a pointer to the module instance. Module has to have been
-     *        started up first otherwise an exception will be thrown.
+     *         started up first otherwise an exception will be thrown.
      */
     static T*
     instancePtr() {

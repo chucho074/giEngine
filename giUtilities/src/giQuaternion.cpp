@@ -95,10 +95,11 @@ namespace giEngineSDK {
     rotMatrix.m_yColumn.z = 2 * (z * w + x * y);
 
     //
-    rotMatrix.m_yColumn.x = 2 * (y * w + x * z);
-    rotMatrix.m_yColumn.y = 2 * (z * w - x * y);
-    rotMatrix.m_yColumn.z = 2 * (x * x + w * w) - 1;
+    rotMatrix.m_zColumn.x = 2 * (y * w + x * z);
+    rotMatrix.m_zColumn.y = 2 * (z * w - x * y);
+    rotMatrix.m_zColumn.z = 2 * (x * x + w * w) - 1;
 
+    rotMatrix.m_wColumn.w = 1;
 
     return rotMatrix;
   }

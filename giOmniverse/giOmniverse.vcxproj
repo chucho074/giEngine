@@ -81,9 +81,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\msvc\VC\Tools\MSVC\14.16.27023\include;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\include\winrt;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\include\um;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\include\ucrt;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\include\shared;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\msvc\VC\Tools\MSVC\14.16.27023\lib\onecore\x64;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\lib\ucrt\x64;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\lib\um\x64;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\msvc\VC\Tools\MSVC\14.16.27023\bin\HostX64\x64;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\msvc\MSBuild\15.0\bin;G:\OMNI\lib\connectsample-101.1.6\_build\host-deps\winsdk\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\include;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\winrt;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\um;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\ucrt;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\shared;$(IncludePath)</IncludePath>
+    <LibraryPath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\lib\onecore\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\lib\ucrt\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\lib\um\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\bin\HostX64\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\bin\x64;$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>

@@ -13,10 +13,7 @@
 #pragma once
 #include <giBaseOmniverse.h>
 #include <giSceneGraph.h>
-#include "giPrerequisitesOmniverse.h"
-#include <iostream>
-
-using std::endl;
+#include "giPrerequisitesOmniverse.h"`
 
 namespace giEngineSDK {
 
@@ -55,7 +52,6 @@ namespace giEngineSDK {
     void 
     destroy() override;
 
-    
     /**
      * @brief    Creates the USD file from the Scene Graph.
      */
@@ -75,13 +71,13 @@ namespace giEngineSDK {
      * @param    inMesh        USD data obtained.
      */
     void
-    createSGFromUSD(UsdGeomMesh inMesh);
+    createSGFromUSD();
 
     /**
      * @brief    Get the data from the Scene Graph.
      */
     UsdGeomMesh
-    getData();
+    getDataFromSG();
    
     /**
      * @brief    .
@@ -130,7 +126,7 @@ namespace giEngineSDK {
       if (!op) {
         op = xForm.AddXformOp(opType, precision);
         std::unique_lock<std::mutex> lk(gLogMutex);
-        ConsoleOut << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
+        ConsoleOut << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
       }
 
       if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat) {
@@ -140,7 +136,7 @@ namespace giEngineSDK {
         op.Set(value);
       }
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << endl;
+      ConsoleOut << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
     }
   };
 

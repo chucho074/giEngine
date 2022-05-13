@@ -1,6 +1,6 @@
 /**
  * @file    giBaseApp.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/08/2020
  * @brief   A class for the basics functions of the apps.
@@ -22,6 +22,7 @@
 #include "giSceneGraph.h"
 #include "giBaseInput.h"
 #include "giBaseOmniverse.h"
+#include "giBaseConfig.h"
 
 using namespace giEngineSDK;
 
@@ -50,7 +51,7 @@ class GI_CORE_EXPORT BaseApp
   /**
    * @brief    Runs the app.
    * @bug      No known Bugs.
-   * @return   Returns a 0 if its ok.
+   * @return   Returns a 0 if it's ok.
    */
   int32 
   run();
@@ -71,7 +72,7 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual method in charge to updating the logical information.
-   * @param    inDeltaTime    For update the game time.
+   * @param    inDeltaTime     For update the game time.
    * @bug      No known Bugs.
    */
   virtual void 
@@ -104,7 +105,7 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Method in charge of updates the logic info.
-   * @param    inDeltaTime 
+   * @param    inDeltaTime     .
    * @bug      No known Bugs.
    */
   void 
@@ -151,13 +152,13 @@ class GI_CORE_EXPORT BaseApp
    */
   //static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
 
-  ///The Width of the window with a default size
-  uint32 m_width = 640.f;
+  ///The Width of the window with a default size.
+  uint32 m_width = EngineConfigs::s_resolution.x;
   
-  ///The Height of the window with a default size
-  uint32 m_height = 480.f;
+  ///The Height of the window with a default size.
+  uint32 m_height = EngineConfigs::s_resolution.y;
   
-  ///The reference of the window
+  ///The reference of the window.
   WindowBase m_window;
 
   //

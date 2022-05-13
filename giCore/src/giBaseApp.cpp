@@ -1,6 +1,6 @@
 /**
  * @file    giBaseApp.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/08/2020
  * @brief   A class for the basics functions of the apps.
@@ -20,27 +20,29 @@
 int32 
 BaseApp::run() {
 
-  //Create the main window
+  //Create the main window.
   createWindow();
 
-  //Initialize every system
+  //Initialize every system.
   initSystems();
   auto& renderer = BaseRenderer::instance();
 
-  //Send message to device
+  //Send message to device.
   onCreate();
 
-  //Initialize the inputs
+  //Initialize the inputs.
   m_inputManager->init();
 
-  //Create the renderer
+  //Create the renderer.
   renderer.create();
 
-  //Create a USD for the scene
+  //Create the Omniverse conection.
+  m_omniverse->init(EngineConfigs::s_existingStage, 
+                    EngineConfigs::s_destinationPath);
   m_omniverse->startConection();
 
 
-  //App Loop
+  //App Loop.
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
     m_inputManager->update();
@@ -58,18 +60,19 @@ BaseApp::run() {
         break;
       }
 
-      //Eventos propios
+      //Eventos propios.
       event(msg);
     }
     m_inputManager->runEvents();
-    //Update Time
+
+    //Update Time.
     m_time->update();
     float deltaTime = g_time().getTime();
 
-    //Update Game Logic
+    //Update Game Logic.
     update(deltaTime);
     
-    //Render Frame
+    //Render Frame.
     render();
 
     renderer.render();
