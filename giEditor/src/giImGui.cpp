@@ -47,7 +47,6 @@ using giEngineSDK::Vector;
 using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;
 
-using std::cout;
 
 // giEngine data
 struct ImGui_ImplGI_Data {
@@ -188,9 +187,9 @@ namespace ImGui {
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
     ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-    mainViewport->PlatformHandle = mainViewport->PlatformHandleRaw = inWindow;           //Si falla soy yo xd
+    mainViewport->PlatformHandle = mainViewport->PlatformHandleRaw = inWindow;
 
-    //Inputs
+    //Inputs of the keyboard
 
     io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
 
@@ -323,17 +322,13 @@ namespace ImGui {
     io.Fonts->GetTexDataAsRGBA32(&tmpPixels, &tmpWidth, &tmpHeight);
 
     // Upload texture to graphics system
-    {
-      SharedPtr<Texture2D> tmpTex;
-
-      tmpTex = gapi.TextureFromMem(tmpPixels,
-                                   tmpWidth,
-                                   tmpHeight,
-                                   giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                   giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
-  
-      tmpData->spFontTextureView = tmpTex;
-    }
+    
+    tmpData->spFontTextureView = gapi.TextureFromMem(tmpPixels,
+                                 tmpWidth,
+                                 tmpHeight,
+                                 giEngineSDK::GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                 giEngineSDK::GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
+    
 
     // Store our identifier
     io.Fonts->SetTexID(static_cast<ImTextureID>(&tmpData->spFontTextureView));
