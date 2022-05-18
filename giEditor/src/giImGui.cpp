@@ -139,7 +139,7 @@ ImGui_ImplGI_SetupRenderState(ImDrawData* draw_data) {
   //Set Index Buffer
   gapi.setIndexBuffer(bd->spIB, giEngineSDK::GI_FORMAT::E::kFORMAT_R16_UINT);
   //Set Topology
-  //gapi.setTopology(giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  gapi.setTopology(giEngineSDK::GI_PRIMITIVE_TOPOLOGY::E::kPRIMITIVE_TOPOLOGY_TRIANGLELIST);
   //Set Vertex Shader
   gapi.vsSetShader(bd->spVertexShader);
   //Set Set Constant Buffer
@@ -462,9 +462,9 @@ namespace ImGui {
       }
       tmpData->VertexBufferSize = data->TotalVtxCount;
       tmpData->spVB = gapi.createBuffer(tmpData->VertexBufferSize * sizeof(ImDrawVert),
-        giEngineSDK::GI_BIND_FLAG::kBIND_VERTEX_BUFFER,
-        0,
-        nullptr);
+                                        giEngineSDK::GI_BIND_FLAG::kBIND_VERTEX_BUFFER,
+                                        0,
+                                        nullptr);
     }
     if (!tmpData->spIB || tmpData->IndexBufferSize < data->TotalIdxCount) {
       if (tmpData->spIB) {
