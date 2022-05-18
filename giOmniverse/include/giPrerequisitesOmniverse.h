@@ -105,7 +105,8 @@ static std::mutex gLogMutex;
 TF_DEFINE_PRIVATE_TOKENS(
   _tokens,
   (box)
-  (Light)
+  (DistantLight)
+  (DomeLight)
   (Looks)
   (Root)
   (Shader)

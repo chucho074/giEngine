@@ -132,10 +132,31 @@ namespace giEngineSDK {
     return stageUrl;
   }
 
+  // Create a light source in the scene.
+  static void 
+  createDistantLight() {
+    // Construct /Root/Light path
+    SdfPath lightPath = SdfPath::AbsoluteRootPath()
+      .AppendChild(_tokens->Root)
+      .AppendChild(_tokens->DistantLight);
+    UsdLuxDistantLight newLight = UsdLuxDistantLight::Define(gStage, lightPath);
+
+    // Set the attributes
+    newLight.CreateAngleAttr(VtValue(0.53f));
+    GfVec3f color(1.0f, 1.0f, 0.745f);
+    newLight.CreateColorAttr(VtValue(color));
+    newLight.CreateIntensityAttr(VtValue(5000.0f));
+
+    // Commit the changes to the USD
+    gStage->Save();
+    omniUsdLiveProcess();
+  }
+
   static void 
   createEmptyFolder(const String& emptyFolderPath) {
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Waiting to create a new folder: " << emptyFolderPath << " ... ";
     }
 
     OmniClientResult localResult;
@@ -151,6 +172,8 @@ namespace giEngineSDK {
 
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "finished [" << omniClientGetResultString(localResult) 
+                 << "]" << ConsoleLine;
     }
   }
 
@@ -192,8 +215,7 @@ namespace giEngineSDK {
     std::unique_lock<std::mutex> lk(gLogMutex);
 
     fprintf(stderr, "%s\n", msg);
-    if (detail != nullptr)
-    {
+    if (detail != nullptr) {
       fprintf(stderr, "%s\n", detail);
     }
   }
@@ -243,6 +265,164 @@ namespace giEngineSDK {
                         "ERROR: No UsdGeomMesh found in stage: " + existingStage);
     return UsdGeomMesh();
   }
+
+  // Upload a material and its textures to the Omniverse Server
+  static void 
+  uploadMaterial(const String& destinationPath) {
+    String uriPath = destinationPath + "/Materials";
+
+    // Delete the old version of this folder on Omniverse and wait for the 
+    // operation to complete.
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Waiting for " << uriPath << " to delete... ";
+    }
+    omniClientWait(omniClientDelete(uriPath.c_str(), nullptr, nullptr));
+
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Finished" << ConsoleLine;
+    }
+
+    // Upload the material folder (MDL and textures)
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Waiting for the resources/Materials folder to upload to " 
+                 << uriPath << " ... ";
+    }
+
+    omniClientWait(omniClientCopy("resources/Materials", 
+                                  uriPath.c_str(), 
+                                  nullptr, 
+                                  nullptr));
+
+    {
+      std::unique_lock<std::mutex> lk(gLogMutex);
+      ConsoleOut << "Finished" << ConsoleLine;
+    }
+  }
+
+  // Bind a material to this geometry
+  static void 
+  createMaterial(UsdGeomMesh meshIn) {
+
+    //Get the material name
+    String materialName = "Fieldstone";
+
+    // Create a material instance for this in USD
+    TfToken materialNameToken(materialName);
+    // Make path for "/Root/Looks/Fieldstone";
+    SdfPath matPath = SdfPath::AbsoluteRootPath()
+                               .AppendChild(_tokens->Root)
+                               .AppendChild(_tokens->Looks)
+                               .AppendChild(materialNameToken);
+    UsdShadeMaterial newMat = UsdShadeMaterial::Define(gStage, matPath);
+
+    // MDL Shader
+    {
+      // Create the MDL shader to bind to the material
+      SdfAssetPath mdlShaderModule = SdfAssetPath("./Materials/Fieldstone.mdl");
+      SdfPath shaderPath = matPath.AppendChild(materialNameToken);
+      UsdShadeShader mdlShader = UsdShadeShader::Define(gStage, shaderPath);
+      mdlShader.CreateIdAttr(VtValue(_tokens->shaderId));
+
+      // These attributes will be reworked or replaced in the official MDL schema for USD.
+      // https://developer.nvidia.com/usd/MDLschema
+      mdlShader.SetSourceAsset(mdlShaderModule, _tokens->mdl);
+      mdlShader.GetPrim().CreateAttribute(TfToken("info:mdl:sourceAsset:subIdentifier"), 
+                                          SdfValueTypeNames->Token, 
+                                          false, 
+                                          SdfVariabilityUniform).Set(materialNameToken);
+
+      // Set the linkage between material and MDL shader
+      UsdShadeOutput mdlOutput = newMat.CreateSurfaceOutput(_tokens->mdl);
+      mdlOutput.ConnectToSource(mdlShader, _tokens->out);
+    }
+
+
+    // USD Preview Surface Shaders
+    {
+      // Create the "USD Primvar reader for float2" shader
+      SdfPath shaderPath = matPath.AppendChild(_tokens->PrimST);
+      UsdShadeShader primStShader = UsdShadeShader::Define(gStage, shaderPath);
+      primStShader.CreateIdAttr(VtValue(_tokens->PrimStShaderId));
+      primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2);
+      primStShader.CreateInput(_tokens->varname, SdfValueTypeNames->Token).Set(_tokens->st);
+
+      // Create the "Diffuse Color Tex" shader
+      String diffuseColorShaderName = materialName + "DiffuseColorTex";
+      String diffuseFilePath = "./Materials/Fieldstone/Fieldstone_BaseColor.png";
+      shaderPath = matPath.AppendChild(TfToken(diffuseColorShaderName));
+      UsdShadeShader diffuseColorShader = UsdShadeShader::Define(gStage, shaderPath);
+      diffuseColorShader.CreateIdAttr(VtValue(_tokens->UsdUVTexture));
+      UsdShadeInput texInput = diffuseColorShader.CreateInput(_tokens->file, SdfValueTypeNames->Asset);
+      texInput.Set(SdfAssetPath(diffuseFilePath));
+      texInput.GetAttr().SetColorSpace(_tokens->sRGB);
+      diffuseColorShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2).ConnectToSource(primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2));
+      UsdShadeOutput diffuseColorShaderOutput = diffuseColorShader.CreateOutput(_tokens->rgb, SdfValueTypeNames->Float3);
+
+      // Create the "Normal Tex" shader
+      String normalShaderName = materialName + "NormalTex";
+      String normalFilePath = "./Materials/Fieldstone/Fieldstone_N.png";
+      shaderPath = matPath.AppendChild(TfToken(normalShaderName));
+      UsdShadeShader normalShader = UsdShadeShader::Define(gStage, shaderPath);
+      normalShader.CreateIdAttr(VtValue(_tokens->UsdUVTexture));
+      UsdShadeInput normalTexInput = normalShader.CreateInput(_tokens->file, SdfValueTypeNames->Asset);
+      normalTexInput.Set(SdfAssetPath(normalFilePath));
+      normalTexInput.GetAttr().SetColorSpace(_tokens->RAW);
+      normalShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2).ConnectToSource(primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2));
+      UsdShadeOutput normalShaderOutput = normalShader.CreateOutput(_tokens->rgb, SdfValueTypeNames->Float3);
+
+      // Create the USD Preview Surface shader
+      String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
+      shaderPath = matPath.AppendChild(TfToken(usdPreviewSurfaceShaderName));
+      UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
+      usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
+      UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, SdfValueTypeNames->Color3f);
+      diffuseColorInput.ConnectToSource(diffuseColorShaderOutput);
+      UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
+      normalInput.ConnectToSource(normalShaderOutput);
+
+      // Set the linkage between material and USD Preview surface shader
+      UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
+      usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
+    }
+
+    // Final step, associate the material with the face
+    UsdShadeMaterialBindingAPI usdMaterialBinding(meshIn);
+    usdMaterialBinding.Bind(newMat);
+
+    // Commit the changes to the USD
+    gStage->Save();
+    omniUsdLiveProcess();
+  }
+
+  // Create a light source in the scene.
+  static void 
+  createDomeLight(const String& texturePath) {
+    // Construct /Root/Light path
+    SdfPath lightPath = SdfPath::AbsoluteRootPath()
+      .AppendChild(_tokens->Root)
+      .AppendChild(_tokens->DomeLight);
+    UsdLuxDomeLight newLight = UsdLuxDomeLight::Define(gStage, lightPath);
+
+    // Set the attributes
+    newLight.CreateIntensityAttr(VtValue(1000.0f));
+    newLight.CreateTextureFileAttr(VtValue(SdfAssetPath(texturePath)));
+    newLight.CreateTextureFormatAttr(VtValue(UsdLuxTokens->latlong));
+
+    // Set rotation on domelight
+    UsdGeomXformable xForm = newLight;
+    UsdGeomXformOp rotateOp;
+    GfVec3f rotZYX(270, 0, 0);
+    rotateOp = xForm.AddXformOp(UsdGeomXformOp::TypeRotateZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+    rotateOp.Set(rotZYX);
+
+    // Commit the changes to the USD
+    gStage->Save();
+    omniUsdLiveProcess();
+  }
+
 
   // Returns true if the provided maybeURL contains a host and path
   static bool 
@@ -350,35 +530,39 @@ namespace giEngineSDK {
       //exit(1);
     }
     
-    // Create the USD model in Omniverse
+    // Create the USD model in Omniverse.
     const String stageUrl = createOmniverseModel(m_destinationPath);
 
-    // Print the username for the server
+    // Print the username for the server.
     printConnectedUsername(stageUrl);
 
-    // Get the geometry from the Scene Graph
+    // Get the geometry from the Scene Graph.
     tmpMesh = getDataFromSG();
 
-    // Adding a checkpoint for the added models
+    // Adding a checkpoint for the added models.
     checkpointFile(stageUrl, "Added a Model(s) from the Scene Graph existans info.");
 
-    // Create lights in the scene
-      //createDistantLight();
-      //createDomeLight("./Materials/kloofendal_48d_partly_cloudy.hdr");
+    // Create lights in the scene.
+    createDistantLight();
 
-    // Add a Nucleus Checkpoint to the stage
-      //checkpointFile(stageUrl, "Add lights to stage");
+    //Create the skybox with the skybox texture.
+    createDomeLight("./Materials/skyboxDefault.hdr");
 
-    // Upload a material and textures to the Omniverse server
-      //uploadMaterial(destinationPath);
+    // Add a Nucleus Checkpoint to the stage.
+    checkpointFile(stageUrl, "Added a default skybox to the scene");
 
-    // Add a material to the box
-      //createMaterial(boxMesh);
+    // Upload a material and textures to the Omniverse server.
+    uploadMaterial(m_destinationPath);
 
-    // Add a Nucleus Checkpoint to the stage
-      //checkpointFile(stageUrl, "Add material to the box");
+    // Add a material to the box.
+    createMaterial(tmpMesh);
+    // Create a for where i took 1 by 1 the information of the models in the SG 
+    // and sets the correct texture in each model.
 
-    // All done, shut down our connection to Omniverse
+    // Add a Nucleus Checkpoint to the stage.
+    checkpointFile(stageUrl, "Added a material to the Model(s)");
+
+    // All done, shut down our connection to Omniverse.
     shutdownOmniverse();
 
   }
@@ -661,7 +845,6 @@ namespace giEngineSDK {
       if (!mesh) {
         return mesh;
       }
-
 
       // Set orientation
       mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->leftHanded));

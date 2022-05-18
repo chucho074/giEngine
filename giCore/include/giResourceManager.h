@@ -17,7 +17,7 @@
 
 namespace giEngineSDK {
 
-  class ResourceManager
+  class ResourceManager 
   {
    public:
   	//Default Constructor.
