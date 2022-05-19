@@ -1,6 +1,6 @@
 /**
  * @file    giModel.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   For load models.
@@ -38,11 +38,11 @@ namespace giEngineSDK {
 
     /**
      * @brief    Load a model from file.
-     * @param    inFileName   File to read a model.
+     * @param    inFileName    File to read a model.
      * @bug      No known Bugs.
      */
     bool 
-    loadFromFile(const String& inFileName) override;
+    loadFromFile(const Path& inFile) override;
 
     /**
      * @brief    Load a model from memory.

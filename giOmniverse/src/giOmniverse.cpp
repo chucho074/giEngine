@@ -137,8 +137,8 @@ namespace giEngineSDK {
   createDistantLight() {
     // Construct /Root/Light path
     SdfPath lightPath = SdfPath::AbsoluteRootPath()
-      .AppendChild(_tokens->Root)
-      .AppendChild(_tokens->DistantLight);
+                                 .AppendChild(_tokens->Root)
+                                 .AppendChild(_tokens->DistantLight);
     UsdLuxDistantLight newLight = UsdLuxDistantLight::Define(gStage, lightPath);
 
     // Set the attributes
@@ -304,8 +304,10 @@ namespace giEngineSDK {
 
   // Bind a material to this geometry
   static void 
-  createMaterial(UsdGeomMesh meshIn) {
+  createMaterial(UsdGeomMesh inUsdMesh, Mesh inOwnMesh) {
 
+    
+    
     //Get the material name
     String materialName = "Fieldstone";
 
@@ -389,7 +391,7 @@ namespace giEngineSDK {
     }
 
     // Final step, associate the material with the face
-    UsdShadeMaterialBindingAPI usdMaterialBinding(meshIn);
+    UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
     usdMaterialBinding.Bind(newMat);
 
     // Commit the changes to the USD
@@ -552,10 +554,10 @@ namespace giEngineSDK {
     checkpointFile(stageUrl, "Added a default skybox to the scene");
 
     // Upload a material and textures to the Omniverse server.
-    uploadMaterial(m_destinationPath);
+    //uploadMaterial(m_destinationPath);
 
     // Add a material to the box.
-    createMaterial(tmpMesh);
+    ///createMaterial(tmpMesh);
     // Create a for where i took 1 by 1 the information of the models in the SG 
     // and sets the correct texture in each model.
 
@@ -815,7 +817,7 @@ namespace giEngineSDK {
     // Create the geometry inside of "Root"
     String boxName("model_");
     boxName.append(std::to_string(0));
-    SdfPath modelPath = rootPrimPath.AppendChild(TfToken(boxName));//_tokens->box);
+    SdfPath modelPath = rootPrimPath.AppendChild(TfToken(boxName));
     UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
 
     if (!model) {
@@ -1050,5 +1052,143 @@ namespace giEngineSDK {
     return tmpModel;
   }
 
-  
+  void
+  getFromSG() {
+    auto& sgraph = SceneGraph::instance();
+
+    // Keep the model contained inside of "Root", only need to do this once per model
+    SdfPath rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(_tokens->Root);
+    UsdGeomXform::Define(gStage, rootPrimPath);
+
+    //Get the actor from the Scene Graph
+    Vector<SharedPtr<Actor>> tmpActors = sgraph.getActorsFromRoot();
+
+    for (auto actors : tmpActors) {
+
+      // Create the geometry inside of "Root"
+      SdfPath modelPath = rootPrimPath.AppendChild(TfToken(actors->m_actorName));
+      UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
+
+      if (!model) {
+        return;
+      }
+
+      if (actors->isStaticMesh) {
+      
+        //Get the Static Mesh component
+        SharedPtr<StaticMesh> tmpModelBase = static_pointer_cast<StaticMesh>(actors->getComponent(COMPONENT_TYPE::kStaticMesh));
+        //Get the Model
+        auto tmpModel = tmpModelBase->getModel();
+        int32 noMesh = 0;
+
+        for (auto actualMesh : tmpModel->m_meshes) {
+          // Create the geometry inside of "model_"
+          String meshName("mesh_");
+          meshName.append(std::to_string(noMesh));
+          SdfPath meshPath = modelPath.AppendChild(TfToken(meshName));
+          UsdGeomMesh mesh = UsdGeomMesh::Define(gStage, meshPath);
+
+          if (!mesh) {
+            return;
+          }
+
+          // Set orientation
+          mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->leftHanded));
+
+          //Get the num of vertex
+          int32 num_vertices = actualMesh.m_vertexVector.size();
+          //Get the vertex
+          Vector<Vector3> vertex;
+          vertex.reserve(num_vertices);
+          for (int32 i = 0; i < num_vertices; i++) {
+            vertex.push_back(actualMesh.m_vertexVector.at(i).Pos);
+          }
+
+          //Get the index
+          auto tmpIndex = actualMesh.m_facesList;
+
+          //Get Normals
+          Vector<Vector3> Normals;
+          Normals.reserve(num_vertices);
+          for (int32 i = 0; i < num_vertices; i++) {
+            Normals.push_back(actualMesh.m_vertexVector.at(i).Nor);
+          }
+
+          //Get UVs
+          Vector<Vector2> uvs;
+          uvs.reserve(num_vertices);
+          for (int32 i = 0; i < num_vertices; i++) {
+            uvs.push_back(actualMesh.m_vertexVector.at(i).Tex);
+          }
+
+          // Add all of the vertices
+          VtArray<GfVec3f> points;
+          points.resize(num_vertices);
+          for (int32 i = 0; i < num_vertices; i++) {
+            points[i] = GfVec3f(vertex.at(i).x, vertex.at(i).y, vertex.at(i).z);
+          }
+          mesh.CreatePointsAttr(VtValue(points));
+
+          // Calculate indices for each triangle
+          int32 num_indices = tmpIndex.size(); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
+          VtArray<int32> vecIndices;
+          vecIndices.resize(num_indices);
+          for (int32 i = 0; i < num_indices; i++) {
+            vecIndices[i] = tmpIndex[i];
+          }
+          mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
+
+          // Add vertex normals
+          int32 num_normals = Normals.size();
+          VtArray<GfVec3f> meshNormals;
+          meshNormals.resize(num_vertices);
+          for (int32 i = 0; i < num_vertices; i++) {
+            meshNormals[i] = GfVec3f(Normals[i].x, Normals[i].y, Normals[i].z);
+          }
+          mesh.CreateNormalsAttr(VtValue(meshNormals));
+
+          // Add face vertex count
+          VtArray<int32> faceVertexCounts;
+          faceVertexCounts.resize(num_indices * 2); // 2 Triangles per face * 6 faces
+          std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
+          mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
+
+          // Set the color on the mesh
+          UsdPrim meshPrim = mesh.GetPrim();
+          UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
+          {
+            VtVec3fArray valueArray;
+            GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
+            valueArray.push_back(rgbFace);
+            displayColorAttr.Set(valueArray);
+          }
+
+          // Set the UV (st) values for this mesh
+          UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
+          {
+            int32 uv_count = uvs.size();
+            VtVec2fArray valueArray;
+            valueArray.resize(uv_count);
+            for (int32 i = 0; i < uv_count; ++i) {
+              valueArray[i].Set(uvs[i].x, uvs[i].y);
+            }
+
+            bool status = attr2.Set(valueArray);
+          }
+          attr2.SetInterpolation(UsdGeomTokens->vertex);
+          rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(meshName));
+          noMesh++;
+
+          createMaterial(mesh, actualMesh);
+
+        }
+      }
+    }
+    
+    // Commit the changes to the USD
+    gStage->Save();
+    omniUsdLiveProcess();
+
+    //return model;
+  }
 }

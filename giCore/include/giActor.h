@@ -92,5 +92,7 @@ namespace giEngineSDK {
      * @brief    Base Transform for the actor.
      */
     Transform m_transform;
+
+    bool isStaticMesh = false;
   };
 }

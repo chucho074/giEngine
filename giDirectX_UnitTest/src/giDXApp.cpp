@@ -16,8 +16,8 @@
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  m_width = 1280;
-  m_height = 720;
+  m_width = EngineConfigs::s_resolution.x;
+  m_height = EngineConfigs::s_resolution.y;
   m_world = Matrix4::IDENTITY;
   
 }
@@ -26,8 +26,6 @@ DirectXApp::DirectXApp() {
 void 
 DirectXApp::onCreate() {
 
-
-  auto& omni = g_omniverse();
   auto& gapi = g_graphicsAPI();
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();

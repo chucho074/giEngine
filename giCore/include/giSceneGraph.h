@@ -54,6 +54,13 @@ namespace giEngineSDK {
     getActorByName(const String& inName);
 
     /**
+     * @brief    Obtain the actor childs of the root.
+     * @return   Returns the list of the actors who there parent is the root.
+     */
+    Vector<SharedPtr<Actor>>
+    getActorsFromRoot();
+
+    /**
      * @brief    .
      * @param    inParent
      */
@@ -62,7 +69,7 @@ namespace giEngineSDK {
 
     /**
      * @brief    .
-     * @return   Returns .
+     * @return   Returns the root of the scene.
      */
     SharedPtr<SceneNode>
     getRoot();

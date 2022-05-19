@@ -32,7 +32,9 @@ namespace giEngineSDK {
       tmpComponent.first = inComponentType;
       tmpComponent.second = inComponent;
       m_components.insert(tmpComponent);
-
+      if(inComponentType == COMPONENT_TYPE::kStaticMesh) {
+        isStaticMesh = true;
+      }
     }
     return false;
   }
@@ -58,6 +60,7 @@ namespace giEngineSDK {
   SharedPtr<Component>& 
   Actor::getComponent(COMPONENT_TYPE::E inComponent) {
     auto tmp = m_components.find(inComponent);
+    
     return tmp->second;
   }
 

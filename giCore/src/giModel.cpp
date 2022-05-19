@@ -1,6 +1,6 @@
 /**
  * @file    giModel.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   For load models.
@@ -100,7 +100,7 @@ namespace giEngineSDK {
   }
 
   bool 
-  Model::loadFromFile(const String& inFileName) {
+  Model::loadFromFile(const Path& inFileName) {
 
     // Create an instance of the Importer class
     Assimp::Importer importer;
@@ -108,7 +108,7 @@ namespace giEngineSDK {
     // And have it read the given file with some example postprocessing
     // Usually - if speed is not the most important aspect for you - you'll
     // probably to request more postprocessing than we do in this example.
-    importer.ReadFile(inFileName,
+    importer.ReadFile(inFileName.string(),
                       aiProcessPreset_TargetRealtime_MaxQuality |
                       aiProcess_TransformUVCoords|
                       aiProcess_ConvertToLeftHanded |
@@ -123,7 +123,7 @@ namespace giEngineSDK {
       return false;
     }
 
-    m_directory = inFileName.substr(0, inFileName.find_last_of('/') + 1);
+    m_directory = inFileName.string().substr(0, inFileName.string().find_last_of('/') + 1);
 
     processNode(*this, tmpScene->mRootNode, tmpScene);
   }

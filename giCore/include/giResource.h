@@ -30,7 +30,7 @@ class Resource
   ~Resource() = default;
 
   virtual bool 
-  loadFromFile(const String& inPath) = 0;
+  loadFromFile(const Path& inPath) = 0;
 
   virtual bool
   loadFromMemory(const char* inData, size_T inSizeOfData) = 0;

@@ -45,6 +45,16 @@ namespace giEngineSDK {
     return m_root->getActorByName(inName);
   }
 
+  Vector<SharedPtr<Actor>>
+  SceneGraph::getActorsFromRoot() {
+    Vector<SharedPtr<Actor>> tmpVector;
+    for (auto nodes : m_root->m_childs) {
+      tmpVector.push_back(nodes->m_actor);
+    }
+
+    return tmpVector;
+  }
+
   List<SharedPtr<SceneNode>>&
   SceneGraph::getNodesByParent(WeakPtr<SceneNode> inParent) {
     if (SharedPtr<SceneNode>(nullptr) == inParent.lock()) {
