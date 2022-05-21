@@ -224,7 +224,7 @@ namespace giEngineSDK {
   static UsdGeomMesh 
   findGeomMesh(const String& existingStage) {
     
-    omniUsdLiveWaitForPendingUpdates();
+    //omniUsdLiveWaitForPendingUpdates();
     // Open this file from Omniverse
     gStage = UsdStage::Open(existingStage);
     if (!gStage) {
@@ -304,54 +304,78 @@ namespace giEngineSDK {
 
   // Bind a material to this geometry
   static void 
-  createMaterial(UsdGeomMesh inUsdMesh, Mesh inOwnMesh) {
+  createMaterial(UsdGeomMesh inUsdMesh, Mesh inOwnMesh, String inMeshName) {
 
     
     
-    //Get the material name
-    String materialName = "Fieldstone";
+    // Get the material name.
+    String materialName = inMeshName;
+    String tmpPath = "./Materials/";
+    tmpPath = tmpPath + inMeshName;
 
-    // Create a material instance for this in USD
+    // Create a material instance for this in USD.
     TfToken materialNameToken(materialName);
-    // Make path for "/Root/Looks/Fieldstone";
+    // Make path for "/Root/Looks/Fieldstone".
     SdfPath matPath = SdfPath::AbsoluteRootPath()
                                .AppendChild(_tokens->Root)
                                .AppendChild(_tokens->Looks)
                                .AppendChild(materialNameToken);
     UsdShadeMaterial newMat = UsdShadeMaterial::Define(gStage, matPath);
 
-    // MDL Shader
-    {
-      // Create the MDL shader to bind to the material
-      SdfAssetPath mdlShaderModule = SdfAssetPath("./Materials/Fieldstone.mdl");
-      SdfPath shaderPath = matPath.AppendChild(materialNameToken);
-      UsdShadeShader mdlShader = UsdShadeShader::Define(gStage, shaderPath);
-      mdlShader.CreateIdAttr(VtValue(_tokens->shaderId));
+    // MDL Shader.
+    // Create the MDL shader to bind to the material.
+    SdfAssetPath mdlShaderModule = SdfAssetPath(tmpPath + ".mdl");
+    SdfPath shaderPath = matPath.AppendChild(materialNameToken);
+    UsdShadeShader mdlShader = UsdShadeShader::Define(gStage, shaderPath);
+    mdlShader.CreateIdAttr(VtValue(_tokens->shaderId));
 
-      // These attributes will be reworked or replaced in the official MDL schema for USD.
-      // https://developer.nvidia.com/usd/MDLschema
-      mdlShader.SetSourceAsset(mdlShaderModule, _tokens->mdl);
-      mdlShader.GetPrim().CreateAttribute(TfToken("info:mdl:sourceAsset:subIdentifier"), 
-                                          SdfValueTypeNames->Token, 
-                                          false, 
-                                          SdfVariabilityUniform).Set(materialNameToken);
+    // These attributes will be reworked or replaced in the official MDL schema for USD.
+    // https://developer.nvidia.com/usd/MDLschema
+    mdlShader.SetSourceAsset(mdlShaderModule, _tokens->mdl);
+    mdlShader.GetPrim().CreateAttribute(TfToken("info:mdl:sourceAsset:subIdentifier"), 
+                                        SdfValueTypeNames->Token, 
+                                        false, 
+                                        SdfVariabilityUniform).Set(materialNameToken);
 
-      // Set the linkage between material and MDL shader
-      UsdShadeOutput mdlOutput = newMat.CreateSurfaceOutput(_tokens->mdl);
-      mdlOutput.ConnectToSource(mdlShader, _tokens->out);
-    }
+    // Set the linkage between material and MDL shader.
+    UsdShadeOutput mdlOutput = newMat.CreateSurfaceOutput(_tokens->mdl);
+    mdlOutput.ConnectToSource(mdlShader, _tokens->out);
+    
+
+    // USD Preview Surface Shaders.
+    
+    // Create the "USD Primvar reader for float2" shader.
+    //SdfPath shaderPath = matPath.AppendChild(_tokens->PrimST);
+    UsdShadeShader primStShader = UsdShadeShader::Define(gStage, shaderPath);
+    primStShader.CreateIdAttr(VtValue(_tokens->PrimStShaderId));
+    primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2);
+    primStShader.CreateInput(_tokens->varname, SdfValueTypeNames->Token).Set(_tokens->st);
 
 
-    // USD Preview Surface Shaders
-    {
-      // Create the "USD Primvar reader for float2" shader
-      SdfPath shaderPath = matPath.AppendChild(_tokens->PrimST);
-      UsdShadeShader primStShader = UsdShadeShader::Define(gStage, shaderPath);
-      primStShader.CreateIdAttr(VtValue(_tokens->PrimStShaderId));
-      primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2);
-      primStShader.CreateInput(_tokens->varname, SdfValueTypeNames->Token).Set(_tokens->st);
+    //TODO:
+    // Meter en un for para todas las texturas del mesh
+    // Obtener el tipo de textura que es segun lo que soporta el motor
+    // En base a la informacion del tipo de textura, dar un string para el nombre
+    // Guardar la informacion dentro de un vector de tipo UsdShadeOutput
 
-      // Create the "Diffuse Color Tex" shader
+    for (auto textures : inOwnMesh.m_textures) {
+      
+      if (textures.type == "texture_diffuse") {
+        
+      }
+      
+      if (textures.type == "texture_normal") {
+
+      }
+
+      if (textures.type == "texture_specular") {
+        
+      }
+      
+      if (textures.type == "texture_shininess") {
+
+      }
+      // Create the "Diffuse Color Tex" shader.
       String diffuseColorShaderName = materialName + "DiffuseColorTex";
       String diffuseFilePath = "./Materials/Fieldstone/Fieldstone_BaseColor.png";
       shaderPath = matPath.AppendChild(TfToken(diffuseColorShaderName));
@@ -363,32 +387,26 @@ namespace giEngineSDK {
       diffuseColorShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2).ConnectToSource(primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2));
       UsdShadeOutput diffuseColorShaderOutput = diffuseColorShader.CreateOutput(_tokens->rgb, SdfValueTypeNames->Float3);
 
-      // Create the "Normal Tex" shader
-      String normalShaderName = materialName + "NormalTex";
-      String normalFilePath = "./Materials/Fieldstone/Fieldstone_N.png";
-      shaderPath = matPath.AppendChild(TfToken(normalShaderName));
-      UsdShadeShader normalShader = UsdShadeShader::Define(gStage, shaderPath);
-      normalShader.CreateIdAttr(VtValue(_tokens->UsdUVTexture));
-      UsdShadeInput normalTexInput = normalShader.CreateInput(_tokens->file, SdfValueTypeNames->Asset);
-      normalTexInput.Set(SdfAssetPath(normalFilePath));
-      normalTexInput.GetAttr().SetColorSpace(_tokens->RAW);
-      normalShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2).ConnectToSource(primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2));
-      UsdShadeOutput normalShaderOutput = normalShader.CreateOutput(_tokens->rgb, SdfValueTypeNames->Float3);
-
-      // Create the USD Preview Surface shader
-      String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
-      shaderPath = matPath.AppendChild(TfToken(usdPreviewSurfaceShaderName));
-      UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
-      usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
-      UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, SdfValueTypeNames->Color3f);
-      diffuseColorInput.ConnectToSource(diffuseColorShaderOutput);
-      UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
-      normalInput.ConnectToSource(normalShaderOutput);
-
-      // Set the linkage between material and USD Preview surface shader
-      UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
-      usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
     }
+    
+    
+    //normalTexInput.GetAttr().SetColorSpace(_tokens->RAW);
+    
+
+    // Create the USD Preview Surface shader
+    String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
+    shaderPath = matPath.AppendChild(TfToken(usdPreviewSurfaceShaderName));
+    UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
+    usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
+    UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, SdfValueTypeNames->Color3f);
+    //diffuseColorInput.ConnectToSource(diffuseColorShaderOutput);
+    UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
+    //normalInput.ConnectToSource(normalShaderOutput);
+
+    // Set the linkage between material and USD Preview surface shader
+    UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
+    usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
+    
 
     // Final step, associate the material with the face
     UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
@@ -1179,7 +1197,7 @@ namespace giEngineSDK {
           rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(meshName));
           noMesh++;
 
-          createMaterial(mesh, actualMesh);
+          //createMaterial(mesh, actualMesh, actors->m_actorName + "_" + meshName);
 
         }
       }

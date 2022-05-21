@@ -16,8 +16,10 @@
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  m_width = EngineConfigs::s_resolution.x;
-  m_height = EngineConfigs::s_resolution.y;
+  //m_width = EngineConfigs::s_resolution.x;
+  m_width = 1280;
+  //m_height = EngineConfigs::s_resolution.y;
+  m_height = 720;
   m_world = Matrix4::IDENTITY;
   
 }
