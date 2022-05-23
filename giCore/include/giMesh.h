@@ -50,7 +50,7 @@ namespace giEngineSDK {
    */
   class GI_CORE_EXPORT Mesh {
    public:
-    Mesh() = default;
+    //Mesh() = default;
 
     ///Default constructor
     Mesh(Vector<SimpleVertex> inVertex, 

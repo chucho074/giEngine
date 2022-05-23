@@ -20,6 +20,10 @@
 
 namespace giEngineSDK {
 
+  void
+  getFromSG();
+
+  
   // Omniverse Log callback
   static void 
   logCallback(const char* threadName,
@@ -305,8 +309,12 @@ namespace giEngineSDK {
   // Bind a material to this geometry
   static void 
   createMaterial(UsdGeomMesh inUsdMesh, Mesh inOwnMesh, String inMeshName) {
-
     
+    //If the mesh doesn't have textures. 
+    if (0 == inOwnMesh.m_textures.size()) {
+      return;
+    }
+
     
     // Get the material name.
     String materialName = inMeshName;
@@ -325,8 +333,8 @@ namespace giEngineSDK {
     // MDL Shader.
     // Create the MDL shader to bind to the material.
     SdfAssetPath mdlShaderModule = SdfAssetPath(tmpPath + ".mdl");
-    SdfPath shaderPath = matPath.AppendChild(materialNameToken);
-    UsdShadeShader mdlShader = UsdShadeShader::Define(gStage, shaderPath);
+    SdfPath tmpShaderPath = matPath.AppendChild(materialNameToken);
+    UsdShadeShader mdlShader = UsdShadeShader::Define(gStage, tmpShaderPath);
     mdlShader.CreateIdAttr(VtValue(_tokens->shaderId));
 
     // These attributes will be reworked or replaced in the official MDL schema for USD.
@@ -345,7 +353,7 @@ namespace giEngineSDK {
     // USD Preview Surface Shaders.
     
     // Create the "USD Primvar reader for float2" shader.
-    //SdfPath shaderPath = matPath.AppendChild(_tokens->PrimST);
+    SdfPath shaderPath = matPath.AppendChild(_tokens->PrimST);
     UsdShadeShader primStShader = UsdShadeShader::Define(gStage, shaderPath);
     primStShader.CreateIdAttr(VtValue(_tokens->PrimStShaderId));
     primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2);
@@ -357,41 +365,57 @@ namespace giEngineSDK {
     // Obtener el tipo de textura que es segun lo que soporta el motor
     // En base a la informacion del tipo de textura, dar un string para el nombre
     // Guardar la informacion dentro de un vector de tipo UsdShadeOutput
-
+    String tmpTextureName;
+    String tmpFileName;
+    TfToken tmpTextureToken;
+    Vector<UsdShadeOutput> tmpOuputShaders; 
     for (auto textures : inOwnMesh.m_textures) {
       
       if (textures.type == "texture_diffuse") {
-        
+        //The name of the texture.
+        tmpTextureName = "DiffuseColorTex";
+        //The token of the texture.
+        tmpTextureToken = _tokens->sRGB;
+        //The name of the file.
+        tmpFileName = "BaseColor";
       }
       
       if (textures.type == "texture_normal") {
+        tmpTextureName = "NormalTex";
 
+        tmpTextureToken = _tokens->RAW;
+
+        tmpFileName = "Norm";
       }
 
       if (textures.type == "texture_specular") {
-        
+        break;
       }
       
       if (textures.type == "texture_shininess") {
-
+        break;
       }
-      // Create the "Diffuse Color Tex" shader.
-      String diffuseColorShaderName = materialName + "DiffuseColorTex";
-      String diffuseFilePath = "./Materials/Fieldstone/Fieldstone_BaseColor.png";
-      shaderPath = matPath.AppendChild(TfToken(diffuseColorShaderName));
-      UsdShadeShader diffuseColorShader = UsdShadeShader::Define(gStage, shaderPath);
-      diffuseColorShader.CreateIdAttr(VtValue(_tokens->UsdUVTexture));
-      UsdShadeInput texInput = diffuseColorShader.CreateInput(_tokens->file, SdfValueTypeNames->Asset);
-      texInput.Set(SdfAssetPath(diffuseFilePath));
-      texInput.GetAttr().SetColorSpace(_tokens->sRGB);
-      diffuseColorShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2).ConnectToSource(primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2));
-      UsdShadeOutput diffuseColorShaderOutput = diffuseColorShader.CreateOutput(_tokens->rgb, SdfValueTypeNames->Float3);
 
+      // Create the shader.
+      String tmpShaderName = materialName + tmpTextureName;
+      //String tmpFilePath = "./Materials/" + tmpFileName + ".png";
+      String tmpFilePath = "./Materials" + textures.path;
+      shaderPath = matPath.AppendChild(TfToken(tmpShaderName));
+      UsdShadeShader tmpShader = UsdShadeShader::Define(gStage, shaderPath);
+      tmpShader.CreateIdAttr(VtValue(_tokens->UsdUVTexture));
+      UsdShadeInput texInput = tmpShader.CreateInput(_tokens->file, 
+                                                     SdfValueTypeNames->Asset);
+      texInput.Set(SdfAssetPath(tmpFilePath));
+      texInput.GetAttr().SetColorSpace(tmpTextureToken);
+      tmpShader.CreateInput(_tokens->st, SdfValueTypeNames->Float2)
+                            .ConnectToSource(primStShader
+                                            .CreateOutput(_tokens->result, 
+                                                          SdfValueTypeNames->Float2));
+      UsdShadeOutput tmpShaderOutput = tmpShader.CreateOutput(_tokens->rgb, 
+                                                              SdfValueTypeNames->Float3);
+
+      tmpOuputShaders.push_back(tmpShaderOutput);
     }
-    
-    
-    //normalTexInput.GetAttr().SetColorSpace(_tokens->RAW);
-    
 
     // Create the USD Preview Surface shader
     String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
@@ -399,15 +423,16 @@ namespace giEngineSDK {
     UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
     usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
     UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, SdfValueTypeNames->Color3f);
-    //diffuseColorInput.ConnectToSource(diffuseColorShaderOutput);
-    UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
-    //normalInput.ConnectToSource(normalShaderOutput);
+    diffuseColorInput.ConnectToSource(tmpOuputShaders.at(0));
+    if (1 > tmpOuputShaders.size()) {
+      UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
+      normalInput.ConnectToSource(tmpOuputShaders.at(1));
+    }
 
     // Set the linkage between material and USD Preview surface shader
     UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
     usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
     
-
     // Final step, associate the material with the face
     UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
     usdMaterialBinding.Bind(newMat);
@@ -500,7 +525,7 @@ namespace giEngineSDK {
 
   void
   Omni::update() {
-    UsdGeomMesh tmpMesh;
+    
     
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
@@ -530,7 +555,7 @@ namespace giEngineSDK {
     }
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
-      liveEdit(tmpMesh);
+      //liveEdit(tmpMesh);
     }
   }
 
@@ -557,7 +582,7 @@ namespace giEngineSDK {
     printConnectedUsername(stageUrl);
 
     // Get the geometry from the Scene Graph.
-    tmpMesh = getDataFromSG();
+    //tmpMesh = getDataFromSG();
 
     // Adding a checkpoint for the added models.
     checkpointFile(stageUrl, "Added a Model(s) from the Scene Graph existans info.");
@@ -572,9 +597,10 @@ namespace giEngineSDK {
     checkpointFile(stageUrl, "Added a default skybox to the scene");
 
     // Upload a material and textures to the Omniverse server.
-    //uploadMaterial(m_destinationPath);
+    uploadMaterial(m_destinationPath);
 
     // Add a material to the box.
+    getFromSG();
     ///createMaterial(tmpMesh);
     // Create a for where i took 1 by 1 the information of the models in the SG 
     // and sets the correct texture in each model.
@@ -684,6 +710,7 @@ namespace giEngineSDK {
   void 
   Omni::createSGFromUSD() {
 
+    auto& gapi = GraphicsAPI::instance();
     auto& sgraph = SceneGraph::instance();
 
     omniUsdLiveWaitForPendingUpdates();
@@ -725,8 +752,12 @@ namespace giEngineSDK {
 
           SharedPtr<Model> tmpModel;
 
+          tmpActor.reset(new Actor);
+
+          tmpModel.reset(new Model);
+
           UsdPrim parent = node.GetParent();
-          if ("Root" != parent.GetName()) {
+          if ("Root" == parent.GetName()) {
             ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
 
             UsdGeomMesh geoMesh(node);
@@ -784,28 +815,33 @@ namespace giEngineSDK {
             faceArray.reserve(sizeFace);
             faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
             
-            for (int i = 0; i < size; ++i) {
+            for (int i = 0; i < sizeFace; ++i) {
               tmpFacesModel.push_back(faceArray[i].GetArray()[0]);
             }
             
             //Create the mesh.
-            Mesh tmpMesh;
+            Vector<SimpleVertex> tmpVertexList;
             //Set the vertex data to the Vector.
             for (int i = 0; i < size; ++i) {
               //Create the vertex.
-              SimpleVertex tmpVertex;
+              SimpleVertex tmpSimpleVertex;
               //Set positions.
-              tmpVertex.Pos = tmpVertexModel[i];
+              tmpSimpleVertex.Pos = tmpVertexModel[i];
               //Set UVs.
             
               //Set Normals.
-              tmpVertex.Nor = tmpNormalsModel[i];
+              tmpSimpleVertex.Nor = tmpNormalsModel[i];
             
               //Set to the list.
-              tmpMesh.m_vertexVector.push_back(tmpVertex);
+              tmpVertexList.push_back(tmpSimpleVertex);
+
             }
-            //Set the index.
-            tmpMesh.m_facesList = tmpFacesModel;
+
+            //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
+            Vector<Texture> tmpTexture;
+
+            Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
+
             
             //Set in the meshes.
             tmpModel->m_meshes.push_back(tmpMesh);
@@ -1045,24 +1081,29 @@ namespace giEngineSDK {
       tmpFacesModel.push_back(faceArray[i].GetArray()[0]);
     }
 
-    //Create the mesh
-    Mesh tmpMesh;
-    //Set the vertex data to the Vector
-    for(int i = 0; i < size; ++i) {
-      //Create the vertex
-      SimpleVertex tmpVertex;
-      //Set positions
-      tmpVertex.Pos = tmpVertexModel[i];
-      //Set UVs
-      
-      //Set Normals
-      tmpVertex.Nor = tmpNormalsModel[i];
+    //Create the mesh.
+    Vector<SimpleVertex> tmpVertexList;
+    //Set the vertex data to the Vector.
+    for (int i = 0; i < size; ++i) {
+      //Create the vertex.
+      SimpleVertex tmpSimpleVertex;
+      //Set positions.
+      tmpSimpleVertex.Pos = tmpVertexModel[i];
+      //Set UVs.
 
-      //Set to the list
-      tmpMesh.m_vertexVector.push_back(tmpVertex);
+      //Set Normals.
+      tmpSimpleVertex.Nor = tmpNormalsModel[i];
+
+      //Set to the list.
+      tmpVertexList.push_back(tmpSimpleVertex);
+
     }
-    //Set the index
-    tmpMesh.m_facesList = tmpFacesModel;
+
+    //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
+    Vector<Texture> tmpTexture;
+
+    Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
+
 
     //Set in the meshes
     tmpModel->m_meshes.push_back(tmpMesh);
@@ -1197,7 +1238,7 @@ namespace giEngineSDK {
           rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(meshName));
           noMesh++;
 
-          //createMaterial(mesh, actualMesh, actors->m_actorName + "_" + meshName);
+          createMaterial(mesh, actualMesh, actors->m_actorName + "_" + meshName);
 
         }
       }

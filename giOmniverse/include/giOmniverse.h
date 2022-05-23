@@ -94,6 +94,8 @@ namespace giEngineSDK {
     void 
     liveEdit(UsdGeomMesh inMesh);
 
+    UsdGeomMesh tmpMesh;
+
   };
 
   /**
