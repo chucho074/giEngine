@@ -802,7 +802,7 @@ namespace giEngineSDK {
     size_T formatPos = inString.find(".");
     String tmpFormat = inString.substr(formatPos);
 
-    if ("dds" == tmpFormat || "png" == tmpFormat || "jpg" == tmpFormat || "tga" == tmpFormat) {
+    if (".dds" == tmpFormat || ".png" == tmpFormat || ".jpg" == tmpFormat || ".tga" == tmpFormat) {
       uint8* data = stbi_load((inDirectory + inString).c_str(),
                               &width,
                               &height,
