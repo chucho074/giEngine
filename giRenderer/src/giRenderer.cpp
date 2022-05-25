@@ -1,6 +1,6 @@
 /**
  * @file    giRenderer.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
@@ -326,7 +326,45 @@ namespace giEngineSDK {
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &Lightcb);
     
+    /************************************************************************/
+    /*                             HISTOGRAM                                */
+    /************************************************************************/
+
+    //Create Compute Shader
+    m_computeShaderHist = gapi.createCS(L"Resources/Histogram.hlsl", "main", "cs_5_0");
+
+    m_HistTexture.push_back(gapi.createTex2D(1280,
+                                             720, 
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
+
+    HistogramBuffer Histocb;
+    Histocb.ImageSize = Vector2(1280, 720);
+
+    Vector<int> zeroVector;
+    zeroVector.resize(256);
+
+    m_cBufferHist = gapi.createBuffer(sizeof(HistogramBuffer),
+                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                      &Histocb);
+
+    m_cBufferHistR = gapi.createBuffer(sizeof(int32)*256,
+                                       GI_BIND_FLAG::kBIND_UNORDERED_ACCESS,
+                                       &zeroVector, 0, 256, GI_FORMAT::kFORMAT_R32_SINT);
     
+    m_cBufferHistG = gapi.createBuffer(sizeof(int32) * 256,
+                                       GI_BIND_FLAG::kBIND_UNORDERED_ACCESS,
+                                       &zeroVector, 0, 256, GI_FORMAT::kFORMAT_R32_SINT);
+    
+    m_cBufferHistB = gapi.createBuffer(sizeof(int32) * 256,
+                                       GI_BIND_FLAG::kBIND_UNORDERED_ACCESS,
+                                       &zeroVector, 0, 256, GI_FORMAT::kFORMAT_R32_SINT);
+
+
+
     m_SAQ = make_shared<Model>();
 
     m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
@@ -374,6 +412,7 @@ namespace giEngineSDK {
                  m_computeShaderSSAO,
                  tmpSSAOShaderResources,
                  m_SSAOTexture,
+                 Vector<Buffer*>(),
                  m_sampler,
                  {1280/32, 23, 1});
 
@@ -387,6 +426,7 @@ namespace giEngineSDK {
                  m_csBlurH,
                  m_SSAOTexture,
                  m_BlurTexture,
+                 Vector<Buffer*>(),
                  m_sampler,
                  {1280/32, 23, 1});
 
@@ -397,11 +437,12 @@ namespace giEngineSDK {
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
     dispatchData(tmpBlurVConstants,
-      m_csBlurV,
-      m_BlurTexture,
-      m_SSAOTexture,
-      m_sampler,
-      { 1280 / 32, 23, 1 });
+                 m_csBlurV,
+                 m_BlurTexture,
+                 m_SSAOTexture,
+                 Vector<Buffer*>(),
+                 m_sampler,
+                 {1280/32, 23, 1});
 
     /************************************************************************/
     /*                           Shadow                                     */
@@ -445,6 +486,26 @@ namespace giEngineSDK {
                tmpLightConstants,
                tmpLightShaderResources,
                true);
+
+    /************************************************************************/
+    /*                           HISTOGRAM                                  */
+    /************************************************************************/
+    Vector<Buffer*> tmpHistoConstants;
+    tmpHistoConstants.push_back(m_cBufferHist);
+    Vector<Texture2D*> tmpHistoShaderResources;
+    tmpHistoShaderResources.push_back(gapi.getDefaultRenderTarget());
+    Vector<Buffer*> tmpBufferUAVs;
+    tmpBufferUAVs.push_back(m_cBufferHistR);
+    tmpBufferUAVs.push_back(m_cBufferHistG);
+    tmpBufferUAVs.push_back(m_cBufferHistB);
+
+    dispatchData(tmpHistoConstants,
+                 m_computeShaderHist,
+                 tmpHistoShaderResources,
+                 m_HistTexture,
+                 tmpBufferUAVs,
+                 m_sampler,
+                 {1280/32, 23, 1});
    
   }
 
@@ -520,7 +581,8 @@ namespace giEngineSDK {
   Renderer::dispatchData(Vector<Buffer*> inConstantBuffers,
                          BaseComputeShader * inCS,
                          Vector<Texture2D*> inShaderResources,
-                         Vector<Texture2D*> inUAVS,
+                         Vector<Texture2D*> inTextureUAVS,
+                         Vector<Buffer*> inBufferUAVS,
                          Sampler* inSampler,
                          Vector3 inDispatch) {
     //Get the Gapi
@@ -536,10 +598,16 @@ namespace giEngineSDK {
       gapi.csSetConstantBuffer(i, inConstantBuffers[i]);
     }
     //Set UAVs
-    size_T tmpSize = inUAVS.size();
+    size_T tmpSize = inTextureUAVS.size();
     int32 j = 0;
+    int32 l = 0;
     for(; j <tmpSize; ++j) {
-      gapi.setUAV(j, inUAVS[j]);
+      gapi.setUAVTexture(j, inTextureUAVS[j]);
+    }
+    if(!inBufferUAVS.empty()) {
+      for(; l <tmpSize; ++l) {
+        gapi.setUAVBuffer(j+l, inBufferUAVS[l]);
+      }
     }
     //Set Shader Resources
     int32 k = 0;
@@ -551,7 +619,12 @@ namespace giEngineSDK {
     //Unbind UAVs
     if (0 < j) {
       for(int32 i = 0; i < j; ++i) {
-        gapi.setUAV(i, nullptr);
+        gapi.setUAVTexture(i, nullptr);
+      }
+    }
+    if (0 < l) {
+      for(int32 i = 0; i < l; ++i) {
+        gapi.setUAVBuffer(j+i, nullptr);
       }
     }
     //Unbind Shader Resources

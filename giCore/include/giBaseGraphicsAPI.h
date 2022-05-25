@@ -275,12 +275,20 @@ namespace giEngineSDK {
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
 
     /**
-     * @brief     Set Unordered Access View.
+     * @brief     Set Unordered Access View Texture.
      * @param     inUAV     The Unordered Access View to set.
      * @bug       No known Bugs.
      */
      virtual void
-     setUAV(int32, Texture2D*) {};
+     setUAVTexture(int32, Texture2D*) {};
+
+    /**
+     * @brief     Set Unordered Access View Buffer.
+     * @param     inUAV     The Unordered Access View to set.
+     * @bug       No known Bugs.
+     */
+     virtual void
+     setUAVBuffer(int32, Buffer*) {};
     
     /**
      * @brief    Update Subresource.

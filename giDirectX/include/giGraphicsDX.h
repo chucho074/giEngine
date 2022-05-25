@@ -232,7 +232,15 @@ namespace giEngineSDK {
      * @bug     No known Bugs.
      */
     void
-    setUAV(int32, Texture2D* inUAV) override;
+    setUAVTexture(int32, Texture2D* inUAV) override;
+
+    /**
+     * @brief   Set the Unordered Access Views Buffers.
+     * @param   inUAV         The unordered Accesss View to set.
+     * @bug     No known Bugs.
+     */
+    void
+    setUAVBuffer(int32, Buffer* inUAV) override;
 
     /**
      * @brief    Update Subresource.
