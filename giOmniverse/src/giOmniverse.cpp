@@ -551,7 +551,7 @@ namespace giEngineSDK {
       // Find a UsdGeomMesh in the existing stage
       m_existingStage = m_existingStage +"/scene.usd";
       
-      tmpMesh = findGeomMesh(m_existingStage);
+      //tmpMesh = findGeomMesh(m_existingStage);
     }
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
@@ -675,9 +675,9 @@ namespace giEngineSDK {
       position += GfVec3d(x, 0, y);
       rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
 
-      SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
-      SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
-      SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+      //SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
+      //SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+      //SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
 
       // Make sure the xform op order is correct (translate, rotate, scale)
       Vector<UsdGeomXformOp> xFormOpsReordered;
@@ -765,7 +765,7 @@ namespace giEngineSDK {
             //Get the information.
             UsdAttribute tmpVertex = geoMesh.GetPointsAttr();
             UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
-            UsdAttribute tmpFaces = geoMesh.GetFaceVertexCountsAttr();
+            UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
             
             //Points / Vertex.
             VtArray<GfVec3f> tmpPointArray;
@@ -804,19 +804,19 @@ namespace giEngineSDK {
             }
             
             //Faces.
-            VtArray<GfVec3f> tmpFacesArray;
+            VtArray<int32> tmpFacesArray;
             tmpFaces.Get(&tmpFacesArray);
             
-            Vector<GfVec3f> faceArray;
+            Vector<int32> faceArray;
             
             uint32 sizeFace = tmpFacesArray.size();
-            auto tmpStartFaces = reinterpret_cast<GfVec3f*>(tmpFacesArray.data());
+            auto tmpStartFaces = tmpFacesArray.data();
             auto tmpEndFaces = tmpStartFaces + sizeFace;
             faceArray.reserve(sizeFace);
             faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
             
             for (int i = 0; i < sizeFace; ++i) {
-              tmpFacesModel.push_back(faceArray[i].GetArray()[0]);
+              tmpFacesModel.push_back(faceArray[i]);
             }
             
             //Create the mesh.

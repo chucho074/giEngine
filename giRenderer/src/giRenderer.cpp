@@ -375,7 +375,7 @@ namespace giEngineSDK {
                  tmpSSAOShaderResources,
                  m_SSAOTexture,
                  m_sampler,
-                 {1280/32, 23, 1});  
+                 {1280/32, 23, 1});
 
     /************************************************************************/
     /*                           BlurH                                      */
@@ -397,11 +397,11 @@ namespace giEngineSDK {
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
     dispatchData(tmpBlurVConstants,
-                 m_csBlurV,
-                 m_BlurTexture,
-                 m_SSAOTexture,
-                 m_sampler,
-                 {1280/32, 23, 1});
+      m_csBlurV,
+      m_BlurTexture,
+      m_SSAOTexture,
+      m_sampler,
+      { 1280 / 32, 23, 1 });
 
     /************************************************************************/
     /*                           Shadow                                     */
