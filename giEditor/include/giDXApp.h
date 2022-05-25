@@ -13,25 +13,7 @@
 #pragma once
 
 #include <giBaseApp.h>
-#include <giCamera.h>
-#include <giMatrix4.h>
-#include <giVector4.h>
-#include <giVector3.h>
-#include <giVector2.h>
-#include <giTexture2D.h>
-#include <giDepthStencilView.h>
-#include <giRenderTargetView.h>
-#include <giVertexShaderDX.h>
-#include <giPixelShaderDX.h>
-#include <giBuffer.h>
-#include <giInputLayout.h>
-#include <giSampler.h>
-#include <giMesh.h>
-#include <giModel.h>
-#include <giStaticMesh.h>
-#include <giSceneGraph.h>
-#include <SFML/Window.hpp>
-#include <SFML/Window/WindowBase.hpp>
+
 
 using giEngineSDK::Buffer;
 using giEngineSDK::Vector4;
@@ -109,17 +91,17 @@ class DirectXApp : public BaseApp {
 
  private:
 
-  //The Sampler
-  Sampler * m_sampler = nullptr;
+  //The SamplerState
+  SharedPtr<SamplerState> m_sampler = nullptr;
 
   //The Constant Buffer (Never Change)
-  Buffer * m_cBufferCamera = nullptr;
+  SharedPtr<Buffer> m_cBufferCamera = nullptr;
 
   //The Constant Buffer (Change on Resize)
   //Buffer * m_cBufferChangeOnResize = nullptr;
 
   //The Constant Buffer (Change Every Frame)
-  Buffer * m_cBufferChangeEveryFrame = nullptr;
+  SharedPtr<Buffer> m_cBufferChangeEveryFrame = nullptr;
 
   //The World Matrix
   Matrix4 m_world;

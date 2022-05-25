@@ -13,17 +13,17 @@
 #include "giSamplerDX.h"
 
 namespace giEngineSDK {
-  CSamplerDX::CSamplerDX() {
+  SamplerDX::SamplerDX() {
     m_sampler = nullptr;
     memset(&m_desc, 0, sizeof(m_desc));
   }
 
-  CSamplerDX::~CSamplerDX() {
+  SamplerDX::~SamplerDX() {
     SAFE_RELEASE(m_sampler);
   }
 
   void
-  CSamplerDX::init(SamplerDesc inDesc) {
+  SamplerDX::init(SamplerDesc inDesc) {
     m_desc.Filter = (D3D11_FILTER)inDesc.filter;
     m_desc.AddressU = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressU;
     m_desc.AddressV = (D3D11_TEXTURE_ADDRESS_MODE)inDesc.addressV;

@@ -1,6 +1,6 @@
 /**
  * @file    giComputeShaderDX.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/10/2021
  * @brief   A basic description of the what do the doc.
@@ -23,7 +23,7 @@ namespace giEngineSDK {
   }
   
   bool 
-  ComputeShaderDX::CompileShaderFromFile(wString szFileName, 
+  ComputeShaderDX::CompileShaderFromFile(wString szFileName,
                                          String szEntryPoint, 
                                          String szShaderModel, 
                                          ID3DBlob** ppBlobOut) {

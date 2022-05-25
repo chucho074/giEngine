@@ -194,6 +194,7 @@
     <ClInclude Include="include\giBaseInput.h" />
     <ClInclude Include="include\giBaseOmniverse.h" />
     <ClInclude Include="include\giBaseRenderer.h" />
+    <ClInclude Include="include\giBaseViewport.h" />
     <ClInclude Include="include\giBlendState.h" />
     <ClInclude Include="include\giComponent.h" />
     <ClInclude Include="include\giActor.h" />
@@ -213,7 +214,7 @@
     <ClInclude Include="include\giModel.h" />
     <ClInclude Include="include\giObject.h" />
     <ClInclude Include="include\giPrerequisitesCore.h" />
-    <ClInclude Include="include\giRasterizer.h" />
+    <ClInclude Include="include\giBaseRasterizer.h" />
     <ClInclude Include="include\giResource.h" />
     <ClInclude Include="include\giResourceManager.h" />
     <ClInclude Include="include\giSampler.h" />

@@ -53,7 +53,7 @@ namespace giEngineSDK {
 
     for(uint32 i = 0; i < m_textures.size(); i++) {
       GAPI.psSetShaderResource(i, m_textures[i].texture);
-      GAPI.psSetSampler(i, 1, m_textures[i].samplerState);
+      GAPI.psSetSamplerState(i, 1, m_textures[i].samplerState);
     }
 
 

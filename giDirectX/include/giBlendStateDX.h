@@ -15,7 +15,7 @@
 #include "giPrerequisitesDX.h"
 
 namespace giEngineSDK {
-  class BlendStateDX : public BlendState
+  class BlendStateDX : public BaseBlendState
   {
    public:
     //Default Constructor
@@ -26,6 +26,8 @@ namespace giEngineSDK {
       SAFE_RELEASE(m_blendState);
     };
 
-    ID3D11BlendState * m_blendState;
+    ID3D11BlendState * m_blendState = nullptr;
+    Vector4 m_blendFactor;
+    uint32 m_mask;
   };
 }

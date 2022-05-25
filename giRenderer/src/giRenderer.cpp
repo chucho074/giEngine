@@ -1,6 +1,6 @@
 /**
  * @file    giRenderer.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
@@ -36,12 +36,12 @@ namespace giEngineSDK {
     auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
     m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
-    //Create Sampler
+    //Create SamplerState
     SamplerDesc sampDesc;
-    sampDesc.filter = 21;
-    sampDesc.addressU = 1;
-    sampDesc.addressV = 1;
-    sampDesc.addressW = 1;
+    sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+    sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.comparisonFunc = 1;
     sampDesc.minLOD = 0;
     sampDesc.maxLOD = 3.402823466e+38f;
@@ -170,7 +170,7 @@ namespace giEngineSDK {
     layoutDesc[4].instanceDataStepRate = 0;
     
     //Create the Input Layout
-    m_inputLayout = gapi.createIL(layoutDesc, m_vertexShader);
+    m_inputLayout = gapi.createInputLayout(layoutDesc, m_vertexShader);
     
     
     //Create the textures
@@ -201,9 +201,40 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                               SSAO                                   */
     /************************************************************************/
+    //Create Vertex Shader 
+    m_vertexShaderSSAO = gapi.createVShaderFromFile(L"Resources/SSAO.hlsl", "VS_SSAO", "vs_4_0");
 
-    //Create Compute Shader
-    m_computeShaderSSAO = gapi.createCS(L"Resources/ComputeSSAO.hlsl", "main", "cs_5_0");
+    //Create Pixel Shader
+    m_pixelShaderSSAO = gapi.createPShaderFromFile(L"Resources/SSAO.hlsl", "PS_SSAO", "ps_4_0");
+
+    //Create Input Layout
+    Vector<InputLayoutDesc> layoutDescSSAO;
+
+    //Set the size for the inputLayout
+    layoutDescSSAO.resize(2);
+
+    //Sets the input Layout values
+
+    //Positions
+    layoutDescSSAO[0].semanticName = "POSITION";
+    layoutDescSSAO[0].semanticIndex = 0;
+    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
+    layoutDescSSAO[0].inputSlot = 0;
+    layoutDescSSAO[0].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDescSSAO[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDescSSAO[0].instanceDataStepRate = 0;
+
+    //Texcoords
+    layoutDescSSAO[1].semanticName = "TEXCOORD";
+    layoutDescSSAO[1].semanticIndex = 0;
+    layoutDescSSAO[1].format = GI_FORMAT::kFORMAT_R32G32_FLOAT;
+    layoutDescSSAO[1].inputSlot = 0;
+    layoutDescSSAO[1].alignedByteOffset = ALIGN_ELEMENT;
+    layoutDescSSAO[1].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
+    layoutDescSSAO[1].instanceDataStepRate = 0;
+
+    //Create the Input Layout
+    m_inputLayoutSSAO = gapi.createInputLayout(layoutDescSSAO, m_vertexShaderSSAO);
 
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
@@ -229,12 +260,14 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                               BLUR                                   */
     /************************************************************************/
+    //Create Vertex Shader 
+    m_vertexShaderBlur = gapi.createVShaderFromFile(L"Resources/Blur.hlsl", "vs_blur", "vs_4_0");
 
     //Create Pixel Shader
-    m_csBlurH = gapi.createCS(L"Resources/ComputeBlur.hlsl", "cs_gaussian_blurH", "cs_5_0");
+    m_pixelShaderBlurH = gapi.createPShaderFromFile(L"Resources/Blur.hlsl", "ps_gaussian_blurH", "ps_4_0");
 
     //Create Pixel Shader
-    m_csBlurV = gapi.createCS(L"Resources/ComputeBlur.hlsl", "cs_gaussian_blurV", "cs_5_0");
+    m_pixelShaderBlurV = gapi.createPShaderFromFile(L"Resources/Blur.hlsl", "ps_gaussian_blurV", "ps_4_0");
 
 
     //Create the texture
@@ -313,7 +346,7 @@ namespace giEngineSDK {
     layoutDescLight[1].instanceDataStepRate = 0;
 
     //Create the Input Layout
-    m_inputLayoutLight = gapi.createIL(layoutDescLight, m_vertexShaderLight);
+    m_inputLayoutLight = gapi.createInputLayout(layoutDescLight, m_vertexShaderLight);
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
@@ -348,7 +381,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/
-    Vector<Buffer*> tmpGbufferConstants;
+    Vector<SharedPtr<Buffer>> tmpGbufferConstants;
 
     tmpGbufferConstants.push_back(m_cBufferCamera);
     tmpGbufferConstants.push_back(m_cBufferChangeEveryFrame);
@@ -364,9 +397,9 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           SSAO                                       */
     /************************************************************************/
-    Vector<Buffer*> tmpSSAOConstants;
+    Vector<SharedPtr<Buffer>> tmpSSAOConstants;
     tmpSSAOConstants.push_back(m_cBufferSSAO);
-    Vector<Texture2D*> tmpSSAOShaderResources;
+    Vector<SharedPtr<Texture2D>> tmpSSAOShaderResources;
     tmpSSAOShaderResources.push_back(m_renderTargets[0]);
     tmpSSAOShaderResources.push_back(m_renderTargets[1]);
 
@@ -380,7 +413,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           BlurH                                      */
     /************************************************************************/
-    Vector<Buffer*> tmpBlurHConstants;
+    Vector<SharedPtr<Buffer>> tmpBlurHConstants;
     tmpBlurHConstants.push_back(m_cBufferBlur);
 
     dispatchData(tmpBlurHConstants,
@@ -393,7 +426,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           BlurV                                      */
     /************************************************************************/
-    Vector<Buffer*> tmpBlurVConstants;
+    Vector<SharedPtr<Buffer>> tmpBlurVConstants;
     tmpBlurVConstants.push_back(m_cBufferBlur);
 
     dispatchData(tmpBlurVConstants,
@@ -406,7 +439,7 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           Shadow                                     */
     /************************************************************************/
-    Vector<Buffer*> tmpShadowConstants;
+    Vector<SharedPtr<Buffer>> tmpShadowConstants;
     tmpShadowConstants.push_back(m_cBufferShadow);
 
     renderData(m_ShadowTexture,
@@ -421,15 +454,15 @@ namespace giEngineSDK {
     /************************************************************************/
     /*                           Light                                      */
     /************************************************************************/
-    Vector<Texture2D*> tmpVector;
+    Vector<SharedPtr<Texture2D>> tmpVector;
     tmpVector.push_back(gapi.getDefaultRenderTarget());
-    Vector<Buffer*> tmpLightConstants;
+    Vector<SharedPtr<Buffer>> tmpLightConstants;
     tmpLightConstants.push_back(m_cBufferCamera);
     tmpLightConstants.push_back(m_cBufferShadow);
     tmpLightConstants.push_back(m_cBufferChangeEveryFrame);
     tmpLightConstants.push_back(m_cBufferLight);
 
-    Vector<Texture2D*> tmpLightShaderResources;
+    Vector<SharedPtr<Texture2D>> tmpLightShaderResources;
     for(auto RT : m_renderTargets) {
       tmpLightShaderResources.push_back(RT);
     }
@@ -445,18 +478,18 @@ namespace giEngineSDK {
                tmpLightConstants,
                tmpLightShaderResources,
                true);
-   
+
   }
 
   void
-  Renderer::renderData(Vector<Texture2D*> inRenderTarget,
-                       Texture2D * inDS, 
-                       InputLayout * inInputLayout,
-                       BaseVertexShader * inVertexShader,
-                       BasePixelShader * inPixelShader,
-                       Sampler * inSampler, 
-                       Vector<Buffer*> inConstantBuffers,
-                       Vector<Texture2D*> inShaderResources,
+  Renderer::renderData(Vector<SharedPtr<Texture2D>> inRenderTarget,
+                       SharedPtr<Texture2D> inDS, 
+                       SharedPtr<InputLayout> inInputLayout,
+                       SharedPtr<BaseVertexShader> inVertexShader,
+                       SharedPtr<BasePixelShader> inPixelShader,
+                       SharedPtr<SamplerState> inSampler, 
+                       Vector<SharedPtr<Buffer>> inConstantBuffers,
+                       Vector<SharedPtr<Texture2D>> inShaderResources,
                        bool inDrawSAQ, 
                        bool inClear) {
 
@@ -487,7 +520,7 @@ namespace giEngineSDK {
     }
 
     if(nullptr != inSampler) {
-      gapi.psSetSampler(0, 1, inSampler);
+      gapi.psSetSamplerState(0, 1, inSampler);
     }
 
     for (int i = 0; i < inConstantBuffers.size(); ++i) {

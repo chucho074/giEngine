@@ -19,18 +19,18 @@ namespace giEngineSDK {
 
 
   /**
-   * @class    CInputLayoutDX.
+   * @class    InputLayoutDX.
    * @brief    Manage the Input Layout information.
    * @bug      No known Bugs.
    */
-  class CInputLayoutDX : public InputLayout
+  class InputLayoutDX : public InputLayout
   {
    public:
     ///Constructor
-    CInputLayoutDX();
+    InputLayoutDX();
 
     ///Destructor
-    ~CInputLayoutDX();
+    ~InputLayoutDX();
 
     /**
      * @brief    Initializer.

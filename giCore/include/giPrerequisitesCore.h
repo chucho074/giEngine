@@ -54,6 +54,8 @@
 namespace giEngineSDK {
 #define ALIGN_ELEMENT (0xffffffff)
 #define SAFE_RELEASE(x) if(x != nullptr) x->Release(); x=nullptr;
+#define	GI_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE	( 16 )
+
 
   using wchar = wchar_t;
 
@@ -271,6 +273,103 @@ namespace giEngineSDK {
     enum E {
       kINPUT_PER_VERTEX_DATA = 0,
       kINPUT_PER_INSTANCE_DATA = 1
+    };
+  }
+
+  namespace GI_FILTER {
+    enum E {
+      kFILTER_MIN_MAG_MIP_POINT = 0,
+      kFILTER_MIN_MAG_POINT_MIP_LINEAR = 0x1,
+      kFILTER_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x4,
+      kFILTER_MIN_POINT_MAG_MIP_LINEAR = 0x5,
+      kFILTER_MIN_LINEAR_MAG_MIP_POINT = 0x10,
+      kFILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x11,
+      kFILTER_MIN_MAG_LINEAR_MIP_POINT = 0x14,
+      kFILTER_MIN_MAG_MIP_LINEAR = 0x15,
+      kFILTER_ANISOTROPIC = 0x55,
+      kFILTER_COMPARISON_MIN_MAG_MIP_POINT = 0x80,
+      kFILTER_COMPARISON_MIN_MAG_POINT_MIP_LINEAR = 0x81,
+      kFILTER_COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x84,
+      kFILTER_COMPARISON_MIN_POINT_MAG_MIP_LINEAR = 0x85,
+      kFILTER_COMPARISON_MIN_LINEAR_MAG_MIP_POINT = 0x90,
+      kFILTER_COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
+      kFILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT = 0x94,
+      kFILTER_COMPARISON_MIN_MAG_MIP_LINEAR = 0x95,
+      kFILTER_COMPARISON_ANISOTROPIC = 0xd5,
+      kFILTER_MINIMUM_MIN_MAG_MIP_POINT = 0x100,
+      kFILTER_MINIMUM_MIN_MAG_POINT_MIP_LINEAR = 0x101,
+      kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x104,
+      kFILTER_MINIMUM_MIN_POINT_MAG_MIP_LINEAR = 0x105,
+      kFILTER_MINIMUM_MIN_LINEAR_MAG_MIP_POINT = 0x110,
+      kFILTER_MINIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x111,
+      kFILTER_MINIMUM_MIN_MAG_LINEAR_MIP_POINT = 0x114,
+      kFILTER_MINIMUM_MIN_MAG_MIP_LINEAR = 0x115,
+      kFILTER_MINIMUM_ANISOTROPIC = 0x155,
+      kFILTER_MAXIMUM_MIN_MAG_MIP_POINT = 0x180,
+      kFILTER_MAXIMUM_MIN_MAG_POINT_MIP_LINEAR = 0x181,
+      kFILTER_MAXIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT = 0x184,
+      kFILTER_MAXIMUM_MIN_POINT_MAG_MIP_LINEAR = 0x185,
+      kFILTER_MAXIMUM_MIN_LINEAR_MAG_MIP_POINT = 0x190,
+      kFILTER_MAXIMUM_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x191,
+      kFILTER_MAXIMUM_MIN_MAG_LINEAR_MIP_POINT = 0x194,
+      kFILTER_MAXIMUM_MIN_MAG_MIP_LINEAR = 0x195,
+      kFILTER_MAXIMUM_ANISOTROPIC = 0x1d5
+    };
+  }
+
+  namespace GI_TEXTURE_ADDRESS_MODE {
+    enum E {
+      kTEXTURE_ADDRESS_WRAP = 1,
+      kTEXTURE_ADDRESS_MIRROR = 2,
+      kTEXTURE_ADDRESS_CLAMP = 3,
+      kTEXTURE_ADDRESS_BORDER = 4,
+      kTEXTURE_ADDRESS_MIRROR_ONCE = 5
+    };
+  }
+
+  namespace GI_COMPARATION_FUNC {
+    enum E {
+      kCOMPARISON_NEVER = 1,
+      kCOMPARISON_LESS = 2,
+      kCOMPARISON_EQUAL = 3,
+      kCOMPARISON_LESS_EQUAL = 4,
+      kCOMPARISON_GREATER = 5,
+      kCOMPARISON_NOT_EQUAL = 6,
+      kCOMPARISON_GREATER_EQUAL = 7,
+      kCOMPARISON_ALWAYS = 8
+    };
+  }
+
+  namespace BLEND_TYPE {
+    enum E {
+      zero = 1,
+      one,
+      src_color,
+      inv_src_color,
+      src_alpha,
+      inv_src_alpha,
+      dest_alpha,
+      inv_dest_alpha,
+      dest_color,
+      inv_dest_color,
+      src_alpha_sat,
+      blend_factor = 14,
+      inv_blend_factor,
+      src1_color,
+      inv_src1_color,
+      src1_alpha,
+      inv_src1_alpha
+    };
+
+  }
+
+  namespace BLEND_OP {
+    enum E {
+      add = 1,
+      substract,
+      rev_substract,
+      min,
+      max
     };
   }
 }

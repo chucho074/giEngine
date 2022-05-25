@@ -14,13 +14,14 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-  class GI_CORE_EXPORT BlendState
+
+  class GI_CORE_EXPORT BaseBlendState
   {
    public:
     //Default constructor
-  	BlendState() = default;
+     BaseBlendState() = default;
 
     //Destructor
-  	~BlendState() = default;
+  	~BaseBlendState() = default;
   };
 }

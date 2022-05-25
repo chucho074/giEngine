@@ -39,8 +39,8 @@ namespace giEngineSDK {
     uint32 id;
     String type;
     String path;
-    Texture2D * texture;
-    Sampler * samplerState;
+    SharedPtr<Texture2D> texture;
+    SharedPtr<SamplerState> samplerState;
   };
 
   /**
@@ -78,13 +78,13 @@ namespace giEngineSDK {
    //protected:
 
     //The vertex buffer for the mesh
-    Buffer * m_vertexBuffer = nullptr;
+    SharedPtr<Buffer> m_vertexBuffer = nullptr;
 
     //A vertex data Vector
     Vector<SimpleVertex> m_vertexVector;
 
     //The index buffer for the mesh
-    Buffer * m_indexBuffer = nullptr;
+    SharedPtr<Buffer> m_indexBuffer = nullptr;
 
     //The list of Faces
     Vector<uint32> m_facesList;

@@ -1,6 +1,6 @@
 /**
  * @file    giRenderer.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
@@ -19,6 +19,8 @@ namespace giEngineSDK {
   class Model;
   class BaseVertexShader;
   class BasePixelShader;
+  class DepthStateDX;
+  class RasterizerDX;
 }
 
 
@@ -113,14 +115,14 @@ namespace giEngineSDK {
      * brief
      */
     void
-    renderData(Vector<Texture2D*> inRendertarget,
-               Texture2D* inDS,
-               InputLayout* inInputLayout,
-               BaseVertexShader* inVertexShader,
-               BasePixelShader* inPixelShader,
-               Sampler* inSampler,
-               Vector<Buffer*> inConstantBuffers,
-               Vector<Texture2D*> inShaderResources = Vector<Texture2D*>(),
+    renderData(Vector<SharedPtr<Texture2D>> inRendertarget,
+               SharedPtr<Texture2D> inDS,
+               SharedPtr<InputLayout> inInputLayout,
+               SharedPtr<BaseVertexShader> inVertexShader,
+               SharedPtr<BasePixelShader> inPixelShader,
+               SharedPtr<SamplerState> inSampler,
+               Vector<SharedPtr<Buffer>> inConstantBuffers,
+               Vector<SharedPtr<Texture2D>> inShaderResources = Vector<SharedPtr<Texture2D>>(),
                bool inDrawSAQ = false, 
                bool inClear = true);
 
@@ -143,65 +145,85 @@ namespace giEngineSDK {
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
     //The Constant Buffer (Never Change)
-    Buffer * m_cBufferCamera = nullptr;
+    SharedPtr<Buffer> m_cBufferCamera;
+
     //The Constant Buffer (Change Every Frame)
-    Buffer * m_cBufferChangeEveryFrame = nullptr;
+    SharedPtr<Buffer> m_cBufferChangeEveryFrame;
+
     //The input Layout
-    InputLayout* m_inputLayout = nullptr;
-    //The Sampler
-    Sampler* m_sampler = nullptr;
+    SharedPtr<InputLayout> m_inputLayout;
+
+    //The SamplerState
+    SharedPtr<SamplerState> m_sampler;
+
     //The color For the mesh
     Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };
     //Depth Stencil State
-    SharedPtr<DepthState> m_depthStateGBuffer;
+    SharedPtr<DepthStateDX> m_depthStateGBuffer;
+
     //Rasterizer
-    SharedPtr<Rasterizer> m_rasterGBuffer;
-    Vector<Texture2D*> m_renderTargets;
+    SharedPtr<RasterizerDX> m_rasterGBuffer;
+
+    Vector<SharedPtr<Texture2D>> m_renderTargets;
 
                 //GBUFFER
     //The Vertex shader
-    BaseVertexShader* m_vertexShader = nullptr;
-    //The Pixel Shader
-    BasePixelShader* m_pixelShader = nullptr;
+    SharedPtr<BaseVertexShader> m_vertexShader;
 
-                  //SSAO
-    //The Compute Shader
-    BaseComputeShader* m_computeShaderSSAO = nullptr;
-    Buffer* m_cBufferSSAO = nullptr;
-    Vector<Texture2D*> m_SSAOTexture;
+    //The Pixel Shader
+    SharedPtr<BasePixelShader> m_pixelShader;
+
+    //SSAO
+    //The Vertex shader
+    SharedPtr<BaseVertexShader> m_vertexShaderSSAO;
+
+    //The Pixel Shader
+    SharedPtr<BasePixelShader> m_pixelShaderSSAO;
+
+
+    SharedPtr<InputLayout> m_inputLayoutSSAO;
+
+    SharedPtr<Buffer> m_cBufferSSAO;
+    
+    Vector<SharedPtr<Texture2D>> m_SSAOTexture;
 
     //SAQ
     SharedPtr<Model> m_SAQ;
 
-                  //Blur
-    //The Compute Shader
-    BaseComputeShader* m_csBlurH = nullptr;
-    //The Compute Shader
-    BaseComputeShader* m_csBlurV = nullptr;
-    Vector<Texture2D*> m_BlurTexture;
-    Buffer* m_cBufferBlur = nullptr;
+    //Blur
+    //The Vertex Shader
+    SharedPtr<BaseVertexShader> m_vertexShaderBlur;
+    //The Pixel Shader
+    SharedPtr<BasePixelShader> m_pixelShaderBlurH;
+
+    //The Pixel Shader
+    SharedPtr<BasePixelShader> m_pixelShaderBlurV;
+
+    Vector<SharedPtr<Texture2D>> m_BlurTexture;
+
+    SharedPtr<Buffer> m_cBufferBlur;
 
                 //Shadows
     //The Vertex Shader
-    BaseVertexShader* m_vertexShaderShadow = nullptr;
+    SharedPtr<BaseVertexShader> m_vertexShaderShadow;
     //The Pixel Shader
-    BasePixelShader* m_pixelShaderShadow = nullptr;
+    SharedPtr<BasePixelShader> m_pixelShaderShadow;
     //The texture
-    Vector<Texture2D*> m_ShadowTexture;
+    Vector<SharedPtr<Texture2D>> m_ShadowTexture;
     //The buffer
-    Buffer* m_cBufferShadow = nullptr;
+    SharedPtr<Buffer> m_cBufferShadow;
     //Camera
     SharedPtr<Camera> m_ShadowCamera;
 
                //Light
     //The Vertex Shader
-    BaseVertexShader* m_vertexShaderLight = nullptr;
+    SharedPtr<BaseVertexShader> m_vertexShaderLight;
     //The Pixel Shader
-    BasePixelShader* m_pixelShaderLight = nullptr;
+    SharedPtr<BasePixelShader> m_pixelShaderLight;
     //The input Layout
-    InputLayout* m_inputLayoutLight = nullptr;
+    SharedPtr<InputLayout> m_inputLayoutLight;
     //The Constant Buffer
-    Buffer* m_cBufferLight = nullptr;
+    SharedPtr<Buffer> m_cBufferLight;
 
 
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha

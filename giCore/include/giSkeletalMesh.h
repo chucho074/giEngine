@@ -42,7 +42,7 @@ namespace giEngineSDK {
     String type;
     String path;
     Texture2D* texture;
-    Sampler* samplerState;
+    SamplerState* samplerState;
   };
 
   /**

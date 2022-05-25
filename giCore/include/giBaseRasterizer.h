@@ -1,5 +1,5 @@
 /**
- * @file    giRasterizer
+ * @file    giBaseRasterizer
  * @author  Jesús Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
@@ -30,14 +30,14 @@ namespace giEngineSDK {
     };
   }
 
-  class Rasterizer
+  class BaseRasterizerState
   {
    public:
   	//Default constructor
-    Rasterizer() = default;
+    BaseRasterizerState() = default;
 
     //Destructor
     virtual
-  	~Rasterizer() = default;
+  	~BaseRasterizerState() = default;
   };
 }

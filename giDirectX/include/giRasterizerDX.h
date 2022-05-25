@@ -12,10 +12,10 @@
  */
 #pragma once
 #include "giPrerequisitesDX.h"
-#include <giRasterizer.h>
+#include <giBaseRasterizer.h>
 
 namespace giEngineSDK {
-  class RasterizerDX final : public Rasterizer
+  class RasterizerDX final : public BaseRasterizerState
   {
    public:
     //Default constructor

@@ -16,32 +16,32 @@
 namespace giEngineSDK {
   /**
    * @struct   SamplerDesc.
-   * @brief    Manage the information for the Sampler.
+   * @brief    Manage the information for the SamplerState.
    * @bug      No known Bugs.
    */
   struct SamplerDesc {
-    uint32 filter = 0;
-    uint32 addressU = 0;
-    uint32 addressV = 0;
-    uint32 addressW = 0;
+    GI_FILTER::E filter = GI_FILTER::kFILTER_MIN_MAG_MIP_POINT;
+    GI_TEXTURE_ADDRESS_MODE::E addressU;
+    GI_TEXTURE_ADDRESS_MODE::E addressV;
+    GI_TEXTURE_ADDRESS_MODE::E addressW;
     uint32 comparisonFunc = 0;
     float minLOD = 0.f;
     float maxLOD = 0.f;
   };
   
   /**
-   * @class    Sampler.
-   * @brief    Manage the Sampler State.
+   * @class    SamplerState.
+   * @brief    Manage the SamplerState State.
    * @bug      No known Bugs.
    */
-  class Sampler {
+  class SamplerState {
    public:
      //Constructor
-     Sampler() = default;
+     SamplerState() = default;
 
      //Destructor  
      virtual
-     ~Sampler() = default;
+     ~SamplerState() = default;
   
      /**
       * @brief     Initialize the sampler.

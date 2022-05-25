@@ -1,6 +1,6 @@
 /**
  * @file    giDXApp.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesï¿½s Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
@@ -11,8 +11,28 @@
  * @include
  */
 #include <giDegrees.h>
+//#include <giGraphicsDX.h>
 #include <giCamera.h>
+#include <giMatrix4.h>
+#include <giVector4.h>
+#include <giVector3.h>
+#include <giVector2.h>
+#include <giTexture2D.h>
+#include <giDepthStencilView.h>
+#include <giRenderTargetView.h>
+#include <giVertexShaderDX.h>
+#include <giPixelShaderDX.h>
+#include <giBuffer.h>
+#include <giInputLayout.h>
+#include <giSampler.h>
+#include <giMesh.h>
+#include <giModel.h>
+#include <giStaticMesh.h>
+#include <giSceneGraph.h>
+#include <SFML/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
 #include "giDXApp.h"
+#include "giImGui.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -28,7 +48,10 @@ DirectXApp::DirectXApp() {
 void 
 DirectXApp::onCreate() {
 
-  auto& gapi = g_graphicsAPI();
+  Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
+
+  ImGui::init(&m_window, tmpSize);
+
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
   mainCamera->init(Degrees(75.0f).getRadians(),
@@ -89,20 +112,14 @@ DirectXApp::onCreate() {
                                                    GI_BIND_FLAG::kBIND_CONSTANT_BUFFER, 
                                                    nullptr);
 
-
   //Initialize world matrix
   m_world = Matrix4::IDENTITY;
-
-  /*SharedPtr<Texture2D> tmpTex;
-  tmpTex.reset(gapi.TextureFromFile());*/
-  
-  
 }
 
 
 void 
 DirectXApp::onDestroy() {
-
+  ImGui::shutDown();
 }
 
 
@@ -112,6 +129,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
   //World rotation
   //m_world = XMMatrixRotationY(inDeltaTime);
 
+
   auto& camera = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 
   if(camera) {
@@ -119,11 +137,17 @@ DirectXApp::onUpdate(float inDeltaTime) {
   }
 
   m_sceneGraph->update(inDeltaTime);
+  
+  ImGui::NewFrame();
+  ImGui::update(m_window.getSystemHandle(), inDeltaTime);
+  ImGui::ShowDemoWindow();
 }
 
 
 void 
 DirectXApp::onRender() {
+
+  ImGui::render();
 
   //Update variables that change once per frame
   //CBChangesEveryFrame cb;
@@ -136,7 +160,7 @@ DirectXApp::onRender() {
   //m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
   //m_gapi->psSetShaderResource(0, m_colorTexture);
-  //m_gapi->psSetSampler(0, 1, m_sampler);
+  //m_gapi->psSetSamplerState(0, 1, m_sampler);
   
   //Apply a rotation
   //static float tmpRotation = Math::PI / 550.0f;
@@ -160,6 +184,8 @@ void
 DirectXApp::onEvent(MSG inMsg) {
   
   //g_inputManager().sendEvent(inMsg);
+
+  ImGui::callBack();
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {

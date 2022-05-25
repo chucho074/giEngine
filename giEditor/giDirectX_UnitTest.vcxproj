@@ -20,10 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\giDXApp.cpp" />
+    <ClCompile Include="src\giImGui.cpp" />
+    <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDXApp.h" />
+    <ClInclude Include="include\giImGui.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -31,6 +38,7 @@
     <ProjectGuid>{f3af756a-7689-44c6-ad12-7c7de34e8b63}</ProjectGuid>
     <RootNamespace>giDirectXUnitTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>giEditor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -99,9 +107,6 @@
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -154,13 +159,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(SolutionDir)giDirectX/include;./include/;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;DXUT\Core;$(SolutionDir)giRenderer/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/ImGui/;$(DEVLIBS)/GaInput/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;assimp-vc142-mtd.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>giUtilities_d.lib;assimp-vc142-mtd.lib;giCore_d.lib;sfml-window-d.lib;sfml-system-d.lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
