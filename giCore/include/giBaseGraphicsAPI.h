@@ -210,7 +210,6 @@ namespace giEngineSDK {
      * @brief    Creates a buffer.
      * @param    inByteWidth   The byte Width for the buffer.
      * @param    inBindFlags   The bind flags for the buffer.
-     * @param    inOffset      The offset of the buffer.
      * @param    inBufferData  The information to save into the buffer.
      * @return   Returns the buffer.
      * @bug      No known Bugs.
@@ -337,6 +336,15 @@ namespace giEngineSDK {
     setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {};
     
     /**
+     * @brief   Set the Unordered Access Views.
+     * @param   inUAV         The unordered Accesss View to set.
+     * @bug     No known Bugs.
+     */
+    virtual void
+    setUAV(int32, Texture2D* inUAV) {};
+
+
+    /**
      * @brief    Update Subresource.
      * @param    inBuffer      The buffer with the information.
      * @param    inData        The data to update.
@@ -419,7 +427,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    csSetShader(BaseShader * = nullptr) {};
+    csSetShader(SharedPtr<BaseShader> = nullptr) {};
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -439,7 +447,7 @@ namespace giEngineSDK {
      */
     virtual void 
     csSetConstantBuffer(uint32, 
-                        Buffer *) {};
+                        SharedPtr<Buffer> inBuffer) {};
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
@@ -468,9 +476,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    psSetSampler(uint32, 
-                 uint32, 
-                 SharedPtr<SamplerState>) {};
+      psSetSamplerState(uint32,
+                        uint32, 
+                        SharedPtr<SamplerState>) {};
 
     /**
      * @brief    Compute Shader Set Samplers.

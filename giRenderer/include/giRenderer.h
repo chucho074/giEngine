@@ -130,11 +130,11 @@ namespace giEngineSDK {
      * @brief
      */
     void 
-    dispatchData(Vector<Buffer*> inConstantBuffers,
-                 BaseComputeShader * inCS,
-                 Vector<Texture2D*> inShaderResources,
-                 Vector<Texture2D*> inUAVS,
-                 Sampler* inSampler,
+    dispatchData(Vector<SharedPtr<Buffer>> inConstantBuffers,
+                 SharedPtr<BaseComputeShader> inCS,
+                 Vector<SharedPtr<Texture2D>> inShaderResources,
+                 Vector<SharedPtr<Texture2D>> inUAVS,
+                 SharedPtr<SamplerState> inSampler,
                  Vector3 inDispatch);
     /**
      * @brief    .

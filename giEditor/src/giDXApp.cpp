@@ -138,16 +138,16 @@ DirectXApp::onUpdate(float inDeltaTime) {
 
   m_sceneGraph->update(inDeltaTime);
   
-  ImGui::NewFrame();
+  /*ImGui::NewFrame();
   ImGui::update(m_window.getSystemHandle(), inDeltaTime);
-  ImGui::ShowDemoWindow();
+  ImGui::ShowDemoWindow();*/
 }
 
 
 void 
 DirectXApp::onRender() {
 
-  ImGui::render();
+  //ImGui::render();
 
   //Update variables that change once per frame
   //CBChangesEveryFrame cb;

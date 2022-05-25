@@ -428,7 +428,6 @@ namespace giEngineSDK {
                             uint32 inNumElements,
                             GI_FORMAT::E inFormat) {
 
-    GI_UNREFERENCED_PARAMETER(inOffset);
     SharedPtr<BufferDX> tmpBuffer;
     tmpBuffer.reset(new BufferDX);
 
@@ -763,8 +762,8 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::csSetShader(BaseShader* inCShader) {
-    auto tmpShader = static_cast<ComputeShaderDX*>(inCShader);
+  CGraphicsDX::csSetShader(SharedPtr<BaseShader> inCShader) {
+    SharedPtr<ComputeShaderDX> tmpShader = static_pointer_cast<ComputeShaderDX>(inCShader);
 
     ID3D11ComputeShader* tmpCShader = nullptr;
     if (nullptr != tmpShader) {
@@ -785,10 +784,11 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::csSetConstantBuffer(uint32 inSlot, Buffer* inBuffer) {
+  CGraphicsDX::csSetConstantBuffer(uint32 inSlot, SharedPtr<Buffer> inBuffer) {
+    SharedPtr<BufferDX> tmpBuffer = static_pointer_cast<BufferDX>(inBuffer);
     m_devContext->CSSetConstantBuffers(inSlot, 
                                        1, 
-                                       &static_cast<CBufferDX*>(inBuffer)->m_buffer);
+                                       &tmpBuffer->m_buffer);
   }
 
 
@@ -806,10 +806,11 @@ namespace giEngineSDK {
   }
 
   void 
-  CGraphicsDX::csSetShaderResource(uint32 inSlot, Texture2D* inTexture) {
+  CGraphicsDX::csSetShaderResource(uint32 inSlot, SharedPtr<Texture2D> inTexture) {
     ID3D11ShaderResourceView* tmpSRV = nullptr;
+    SharedPtr<Texture2DDX> tmpTexture= static_pointer_cast<Texture2DDX>(inTexture);
     if (nullptr != inTexture) {
-      tmpSRV = static_cast<Texture2DDX*>(inTexture)->getSRV();
+      tmpSRV = tmpTexture->getSRV();
     }
 
     m_devContext->CSSetShaderResources(inSlot, 1, &tmpSRV);
@@ -829,9 +830,9 @@ namespace giEngineSDK {
   void 
   CGraphicsDX::csSetSampler(uint32 inSlot,
                             uint32 inNumSamplers,
-                            Sampler* inSampler) {
+                            SharedPtr<SamplerState> inSampler) {
 
-    auto tmpSampler = static_cast<CSamplerDX*>(inSampler);
+    SharedPtr<SamplerDX> tmpSampler = static_pointer_cast<SamplerDX>(inSampler);
 
     m_devContext->CSSetSamplers(inSlot, inNumSamplers, &tmpSampler->m_sampler);
   }
@@ -1082,7 +1083,8 @@ namespace giEngineSDK {
                               &height,
                               &nrChannels, 4);
       if (data) {
-        Texture2DDX* temp = new Texture2DDX();
+        SharedPtr<Texture2DDX> temp;
+        temp.reset(new Texture2DDX());
         CD3D11_TEXTURE2D_DESC tempDesc;
         memset(&tempDesc, 0, sizeof(tempDesc));
         tempDesc.Width = width;

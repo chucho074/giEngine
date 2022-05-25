@@ -261,6 +261,10 @@ namespace giEngineSDK {
     void 
     setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) override;
 
+    /**
+     * @brief    .
+     * @param    .
+     */
     void 
     setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) override;
     
@@ -355,7 +359,7 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     void 
-    csSetShader(BaseShader * inCShader = nullptr) override;
+    csSetShader(SharedPtr<BaseShader> inCShader = nullptr) override;
     
     /**
      * @brief    Pixel Shader Set Constant Buffer.
@@ -365,7 +369,7 @@ namespace giEngineSDK {
      */
     void 
     psSetConstantBuffer(uint32 inSlot, 
-                        Buffer * inBuffer) override;
+                        SharedPtr<Buffer>) override;
     /**
      * @brief    Compute Shader Set Constant Buffer.
      * @param    inSlot      The index to begin setting constant buffer.
@@ -404,8 +408,8 @@ namespace giEngineSDK {
      */
     void 
     psSetSamplerState(uint32 inSlot, 
-                 uint32 inNumSamplers, 
-                 SharedPtr<SamplerState> inSampler) override;
+                      uint32 inNumSamplers, 
+                      SharedPtr<SamplerState> inSampler) override;
     
     /**
      * @brief    Compute Shader Set Samplers.
@@ -417,7 +421,7 @@ namespace giEngineSDK {
     void 
     csSetSampler(uint32 inSlot, 
                  uint32 inNumSamplers, 
-                 Sampler * inSampler) override;
+                 SharedPtr<SamplerState> inSampler) override;
     
     /** 
      * @brief    IA Set Input Layout.

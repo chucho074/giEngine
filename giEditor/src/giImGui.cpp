@@ -291,7 +291,6 @@ namespace ImGui {
     //
     tmpData->spVertexConstantBuffer = gapi.createBuffer(sizeof(Matrix4),
                                                         giEngineSDK::GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
-                                                        0,
                                                         nullptr);
     //Create Blend State
     Vector4 tmpkk = { 0.f, 0.f, 0.f, 0.f };
@@ -463,7 +462,6 @@ namespace ImGui {
       tmpData->VertexBufferSize = data->TotalVtxCount;
       tmpData->spVB = gapi.createBuffer(tmpData->VertexBufferSize * sizeof(ImDrawVert),
                                         giEngineSDK::GI_BIND_FLAG::kBIND_VERTEX_BUFFER,
-                                        0,
                                         nullptr);
     }
     if (!tmpData->spIB || tmpData->IndexBufferSize < data->TotalIdxCount) {
@@ -473,7 +471,6 @@ namespace ImGui {
       tmpData->IndexBufferSize = data->TotalIdxCount;
       tmpData->spIB = gapi.createBuffer(tmpData->IndexBufferSize * sizeof(ImDrawIdx),
                                         giEngineSDK::GI_BIND_FLAG::kBIND_INDEX_BUFFER,
-                                        0,
                                         nullptr);
     }
     //Upload vertex/index data

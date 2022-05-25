@@ -1137,7 +1137,7 @@ namespace giEngineSDK {
         //Get the Static Mesh component
         SharedPtr<StaticMesh> tmpModelBase = static_pointer_cast<StaticMesh>(actors->getComponent(COMPONENT_TYPE::kStaticMesh));
         //Get the Model
-        auto tmpModel = tmpModelBase->getModel();
+        SharedPtr<Model> tmpModel = tmpModelBase->getModel();
         int32 noMesh = 0;
 
         for (auto actualMesh : tmpModel->m_meshes) {
