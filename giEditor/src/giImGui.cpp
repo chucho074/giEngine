@@ -1,6 +1,6 @@
 /**
  * @file    giImgui.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    03/05/2022
  * @brief   A basic description of the what do the doc.

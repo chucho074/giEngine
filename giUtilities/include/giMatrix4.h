@@ -1,6 +1,6 @@
 /**
  * @file    giMatrix4.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/02/2021
  * @brief   .

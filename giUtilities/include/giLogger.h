@@ -1,6 +1,6 @@
 /**
  * @file    giLogger.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2021
  * @brief   A log creator for the engine.

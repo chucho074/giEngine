@@ -1,6 +1,6 @@
 /**
  * @file    giVertexShaderDX.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/04/2021
  * @brief   A basic description of the what do the doc.

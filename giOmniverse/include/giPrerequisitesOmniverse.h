@@ -1,6 +1,6 @@
 /**
  * @file    giPrerequisitesOmniverse.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
  * @brief   The prerequisites for the core.

@@ -1,6 +1,6 @@
 /**
  * @file    giMatrix4.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/02/2021
  * @brief   A basic description of the what do the doc.

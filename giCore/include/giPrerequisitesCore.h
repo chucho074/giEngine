@@ -1,6 +1,6 @@
 /**
  * @file    giPrerequisitesCore.h
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/04/2021
  * @brief   The prerequisites for the core.

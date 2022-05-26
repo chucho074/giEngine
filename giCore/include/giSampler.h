@@ -1,6 +1,6 @@
 /**
  * @file     giSampler.h
- * @author   Jesús Alberto Del Moral Cupil
+ * @author   Jesus Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
  * @brief    Management of the SamplerState.

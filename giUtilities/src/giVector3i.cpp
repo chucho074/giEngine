@@ -1,6 +1,6 @@
 /**
  * @file    giVector3i.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    26/03/2021
  * @brief   A basic Vector 3 for ints.

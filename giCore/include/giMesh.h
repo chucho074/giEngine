@@ -1,6 +1,6 @@
 /**
  * @file    Mesh.cpp
- * @author  Jesús Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    28/11/2020
  * @brief   This class have the funtionality for load models.

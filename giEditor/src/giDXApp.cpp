@@ -130,60 +130,35 @@ DirectXApp::onUpdate(float inDeltaTime) {
   //m_world = XMMatrixRotationY(inDeltaTime);
 
 
-  auto& camera = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+  auto& cameraRef = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 
-  if(camera) {
-    //static_cast<Camera>();
+  if(cameraRef) {
+    SharedPtr<Camera> tmpCamera = static_pointer_cast<Camera>(cameraRef);
+
+
+
   }
 
   m_sceneGraph->update(inDeltaTime);
   
-  /*ImGui::NewFrame();
+  ImGui::NewFrame();
   ImGui::update(m_window.getSystemHandle(), inDeltaTime);
-  ImGui::ShowDemoWindow();*/
+  ImGui::ShowDemoWindow();
 }
 
 
 void 
 DirectXApp::onRender() {
 
-  //ImGui::render();
+  ImGui::render();
 
-  //Update variables that change once per frame
-  //CBChangesEveryFrame cb;
-  //cb.mWorld = m_world.transpose();
-  //cb.vMeshColor = m_meshColor;
-  //m_gapi->updateSubresource(m_cBufferChangeEveryFrame, &cb, sizeof(cb));
-
-  //Render the cube/sets values
-  //m_gapi->vsSetConstantBuffer(0, m_cBufferCamera);
-  //m_gapi->vsSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  //m_gapi->psSetConstantBuffer(1, m_cBufferChangeEveryFrame);
-  //m_gapi->psSetShaderResource(0, m_colorTexture);
-  //m_gapi->psSetSamplerState(0, 1, m_sampler);
-  
-  //Apply a rotation
-  //static float tmpRotation = Math::PI / 550.0f;
-  //tmpRotation += Math::PI / 550.0f;
-
-  //Sets values to the world
-  //m_world = Matrix4::IDENTITY;
-  //m_world *= matrixTranslation({60.f, -10.0f, 50.f});
-  //m_world *= matrixRotationY(180);
-  //m_world *= matrixRotationZ(180);
-  //m_world *= matrixRotationY(tmpRotation);
-  //m_world *= XMMatrixScaling(0.1f, 0.1f, 0.1f);
-
-  //cb.mWorld = m_world.transpose();
-  //cb.vMeshColor = m_meshColor;
-  
 }
 
 
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
-  //g_inputManager().sendEvent(inMsg);
+  g_inputManager().sendEvent(inMsg);
 
   ImGui::callBack();
 
