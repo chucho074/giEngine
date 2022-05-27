@@ -1,6 +1,6 @@
 /**
  * @file    giDXApp.cpp
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
@@ -50,7 +50,8 @@ DirectXApp::onCreate() {
 
   Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
 
-  ImGui::init(&m_window, tmpSize);
+  //ImGui::init(&m_window, tmpSize);
+  ImGui::CreateContext();
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -119,7 +120,7 @@ DirectXApp::onCreate() {
 
 void 
 DirectXApp::onDestroy() {
-  ImGui::shutDown();
+  //ImGui::shutDown();
 }
 
 
@@ -142,7 +143,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
   m_sceneGraph->update(inDeltaTime);
   
   ImGui::NewFrame();
-  ImGui::update(m_window.getSystemHandle(), inDeltaTime);
+  //ImGui::update(m_window.getSystemHandle(), inDeltaTime);
   ImGui::ShowDemoWindow();
 }
 
@@ -150,7 +151,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
 void 
 DirectXApp::onRender() {
 
-  ImGui::render();
+  //ImGui::render();
 
 }
 
@@ -160,7 +161,7 @@ DirectXApp::onEvent(MSG inMsg) {
   
   g_inputManager().sendEvent(inMsg);
 
-  ImGui::callBack();
+  //ImGui::callBack();
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {
