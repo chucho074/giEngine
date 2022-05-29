@@ -13,6 +13,7 @@
 #pragma once
 
 #include <giBaseApp.h>
+#include <giImGui.h>
 
 
 using giEngineSDK::Buffer;
@@ -107,4 +108,6 @@ class DirectXApp : public BaseApp {
   Matrix4 m_world;
 
   SceneGraph sceneGraph;
+
+  SharedPtr<UI> m_ui;
 };

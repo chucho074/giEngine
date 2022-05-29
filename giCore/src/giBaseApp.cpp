@@ -25,6 +25,7 @@ BaseApp::run() {
 
   //Initialize every system.
   initSystems();
+
   auto& renderer = BaseRenderer::instance();
 
   //Send message to device.
@@ -114,8 +115,9 @@ BaseApp::update(float inDeltaTime) {
 
 void 
 BaseApp::render() {
-  onRender();
   m_gapi->show();
+  onRender();
+
 }
 
 void 

@@ -755,7 +755,23 @@ namespace giEngineSDK {
                    GI_BIND_FLAG::E inBindFlags) {
       return nullptr;
     };
+
+
+
+    virtual void*
+    getDevice() {
+      return nullptr;
+    };
+
+    virtual void*
+    getDeviceContext() {
+      return nullptr;
+    };
+
+
   };
+
+
   
   GI_CORE_EXPORT GraphicsAPI& 
   g_graphicsAPI();

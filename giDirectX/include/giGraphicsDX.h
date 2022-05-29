@@ -663,6 +663,17 @@ namespace giEngineSDK {
                    GI_FORMAT::E inFormat,
                    GI_BIND_FLAG::E inBindFlags) override;
 
+
+
+    void * 
+    getDevice() override {
+      return m_device;
+    }
+    
+    void * 
+    getDeviceContext() override {
+      return m_devContext;
+    } 
   
    private:
   

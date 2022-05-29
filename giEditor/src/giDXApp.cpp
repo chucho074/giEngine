@@ -32,7 +32,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
 #include "giDXApp.h"
-#include "giImGui.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -49,9 +48,8 @@ void
 DirectXApp::onCreate() {
 
   Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
-
-  //ImGui::init(&m_window, tmpSize);
-  ImGui::CreateContext();
+  m_ui.reset(new UI);
+  m_ui->init(&m_window, tmpSize);
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -120,7 +118,7 @@ DirectXApp::onCreate() {
 
 void 
 DirectXApp::onDestroy() {
-  //ImGui::shutDown();
+  m_ui->shutDown();
 }
 
 
@@ -142,16 +140,15 @@ DirectXApp::onUpdate(float inDeltaTime) {
 
   m_sceneGraph->update(inDeltaTime);
   
-  ImGui::NewFrame();
-  //ImGui::update(m_window.getSystemHandle(), inDeltaTime);
-  ImGui::ShowDemoWindow();
+  m_ui->update(m_window.getSystemHandle(), inDeltaTime);
+  
 }
 
 
 void 
 DirectXApp::onRender() {
-
-  //ImGui::render();
+  
+  m_ui->render();
 
 }
 
@@ -161,7 +158,7 @@ DirectXApp::onEvent(MSG inMsg) {
   
   g_inputManager().sendEvent(inMsg);
 
-  //ImGui::callBack();
+  //m_ui.callBack();
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {

@@ -555,7 +555,7 @@ namespace giEngineSDK {
     }
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
-      //liveEdit(tmpMesh);
+      liveEdit(tmpMesh);
     }
   }
 
@@ -675,9 +675,9 @@ namespace giEngineSDK {
       position += GfVec3d(x, 0, y);
       rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
 
-      //SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
-      //SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
-      //SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+      SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
+      SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+      SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
 
       // Make sure the xform op order is correct (translate, rotate, scale)
       Vector<UsdGeomXformOp> xFormOpsReordered;
