@@ -228,7 +228,7 @@ namespace giEngineSDK {
   static UsdGeomMesh 
   findGeomMesh(const String& existingStage) {
     
-    //omniUsdLiveWaitForPendingUpdates();
+    omniUsdLiveWaitForPendingUpdates();
     // Open this file from Omniverse
     gStage = UsdStage::Open(existingStage);
     if (!gStage) {
@@ -551,11 +551,11 @@ namespace giEngineSDK {
       // Find a UsdGeomMesh in the existing stage
       m_existingStage = m_existingStage +"/scene.usd";
       
-      //tmpMesh = findGeomMesh(m_existingStage);
+      tmpMesh = findGeomMesh(m_existingStage);
     }
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
-      liveEdit(tmpMesh);
+      //liveEdit(tmpMesh);
     }
   }
 

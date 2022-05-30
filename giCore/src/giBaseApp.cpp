@@ -115,8 +115,8 @@ BaseApp::update(float inDeltaTime) {
 
 void 
 BaseApp::render() {
-  m_gapi->show();
   onRender();
+  m_gapi->show();
 
 }
 

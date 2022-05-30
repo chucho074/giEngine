@@ -476,9 +476,9 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-      psSetSamplerState(uint32,
-                        uint32, 
-                        SharedPtr<SamplerState>) {};
+    psSetSamplerState(uint32,
+                      uint32, 
+                      SharedPtr<SamplerState>) {};
 
     /**
      * @brief    Compute Shader Set Samplers.

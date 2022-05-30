@@ -23,11 +23,9 @@ Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject/");
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;
 
 //Omniverse settings
-//String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/scene.usd";
-//String EngineConfigs::s_existingStage = "Resources/Models/usds/battledroid.usd";
-String EngineConfigs::s_existingStage = "";
+String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/";
+//String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
-//String EngineConfigs::s_destinationPath = "http://localhost:8080/omniverse://127.0.0.1/Users/giProjects/";
 
 
 

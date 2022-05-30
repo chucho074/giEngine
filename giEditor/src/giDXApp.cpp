@@ -49,7 +49,7 @@ DirectXApp::onCreate() {
 
   Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
   m_ui.reset(new UI);
-  m_ui->init(&m_window, tmpSize);
+  m_ui->init(m_window.getSystemHandle(), tmpSize);
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -63,15 +63,15 @@ DirectXApp::onCreate() {
   m_sceneGraph->addActor(cameraActor, m_sceneGraph->getRoot());
 
   //Sets Vela's model
-  SharedPtr<Model> tmpModel = make_shared<Model>();
-  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
-  //tmpModel->loadFromFile("Resources/Models/cube.fbx");
-  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
-  modelComponent->setModel(tmpModel);
-  SharedPtr<Actor> tmpActor = make_shared<Actor>();
-  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-  tmpActor->m_actorName = "Vela";
-  m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
+  //SharedPtr<Model> tmpModel = make_shared<Model>();
+  //tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  ////tmpModel->loadFromFile("Resources/Models/cube.fbx");
+  //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
+  //modelComponent->setModel(tmpModel);
+  //SharedPtr<Actor> tmpActor = make_shared<Actor>();
+  //tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+  //tmpActor->m_actorName = "Vela";
+  //m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
   //Sets plane model
   //SharedPtr<Model> tmpModelPlane = make_shared<Model>();

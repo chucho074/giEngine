@@ -489,6 +489,8 @@ namespace giEngineSDK {
                tmpLightShaderResources,
                true);
 
+    gapi.omSetRenderTarget(tmpVector, gapi.getDefaultDephtStencil());
+
   }
 
   void

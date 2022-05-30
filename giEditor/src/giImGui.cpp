@@ -663,8 +663,6 @@
 
 
 
-#include "imgui.h"
-
 // To change in the next update
 #include <imgui_impl_win32.cpp>
 #include <imgui_impl_dx11.cpp>
@@ -685,12 +683,22 @@ UI::init(void* inWindow, Vector2 inWindowSize) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
+  io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+  //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+
+  ImGuiStyle& style = ImGui::GetStyle();
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    style.WindowRounding = 0.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+  }
+
+  ImGui::StyleColorsDark();
 
   ImGui_ImplWin32_Init(m_windowHandle);
   ImGui_ImplDX11_Init((ID3D11Device*)g_graphicsAPI().getDevice(),
                       (ID3D11DeviceContext*)g_graphicsAPI().getDeviceContext());
-
-  ImGui::StyleColorsDark();
 
   //Change font path to engine settings
   //io.Fonts->AddFontFromFileTTF("data/misc/fonts/CoD.otf", 16.0f);
@@ -710,28 +718,30 @@ void
 UI::render() {
   //isMouseTouchingImGui();
 
+  ImGuiIO& io = ImGui::GetIO();
+
+
   ImGui::ShowDemoWindow();
 
   ImGui::Render();
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+  // Update and Render additional Platform Windows
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+  }
 }
 
 void
 UI::shutDown() {
-  
-  ImGuiIO& io = ImGui::GetIO();
 
-  ImGui::DestroyPlatformWindows();
-  io.BackendRendererName = nullptr;
-  io.BackendRendererUserData = nullptr;
-  io.BackendPlatformName = nullptr;
-  io.BackendPlatformUserData = nullptr;
-  //IM_DELETE(bd);
-  //IM_DELETE(be);
+  ImGui_ImplDX11_Shutdown();
+  ImGui_ImplWin32_Shutdown();
   ImGui::DestroyContext();
 }
 
 void
-UI::callBack() {
+UI::callBack() { 
   
 }
