@@ -740,8 +740,6 @@ namespace giEngineSDK {
                  << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
     }
 
-    
-
     Vector<Vector3> tmpVertexModel;
     Vector<Vector3> tmpNormalsModel;
     Vector<uint32>  tmpFacesModel;
@@ -767,14 +765,16 @@ namespace giEngineSDK {
             UsdGeomMesh geoMesh(node);
 
             //Get the information.
-            UsdAttribute tmpVertex = geoMesh.GetPointsAttr();
-            UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
-            UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
             
             //Points / Vertex.
+            UsdAttribute tmpVertex = geoMesh.GetPointsAttr();
             VtArray<GfVec3f> tmpPointArray;
             tmpVertex.Get(&tmpPointArray);
-            
+            if (0 < tmpPointArray.size()) {
+              for () {
+                
+              }
+            }
             Vector<GfVec3f> pointArray;
             
             uint32 size = tmpPointArray.size();
@@ -790,6 +790,7 @@ namespace giEngineSDK {
             }
             
             //Normals.
+            UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
             VtArray<GfVec3f> tmpNormalArray;
             tmpNormals.Get(&tmpNormalArray);
             
@@ -808,6 +809,7 @@ namespace giEngineSDK {
             }
             
             //Faces.
+            UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
             VtArray<int32> tmpFacesArray;
             tmpFaces.Get(&tmpFacesArray);
             

@@ -24,8 +24,8 @@ Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;
 
 //Omniverse settings
 //String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/giTestProject/scene.usd";
-//String EngineConfigs::s_existingStage = "C:/Users/HEADQUARTERV2/Downloads/scene.usd";
-String EngineConfigs::s_existingStage = "";
+String EngineConfigs::s_existingStage = "C:/Users/HEADQUARTERV2/Downloads/scene.usd";
+//String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
 
 
