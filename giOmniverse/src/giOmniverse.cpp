@@ -488,7 +488,7 @@ namespace giEngineSDK {
 
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection,
-        "Error creating the conection with NVIDIA Omniverse");
+                                  "Error creating the conection with NVIDIA Omniverse");
       exit(1);
     }
 
@@ -549,13 +549,17 @@ namespace giEngineSDK {
 
     else {
       // Find a UsdGeomMesh in the existing stage
-      m_existingStage = m_existingStage +"/scene.usd";
+      //m_existingStage = m_existingStage +"/scene.usd";
       
       tmpMesh = findGeomMesh(m_existingStage);
+
+      //Set the information in the SG.
+
+
     }
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
-      //liveEdit(tmpMesh);
+      liveEdit(tmpMesh);
     }
   }
 
@@ -1124,16 +1128,16 @@ namespace giEngineSDK {
 
     for (auto actors : tmpActors) {
 
-      // Create the geometry inside of "Root"
-      SdfPath modelPath = rootPrimPath.AppendChild(TfToken(actors->m_actorName));
-      UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
-
-      if (!model) {
-        return;
-      }
-
       if (actors->isStaticMesh) {
-      
+        
+        // Create the geometry inside of "Root"
+        SdfPath modelPath = rootPrimPath.AppendChild(TfToken(actors->m_actorName));
+        UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
+
+        if (!model) {
+          return;
+        }
+
         //Get the Static Mesh component
         SharedPtr<StaticMesh> tmpModelBase = static_pointer_cast<StaticMesh>(actors->getComponent(COMPONENT_TYPE::kStaticMesh));
         //Get the Model
