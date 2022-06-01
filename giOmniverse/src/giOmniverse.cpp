@@ -620,29 +620,23 @@ namespace giEngineSDK {
   void
   Omni::liveEdit(UsdGeomMesh inMesh) {
 
-    // Process any updates that may have happened to the stage from another client
+    // Process any updates that may have happened to the stage from another client.
     omniUsdLiveWaitForPendingUpdates();
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
       ConsoleOut << "Begin Live Edit\n";
     }
 
-    // Process any updates that may have happened to the stage from another client
+    // Process any updates that may have happened to the stage from another client.
     omniUsdLiveWaitForPendingUpdates();
 
     if (m_liveEditActivation) {
-      double angle = 0;
-      if (angle >= 360) {
-        angle = 0;
-      }
-      double radians = angle * Math::PI / 180.0;
-      double x = sin(radians) * 100;
-      double y = cos(radians) * 100;
+      
 
-      // Get the transform on the mesh
+      // Get the transform on the mesh.
       UsdGeomXformable xForm = inMesh;
 
-      // Define storage for the different xform ops that Omniverse Kit likes to use
+      // Define storage for the different xform ops that Omniverse Kit likes to use.
       UsdGeomXformOp translateOp;
       UsdGeomXformOp rotateOp;
       UsdGeomXformOp scaleOp;
@@ -650,54 +644,53 @@ namespace giEngineSDK {
       GfVec3f rotZYX(0);
       GfVec3f scale(1);
 
-      // Get the xform ops stack
+      // Get the xform ops stack.
       bool resetXformStack = false;
       Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
 
-      // Get the current xform op values
+      // Get the current xform op values.
       for (size_T i = 0; i < xFormOps.size(); i++) {
         switch (xFormOps[i].GetOpType()) {
-        case UsdGeomXformOp::TypeTranslate: {
-          translateOp = xFormOps[i];
-          translateOp.Get(&position);
-          break;
-        }
-        case UsdGeomXformOp::TypeRotateZYX: {
-          rotateOp = xFormOps[i];
-          rotateOp.Get(&rotZYX);
-          break;
-        }
-        case UsdGeomXformOp::TypeScale: {
-          scaleOp = xFormOps[i];
-          scaleOp.Get(&scale);
-          break;
-        }
+          case UsdGeomXformOp::TypeTranslate: {
+            translateOp = xFormOps[i];
+            translateOp.Get(&position);
+            break;
+          }
+          case UsdGeomXformOp::TypeRotateZYX: {
+            rotateOp = xFormOps[i];
+            rotateOp.Get(&rotZYX);
+            break;
+          }
+          case UsdGeomXformOp::TypeScale: {
+            scaleOp = xFormOps[i];
+            scaleOp.Get(&scale);
+            break;
+          }
         }
       }
 
-      // Move/Rotate the existing position/rotation - this works for Y-up stages
-      position += GfVec3d(x, 0, y);
-      rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
+      //Set the transformation of the model.
+      position += GfVec3d(1, 0, 0);
+      //rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
+      rotZYX = GfVec3f(0, 0, 0);
+      scale = GfVec3f(1, 1, 1);
 
       SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
       SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
       SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
 
-      // Make sure the xform op order is correct (translate, rotate, scale)
+      // Make sure the xform op order is correct (translate, rotate, scale).
       Vector<UsdGeomXformOp> xFormOpsReordered;
       xFormOpsReordered.push_back(translateOp);
       xFormOpsReordered.push_back(rotateOp);
       xFormOpsReordered.push_back(scaleOp);
       xForm.SetXformOpOrder(xFormOpsReordered);
 
-      ConsoleOut << rotZYX;
+      ConsoleOut << position;
       
       // Commit the change to USD
       gStage->Save();
-
     }
-
-    
   }
 
   void 
@@ -709,6 +702,8 @@ namespace giEngineSDK {
     m_existingStage = m_destinationPath + inProjectName;
     // Saving the destination path with the projectName
     m_destinationPath = m_existingStage;
+
+    m_existingStage += "/scene.usd";
   }
 
   void 
@@ -770,87 +765,181 @@ namespace giEngineSDK {
             UsdAttribute tmpVertex = geoMesh.GetPointsAttr();
             VtArray<GfVec3f> tmpPointArray;
             tmpVertex.Get(&tmpPointArray);
-            if (0 < tmpPointArray.size()) {
-              for () {
-                
+            //Check if it has points / vertex.
+            if (NULL == tmpPointArray.size() && !node.GetAllChildren().empty()) {
+              //
+              for (const auto& tmpIter : node.GetAllChildren()) {
+                //Check if is a GeoMesh
+                if(tmpIter.IsA<UsdGeomMesh>()) {
+                  UsdGeomMesh meshGeoMesh(tmpIter);
+                  ConsoleOut << "Found a mesh in: " << node.GetName() << " named: " 
+                             << tmpIter.GetName() << ConsoleLine;
+
+                  Vector<Vector3> tmpVertexMesh;
+                  Vector<Vector3> tmpNormalsMesh;
+                  Vector<uint32>  tmpFacesMesh;
+                  //Points / Vertex.
+                  UsdAttribute tmpMeshVertex = meshGeoMesh.GetPointsAttr();
+                  VtArray<GfVec3f> tmpMeshPointArray;
+                  tmpMeshVertex.Get(&tmpMeshPointArray);
+
+                  Vector<GfVec3f> pointMeshArray;
+
+                  uint32 sizeMesh = tmpMeshPointArray.size();
+                  auto tmpMeshStart = reinterpret_cast<GfVec3f*>(tmpMeshPointArray.data());
+                  auto tmpMeshEnd = tmpMeshStart + sizeMesh;
+                  pointMeshArray.reserve(sizeMesh);
+                  pointMeshArray.insert(pointMeshArray.end(), tmpMeshStart, tmpMeshEnd);
+
+                  for (int i = 0; i < sizeMesh; ++i) {
+                    tmpVertexMesh.push_back(Vector3(pointMeshArray[i].GetArray()[0],
+                                                    pointMeshArray[i].GetArray()[1],
+                                                    pointMeshArray[i].GetArray()[2]));
+                  }
+
+                  //Normals.
+                  UsdAttribute tmpMeshNormals = meshGeoMesh.GetNormalsAttr();
+                  VtArray<GfVec3f> tmpMeshNormalArray;
+                  tmpMeshNormals.Get(&tmpMeshNormalArray);
+
+                  Vector<GfVec3f> norArrayMesh;
+
+                  uint32 sizeNorMesh = tmpMeshNormalArray.size();
+                  auto tmpMeshStartNor = reinterpret_cast<GfVec3f*>(tmpMeshNormalArray.data());
+                  auto tmpMeshEndNor = tmpMeshStartNor + sizeNorMesh;
+                  norArrayMesh.reserve(sizeNorMesh);
+                  norArrayMesh.insert(norArrayMesh.end(), tmpMeshStartNor, tmpMeshEndNor);
+
+                  for (int i = 0; i < sizeMesh; ++i) {
+                    tmpNormalsMesh.push_back(Vector3(norArrayMesh[i].GetArray()[0],
+                                                     norArrayMesh[i].GetArray()[1],
+                                                     norArrayMesh[i].GetArray()[2]));
+                  }
+
+                  //Faces.
+                  UsdAttribute tmpMeshFaces = meshGeoMesh.GetFaceVertexIndicesAttr();
+                  VtArray<int32> tmpMeshFacesArray;
+                  tmpMeshFaces.Get(&tmpMeshFacesArray);
+
+                  Vector<int32> faceMeshArray;
+
+                  uint32 sizeFaceMesh = tmpMeshFacesArray.size();
+                  auto tmpMeshStartFaces = tmpMeshFacesArray.data();
+                  auto tmpMeshEndFaces = tmpMeshStartFaces + sizeFaceMesh;
+                  faceMeshArray.reserve(sizeFaceMesh);
+                  faceMeshArray.insert(faceMeshArray.end(), tmpMeshStartFaces, tmpMeshEndFaces);
+
+                  for (int i = 0; i < sizeFaceMesh; ++i) {
+                    tmpFacesMesh.push_back(faceMeshArray[i]);
+                  }
+
+                  //Create the mesh.
+                  Vector<SimpleVertex> tmpVertexListMesh;
+                  //Set the vertex data to the Vector.
+                  for (int i = 0; i < sizeMesh; ++i) {
+                    //Create the vertex.
+                    SimpleVertex tmpSimpleVertexMesh;
+                    //Set positions.
+                    tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
+                    //Set UVs.
+
+                    //Set Normals.
+                    tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
+
+                    //Set to the list.
+                    tmpVertexListMesh.push_back(tmpSimpleVertexMesh);
+
+                  }
+
+                  //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
+                  Vector<Texture> tmpTextureMesh;
+
+                  Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
+
+                  //Set in the meshes.
+                  tmpModel->m_meshes.push_back(tmpMeshMesh);
+
+                }
               }
             }
-            Vector<GfVec3f> pointArray;
-            
-            uint32 size = tmpPointArray.size();
-            auto tmpStart = reinterpret_cast<GfVec3f*>(tmpPointArray.data());
-            auto tmpEnd = tmpStart + size;
-            pointArray.reserve(size);
-            pointArray.insert(pointArray.end(), tmpStart, tmpEnd);
-            
-            for (int i = 0; i < size; ++i) {
+            else {
+              //Case of just a model without multiple meshes
+              Vector<GfVec3f> pointArray;
+              
+              uint32 size = tmpPointArray.size();
+              auto tmpStart = reinterpret_cast<GfVec3f*>(tmpPointArray.data());
+              auto tmpEnd = tmpStart + size;
+              pointArray.reserve(size);
+              pointArray.insert(pointArray.end(), tmpStart, tmpEnd);
+              
+              for (int i = 0; i < size; ++i) {
               tmpVertexModel.push_back(Vector3(pointArray[i].GetArray()[0],
                                                pointArray[i].GetArray()[1],
                                                pointArray[i].GetArray()[2]));
             }
+              
+              //Normals.
+              UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
+              VtArray<GfVec3f> tmpNormalArray;
+              tmpNormals.Get(&tmpNormalArray);
+              
+              Vector<GfVec3f> norArray;
+              
+              uint32 sizeNor = tmpNormalArray.size();
+              auto tmpStartNor = reinterpret_cast<GfVec3f*>(tmpNormalArray.data());
+              auto tmpEndNor = tmpStartNor + sizeNor;
+              norArray.reserve(sizeNor);
+              norArray.insert(norArray.end(), tmpStartNor, tmpEndNor);
+              
+              for (int i = 0; i < size; ++i) {
+                tmpNormalsModel.push_back(Vector3(norArray[i].GetArray()[0],
+                                                  norArray[i].GetArray()[1],
+                                                  norArray[i].GetArray()[2]));
+              }
+              
+              //Faces.
+              UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
+              VtArray<int32> tmpFacesArray;
+              tmpFaces.Get(&tmpFacesArray);
+              
+              Vector<int32> faceArray;
+              
+              uint32 sizeFace = tmpFacesArray.size();
+              auto tmpStartFaces = tmpFacesArray.data();
+              auto tmpEndFaces = tmpStartFaces + sizeFace;
+              faceArray.reserve(sizeFace);
+              faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
+              
+              for (int i = 0; i < sizeFace; ++i) {
+                tmpFacesModel.push_back(faceArray[i]);
+              }
+              
+              //Create the mesh.
+              Vector<SimpleVertex> tmpVertexList;
+              //Set the vertex data to the Vector.
+              for (int i = 0; i < size; ++i) {
+                //Create the vertex.
+                SimpleVertex tmpSimpleVertex;
+                //Set positions.
+                tmpSimpleVertex.Pos = tmpVertexModel[i];
+                //Set UVs.
+                
+                //Set Normals.
+                tmpSimpleVertex.Nor = tmpNormalsModel[i];
+              
+                //Set to the list.
+                tmpVertexList.push_back(tmpSimpleVertex);
+
+              }
+
+              //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
+              Vector<Texture> tmpTexture;
+
+              Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
             
-            //Normals.
-            UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
-            VtArray<GfVec3f> tmpNormalArray;
-            tmpNormals.Get(&tmpNormalArray);
-            
-            Vector<GfVec3f> norArray;
-            
-            uint32 sizeNor = tmpNormalArray.size();
-            auto tmpStartNor = reinterpret_cast<GfVec3f*>(tmpNormalArray.data());
-            auto tmpEndNor = tmpStartNor + sizeNor;
-            norArray.reserve(sizeNor);
-            norArray.insert(norArray.end(), tmpStartNor, tmpEndNor);
-            
-            for (int i = 0; i < size; ++i) {
-              tmpNormalsModel.push_back(Vector3(norArray[i].GetArray()[0],
-                                                norArray[i].GetArray()[1],
-                                                norArray[i].GetArray()[2]));
+              //Set in the meshes.
+              tmpModel->m_meshes.push_back(tmpMesh);
             }
-            
-            //Faces.
-            UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
-            VtArray<int32> tmpFacesArray;
-            tmpFaces.Get(&tmpFacesArray);
-            
-            Vector<int32> faceArray;
-            
-            uint32 sizeFace = tmpFacesArray.size();
-            auto tmpStartFaces = tmpFacesArray.data();
-            auto tmpEndFaces = tmpStartFaces + sizeFace;
-            faceArray.reserve(sizeFace);
-            faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
-            
-            for (int i = 0; i < sizeFace; ++i) {
-              tmpFacesModel.push_back(faceArray[i]);
-            }
-            
-            //Create the mesh.
-            Vector<SimpleVertex> tmpVertexList;
-            //Set the vertex data to the Vector.
-            for (int i = 0; i < size; ++i) {
-              //Create the vertex.
-              SimpleVertex tmpSimpleVertex;
-              //Set positions.
-              tmpSimpleVertex.Pos = tmpVertexModel[i];
-              //Set UVs.
-            
-              //Set Normals.
-              tmpSimpleVertex.Nor = tmpNormalsModel[i];
-            
-              //Set to the list.
-              tmpVertexList.push_back(tmpSimpleVertex);
-
-            }
-
-            //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
-            Vector<Texture> tmpTexture;
-
-            Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
-
-            
-            //Set in the meshes.
-            tmpModel->m_meshes.push_back(tmpMesh);
             
             //Set the actor model to the Root in SG.
             tmpActor->m_actorName = node.GetName();

@@ -128,7 +128,8 @@ namespace giEngineSDK {
       if (!op) {
         op = xForm.AddXformOp(opType, precision);
         std::unique_lock<std::mutex> lk(gLogMutex);
-        ConsoleOut << " Adding " << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
+        ConsoleOut << " Adding " 
+                   << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
       }
 
       if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat) {
@@ -138,7 +139,8 @@ namespace giEngineSDK {
         op.Set(value);
       }
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << " Setting " << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
+      ConsoleOut << " Setting " 
+                  << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
     }
   };
 
