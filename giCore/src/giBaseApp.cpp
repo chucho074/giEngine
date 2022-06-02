@@ -61,7 +61,8 @@ BaseApp::run() {
         break;
       }
       if (eventsWnd.type == Event::Resized) {
-        EngineConfigs::s_resolution = { m_window.getSize().x, m_window.getSize().y };
+        EngineConfigs::s_resolution = { (int32)m_window.getSize().x, 
+                                        (int32)m_window.getSize().y };
         m_width = EngineConfigs::s_resolution.x;
         m_height = EngineConfigs::s_resolution.y;
         //Unbind everything
