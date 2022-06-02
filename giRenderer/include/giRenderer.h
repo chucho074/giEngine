@@ -13,6 +13,7 @@
 #pragma once
 #include <giBaseRenderer.h>
 #include <giCamera.h>
+#include <giVector2i.h>
 #include "giPrerequisitesRenderer.h"
 
 namespace giEngineSDK {
@@ -141,6 +142,10 @@ namespace giEngineSDK {
      */
     void
     setModels(Vector<SharedPtr<Model>> inModelList) override;
+
+
+    void
+    updateTextureSizes(Vector2i inSize);
 
     //The main camera 
     SharedPtr<Camera> m_mainCamera;

@@ -13,8 +13,7 @@
 #pragma once
 
 #include <giBaseApp.h>
-#include <giImGui.h>
-
+#include "giEditor.h"
 
 using giEngineSDK::Buffer;
 using giEngineSDK::Vector4;
@@ -109,5 +108,5 @@ class DirectXApp : public BaseApp {
 
   SceneGraph sceneGraph;
 
-  SharedPtr<UI> m_ui;
+  SharedPtr<Editor> m_editorUI;
 };

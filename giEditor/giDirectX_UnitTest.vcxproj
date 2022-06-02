@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\giContentBrowser.cpp" />
     <ClCompile Include="src\giDXApp.cpp" />
+    <ClCompile Include="src\giEditor.cpp" />
     <ClCompile Include="src\giImGui.cpp" />
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_demo.cpp" />
@@ -29,7 +31,9 @@
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giContentBrowser.h" />
     <ClInclude Include="include\giDXApp.h" />
+    <ClInclude Include="include\giEditor.h" />
     <ClInclude Include="include\giImGui.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

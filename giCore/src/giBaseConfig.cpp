@@ -12,9 +12,10 @@
  */
 #include "giBaseConfig.h"
 
-//Basoc App Configs
+//Basic App Configs
 Vector2i EngineConfigs::s_resolution = Vector2i(1280, 720);
 bool EngineConfigs::s_fullscreen = false;
+bool EngineConfigs::s_maximized = true;
 String EngineConfigs::s_projectName = "giTestProject";
 GIENGINE_API::E EngineConfigs::s_activeGraphicApi = GIENGINE_API::kDX11;
 Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject/");
@@ -28,7 +29,7 @@ String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/
 //String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
 
-
+//Editor Settings
 
 
 

@@ -675,6 +675,9 @@ namespace giEngineSDK {
       return m_devContext;
     } 
   
+
+    SharedPtr<Texture2DDX> m_viewportBuffer = nullptr;
+
    private:
   
     ///Reference to the device
@@ -688,7 +691,7 @@ namespace giEngineSDK {
   
     ///Reference to the defautl Render Target
     SharedPtr<Texture2DDX> m_backBuffer = nullptr;
-  
+
     ///Reference to the default Depth Stencil
     SharedPtr<Texture2DDX> m_defaultDSV = nullptr;
    

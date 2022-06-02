@@ -658,17 +658,13 @@
 
 
 
-
-
-
-
-
 // To change in the next update
 #include <imgui_impl_win32.cpp>
 #include <imgui_impl_dx11.cpp>
 
 #include "giImGui.h"
 #include <giBaseGraphicsAPI.h>
+#include <giBaseInput.h>
 
 using namespace giEngineSDK;
 using namespace ImGui;
@@ -721,7 +717,7 @@ UI::render() {
   ImGuiIO& io = ImGui::GetIO();
 
 
-  ImGui::ShowDemoWindow();
+  //ImGui::ShowDemoWindow();
 
   ImGui::Render();
   ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -743,5 +739,39 @@ UI::shutDown() {
 
 void
 UI::callBack() { 
-  
+  ImGuiIO& io = ImGui::GetIO();
+  //Mouse Pressed case
+  {
+    int32 button = -1;
+    button = giEngineSDK::g_inputManager().isMouseButtonPressed(giEngineSDK::MOUSE_BUTTONS::kLEFTCLIC) ?
+      0 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonPressed(giEngineSDK::MOUSE_BUTTONS::kRIGHTCLIC) ?
+      1 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonPressed(giEngineSDK::MOUSE_BUTTONS::kMIDCLIC) ?
+      2 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonPressed(giEngineSDK::MOUSE_BUTTONS::kBUTTON3) ?
+      3 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonPressed(giEngineSDK::MOUSE_BUTTONS::kBUTTON4) ?
+      4 : button;
+    if (button > -1) {
+      io.MouseDown[button] = true;
+    }
+  }
+  //Mouse released case
+  {
+    int32 button = -1;
+    button = giEngineSDK::g_inputManager().isMouseButtonReleassed(giEngineSDK::MOUSE_BUTTONS::kLEFTCLIC) ?
+      0 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonReleassed(giEngineSDK::MOUSE_BUTTONS::kRIGHTCLIC) ?
+      1 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonReleassed(giEngineSDK::MOUSE_BUTTONS::kMIDCLIC) ?
+      2 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonReleassed(giEngineSDK::MOUSE_BUTTONS::kBUTTON3) ?
+      3 : button;
+    button = giEngineSDK::g_inputManager().isMouseButtonReleassed(giEngineSDK::MOUSE_BUTTONS::kBUTTON4) ?
+      4 : button;
+    if (button > -1) {
+      io.MouseDown[button] = false;
+    }
+  }
 }

@@ -38,9 +38,12 @@ namespace GIPLUGINS {
 class EngineConfigs : public Module<EngineConfigs>
 {
  public:
+   EngineConfigs() = default;
+
   //Basic App Configs
   static Vector2i s_resolution;
   static bool s_fullscreen;
+  static bool s_maximized;
   static String s_projectName;
   static GIENGINE_API::E s_activeGraphicApi;
   static Path s_projectPath;
@@ -52,6 +55,9 @@ class EngineConfigs : public Module<EngineConfigs>
   //Omniverse settings
   static String s_existingStage;
   static String s_destinationPath;
+
+  //Editor settings
+
 
 };
 

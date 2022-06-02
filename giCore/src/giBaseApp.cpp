@@ -40,7 +40,7 @@ BaseApp::run() {
   //Create the Omniverse conection.
   m_omniverse->init(EngineConfigs::s_existingStage, 
                     EngineConfigs::s_destinationPath);
-  m_omniverse->startConection();
+  //m_omniverse->startConection();
 
 
   //App Loop.
@@ -59,6 +59,15 @@ BaseApp::run() {
       if (eventsWnd.type == Event::Closed) {
         m_window.close();
         break;
+      }
+      if (eventsWnd.type == Event::Resized) {
+        EngineConfigs::s_resolution = { m_window.getSize().x, m_window.getSize().y };
+        m_width = EngineConfigs::s_resolution.x;
+        m_height = EngineConfigs::s_resolution.y;
+        //Unbind everything
+        //Resize backbuffer
+        //Resize other Textures {Albedo, pos, norm, SSAO, Bluhrs, Light}
+        //Set the information to the ui
       }
 
       //Eventos propios.
@@ -110,7 +119,7 @@ BaseApp::createWindow() {
 void 
 BaseApp::update(float inDeltaTime) {
   onUpdate(inDeltaTime);
-  m_omniverse->update();
+  //m_omniverse->update();
 }
 
 void 

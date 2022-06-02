@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    24/01/2022
- * @brief   A basic description of the what do the doc.
+ * @brief   A basic implementation for NVIDIA Omniverse conection.
  * @bug     No known Bugs.
  */
  
@@ -81,7 +81,7 @@ namespace giEngineSDK {
 
 
     bool 
-    m_liveEditActivation = true;
+    m_liveEditActivation = false;
 
     String 
     m_destinationPath;

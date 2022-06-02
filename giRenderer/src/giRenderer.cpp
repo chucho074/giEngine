@@ -489,6 +489,7 @@ namespace giEngineSDK {
                tmpLightShaderResources,
                true);
 
+    //Render in a diferent texture for the viewport in editor.
     gapi.omSetRenderTarget(tmpVector, gapi.getDefaultDephtStencil());
 
   }

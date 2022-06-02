@@ -40,7 +40,7 @@ DirectXApp::DirectXApp() {
   //m_height = EngineConfigs::s_resolution.y;
   m_height = 720;
   m_world = Matrix4::IDENTITY;
-  
+  m_editorUI.reset(new Editor);
 }
 
 
@@ -48,8 +48,8 @@ void
 DirectXApp::onCreate() {
 
   Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
-  m_ui.reset(new UI);
-  m_ui->init(m_window.getSystemHandle(), tmpSize);
+  
+  m_editorUI->init(m_window.getSystemHandle(), tmpSize);
 
   //Sets the main camera
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
@@ -118,7 +118,7 @@ DirectXApp::onCreate() {
 
 void 
 DirectXApp::onDestroy() {
-  m_ui->shutDown();
+  m_editorUI->destroy();
 }
 
 
@@ -140,7 +140,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
 
   m_sceneGraph->update(inDeltaTime);
   
-  m_ui->update(m_window.getSystemHandle(), inDeltaTime);
+  m_editorUI->update(inDeltaTime);
   
 }
 
@@ -148,7 +148,7 @@ DirectXApp::onUpdate(float inDeltaTime) {
 void 
 DirectXApp::onRender() {
   
-  m_ui->render();
+  m_editorUI->render();
 
 }
 
@@ -156,9 +156,9 @@ DirectXApp::onRender() {
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
-  g_inputManager().sendEvent(inMsg);
+  //g_inputManager().sendEvent(inMsg);
 
-  //m_ui.callBack();
+  m_editorUI->callBack();
 
   //Vector4 tmpVect;
   //if (inEvent.type == Event::KeyPressed) {

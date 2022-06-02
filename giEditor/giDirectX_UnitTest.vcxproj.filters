@@ -42,12 +42,24 @@
     <ClCompile Include="src\imgui_widgets.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\giEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giContentBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giDXApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giImGui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giContentBrowser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
