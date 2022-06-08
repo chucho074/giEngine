@@ -31,9 +31,10 @@ ContentBrowser::update(float inDeltaTime) {
 void 
 ContentBrowser::render() {
 
-  
+  ImGuiWindowFlags window_flags = 0;
+  window_flags |= ImGuiWindowFlags_NoCollapse;
 
-  ImGui::Begin("Content Browser");
+  ImGui::Begin("Content Browser", nullptr, window_flags);
 
   //Back Button
   if (m_currentDirectory != m_workingDirectory) {

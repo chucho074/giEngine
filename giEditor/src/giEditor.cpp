@@ -11,7 +11,9 @@
  * @include
  */
 #include "giEditor.h"
+#include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
+#include <giTexture2D.h>
 
 void 
 Editor::init(void* inHandler, Vector2 inWindowSize) {
@@ -31,6 +33,7 @@ Editor::update(float inDeltaTime) {
 void 
 Editor::render() {
   
+
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
       if (ImGui::MenuItem("New")) {}
@@ -73,7 +76,8 @@ Editor::render() {
     ImGui::End();
   }
   ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse); {
-    //ImGui::Image(&m_finalTexture, ImGui::GetWindowSize());
+    void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
+    ImGui::Image(tmpTexture, ImGui::GetWindowSize());
     ImGui::End();
   }
 

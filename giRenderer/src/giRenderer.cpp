@@ -64,6 +64,11 @@ namespace giEngineSDK {
                            &tmpConstantCamera, 
                            sizeof(tmpConstantCamera));
 
+    //Transformations
+    m_modelBuffer = gapi.createBuffer(sizeof(Matrix4),
+                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                      nullptr);
+
     //Shadow Camera
     
     //Sets the view matrix
@@ -174,7 +179,8 @@ namespace giEngineSDK {
     
     
     //Create the textures
-    
+
+
     //Positions
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
@@ -385,6 +391,7 @@ namespace giEngineSDK {
 
     tmpGbufferConstants.push_back(m_cBufferCamera);
     tmpGbufferConstants.push_back(m_cBufferChangeEveryFrame);
+    tmpGbufferConstants.push_back(m_modelBuffer);
 
     renderData(m_renderTargets, 
                gapi.getDefaultDephtStencil(),
@@ -465,7 +472,7 @@ namespace giEngineSDK {
     /*                           Light                                      */
     /************************************************************************/
     Vector<SharedPtr<Texture2D>> tmpVector;
-    tmpVector.push_back(gapi.getDefaultRenderTarget());
+    tmpVector.push_back(gapi.getViewportTex());
     Vector<SharedPtr<Buffer>> tmpLightConstants;
     tmpLightConstants.push_back(m_cBufferCamera);
     tmpLightConstants.push_back(m_cBufferShadow);
@@ -489,8 +496,11 @@ namespace giEngineSDK {
                tmpLightShaderResources,
                true);
 
+
+    Vector<SharedPtr<Texture2D>> tmpVectorForClear;
+    tmpVectorForClear.push_back(gapi.getDefaultRenderTarget());
     //Render in a diferent texture for the viewport in editor.
-    gapi.omSetRenderTarget(tmpVector, gapi.getDefaultDephtStencil());
+    gapi.omSetRenderTarget(tmpVectorForClear, gapi.getDefaultDephtStencil());
 
   }
 
@@ -611,6 +621,18 @@ namespace giEngineSDK {
   void 
   Renderer::setModels(Vector<SharedPtr<Model>> inModelList) {
     
+  }
+
+  void
+  Renderer::updateTextureSizes(Vector2i inSize) {
+    
+  }
+
+  void 
+  Renderer::setTransform(Matrix4 inTransformation) {
+    g_graphicsAPI().updateSubresource(m_modelBuffer,
+                                      &inTransformation, 
+                                      0);
   }
 
 }

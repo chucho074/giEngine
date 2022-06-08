@@ -92,7 +92,7 @@ namespace giEngineSDK {
      * @param    inMesh        The mesh to syncronize.
      */
     void 
-    liveEdit(UsdGeomMesh inMesh);
+    liveEdit(Vector<UsdPrim>);
 
     UsdGeomMesh tmpMesh;
 

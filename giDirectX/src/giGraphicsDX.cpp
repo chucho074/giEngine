@@ -126,14 +126,22 @@ namespace giEngineSDK {
       __debugbreak();
     }
 
+    //Texture for the viewport.
+    m_viewportTexture.reset(new Texture2DDX);
 
+    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(1280,
+                                                                     720,
+                                                                     1,
+                                                                     GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                                     GI_BIND_FLAG::kBIND_RENDER_TARGET
+                                                                     | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     
     //Create DSV
     m_defaultDSV = static_pointer_cast<Texture2DDX>(createTex2D(inWidth,
-                                                      inHeight,
-                                                      1,
-                                                      GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT,
-                                                      GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
+                                                                inHeight,
+                                                                1,
+                                                                GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT,
+                                                                GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
     createViewport(1, inWidth, inHeight, 0, 0);

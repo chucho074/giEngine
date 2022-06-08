@@ -322,7 +322,7 @@ namespace giEngineSDK {
     else {
       
       Texture texture;
-      texture.texture = GAPI.TextureFromFile("Resources/", "missingtexture.png");
+      texture.texture = GAPI.TextureFromFile("Resources/", "missingTexture.png");
       textures.push_back(texture);
     }
 

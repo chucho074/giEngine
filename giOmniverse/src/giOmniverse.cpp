@@ -14,8 +14,10 @@
 #include "giOmniverse.h"
 #include "giStaticMesh.h"
 #include <giSceneGraph.h>
+#include <giBaseGraphicsAPI.h>
 #include <giMath.h>
-
+#include <giVector3.h>
+#include <giTransform.h>
 //#include "giMesh.h"
 
 namespace giEngineSDK {
@@ -225,49 +227,63 @@ namespace giEngineSDK {
   }
 
   // Opens an existing stage and finds the first UsdGeomMesh
-  static UsdGeomMesh 
-  findGeomMesh(const String& existingStage) {
+  static Vector<UsdPrim>
+  findGeomMesh(/*const String& existingStage*/) {
     
+    //omniUsdLiveWaitForPendingUpdates();
+    //// Open this file from Omniverse
+    ////gStage = UsdStage::Open(existingStage);
+    //if (!gStage) {
+    //  failNotify("Failure to open stage in Omniverse:", existingStage.c_str());
+
+    //  g_logger().SetError(ERROR_TYPE::kOmniConnection,
+    //                      "Failure to open stage in Omniverse:" + existingStage);
+    //  return UsdGeomMesh();
+    //}
+
+    //{
+    //  std::unique_lock<std::mutex> lk(gLogMutex);
+    //  ConsoleOut << "Existing stage opened: " << existingStage << ConsoleLine;
+    //}
+
+    //if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
+    //  std::unique_lock<std::mutex> lk(gLogMutex);
+    //  ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " 
+    //             << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
+    //}
+
+    //// Traverse the stage and return the first UsdGeomMesh we find
+    //auto range = gStage->Traverse();
+    //for (const auto& node : range) {
+    //  if (node.IsA<UsdGeomMesh>()) {
+    //    {
+    //      std::unique_lock<std::mutex> lk(gLogMutex);
+    //      ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
+    //    }
+    //    return UsdGeomMesh(node);
+    //  }
+    //}
+
+    //// No UsdGeomMesh found in stage.
+    //// (what kind of stage is this anyway!?) - idk man, just in case.
+    //ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << ConsoleLine;
+    //g_logger().SetError(ERROR_TYPE::kOmniConnection,
+    //                    "ERROR: No UsdGeomMesh found in stage: " + existingStage);
+    //return UsdGeomMesh();
+
     omniUsdLiveWaitForPendingUpdates();
-    // Open this file from Omniverse
-    gStage = UsdStage::Open(existingStage);
-    if (!gStage) {
-      failNotify("Failure to open stage in Omniverse:", existingStage.c_str());
-
-      g_logger().SetError(ERROR_TYPE::kOmniConnection,
-                          "Failure to open stage in Omniverse:" + existingStage);
-      return UsdGeomMesh();
-    }
-
-    {
-      std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Existing stage opened: " << existingStage << ConsoleLine;
-    }
-
-    if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
-      std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " 
-                 << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
-    }
-
-    // Traverse the stage and return the first UsdGeomMesh we find
+    Vector<UsdPrim> geomMeshes;
     auto range = gStage->Traverse();
     for (const auto& node : range) {
-      if (node.IsA<UsdGeomMesh>()) {
-        {
-          std::unique_lock<std::mutex> lk(gLogMutex);
-          ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
+      if ("Root" == node.GetParent().GetName().GetString()) {
+        if (node.IsA<UsdGeomMesh>()) {
+          geomMeshes.push_back(node);
         }
-        return UsdGeomMesh(node);
       }
     }
+    return geomMeshes;
 
-    // No UsdGeomMesh found in stage.
-    // (what kind of stage is this anyway!?) - idk man, just in case.
-    ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << ConsoleLine;
-    g_logger().SetError(ERROR_TYPE::kOmniConnection,
-                        "ERROR: No UsdGeomMesh found in stage: " + existingStage);
-    return UsdGeomMesh();
+
   }
 
   // Upload a material and its textures to the Omniverse Server
@@ -417,22 +433,6 @@ namespace giEngineSDK {
       tmpOuputShaders.push_back(tmpShaderOutput);
     }
 
-    // Create the USD Preview Surface shader
-    String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
-    shaderPath = matPath.AppendChild(TfToken(usdPreviewSurfaceShaderName));
-    UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
-    usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
-    UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, SdfValueTypeNames->Color3f);
-    diffuseColorInput.ConnectToSource(tmpOuputShaders.at(0));
-    if (1 > tmpOuputShaders.size()) {
-      UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, SdfValueTypeNames->Normal3f);
-      normalInput.ConnectToSource(tmpOuputShaders.at(1));
-    }
-
-    // Set the linkage between material and USD Preview surface shader
-    UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
-    usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
-    
     // Final step, associate the material with the face
     UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
     usdMaterialBinding.Bind(newMat);
@@ -527,39 +527,39 @@ namespace giEngineSDK {
   Omni::update() {
     
     
-    if (!startOmniverse(m_liveEditActivation)) {
-      Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
-                                  "Error creating the conection with NVIDIA Omniverse");
-      exit(1);
-    }
+    //if (!startOmniverse(m_liveEditActivation)) {
+    //  Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
+    //                              "Error creating the conection with NVIDIA Omniverse");
+    //  exit(1);
+    //}
 
-    if (m_existingStage.empty()) {
-      // Create the USD model in Omniverse
-      const String stageUrl = createOmniverseModel(m_destinationPath);
+    //if (m_existingStage.empty()) {
+    //  // Create the USD model in Omniverse
+    //  const String stageUrl = createOmniverseModel(m_destinationPath);
 
-      m_existingStage = m_existingStage +"/scene.usd";
-      // Print the username for the server
-      printConnectedUsername(stageUrl);
-       
-      // Get the geometry from the Scene Graph
-      tmpMesh = getDataFromSG();
+    //  m_existingStage = m_existingStage +"/scene.usd";
+    //  // Print the username for the server
+    //  printConnectedUsername(stageUrl);
+    //   
+    //  // Get the geometry from the Scene Graph
+    //  tmpMesh = getDataFromSG();
 
-      checkpointFile(stageUrl, "Add a Model and nothing else");
-    }
+    //  checkpointFile(stageUrl, "Add a Model and nothing else");
+    //}
 
-    else {
-      // Find a UsdGeomMesh in the existing stage
-      //m_existingStage = m_existingStage +"/scene.usd";
-      
-      tmpMesh = findGeomMesh(m_existingStage);
+    //else {
+    //  // Find a UsdGeomMesh in the existing stage
+    //  //m_existingStage = m_existingStage +"/scene.usd";
+    //  
+    //  tmpMesh = findGeomMesh(m_existingStage);
 
-      //Set the information in the SG.
+    //  //Set the information in the SG.
 
 
-    }
+    //}
      // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
-      liveEdit(tmpMesh);
+      liveEdit(findGeomMesh());
     }
   }
 
@@ -613,12 +613,15 @@ namespace giEngineSDK {
     checkpointFile(stageUrl, "Added a material to the Model(s)");
 
     // All done, shut down our connection to Omniverse.
-    shutdownOmniverse();
+    //shutdownOmniverse();
 
   }
 
   void
-  Omni::liveEdit(UsdGeomMesh inMesh) {
+  Omni::liveEdit(Vector<UsdPrim> inMesh) {
+
+
+    auto& sgraph = SceneGraph::instance();
 
     // Process any updates that may have happened to the stage from another client.
     omniUsdLiveWaitForPendingUpdates();
@@ -629,67 +632,82 @@ namespace giEngineSDK {
 
     // Process any updates that may have happened to the stage from another client.
     omniUsdLiveWaitForPendingUpdates();
+    for (auto& prim : inMesh) {
+      if (m_liveEditActivation) {
+        
+        UsdGeomMesh geomMesh(prim);
+        // Get the transform on the mesh.
+        UsdGeomXformable xForm = geomMesh;
 
-    if (m_liveEditActivation) {
-      
+        // Define storage for the different xform ops that Omniverse Kit likes to use.
+        UsdGeomXformOp translateOp;
+        UsdGeomXformOp rotateOp;
+        UsdGeomXformOp scaleOp;
+        GfVec3d position(0);
+        GfVec3f rotZYX(0);
+        GfVec3f scale(1);
 
-      // Get the transform on the mesh.
-      UsdGeomXformable xForm = inMesh;
+        // Get the xform ops stack.
+        bool resetXformStack = false;
+        Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
 
-      // Define storage for the different xform ops that Omniverse Kit likes to use.
-      UsdGeomXformOp translateOp;
-      UsdGeomXformOp rotateOp;
-      UsdGeomXformOp scaleOp;
-      GfVec3d position(0);
-      GfVec3f rotZYX(0);
-      GfVec3f scale(1);
-
-      // Get the xform ops stack.
-      bool resetXformStack = false;
-      Vector<UsdGeomXformOp> xFormOps = xForm.GetOrderedXformOps(&resetXformStack);
-
-      // Get the current xform op values.
-      for (size_T i = 0; i < xFormOps.size(); i++) {
-        switch (xFormOps[i].GetOpType()) {
-          case UsdGeomXformOp::TypeTranslate: {
-            translateOp = xFormOps[i];
-            translateOp.Get(&position);
-            break;
-          }
-          case UsdGeomXformOp::TypeRotateZYX: {
-            rotateOp = xFormOps[i];
-            rotateOp.Get(&rotZYX);
-            break;
-          }
-          case UsdGeomXformOp::TypeScale: {
-            scaleOp = xFormOps[i];
-            scaleOp.Get(&scale);
-            break;
+        // Get the current xform op values.
+        for (size_T i = 0; i < xFormOps.size(); i++) {
+          switch (xFormOps[i].GetOpType()) {
+            case UsdGeomXformOp::TypeTranslate: {
+              translateOp = xFormOps[i];
+              translateOp.Get(&position);
+              break;
+            }
+            case UsdGeomXformOp::TypeRotateZYX: {
+              rotateOp = xFormOps[i];
+              rotateOp.Get(&rotZYX);
+              break;
+            }
+            case UsdGeomXformOp::TypeScale: {
+              scaleOp = xFormOps[i];
+              scaleOp.Get(&scale);
+              break;
+            }
           }
         }
+
+        //SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
+        //SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
+        //SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
+
+        // Make sure the xform op order is correct (translate, rotate, scale).
+        //Vector<UsdGeomXformOp> xFormOpsReordered;
+        //xFormOpsReordered.push_back(translateOp);
+        //xFormOpsReordered.push_back(rotateOp);
+        //xFormOpsReordered.push_back(scaleOp);
+        //xForm.SetXformOpOrder(xFormOpsReordered);
+
+        //Get corresponding actor in scenegraph      
+        SharedPtr<Actor> tmpActor = sgraph.getActorByName(prim.GetName().GetString());
+        Vector3 tmpPos(position.GetArray()[0],
+                       position.GetArray()[1],
+                       position.GetArray()[2]);
+
+        Vector3 tmpScale(scale.GetArray()[0],
+                         scale.GetArray()[1],
+                         scale.GetArray()[2]);
+
+        //Set Translation
+        tmpActor->m_transform.m_translation = tmpPos;
+
+        //Set Rotations
+
+
+        //Set Scale
+        tmpActor->m_transform.m_scale = tmpScale;
+        
+        ConsoleOut << "Pos: X " << tmpPos.x << " Y " << tmpPos.y << " Z " << tmpPos.z << ConsoleLine;
+        ConsoleOut << "Scale: X " << tmpScale.x << " Y " << tmpScale.y << " Z " << tmpScale.z << ConsoleLine;
+
+        // Commit the change to USD
+        gStage->Save();
       }
-
-      //Set the transformation of the model.
-      position += GfVec3d(1, 0, 0);
-      //rotZYX = GfVec3f(rotZYX[0], angle, rotZYX[2]);
-      rotZYX = GfVec3f(0, 0, 0);
-      scale = GfVec3f(1, 1, 1);
-
-      SetOp(xForm, translateOp, UsdGeomXformOp::TypeTranslate, position, UsdGeomXformOp::Precision::PrecisionDouble);
-      SetOp(xForm, rotateOp, UsdGeomXformOp::TypeRotateZYX, rotZYX, UsdGeomXformOp::Precision::PrecisionFloat);
-      SetOp(xForm, scaleOp, UsdGeomXformOp::TypeScale, scale, UsdGeomXformOp::Precision::PrecisionFloat);
-
-      // Make sure the xform op order is correct (translate, rotate, scale).
-      Vector<UsdGeomXformOp> xFormOpsReordered;
-      xFormOpsReordered.push_back(translateOp);
-      xFormOpsReordered.push_back(rotateOp);
-      xFormOpsReordered.push_back(scaleOp);
-      xForm.SetXformOpOrder(xFormOpsReordered);
-
-      ConsoleOut << position;
-      
-      // Commit the change to USD
-      gStage->Save();
     }
   }
 
@@ -709,7 +727,7 @@ namespace giEngineSDK {
   void 
   Omni::createSGFromUSD() {
 
-    auto& gapi = GraphicsAPI::instance();
+    auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
 
     omniUsdLiveWaitForPendingUpdates();
@@ -842,7 +860,7 @@ namespace giEngineSDK {
                     //Set positions.
                     tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
                     //Set UVs.
-
+                    //tmpSimpleVertexMesh.Tex = {1.f, 0.f};
                     //Set Normals.
                     tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
 
@@ -853,6 +871,19 @@ namespace giEngineSDK {
 
                   //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
                   Vector<Texture> tmpTextureMesh;
+
+                  Texture texture;
+                  texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
+                  SamplerDesc sampDesc;
+                  sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+                  sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+                  sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+                  sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+                  sampDesc.comparisonFunc = 1;
+                  sampDesc.minLOD = 0;
+                  sampDesc.maxLOD = 3.402823466e+38f;
+                  texture.samplerState = gapi.createSampler(sampDesc);
+                  tmpTextureMesh.push_back(texture);
 
                   Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
 
@@ -876,7 +907,7 @@ namespace giEngineSDK {
               tmpVertexModel.push_back(Vector3(pointArray[i].GetArray()[0],
                                                pointArray[i].GetArray()[1],
                                                pointArray[i].GetArray()[2]));
-            }
+              }
               
               //Normals.
               UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
@@ -934,7 +965,18 @@ namespace giEngineSDK {
 
               //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
               Vector<Texture> tmpTexture;
-
+              Texture texture;
+              texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
+              SamplerDesc sampDesc;
+              sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+              sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+              sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+              sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+              sampDesc.comparisonFunc = 1;
+              sampDesc.minLOD = 0;
+              sampDesc.maxLOD = 3.402823466e+38f;
+              texture.samplerState = gapi.createSampler(sampDesc);
+              tmpTexture.push_back(texture);
               Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
             
               //Set in the meshes.
@@ -1117,7 +1159,7 @@ namespace giEngineSDK {
     UsdGeomMesh tmpUSDMesh;
     
     //Get the data of the mesh
-    tmpUSDMesh = findGeomMesh(destinationPath);
+    //tmpUSDMesh = findGeomMesh();
 
     //Get the information
     UsdAttribute tmpVertex = tmpUSDMesh.GetPointsAttr();

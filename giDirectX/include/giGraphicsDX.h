@@ -675,10 +675,15 @@ namespace giEngineSDK {
       return m_devContext;
     } 
   
+    SharedPtr<Texture2D>
+    getViewportTex() override {
+      return m_viewportTexture;
+    }
 
-    SharedPtr<Texture2DDX> m_viewportBuffer = nullptr;
 
    private:
+    //Texture for render in the UI.
+    SharedPtr<Texture2DDX> m_viewportTexture = nullptr;
   
     ///Reference to the device
     ID3D11Device * m_device;

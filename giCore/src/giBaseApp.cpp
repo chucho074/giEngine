@@ -40,7 +40,7 @@ BaseApp::run() {
   //Create the Omniverse conection.
   m_omniverse->init(EngineConfigs::s_existingStage, 
                     EngineConfigs::s_destinationPath);
-  //m_omniverse->startConection();
+  m_omniverse->startConection();
 
 
   //App Loop.
@@ -120,7 +120,7 @@ BaseApp::createWindow() {
 void 
 BaseApp::update(float inDeltaTime) {
   onUpdate(inDeltaTime);
-  //m_omniverse->update();
+  m_omniverse->update();
 }
 
 void 

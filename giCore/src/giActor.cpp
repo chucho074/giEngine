@@ -25,7 +25,11 @@ namespace giEngineSDK {
   //  return false;
   //}
 
-  bool 
+  Actor::Actor() {
+    
+  }
+
+  bool
   Actor::addComponent(SharedPtr<Component> inComponent, COMPONENT_TYPE::E inComponentType) {
     if (m_components.count(inComponentType) == 0) {
       auto tmpComponent = std::pair<COMPONENT_TYPE::E, SharedPtr<Component>>();
@@ -50,6 +54,8 @@ namespace giEngineSDK {
 
   void 
   Actor::render() {
+    
+
     if(!m_components.empty()) {
       for (auto components : m_components) {
         components.second->render();

@@ -45,6 +45,16 @@ namespace giEngineSDK {
     getSRV() { 
       return m_subResourceData; 
     }
+
+    /**
+     * @brief    .
+     * @return   The texture of the specific API.
+     */
+    void *
+    getApiTexture() {
+      return m_subResourceData;
+    }
+
    protected:
     friend class CGraphicsDX;
   

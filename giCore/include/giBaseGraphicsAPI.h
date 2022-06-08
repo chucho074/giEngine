@@ -768,6 +768,10 @@ namespace giEngineSDK {
       return nullptr;
     };
 
+    virtual SharedPtr<Texture2D>
+    getViewportTex() {
+      return nullptr;
+    };
 
   };
 

@@ -147,8 +147,14 @@ namespace giEngineSDK {
     void
     updateTextureSizes(Vector2i inSize);
 
+    void 
+    setTransform(Matrix4 inTransformation);
+
+    SharedPtr<Buffer> m_modelBuffer;
+
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
+
     //The Constant Buffer (Never Change)
     SharedPtr<Buffer> m_cBufferCamera;
 
@@ -178,7 +184,7 @@ namespace giEngineSDK {
     //The Pixel Shader
     SharedPtr<BasePixelShader> m_pixelShader;
 
-    //SSAO
+                //SSAO
     //The Vertex shader
     SharedPtr<BaseVertexShader> m_vertexShaderSSAO;
 
@@ -195,7 +201,7 @@ namespace giEngineSDK {
     //SAQ
     SharedPtr<Model> m_SAQ;
 
-    //Blur
+                //Blur
     //The Vertex Shader
     SharedPtr<BaseVertexShader> m_vertexShaderBlur;
     //The Pixel Shader

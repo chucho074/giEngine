@@ -16,21 +16,35 @@ namespace giEngineSDK {
   
   void 
   Transform::setScale(Vector3 inScale) {
-
+    m_scale = inScale;
   }
 
   void 
   Transform::setRotation(Quaternion inRotation) {
-
+    m_rotation = inRotation;
   }
 
   void 
   Transform::setTranslation(Vector3 inTranslation) {
-
+    m_translation = inTranslation;
   }
 
   Matrix4 
   Transform::getMatrix() {
-    return Matrix4();
+    Matrix4 tmpMatrix;
+    //Scale
+    tmpMatrix.m_xColumn.x = m_scale.x;
+    tmpMatrix.m_yColumn.y = m_scale.y;
+    tmpMatrix.m_zColumn.z = m_scale.z;
+    //Rotation
+    //Quaternion tempQuat = Quaternion::fromEuler(m_localRotation);
+    //tempQuat.normalize();
+    //m_localTransform *= Matrix4::fromQuat(tempQuat);
+    //Translation
+    tmpMatrix.m_xColumn.w = m_translation.x;
+    tmpMatrix.m_yColumn.w = m_translation.y;
+    tmpMatrix.m_zColumn.w = m_translation.z;
+
+    return tmpMatrix;
   }
 }

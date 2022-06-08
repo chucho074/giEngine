@@ -27,7 +27,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor.
-    Actor() = default;
+    Actor();
 
     //Destructor.
     ~Actor() = default;

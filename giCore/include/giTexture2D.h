@@ -52,6 +52,11 @@ namespace giEngineSDK {
       */
      virtual
      ~Texture2D() = default;
+
+     virtual void *
+     getApiTexture() {
+       return nullptr;
+     };
      
      
    protected:
