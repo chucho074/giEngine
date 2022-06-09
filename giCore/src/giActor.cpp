@@ -11,6 +11,7 @@
  * @include
  */
 #include "giActor.h"
+#include "giBaseRenderer.h"
 
 namespace giEngineSDK {
 
@@ -54,7 +55,9 @@ namespace giEngineSDK {
 
   void 
   Actor::render() {
-    
+    auto renderer = BaseRenderer::instancePtr();
+    auto tmpMatrix = m_transform.getMatrix();
+    renderer->setTransform(tmpMatrix);
 
     if(!m_components.empty()) {
       for (auto components : m_components) {

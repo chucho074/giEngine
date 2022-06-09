@@ -146,8 +146,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
       <AdditionalDependencies>giUtilities_d.lib;giCore_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>
-      </ImportLibrary>
+      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -13,8 +13,7 @@
 #include "giTransform.h"
 
 namespace giEngineSDK {
-  
-  void 
+  void
   Transform::setScale(Vector3 inScale) {
     m_scale = inScale;
   }
@@ -32,6 +31,7 @@ namespace giEngineSDK {
   Matrix4 
   Transform::getMatrix() {
     Matrix4 tmpMatrix;
+    tmpMatrix = Matrix4::IDENTITY;
     //Scale
     tmpMatrix.m_xColumn.x = m_scale.x;
     tmpMatrix.m_yColumn.y = m_scale.y;

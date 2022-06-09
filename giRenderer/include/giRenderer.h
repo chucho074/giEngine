@@ -148,9 +148,7 @@ namespace giEngineSDK {
     updateTextureSizes(Vector2i inSize);
 
     void 
-    setTransform(Matrix4 inTransformation);
-
-    SharedPtr<Buffer> m_modelBuffer;
+    setTransform(Matrix4 inTransformation) override;
 
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
@@ -235,6 +233,7 @@ namespace giEngineSDK {
     SharedPtr<InputLayout> m_inputLayoutLight;
     //The Constant Buffer
     SharedPtr<Buffer> m_cBufferLight;
+
 
 
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha

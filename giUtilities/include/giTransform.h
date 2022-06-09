@@ -14,6 +14,7 @@
 #include "giPrerequisitesUtilities.h"
 #include "giQuaternion.h"
 #include "giVector3.h"
+#include "giMatrix4.h"
 
 namespace giEngineSDK {
   /**
@@ -21,7 +22,7 @@ namespace giEngineSDK {
    * @brief    .
    * @bug      No known Bugs.
    */
-  class Transform
+  class GI_UTILITY_EXPORT Transform
   {
    public:
     //Default Constructor.

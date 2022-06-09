@@ -706,7 +706,7 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::clearBackTexture(float inColor[4]) {
-    clearRTV(static_pointer_cast<Texture2D>(getDefaultRenderTarget()),
+    clearRTV(static_pointer_cast<Texture2D>(getViewportTex()),
              inColor);
 
     clearDSV(static_pointer_cast<Texture2D>(getDefaultDephtStencil()));

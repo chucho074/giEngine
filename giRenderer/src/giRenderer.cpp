@@ -63,12 +63,6 @@ namespace giEngineSDK {
     gapi.updateSubresource(m_cBufferCamera, 
                            &tmpConstantCamera, 
                            sizeof(tmpConstantCamera));
-
-    //Transformations
-    m_modelBuffer = gapi.createBuffer(sizeof(Matrix4),
-                                      GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
-                                      nullptr);
-
     //Shadow Camera
     
     //Sets the view matrix
@@ -89,10 +83,7 @@ namespace giEngineSDK {
 
     // Update variables that change once per frame
     CBChangesEveryFrame tmpConstantEveryFrame;
-    tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;/*
-    tmpConstantEveryFrame.mWorld.m_xColumn.x = 0.05f;
-    tmpConstantEveryFrame.mWorld.m_yColumn.y = 0.05f;
-    tmpConstantEveryFrame.mWorld.m_zColumn.z = 0.05f;*/
+    tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;
     //tmpConstantEveryFrame.vMeshColor = m_meshColor;
 
 
@@ -391,7 +382,6 @@ namespace giEngineSDK {
 
     tmpGbufferConstants.push_back(m_cBufferCamera);
     tmpGbufferConstants.push_back(m_cBufferChangeEveryFrame);
-    tmpGbufferConstants.push_back(m_modelBuffer);
 
     renderData(m_renderTargets, 
                gapi.getDefaultDephtStencil(),
@@ -523,7 +513,9 @@ namespace giEngineSDK {
     gapi.omSetRenderTarget(inRenderTarget, inDS);
 
     if(inClear) {
-      gapi.clearRTV(inRenderTarget[0], ClearColor);
+      for (auto tmpRTV : inRenderTarget) {
+        gapi.clearRTV(tmpRTV, ClearColor);
+      }
     }
 
     if(nullptr != inDS && inClear) {
@@ -630,7 +622,8 @@ namespace giEngineSDK {
 
   void 
   Renderer::setTransform(Matrix4 inTransformation) {
-    g_graphicsAPI().updateSubresource(m_modelBuffer,
+
+    g_graphicsAPI().updateSubresource(m_cBufferChangeEveryFrame,
                                       &inTransformation, 
                                       0);
   }

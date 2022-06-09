@@ -75,7 +75,7 @@ Editor::render() {
     ImGui::Text("Placeholder for object details (Transform, Components, etc)");
     ImGui::End();
   }
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse); {
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar); {
     void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
     ImGui::Image(tmpTexture, ImGui::GetWindowSize());
     ImGui::End();

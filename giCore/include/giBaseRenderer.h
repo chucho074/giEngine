@@ -14,6 +14,7 @@
 #include "giPrerequisitesCore.h"
 #include <giModule.h>
 #include <giModel.h>
+#include <giMatrix4.h>
 
 namespace giEngineSDK {
   class BaseRenderer : public Module<BaseRenderer>
@@ -49,6 +50,8 @@ namespace giEngineSDK {
     virtual void
     setModels(Vector<SharedPtr<Model>> inModelList) {};
 
+    virtual void 
+    setTransform(Matrix4 inMatrix) {};
 
     /**
      * @brief    Set the object of the Graphics API.
