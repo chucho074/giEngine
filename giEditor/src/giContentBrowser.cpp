@@ -16,11 +16,12 @@
 ContentBrowser::ContentBrowser(Path inWorkingDir) {
   m_workingDirectory = inWorkingDir;
   m_currentDirectory = m_workingDirectory;
+  init();
 }
 
 void
 ContentBrowser::init() {
-  
+  m_windowFlags |= ImGuiWindowFlags_NoCollapse;
 }
 
 void 
@@ -31,10 +32,7 @@ ContentBrowser::update(float inDeltaTime) {
 void 
 ContentBrowser::render() {
 
-  ImGuiWindowFlags window_flags = 0;
-  window_flags |= ImGuiWindowFlags_NoCollapse;
-
-  ImGui::Begin("Content Browser", nullptr, window_flags);
+  ImGui::Begin("Content Browser", nullptr, m_windowFlags);
 
   //Back Button
   if (m_currentDirectory != m_workingDirectory) {

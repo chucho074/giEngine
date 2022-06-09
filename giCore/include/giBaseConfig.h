@@ -39,6 +39,7 @@ class EngineConfigs : public Module<EngineConfigs>
 {
  public:
    EngineConfigs() = default;
+   ~EngineConfigs() = default;
 
   //Basic App Configs
   static Vector2i s_resolution;

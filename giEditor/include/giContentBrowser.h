@@ -28,25 +28,25 @@ class ContentBrowser
 	
 	
 	/**
-	 * @brief      .
+	 * @brief      Initialize the content Browser.
 	 */
 	void
 	init();
 
 	/**
-	 * @brief      .
+	 * @brief      Update the information of the content browser.
 	 */
 	void
 	update(float inDeltaTime);
 
 	/**
-	 * @brief      .
+	 * @brief      Render the information of the content browser.
 	 */
 	void 
 	render();
 
 	/**
-	 * @brief      .
+	 * @brief      Destroy the information of the content browser.
 	 */
 	void
 	destroy();
@@ -62,4 +62,6 @@ class ContentBrowser
 	 Path m_workingDirectory;
 
 	 Path m_currentDirectory;
+
+   ImGuiWindowFlags m_windowFlags = 0;
 };

@@ -13,6 +13,8 @@
 #pragma once
 #include "giImGui.h"
 #include "giContentBrowser.h"
+#include "giHierarchy.h"
+#include "giDetails.h"
 
 using namespace giEngineSDK;
 using namespace ImGui;
@@ -71,6 +73,10 @@ class Editor
    SharedPtr<UI> m_ui;
 
    SharedPtr<ContentBrowser> m_contentBrowser;
+
+   SharedPtr<Hierarchy> m_hierarchy;
+
+   SharedPtr<Details> m_details;
 
    void * m_windowHandle = nullptr;
 

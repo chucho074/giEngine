@@ -19,15 +19,25 @@ void
 Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_ui.reset(new UI);
   m_ui->init(inHandler, inWindowSize);
+
   //m_contentBrowser.reset(new ContentBrowser(EngineConfigs::s_projectPath));
   m_contentBrowser.reset(new ContentBrowser("G:/Dev/giTestProject/"));
-  m_contentBrowser->init();
+
+  m_hierarchy.reset(new Hierarchy());
+
+  m_details.reset(new Details());
 }
 
 void 
 Editor::update(float inDeltaTime) {
   m_ui->update(m_windowHandle, inDeltaTime);
+
   m_contentBrowser->update(inDeltaTime);
+
+  m_hierarchy->update(inDeltaTime);
+
+  m_details->update(inDeltaTime);
+
 }
 
 void 
@@ -64,24 +74,25 @@ Editor::render() {
     }
     ImGui::EndMainMenuBar();
   }
+
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-  //Windows
-  ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse); {
-    ImGui::Text("Placeholder for scenegraph content.");
-    ImGui::End();
-  }
-  ImGui::Begin("Details", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse); {
-    ImGui::Text("Placeholder for object details (Transform, Components, etc)");
-    ImGui::End();
-  }
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar); {
+  //Render the hierarchy of the scene.
+  m_hierarchy->render();
+
+  //Render the Details of the actor.
+  m_details->render();
+
+  //Render the viewport window.
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav 
+                                  | ImGuiWindowFlags_NoCollapse 
+                                  | ImGuiWindowFlags_NoScrollbar); {
     void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
     ImGui::Image(tmpTexture, ImGui::GetWindowSize());
     ImGui::End();
   }
 
-  //Render each of the parts 
+  //Render the content Browser.
   m_contentBrowser->render();
 
   //After the own editor ui objects, call the render of ImGui.
@@ -90,6 +101,8 @@ Editor::render() {
 
 void 
 Editor::destroy() {
+  m_details->destroy();
+  m_hierarchy->destroy();
   m_contentBrowser->destroy();
   m_ui->shutDown();
 }

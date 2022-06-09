@@ -12,6 +12,7 @@
  */
 #include "giBaseConfig.h"
 
+
 //Basic App Configs
 Vector2i EngineConfigs::s_resolution = Vector2i(1280, 720);
 bool EngineConfigs::s_fullscreen = false;

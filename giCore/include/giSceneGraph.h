@@ -93,6 +93,22 @@ namespace giEngineSDK {
     void 
     draw();
 
+    /**
+     * @brief    .
+     * @return   Get a selected Actor.
+     */
+    SharedPtr<Actor>
+    getSelectedActor() {
+      return m_selectedActor;
+    }
+    
+    /**
+     * @brief    Set a selected Actor.
+     */
+    void
+    setSelectedActor(SharedPtr<Actor> inActor) {
+      m_selectedActor = inActor;
+    }
 
    private:
 
@@ -100,6 +116,8 @@ namespace giEngineSDK {
      * @brief    The root of the Scene.
      */
     SharedPtr<SceneNode> m_root;
+
+    SharedPtr<Actor> m_selectedActor;
 
    protected:
     /**
