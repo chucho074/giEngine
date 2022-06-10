@@ -256,7 +256,7 @@ namespace giEngineSDK {
      * @return  Returns .
      */
     virtual Vector2 
-    isMouseMoved(Vector2) {
+    isMouseMoved() {
       return Vector2();
     }
   };

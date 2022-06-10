@@ -31,9 +31,6 @@ BaseApp::run() {
   //Send message to device.
   onCreate();
 
-  //Initialize the inputs.
-  m_inputManager->init();
-
   //Create the renderer.
   renderer.create();
 
@@ -46,7 +43,6 @@ BaseApp::run() {
   //App Loop.
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
-    m_inputManager->update();
     MSG msg;
     Event eventsWnd;
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
@@ -74,11 +70,12 @@ BaseApp::run() {
       //Eventos propios.
       event(msg);
     }
-    m_inputManager->runEvents();
 
     //Update Time.
     m_time->update();
     float deltaTime = g_time().getTime();
+
+    m_inputManager->update();
 
     //Update Game Logic.
     update(deltaTime);
@@ -86,8 +83,6 @@ BaseApp::run() {
     //Render Frame
     renderer.render();
     render();
-
-    
   }
 
   //Write the logs
@@ -157,6 +152,9 @@ BaseApp::initSystems() {
     BaseInput* input = createInputManager();
     g_inputManager().setObject(input);
     m_inputManager = &g_inputManager();
+    //Initialize the inputs.
+    m_inputManager->init();
+    m_inputManager->updateSize(m_width, m_height);
 
   }
 
