@@ -133,9 +133,18 @@ DirectXApp::onUpdate(float inDeltaTime) {
 
   if(cameraRef) {
     SharedPtr<Camera> tmpCamera = static_pointer_cast<Camera>(cameraRef);
-
-
-
+    //Get forward input
+    tmpCamera->m_front = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kW);
+    //Get backard input
+    tmpCamera->m_back = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kS);
+    //Get left input
+    tmpCamera->m_left = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kA);
+    //Get right input
+    tmpCamera->m_right = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kD);
+    //Get up input
+    tmpCamera->m_up = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kQ);
+    //Get down input
+    tmpCamera->m_down = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kE);
   }
 
   m_sceneGraph->update(inDeltaTime);

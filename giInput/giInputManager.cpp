@@ -13,201 +13,258 @@
 #include "giInputManager.h"
 #include <iostream>
 
-using std::cout;
 
 namespace giEngineSDK {
-  void 
-  Input::init() {
-    mouseId    = m_manager.CreateDevice<gainput::InputDeviceMouse>();
-    keyboardId = m_manager.CreateDevice<gainput::InputDeviceKeyboard>();
-    padId      = m_manager.CreateDevice<gainput::InputDevicePad>();
-
-    m_keyboardMap = new gainput::InputMap(m_manager);
-    m_mouseAxisMap = new gainput::InputMap(m_manager);
-    m_mouseButtonsMap = new gainput::InputMap(m_manager);
-    m_gamepadAxisMap = new gainput::InputMap(m_manager);
-    m_gamepadButtonsMap = new gainput::InputMap(m_manager);
-    
-    setButtons();
+  Input::~Input() {
+    if (m_inputManager) {
+      OIS::InputManager::destroyInputSystem(m_inputManager);
+    }
   }
 
   void
-  Input::createInputDevice() {
+  Input::init(WindowHandle wHndl) {
+    OIS::ParamList pl;
+    std::ostringstream windowHndStr;
+    windowHndStr << (size_T)wHndl;
+    pl.insert(make_pair(String("WINDOW"), windowHndStr.str()));
+    pl.insert(make_pair(String("w32_mouse"), String("DISCL_FOREGROUND")));
+    pl.insert(make_pair(String("w32_mouse"), String("DISCL_NONEXCLUSIVE")));
+
+    m_inputManager = OIS::InputManager::createInputSystem(pl);
+    uint32 v = m_inputManager->getVersionNumber();
+    ConsoleOut << "OIS Version " << (v >> 16) << "." << ((v >> 8) & 0x000000FF) << "." << (v & 0x000000FF)
+      << "\nRelease Name: "    << m_inputManager->getVersionName()
+      << "\nManager: "         << m_inputManager->inputSystemName()
+      << "\nTotal Keyboards: " << m_inputManager->getNumberOfDevices(OIS::OISKeyboard)
+      << "\nTotal Mouses: "      << m_inputManager->getNumberOfDevices(OIS::OISMouse)
+      << "\nTotal JoySticks: " << m_inputManager->getNumberOfDevices(OIS::OISJoyStick);
+
+    m_keyBoard = static_cast<OIS::Keyboard*>(m_inputManager->createInputObject(OIS::OISKeyboard, true));
+    m_keyBoard->setEventCallback(this);
+
+    m_mouse = static_cast<OIS::Mouse*>(m_inputManager->createInputObject(OIS::OISMouse, true));
+    m_mouse->setEventCallback(this);
+    
+    setButtons();
     
   }
   
   void 
   Input::update() {
-    m_manager.Update();
+    m_keyBoard->capture();
+    m_mouse->capture();
   }
   
   void 
   Input::updateSize(int inWidth, int inHeight) {
-    m_manager.SetDisplaySize(inWidth, inHeight);
-  }
-
-  void 
-  Input::sendEvent(MSG inMessage) {
-    MSG msg = tagMSG(inMessage);
-    m_manager.HandleMessage(msg);
+    const OIS::MouseState& ms = m_mouse->getMouseState();
+    ms.width = inWidth;
+    ms.height = inHeight;
   }
 
   bool 
   Input::isKeyPressed(KEYBOARD_KEYS::E inKey) {
-    return m_keyboardMap->GetBoolIsNew(inKey);
+    return m_keyState[inKey] == STATUS_BUTTONS::kPRESSED ? true : false;
   }
 
   bool
   Input::isKeyReleassed(KEYBOARD_KEYS::E inKey) {
-    return m_keyboardMap->GetBoolWasDown(inKey);
+    if (m_keyState[inKey] == STATUS_BUTTONS::kRELEASED) {
+      m_keyState[inKey] == STATUS_BUTTONS::kIDLE;
+      return true;
+    }
+    else {
+      return false;
+    }
+    //return m_keyState[inKey] == STATUS_BUTTONS::kRELEASED ? true : false;
   }
 
   bool 
   Input::isMouseButtonPressed(MOUSE_BUTTONS::E inButton) {
-    return m_mouseButtonsMap->GetBoolIsNew(inButton);
+    return m_mouseState[inButton] == STATUS_BUTTONS::kPRESSED ? true : false;
   }
 
   bool
   Input::isMouseButtonReleassed(MOUSE_BUTTONS::E inButton) {
-    return m_mouseButtonsMap->GetBoolWasDown(inButton);
+    if(m_mouseState[inButton] == STATUS_BUTTONS::kRELEASED) {
+      m_mouseState[inButton] == STATUS_BUTTONS::kIDLE;
+      return true;
+    }
+    else {
+      return false;
+    }
+    //return m_mouseState[inButton] == STATUS_BUTTONS::kRELEASED ? true : false;
   }
 
   bool 
   Input::isButtonPressed(CONTROL_BUTTONS::E inButton) {
-    return m_gamepadButtonsMap->GetBoolIsNew(inButton);
+    return false; 
   }
 
   bool 
   Input::isButtonReleassed(CONTROL_BUTTONS::E inButton) {
-    return m_gamepadButtonsMap->GetBoolWasDown(inButton);
+    return false;
   }
 
   Vector2 
   Input::isMouseMoved() {
-    uint32 x = m_mouseAxisMap->GetFloat(MOUSE_MOVEMENTS::kXAxis) * m_manager.GetDisplayWidth();
-    uint32 y = m_mouseAxisMap->GetFloat(MOUSE_MOVEMENTS::kYAxis) * m_manager.GetDisplayHeight();
-    return Vector2(x, y);
+  Vector2 tmpVect;
+    const OIS::MouseState& ms = m_mouse->getMouseState();
+    tmpVect.x = (float)ms.X.rel;
+    tmpVect.y = (float)ms.Y.rel;
+    return tmpVect;
   }
 
   void
   Input::setButtons() {
-    //Keyboard
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kESQ,         keyboardId, gainput::KeyEscape);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF1,          keyboardId, gainput::KeyF1);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF2,          keyboardId, gainput::KeyF2);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF3,          keyboardId, gainput::KeyF3);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF4,          keyboardId, gainput::KeyF4);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF5,          keyboardId, gainput::KeyF5);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF6,          keyboardId, gainput::KeyF6);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF7,          keyboardId, gainput::KeyF7);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF8,          keyboardId, gainput::KeyF8);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF9,          keyboardId, gainput::KeyF9);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF10,         keyboardId, gainput::KeyF10);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF11,         keyboardId, gainput::KeyF11);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF12,         keyboardId, gainput::KeyF12);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kPRTSC,       keyboardId, gainput::KeyPrint);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kSCRLK,       keyboardId, gainput::KeyScrollLock);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kPAUSE,       keyboardId, gainput::KeyBreak);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kGRAVEACCENT, keyboardId, gainput::KeyGrave);      //
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k1,           keyboardId, gainput::Key1);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k2,           keyboardId, gainput::Key2);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k3,           keyboardId, gainput::Key3);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k4,           keyboardId, gainput::Key4);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k5,           keyboardId, gainput::Key5);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k6,           keyboardId, gainput::Key6);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k7,           keyboardId, gainput::Key7);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k8,           keyboardId, gainput::Key8);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k9,           keyboardId, gainput::Key9);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::k0,           keyboardId, gainput::Key0);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kMINUS,       keyboardId, gainput::KeyMinus);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kEQUAL,       keyboardId, gainput::KeyEqual);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kBACKSPACE,   keyboardId, gainput::KeyBackSpace);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kINSERT,      keyboardId, gainput::KeyInsert);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kHOME,        keyboardId, gainput::KeyHome);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kPGUP,        keyboardId, gainput::KeyPageUp);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kTAB,         keyboardId, gainput::KeyTab);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kQ,           keyboardId, gainput::KeyQ);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kW,           keyboardId, gainput::KeyW);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kE,           keyboardId, gainput::KeyE);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kR,           keyboardId, gainput::KeyR);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kT,           keyboardId, gainput::KeyT);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kY,           keyboardId, gainput::KeyY);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kU,           keyboardId, gainput::KeyU);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kI,           keyboardId, gainput::KeyI);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kO,           keyboardId, gainput::KeyO);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kP,           keyboardId, gainput::KeyP);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kLBRACKET,    keyboardId, gainput::KeyBraceLeft);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kRBRACKET,    keyboardId, gainput::KeyBracketRight);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kBACKSLASH,   keyboardId, gainput::KeyBackslash);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kDELETE,      keyboardId, gainput::KeyDelete);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kEND,         keyboardId, gainput::KeyEnd);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kPGDOWN,      keyboardId, gainput::KeyPageDown);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kCAPS,        keyboardId, gainput::KeyCapsLock);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kA,           keyboardId, gainput::KeyA);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kS,           keyboardId, gainput::KeyS);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kD,           keyboardId, gainput::KeyD);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kF,           keyboardId, gainput::KeyF);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kG,           keyboardId, gainput::KeyG);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kH,           keyboardId, gainput::KeyH);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kJ,           keyboardId, gainput::KeyJ);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kK,           keyboardId, gainput::KeyK);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kL,           keyboardId, gainput::KeyL);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kSEMICOLON,   keyboardId, gainput::KeySemicolon);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kAPOSTROPHE,  keyboardId, gainput::KeyApostrophe);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kENTER,       keyboardId, gainput::KeyKpEnter);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kLSHIFT,      keyboardId, gainput::KeyShiftL);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kZ,           keyboardId, gainput::KeyZ);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kX,           keyboardId, gainput::KeyX);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kC,           keyboardId, gainput::KeyC);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kV,           keyboardId, gainput::KeyV);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kB,           keyboardId, gainput::KeyB);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kN,           keyboardId, gainput::KeyN);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kM,           keyboardId, gainput::KeyM);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kCOMMA,       keyboardId, gainput::KeyComma);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kDOT,         keyboardId, gainput::KeyPeriod);     //
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kSLASH,       keyboardId, gainput::KeySlash);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kRSHIFT,      keyboardId, gainput::KeyShiftR);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kLCTRL,       keyboardId, gainput::KeyCtrlL);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kLALT,        keyboardId, gainput::KeyAltL);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kSPACE,        keyboardId, gainput::KeySpace);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kRALT,        keyboardId, gainput::KeyAltGr);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kRCTRL,       keyboardId, gainput::KeyCtrlR);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kUP,          keyboardId, gainput::KeyUp);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kLEFT,        keyboardId, gainput::KeyLeft);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kDOWN,        keyboardId, gainput::KeyDown);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kRIGHT,       keyboardId, gainput::KeyRight);
-    //m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMLOCK,     keyboardId, gainput::KeyNumLock);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kDIV,         keyboardId, gainput::KeyKpDivide);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kMUL,         keyboardId, gainput::KeyKpMultiply);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kSUB,         keyboardId, gainput::KeyKpSubtract);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kINC,         keyboardId, gainput::KeyKpAdd);
-    /*m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD0,     keyboardId, gainput::KeyKpInsert);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD1,     keyboardId, gainput::KeyKpEnd);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD2,     keyboardId, gainput::KeyKpDown);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD3,     keyboardId, gainput::KeyKpPageDown);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD4,     keyboardId, gainput::KeyKpLeft);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD5,     keyboardId, gainput::KeyKpBegin);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD6,     keyboardId, gainput::KeyKpRight);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD7,     keyboardId, gainput::KeyKpHome);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD8,     keyboardId, gainput::KeyKpPageUp);
-    m_keyboardMap->MapBool(KEYBOARD_KEYS::kNUMPAD9,     keyboardId, gainput::KeyKpDelete);*/
-    
+    m_keys.insert(make_pair(OIS::KeyCode::KC_ESCAPE,     KEYBOARD_KEYS::kESQ));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_1,          KEYBOARD_KEYS::k1));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_2,          KEYBOARD_KEYS::k2));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_3,          KEYBOARD_KEYS::k3));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_4,          KEYBOARD_KEYS::k4));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_5,          KEYBOARD_KEYS::k5));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_6,          KEYBOARD_KEYS::k6));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_7,          KEYBOARD_KEYS::k7));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_8,          KEYBOARD_KEYS::k8));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_9,          KEYBOARD_KEYS::k9));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_0,          KEYBOARD_KEYS::k0));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_MINUS,      KEYBOARD_KEYS::kMINUS));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_EQUALS,     KEYBOARD_KEYS::kEQUAL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_BACK,       KEYBOARD_KEYS::kBACKSPACE));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_TAB,        KEYBOARD_KEYS::kTAB));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_Q,          KEYBOARD_KEYS::kQ));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_W,          KEYBOARD_KEYS::kW));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_E,          KEYBOARD_KEYS::kE));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_R,          KEYBOARD_KEYS::kR));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_T,          KEYBOARD_KEYS::kT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_Y,          KEYBOARD_KEYS::kY));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_U,          KEYBOARD_KEYS::kU));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_I,          KEYBOARD_KEYS::kI));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_O,          KEYBOARD_KEYS::kO));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_P,          KEYBOARD_KEYS::kP));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_A,          KEYBOARD_KEYS::kA));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_S,          KEYBOARD_KEYS::kS));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_D,          KEYBOARD_KEYS::kD));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F,          KEYBOARD_KEYS::kF));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_G,          KEYBOARD_KEYS::kG));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_H,          KEYBOARD_KEYS::kH));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_J,          KEYBOARD_KEYS::kJ));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_K,          KEYBOARD_KEYS::kK));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_L,          KEYBOARD_KEYS::kL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_Z,          KEYBOARD_KEYS::kZ));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_X,          KEYBOARD_KEYS::kX));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_C,          KEYBOARD_KEYS::kC));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_V,          KEYBOARD_KEYS::kV));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_B,          KEYBOARD_KEYS::kB));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_N,          KEYBOARD_KEYS::kN));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_M,          KEYBOARD_KEYS::kM));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_UP,         KEYBOARD_KEYS::kUP));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_DOWN,       KEYBOARD_KEYS::kDOWN));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_LEFT,       KEYBOARD_KEYS::kLEFT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_RIGHT,      KEYBOARD_KEYS::kRIGHT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_LBRACKET,   KEYBOARD_KEYS::kLBRACKET));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_RBRACKET,   KEYBOARD_KEYS::kRBRACKET));
+    //m_keys.insert(make_pair(OIS::KeyCode::KC_RETURN,     KEYBOARD_KEYS::kRETURN));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_LCONTROL,   KEYBOARD_KEYS::kLCTRL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_RCONTROL,   KEYBOARD_KEYS::kRCTRL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_SEMICOLON,  KEYBOARD_KEYS::kSEMICOLON));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_APOSTROPHE, KEYBOARD_KEYS::kAPOSTROPHE));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_GRAVE,      KEYBOARD_KEYS::kGRAVEACCENT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_LSHIFT,     KEYBOARD_KEYS::kLSHIFT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_BACKSLASH,  KEYBOARD_KEYS::kBACKSLASH));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_COMMA,      KEYBOARD_KEYS::kCOMMA));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_PERIOD,     KEYBOARD_KEYS::kDOT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_SLASH,      KEYBOARD_KEYS::kSLASH));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_RSHIFT,     KEYBOARD_KEYS::kRSHIFT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_LMENU,      KEYBOARD_KEYS::kLALT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_RMENU,      KEYBOARD_KEYS::kRALT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_SPACE,      KEYBOARD_KEYS::kSPACE));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_CAPITAL,    KEYBOARD_KEYS::kCAPS));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F1,         KEYBOARD_KEYS::kF1));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F2,         KEYBOARD_KEYS::kF2));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F3,         KEYBOARD_KEYS::kF3));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F4,         KEYBOARD_KEYS::kF4));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F5,         KEYBOARD_KEYS::kF5));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F6,         KEYBOARD_KEYS::kF6));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F7,         KEYBOARD_KEYS::kF7));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F8,         KEYBOARD_KEYS::kF8));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F9,         KEYBOARD_KEYS::kF9));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F10,        KEYBOARD_KEYS::kF10));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F11,        KEYBOARD_KEYS::kF11));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_F12,        KEYBOARD_KEYS::kF12));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMLOCK,    KEYBOARD_KEYS::kNUMLOCK));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_SCROLL,     KEYBOARD_KEYS::kSCRLK));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD1,    KEYBOARD_KEYS::kNUMPAD1));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD2,    KEYBOARD_KEYS::kNUMPAD2));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD3,    KEYBOARD_KEYS::kNUMPAD3));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD4,    KEYBOARD_KEYS::kNUMPAD4));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD5,    KEYBOARD_KEYS::kNUMPAD5));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD6,    KEYBOARD_KEYS::kNUMPAD6));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD7,    KEYBOARD_KEYS::kNUMPAD7));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD8,    KEYBOARD_KEYS::kNUMPAD8));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD9,    KEYBOARD_KEYS::kNUMPAD9));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_NUMPAD0,    KEYBOARD_KEYS::kNUMPAD0));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_SUBTRACT,   KEYBOARD_KEYS::kSUB));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_ADD,        KEYBOARD_KEYS::kINC));
+    //m_keys.insert(make_pair(OIS::KeyCode::KC_DECIMAL,    KEYBOARD_KEYS::kDECIMAL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_DIVIDE,     KEYBOARD_KEYS::kDIV));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_MULTIPLY,   KEYBOARD_KEYS::kMUL));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_PGDOWN,     KEYBOARD_KEYS::kPGDOWN));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_PGUP,       KEYBOARD_KEYS::kPGUP));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_INSERT,     KEYBOARD_KEYS::kINSERT));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_DELETE,     KEYBOARD_KEYS::kDELETE));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_HOME,       KEYBOARD_KEYS::kHOME));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_END,        KEYBOARD_KEYS::kEND));
+    m_keys.insert(make_pair(OIS::KeyCode::KC_INSERT,     KEYBOARD_KEYS::kINSERT));
+
     //Mouse
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kLEFTCLIC,  mouseId, gainput::MouseButtonLeft);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kRIGHTCLIC, mouseId, gainput::MouseButtonRight);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kMIDCLIC,   mouseId, gainput::MouseButtonMiddle);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kBUTTON3,   mouseId, gainput::MouseButton3);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kBUTTON4,   mouseId, gainput::MouseButton4);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kBUTTON5,   mouseId, gainput::MouseButton5);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kBUTTON6,   mouseId, gainput::MouseButton6);
-    m_mouseButtonsMap->MapBool(MOUSE_BUTTONS::kBUTTON7,   mouseId, gainput::MouseButton7);
-
-    m_mouseAxisMap->MapFloat(MOUSE_MOVEMENTS::kXAxis, mouseId, gainput::MouseAxisX);
-    m_mouseAxisMap->MapFloat(MOUSE_MOVEMENTS::kYAxis, mouseId, gainput::MouseAxisY);
-    m_mouseAxisMap->MapFloat(MOUSE_MOVEMENTS::kWheelUp,   mouseId, gainput::MouseButtonWheelUp);
-    m_mouseAxisMap->MapFloat(MOUSE_MOVEMENTS::kWheelDown, mouseId, gainput::MouseButtonWheelDown);
-
-    //Control
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Left, MOUSE_BUTTONS::kLEFTCLIC));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Right, MOUSE_BUTTONS::kRIGHTCLIC));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Middle, MOUSE_BUTTONS::kMIDCLIC));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button3, MOUSE_BUTTONS::kBUTTON3));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button4, MOUSE_BUTTONS::kBUTTON4));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button5, MOUSE_BUTTONS::kBUTTON5));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button6, MOUSE_BUTTONS::kBUTTON6));
+    m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button7, MOUSE_BUTTONS::kBUTTON7));
 
   }
+  
+  bool 
+  Input::keyPressed(const OIS::KeyEvent& arg) {
+    if(m_keyState[m_keys[arg.key]] = STATUS_BUTTONS::kPRESSED) {
+      return true;
+    }
+    return false;
+  }
+  
+  bool 
+  Input::keyReleased(const OIS::KeyEvent& arg) {
+    m_keyState[m_keys[arg.key]] = STATUS_BUTTONS::kRELEASED;
+    return true;
+  }
+  
+  bool 
+  Input::mouseMoved(const OIS::MouseEvent& arg) {
+    GI_UNREFERENCED_PARAMETER(arg);
+    //const OIS::MouseState& s = arg.state;
+    /*std::cout << "\nMouseMoved: Abs("
+              << s.X.abs << ", " << s.Y.abs << ", " << s.Z.abs << ") Rel(" << s.X.rel
+              << ", " << s.Y.rel << ", " << s.Z.rel << ")";*/
+    return true;
+  }
+  
+  bool 
+  Input::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
+    GI_UNREFERENCED_PARAMETER(arg);
+    m_mouseState[m_mouseKeys[id]] = STATUS_BUTTONS::kPRESSED;
+    return false;
+  }
+  
+  bool 
+  Input::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
+    GI_UNREFERENCED_PARAMETER(arg);
+    m_mouseState[m_mouseKeys[id]] = STATUS_BUTTONS::kRELEASED;
+    return false;
+  }
+  
 }

@@ -97,8 +97,8 @@
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <IncludePath>$(DEVLIBS)/GaInput/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DEVLIBS)/GaInput/lib/x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(DEVLIBS)/ois/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DEVLIBS)/ois/lib/x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -153,13 +153,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giCore/include;$(DEVLIBS)/ois/includes;$(DEVLIBS)/SFML/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;gainput-d.lib;gainputstatic-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/ois/lib/$(PlatformTarget)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giUtilities_d.lib;OIS_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

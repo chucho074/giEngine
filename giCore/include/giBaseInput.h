@@ -14,7 +14,10 @@
 #include <giPrerequisitesCore.h>
 #include <giModule.h>
 #include <giVector2.h>
-#include <windows.h>
+#include <Windows.h>
+#include <SFML/Window.hpp>
+
+using sf::WindowHandle;
 
 namespace giEngineSDK {
   /**
@@ -152,6 +155,14 @@ namespace giEngineSDK {
     };
   }
 
+  namespace STATUS_BUTTONS {
+    enum E {
+      kIDLE = 0,
+      kPRESSED,
+      kRELEASED
+    };
+  }
+
   class BaseInput : public Module<BaseInput>
   {
    public:
@@ -165,13 +176,7 @@ namespace giEngineSDK {
      * @brief   Initialize the input manager.
      */
     virtual void 
-    init() {}
-
-    /**
-     * @brief   .
-     */
-    virtual void
-    createInputDevice() {}
+    init(WindowHandle wHndl) {}
 
     /**
      * @brief   Update the information of the input manager.
@@ -186,23 +191,12 @@ namespace giEngineSDK {
     updateSize(int inWidth, int inHeight) {}
 
     /**
-     * @brief   Send the events to the handle.
-     */
-    virtual void
-    sendEvent(MSG inMessage) {}
-    
-    /**
-     * @brief   .
-     */
-    virtual void 
-    runEvents() {}
-
-    /**
      * @brief   Verify if a key of the keyboard was pressed.
      * @return  Returns a true if the key was pressed.
      */
     virtual bool 
     isKeyPressed(KEYBOARD_KEYS::E inKey) {
+      GI_UNREFERENCED_PARAMETER(inKey);
       return false;
     }
 
@@ -212,6 +206,7 @@ namespace giEngineSDK {
      */
     virtual bool 
     isMouseButtonPressed(MOUSE_BUTTONS::E inButton) {
+      GI_UNREFERENCED_PARAMETER(inButton);
       return false;
     }
 
@@ -221,6 +216,7 @@ namespace giEngineSDK {
      */
     virtual bool 
     isButtonPressed(CONTROL_BUTTONS::E inButton) {
+      GI_UNREFERENCED_PARAMETER(inButton);
       return false;
     }
 
@@ -230,6 +226,7 @@ namespace giEngineSDK {
      */
     virtual bool 
     isKeyReleassed(KEYBOARD_KEYS::E inKey) {
+      GI_UNREFERENCED_PARAMETER(inKey);
       return false;
     }
 
@@ -239,6 +236,7 @@ namespace giEngineSDK {
      */
     virtual bool 
     isMouseButtonReleassed(MOUSE_BUTTONS::E inButton) {
+      GI_UNREFERENCED_PARAMETER(inButton);
       return false;
     }
 
@@ -248,6 +246,7 @@ namespace giEngineSDK {
      */
     virtual bool 
     isButtonReleassed(CONTROL_BUTTONS::E inButton) {
+      GI_UNREFERENCED_PARAMETER(inButton);
       return false;
     }
 
@@ -259,6 +258,35 @@ namespace giEngineSDK {
     isMouseMoved() {
       return Vector2();
     }
+
+    /**
+     * @brief 
+     * @return 
+     */
+    virtual float
+    getXAxis() { 
+      return 0.f; 
+    }
+
+    /**
+     * @brief 
+     * @return 
+     */
+    virtual float
+    getYAxis() { 
+      return 0.f; 
+    }
+
+   protected: 
+     bool m_keyboardPress = false;
+     bool m_keyboardRelease = false;
+     bool m_mousePressed = false;
+     bool m_mouseReleased = false;
+
+
+     Map<KEYBOARD_KEYS::E, STATUS_BUTTONS::E> m_keyState;
+
+     Map<MOUSE_BUTTONS::E, STATUS_BUTTONS::E> m_mouseState;
   };
 
   GI_CORE_EXPORT BaseInput& 

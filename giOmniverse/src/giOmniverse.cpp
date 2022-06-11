@@ -627,7 +627,7 @@ namespace giEngineSDK {
     omniUsdLiveWaitForPendingUpdates();
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Begin Live Edit\n";
+      //ConsoleOut << "Begin Live Edit\n";
     }
 
     // Process any updates that may have happened to the stage from another client.
@@ -702,8 +702,8 @@ namespace giEngineSDK {
         //Set Scale
         tmpActor->m_transform.m_scale = tmpScale;
         
-        ConsoleOut << "Pos: X " << tmpPos.x << " Y " << tmpPos.y << " Z " << tmpPos.z << ConsoleLine;
-        ConsoleOut << "Scale: X " << tmpScale.x << " Y " << tmpScale.y << " Z " << tmpScale.z << ConsoleLine;
+        //ConsoleOut << "Pos: X " << tmpPos.x << " Y " << tmpPos.y << " Z " << tmpPos.z << ConsoleLine;
+        //ConsoleOut << "Scale: X " << tmpScale.x << " Y " << tmpScale.y << " Z " << tmpScale.z << ConsoleLine;
 
         // Commit the change to USD
         gStage->Save();

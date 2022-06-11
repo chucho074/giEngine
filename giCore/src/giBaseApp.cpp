@@ -48,8 +48,6 @@ BaseApp::run() {
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
-
-      m_inputManager->sendEvent(msg);
       
       m_window.pollEvent(eventsWnd);
       if (eventsWnd.type == Event::Closed) {
@@ -75,11 +73,13 @@ BaseApp::run() {
     m_time->update();
     float deltaTime = g_time().getTime();
 
-    m_inputManager->update();
 
     //Update Game Logic.
     update(deltaTime);
     
+    m_inputManager->update();
+
+
     //Render Frame
     renderer.render();
     render();
@@ -153,7 +153,7 @@ BaseApp::initSystems() {
     g_inputManager().setObject(input);
     m_inputManager = &g_inputManager();
     //Initialize the inputs.
-    m_inputManager->init();
+    m_inputManager->init(m_window.getSystemHandle());
     m_inputManager->updateSize(m_width, m_height);
 
   }

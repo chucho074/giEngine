@@ -13,8 +13,11 @@
 #pragma once
 #include <giPrerequisitesUtilities.h>
 #include <giBaseInput.h>
-#include <gainput/gainput.h>
-#include <windows.h>
+#include <OISInputManager.h>
+#include <OISKeyboard.h>
+#include <OISMouse.h>
+#include <OISEvents.h>
+#include <OISException.h>
 
 namespace giEngineSDK {
   enum Button {
@@ -27,26 +30,22 @@ namespace giEngineSDK {
   /**
    * @class:    Input.
    */
-  class Input : public BaseInput
+  class Input final : public BaseInput,
+                      public OIS::KeyListener,
+                      public OIS::MouseListener
   {
    public:
     //Default Constructor
   	Input() = default;
 
     //Destructor
-  	~Input() = default;
+  	~Input();
 
     /**
      * 
      */
     void 
-    init();
-
-    /**
-     * 
-     */
-    void
-    createInputDevice();
+    init(WindowHandle wHndl);
 
     /**
      * 
@@ -59,12 +58,6 @@ namespace giEngineSDK {
      */
     void
     updateSize(int inWidth, int inHeight);
-
-    /**
-     * 
-     */
-    void
-    sendEvent(MSG inMessage);
 
     /**
      * @brief   Verify if a key of the keyboard was pressed.
@@ -125,24 +118,35 @@ namespace giEngineSDK {
 
    private:
 
-    //
-    gainput::InputManager m_manager;
-    //
-    gainput::InputMap * m_keyboardMap;
+     OIS::InputManager* m_inputManager = nullptr;
 
-    gainput::InputMap * m_mouseAxisMap;
+     //Devices
+     OIS::Keyboard* m_keyBoard = nullptr;
 
-    gainput::InputMap * m_mouseButtonsMap;
+     OIS::Mouse* m_mouse = nullptr;
 
-    gainput::InputMap * m_gamepadAxisMap;
+     Map<OIS::KeyCode, KEYBOARD_KEYS::E> m_keys;
 
-    gainput::InputMap * m_gamepadButtonsMap;
+     Map<OIS::MouseButtonID, MOUSE_BUTTONS::E> m_mouseKeys;
 
-    gainput::DeviceId mouseId;
+     bool
+     keyPressed(const OIS::KeyEvent& arg) override;
+     
+     bool
+     keyReleased(const OIS::KeyEvent& arg) override;
+     
+     bool
+     mouseMoved(const OIS::MouseEvent& arg) override;
+     
+     bool
+     mousePressed(const OIS::MouseEvent& arg,
+                  OIS::MouseButtonID id) override;
+     
+     bool
+     mouseReleased(const OIS::MouseEvent& arg,
+                   OIS::MouseButtonID id) override;
 
-    gainput::DeviceId keyboardId;
     
-    gainput::DeviceId padId;
   };
 
   /**

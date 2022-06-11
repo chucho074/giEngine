@@ -11,18 +11,66 @@
  * @include
  */
 #pragma once
+ /*****************************************************************************/
+ /*
+ * C type objects
+ */
+ /*****************************************************************************/
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
+#include <cstdarg>
+//#include <cmath>
+
+/*****************************************************************************/
+/*
+* Memory management
+*/
+/*****************************************************************************/
+#include <memory>
+
+/*****************************************************************************/
+/*
+* STL containers
+*/
+/*****************************************************************************/
 #include <vector>
 #include <stack>
-#include <queue>
-#include <array>
-#include <string>
-#include <list>
 #include <map>
-#include <memory>
-#include <locale>
-#include <filesystem>
+#include <string>
+#include <set>
+#include <list>
+#include <forward_list>
+#include <deque>
+#include <queue>
+#include <bitset>
+#include <array>
+#include <unordered_map>
+#include <unordered_set>
+
+/*****************************************************************************/
+/*
+* STL algorithms and functions
+*/
+/*****************************************************************************/
+#include <algorithm>
+#include <functional>
+#include <limits>
+#include <iterator>
+#include <numeric>
+
+/*****************************************************************************/
+/*
+* C++ Stream
+*/
+/*****************************************************************************/
+#include <fstream>
 #include <iostream>
-//#include <Windows.h>
+#include <iomanip>
+#include <sstream>
+#include <filesystem>
 
 namespace giEngineSDK {
   using String = std::string;
@@ -111,6 +159,9 @@ namespace giEngineSDK {
 
   //Making shared 
   using std::make_shared;
+
+  //Make pair
+  using std::make_pair;
 
   namespace fsys = std::filesystem;
 
