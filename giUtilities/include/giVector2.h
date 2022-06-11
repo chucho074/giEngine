@@ -20,7 +20,7 @@ namespace giEngineSDK {
   {
    public:
     
-    Vector2() = default;
+    Vector2();
     
     Vector2(float inX, float inY);
     
@@ -97,6 +97,16 @@ namespace giEngineSDK {
 
     float x;
     float y;
+
+    /**
+     * @brief A zero vector (0,0)
+     */
+    static const Vector2 ZERO;
+
+    /**
+     * @brief A unit vector (1,1)
+     */
+    static const Vector2 UNIT;
   
   };
 }

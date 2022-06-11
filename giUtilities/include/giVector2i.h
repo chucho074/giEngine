@@ -21,7 +21,7 @@ namespace giEngineSDK {
   {
    public:
 
-    Vector2i() = default;
+    Vector2i();
 
     Vector2i(int32 inX, int32 inY);
 
@@ -98,6 +98,16 @@ namespace giEngineSDK {
 
     int32 x;
     int32 y;
+
+    /**
+     * @brief A zero vector (0,0)
+     */
+    static const Vector2i ZERO;
+
+    /**
+     * @brief A unit vector (1,1)
+     */
+    static const Vector2i UNIT;
   
   };
   

@@ -627,7 +627,7 @@ namespace giEngineSDK {
     omniUsdLiveWaitForPendingUpdates();
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
-      //ConsoleOut << "Begin Live Edit\n";
+      ConsoleOut << "Begin Live Edit\n";
     }
 
     // Process any updates that may have happened to the stage from another client.
@@ -860,7 +860,7 @@ namespace giEngineSDK {
                     //Set positions.
                     tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
                     //Set UVs.
-                    //tmpSimpleVertexMesh.Tex = {1.f, 0.f};
+                    //tmpSimpleVertexMesh.Tex = {0.f, 0.f};
                     //Set Normals.
                     tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
 

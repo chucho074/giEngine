@@ -81,7 +81,7 @@ namespace giEngineSDK {
 
 
     bool 
-    m_liveEditActivation = true;
+    m_liveEditActivation = false;
 
     String 
     m_destinationPath;

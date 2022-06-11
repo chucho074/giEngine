@@ -183,4 +183,8 @@ class GI_CORE_EXPORT BaseApp
   BaseInput * m_inputManager = nullptr;
 
   BaseOmni * m_omniverse = nullptr;
+
+  sf::Clock m_appClock;
+
+  float m_deltaTime;
 };

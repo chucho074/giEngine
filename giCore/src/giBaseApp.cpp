@@ -43,6 +43,8 @@ BaseApp::run() {
   //App Loop.
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
+    //m_deltaTime = m_appClock.getElapsedTime().asSeconds();
+    m_deltaTime = m_appClock.restart().asSeconds();
     MSG msg;
     Event eventsWnd;
     while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
@@ -71,11 +73,10 @@ BaseApp::run() {
 
     //Update Time.
     m_time->update();
-    float deltaTime = g_time().getTime();
-
+    //float deltaTime = g_time().getTime();
 
     //Update Game Logic.
-    update(deltaTime);
+    update(m_deltaTime);
     
     m_inputManager->update();
 

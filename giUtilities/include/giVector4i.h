@@ -29,7 +29,7 @@ namespace giEngineSDK {
   {
    public:
   
-    Vector4i() = default;
+    Vector4i();
   
     Vector4i(int32 inX, int32 inY, int32 inZ, int32 inW);
 
@@ -116,6 +116,16 @@ namespace giEngineSDK {
     int32 z;
 
     int32 w;
+
+    /**
+     * @brief A zero vector (0,0,0)
+     */
+    static const Vector4i ZERO;
+
+    /**
+     * @brief A unit vector (1,1,1)
+     */
+    static const Vector4i UNIT;
   
   };
 }

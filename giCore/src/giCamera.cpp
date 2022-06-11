@@ -23,6 +23,15 @@ namespace giEngineSDK {
     
     m_up2 = m_forward.cross(m_rightVector);
     //m_up2.normalize();
+
+
+    m_front = false;
+    m_back = false;
+    m_left = false;
+    m_right = false;
+    m_up = false;
+    m_down = false;
+
   }
   
   void 

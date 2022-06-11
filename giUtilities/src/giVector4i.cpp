@@ -16,6 +16,13 @@
 
 namespace giEngineSDK {
   
+  const Vector4i Vector4i::ZERO = Vector4i(0, 0, 0, 0);
+  const Vector4i Vector4i::UNIT = Vector4i(1, 1, 1, 1);
+
+  Vector4i::Vector4i() {
+    *this = ZERO;  
+  }
+  
   Vector4i::Vector4i(int32 inX, int32 inY, int32 inZ, int32 inW)  {
     x = inX;
     y = inY;

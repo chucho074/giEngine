@@ -134,17 +134,47 @@ DirectXApp::onUpdate(float inDeltaTime) {
   if(cameraRef) {
     SharedPtr<Camera> tmpCamera = static_pointer_cast<Camera>(cameraRef);
     //Get forward input
-    tmpCamera->m_front = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kW);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kW)) {
+      tmpCamera->m_front = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kW)) {
+      tmpCamera->m_front = false;
+    }
     //Get backard input
-    tmpCamera->m_back = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kS);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kS)) {
+      tmpCamera->m_back = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kS)) {
+      tmpCamera->m_back = false;
+    }
     //Get left input
-    tmpCamera->m_left = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kA);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kA)) {
+      tmpCamera->m_left = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kA)) {
+      tmpCamera->m_left = false;
+    }
     //Get right input
-    tmpCamera->m_right = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kD);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kD)) {
+      tmpCamera->m_right = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kD)) {
+      tmpCamera->m_right = false;
+    }
     //Get up input
-    tmpCamera->m_up = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kQ);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kQ)) {
+      tmpCamera->m_up = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kQ)) {
+      tmpCamera->m_up = false;
+    }
     //Get down input
-    tmpCamera->m_down = g_inputManager().isKeyPressed(KEYBOARD_KEYS::kE);
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kE)) {
+      tmpCamera->m_down = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kE)) {
+      tmpCamera->m_down = false;
+    }
   }
 
   m_sceneGraph->update(inDeltaTime);

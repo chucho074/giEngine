@@ -1,6 +1,12 @@
 #include "giVector2.h"
 
 namespace giEngineSDK {
+  const Vector2 Vector2::ZERO = Vector2(0.f, 0.f);
+  const Vector2 Vector2::UNIT = Vector2(1.f, 1.f);
+
+  Vector2::Vector2() {
+    *this = ZERO;
+  }
 
   Vector2::Vector2(float inX, float inY) {
     x = inX;

@@ -28,7 +28,7 @@ namespace giEngineSDK {
   {
    public:
     //Default constructor
-    Matrix4() = default;
+    Matrix4();
     
     //Constructor from another matrix
     Matrix4(Matrix4 & inMatrix);
@@ -191,6 +191,9 @@ namespace giEngineSDK {
 
     static const Matrix4
     IDENTITY;
+
+    static const Matrix4
+    ZERO;
     
   };
 

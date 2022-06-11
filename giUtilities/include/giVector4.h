@@ -22,7 +22,7 @@ namespace giEngineSDK {
   {
    public:
   
-    Vector4() = default;
+    Vector4();
   
     Vector4(float inX, float inY, float inZ, float inW);
 
@@ -134,6 +134,16 @@ namespace giEngineSDK {
     float z;
     
     float w;
+
+    /**
+     * @brief A zero vector (0,0,0,0)
+     */
+    static const Vector4 ZERO;
+
+    /**
+     * @brief A unit vector (1,1,1,1)
+     */
+    static const Vector4 UNIT;
   
   };
 

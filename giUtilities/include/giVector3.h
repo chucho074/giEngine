@@ -20,7 +20,7 @@ namespace giEngineSDK {
   {
    public:
 
-    Vector3() = default;
+    Vector3();
     
     Vector3(float inX, float inY, float inZ);
     

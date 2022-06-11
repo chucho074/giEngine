@@ -15,6 +15,13 @@
 
 namespace giEngineSDK {
   
+  const Vector4 Vector4::ZERO = Vector4(0.f, 0.f, 0.f, 0.f);
+  const Vector4 Vector4::UNIT = Vector4(1.f, 1.f, 1.f, 1.f);
+  
+  Vector4::Vector4() {
+    *this = ZERO;
+  }
+
   Vector4::Vector4(float inX, float inY, float inZ, float inW) {
     x = inX;
     y = inY;

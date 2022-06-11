@@ -2,6 +2,13 @@
 
 namespace giEngineSDK {
 
+  const Vector2i Vector2i::ZERO = Vector2i(0, 0);
+  const Vector2i Vector2i::UNIT = Vector2i(1, 1);
+
+  Vector2i::Vector2i() {
+    *this = ZERO;
+  }
+
   Vector2i::Vector2i(int32 inX, int32 inY) {
     x = inX;
     y = inY;

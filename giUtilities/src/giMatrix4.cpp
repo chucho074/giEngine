@@ -17,6 +17,16 @@ namespace giEngineSDK {
                               { 0, 1, 0, 0 },
                               { 0, 0, 1, 0 },
                               { 0, 0, 0, 1 });
+  
+  const Matrix4 
+  Matrix4::ZERO = Matrix4({ 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 });
+
+  Matrix4::Matrix4() {
+    *this = ZERO;
+  }
 
   Matrix4::Matrix4(Matrix4& inMatrix) {
     m_xColumn = inMatrix.m_xColumn;

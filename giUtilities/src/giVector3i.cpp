@@ -13,6 +13,12 @@
 #include "giVector3i.h"
 
 namespace giEngineSDK {
+  const Vector3i Vector3i::ZERO = Vector3i(0, 0, 0);
+  const Vector3i Vector3i::UNIT = Vector3i(1, 1, 1);
+
+  Vector3i::Vector3i() {
+    *this = ZERO;
+  }
 
   Vector3i::Vector3i(int32 inX, int32 inY, int32 inZ) {
     x = inX;
