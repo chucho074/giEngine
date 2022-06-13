@@ -330,7 +330,6 @@ namespace giEngineSDK {
     if (0 == inOwnMesh.m_textures.size()) {
       return;
     }
-
     
     // Get the material name.
     String materialName = inMeshName;
@@ -705,7 +704,7 @@ namespace giEngineSDK {
         //ConsoleOut << "Pos: X " << tmpPos.x << " Y " << tmpPos.y << " Z " << tmpPos.z << ConsoleLine;
         //ConsoleOut << "Scale: X " << tmpScale.x << " Y " << tmpScale.y << " Z " << tmpScale.z << ConsoleLine;
 
-        // Commit the change to USD
+        // Commit the change to USD / Just to send our information to save.
         gStage->Save();
       }
     }

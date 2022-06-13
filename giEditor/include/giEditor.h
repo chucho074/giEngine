@@ -20,7 +20,7 @@ using namespace giEngineSDK;
 using namespace ImGui;
 
 /**
- * @brief      .
+ * @brief     Basic implementation of the ui for the Editor for the engine.
  */
 class Editor
 {
@@ -33,41 +33,35 @@ class Editor
   ~Editor() = default;
 
   /**
-   * @brief      .
+   * @brief      Initialize the editor UI.
    */
   void
   init(void * inHandler, Vector2 inWindowSize);
 
   /**
-   * @brief      .
+   * @brief      Update the information of the editor.
    */
   void
   update(float inDeltaTime);
 
   /**
-   * @brief      .
+   * @brief      Render the information of the editor.
    */
   void 
   render();
 
   /**
-   * @brief      .
+   * @brief      Destroy the information of the editor.
    */
   void
   destroy();
 
   /**
-   * 
+   * @brief      Detect the inputs of the editor.
    */
   void
   callBack();
 
-
-
- protected:
-
-
-	
  private:
    
    SharedPtr<UI> m_ui;
@@ -79,8 +73,6 @@ class Editor
    SharedPtr<Details> m_details;
 
    void * m_windowHandle = nullptr;
-
-
 
    bool m_touchingImGui = false;
 

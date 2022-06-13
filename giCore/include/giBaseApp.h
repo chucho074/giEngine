@@ -89,7 +89,7 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Method in charge of get the events of the window
-   * @param    
+   * @param    inMsg           The message to process.
    * @bug      No known Bugs.
    */
   virtual void 
@@ -105,7 +105,7 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Method in charge of updates the logic info.
-   * @param    inDeltaTime     .
+   * @param    inDeltaTime     The delta time.
    * @bug      No known Bugs.
    */
   void 
