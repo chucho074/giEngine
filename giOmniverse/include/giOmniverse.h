@@ -73,17 +73,11 @@ namespace giEngineSDK {
     void
     createSGFromUSD();
 
-    /**
-     * @brief    Get the data from the Scene Graph.
-     */
-    UsdGeomMesh
-    getDataFromSG();
-   
-    /**
-     * @brief    .
-     */
-    SharedPtr<Model>
-    modelFromUSD() override;
+    void
+    setTransformOp(Vector3 inData,
+                   GI_OMNI_OP::E inOp,
+                   GI_OMNI_PRECISION::E inPrecision,
+                   String omniPath) override;
 
    private:
     
@@ -127,9 +121,6 @@ namespace giEngineSDK {
           const UsdGeomXformOp::Precision precision) {
       if (!op) {
         op = xForm.AddXformOp(opType, precision);
-        std::unique_lock<std::mutex> lk(gLogMutex);
-        ConsoleOut << " Adding " 
-                   << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
       }
 
       if (op.GetPrecision() == UsdGeomXformOp::Precision::PrecisionFloat) {
@@ -138,9 +129,6 @@ namespace giEngineSDK {
       else { 
         op.Set(value);
       }
-      std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << " Setting " 
-                  << UsdGeomXformOp::GetOpTypeToken(opType) << ConsoleLine;
     }
   };
 

@@ -94,5 +94,8 @@ namespace giEngineSDK {
 
     //Textures in the mesh
     Vector<Texture> m_textures;
+
+
+    String m_omniRefPath = "";
   };
 }

@@ -13,10 +13,28 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 #include <giModule.h>
+#include <giVector3.h>
 
 
 namespace giEngineSDK {
+  
   class Model;
+
+  namespace GI_OMNI_OP {
+    enum E {
+      kTRANSLATE,
+      kROTATE,
+      kSCALE
+    };
+  }
+
+  namespace GI_OMNI_PRECISION {
+    enum E {
+      kDOUBLE,
+      kFLOAT
+    };
+  }
+
   /**
    * @class    BaseOmni.
    * @brief    .
@@ -69,6 +87,19 @@ namespace giEngineSDK {
      */
     virtual void
     createEmptyUSD(String inProjectName) { }
+
+    /**
+     * @brief 
+     * @param inData 
+     * @param inOp 
+     * @param inPrecision 
+     * @param omniPath 
+     */
+    virtual void
+    setTransformOp(Vector3 inData,
+                   GI_OMNI_OP::E inOp,
+                   GI_OMNI_PRECISION::E inPrecision,
+                   String omniPath) { }
 
     /**
      * @brief    .

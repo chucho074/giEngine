@@ -113,7 +113,7 @@ namespace giEngineSDK {
 
     Vector<Texture> m_texturesLoaded;
 
-    Transform m_transform;
+    //Transform m_transform;
 
   };
 }

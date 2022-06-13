@@ -94,5 +94,8 @@ namespace giEngineSDK {
     Transform m_transform;
 
     bool isStaticMesh = false;
+
+   public:
+    String m_omniRefPath = "";
   };
 }

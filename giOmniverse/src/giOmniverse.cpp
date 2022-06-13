@@ -488,7 +488,7 @@ namespace giEngineSDK {
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection,
                                   "Error creating the conection with NVIDIA Omniverse");
-      exit(1);
+      //exit(1);
     }
 
     //Get the instance of the SceneGraph
@@ -524,39 +524,6 @@ namespace giEngineSDK {
 
   void
   Omni::update() {
-    
-    
-    //if (!startOmniverse(m_liveEditActivation)) {
-    //  Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
-    //                              "Error creating the conection with NVIDIA Omniverse");
-    //  exit(1);
-    //}
-
-    //if (m_existingStage.empty()) {
-    //  // Create the USD model in Omniverse
-    //  const String stageUrl = createOmniverseModel(m_destinationPath);
-
-    //  m_existingStage = m_existingStage +"/scene.usd";
-    //  // Print the username for the server
-    //  printConnectedUsername(stageUrl);
-    //   
-    //  // Get the geometry from the Scene Graph
-    //  tmpMesh = getDataFromSG();
-
-    //  checkpointFile(stageUrl, "Add a Model and nothing else");
-    //}
-
-    //else {
-    //  // Find a UsdGeomMesh in the existing stage
-    //  //m_existingStage = m_existingStage +"/scene.usd";
-    //  
-    //  tmpMesh = findGeomMesh(m_existingStage);
-
-    //  //Set the information in the SG.
-
-
-    //}
-     // Do a live edit session moving the box around, changing a material.
     if (m_liveEditActivation) {
       liveEdit(findGeomMesh());
     }
@@ -575,7 +542,7 @@ namespace giEngineSDK {
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
                                   "Error creating the conection with NVIDIA Omniverse");
-      //exit(1);
+      
     }
     
     // Create the USD model in Omniverse.
@@ -583,9 +550,6 @@ namespace giEngineSDK {
 
     // Print the username for the server.
     printConnectedUsername(stageUrl);
-
-    // Get the geometry from the Scene Graph.
-    //tmpMesh = getDataFromSG();
 
     // Adding a checkpoint for the added models.
     checkpointFile(stageUrl, "Added a Model(s) from the Scene Graph existans info.");
@@ -604,9 +568,6 @@ namespace giEngineSDK {
 
     // Add a material to the box.
     getFromSG();
-    ///createMaterial(tmpMesh);
-    // Create a for where i took 1 by 1 the information of the models in the SG 
-    // and sets the correct texture in each model.
 
     // Add a Nucleus Checkpoint to the stage.
     checkpointFile(stageUrl, "Added a material to the Model(s)");
@@ -619,18 +580,11 @@ namespace giEngineSDK {
   void
   Omni::liveEdit(Vector<UsdPrim> inMesh) {
 
-
+    // Process any updates that may have happened to the stage from another client.
     auto& sgraph = SceneGraph::instance();
 
-    // Process any updates that may have happened to the stage from another client.
     omniUsdLiveWaitForPendingUpdates();
-    {
-      std::unique_lock<std::mutex> lk(gLogMutex);
-      ConsoleOut << "Begin Live Edit\n";
-    }
 
-    // Process any updates that may have happened to the stage from another client.
-    omniUsdLiveWaitForPendingUpdates();
     for (auto& prim : inMesh) {
       if (m_liveEditActivation) {
         
@@ -886,6 +840,9 @@ namespace giEngineSDK {
 
                   Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
 
+                  //Save a reference to the mesh.
+                  tmpMeshMesh.m_omniRefPath = tmpIter.GetPath().GetString();
+
                   //Set in the meshes.
                   tmpModel->m_meshes.push_back(tmpMeshMesh);
 
@@ -977,7 +934,10 @@ namespace giEngineSDK {
               texture.samplerState = gapi.createSampler(sampDesc);
               tmpTexture.push_back(texture);
               Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
-            
+              
+              //Save a reference to the mesh.
+              tmpMesh.m_omniRefPath = node.GetPath().GetString();
+
               //Set in the meshes.
               tmpModel->m_meshes.push_back(tmpMesh);
             }
@@ -987,7 +947,7 @@ namespace giEngineSDK {
             SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
             modelComponent->setModel(tmpModel);
             tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-            
+            tmpActor->m_omniRefPath = node.GetPath().GetString();
             sgraph.addActor(tmpActor, sgraph.getRoot());
 
           }
@@ -995,256 +955,55 @@ namespace giEngineSDK {
     }
   }
 
-  UsdGeomMesh
-  Omni::getDataFromSG() {
+  void 
+  Omni::setTransformOp(Vector3 inData, 
+                       GI_OMNI_OP::E inOp, 
+                       GI_OMNI_PRECISION::E inPrecision, 
+                       String omniPath) {
     
-    auto& sgraph = SceneGraph::instance();
+    UsdGeomXformable xform(gStage->GetPrimAtPath(SdfPath(omniPath)));
 
-    // Keep the model contained inside of "Root", only need to do this once per model
-    SdfPath rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(_tokens->Root);
-    UsdGeomXform::Define(gStage, rootPrimPath);
-     
-    // Create the geometry inside of "Root"
-    String boxName("model_");
-    boxName.append(std::to_string(0));
-    SdfPath modelPath = rootPrimPath.AppendChild(TfToken(boxName));
-    UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
 
-    if (!model) {
-      return model;
+    UsdGeomXformOp::Type op;
+    switch (inOp) {
+    case giEngineSDK::GI_OMNI_OP::kTRANSLATE:
+      op = UsdGeomXformOp::TypeTranslate;
+      break;
+    case giEngineSDK::GI_OMNI_OP::kROTATE:
+      op = UsdGeomXformOp::TypeRotateZYX;
+      break;
+    case giEngineSDK::GI_OMNI_OP::kSCALE:
+      op = UsdGeomXformOp::TypeScale;
+      break;
     }
 
-    // Get the model data
-    // TODO: 
-    // Get the meshes and get the data of every one and set it in a single list
-    // USDgeo = meshes
-
-    //Get the actor from the Scene Graph
-    auto tmpActor = sgraph.getActorByName("Vela");
-    //Get the Static Mesh component
-    SharedPtr<StaticMesh> tmpModelBase = static_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
-    //Get the Model
-    auto tmpModel = tmpModelBase->getModel();
-    int noMesh = 0;
-
-    for(auto actualMesh : tmpModel->m_meshes) {
-      // Create the geometry inside of "model_"
-      String boxName("mesh_");
-      boxName.append(std::to_string(noMesh));
-      SdfPath meshPath = modelPath.AppendChild(TfToken(boxName));//_tokens->box);
-      UsdGeomMesh mesh = UsdGeomMesh::Define(gStage, meshPath);
-
-      if (!mesh) {
-        return mesh;
-      }
-
-      // Set orientation
-      mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->leftHanded));
-
-      //Get the num of vertex
-      int num_vertices = actualMesh.m_vertexVector.size();
-      //Get the vertex
-      Vector<Vector3> vertex;
-      vertex.reserve(num_vertices);
-      for(int i = 0; i < num_vertices; i++) { 
-        vertex.push_back(actualMesh.m_vertexVector.at(i).Pos);
-      }
-      
-      
-      //Get the index
-      auto tmpIndex = actualMesh.m_facesList;
-      
-      //Get Normals
-      Vector<Vector3> Normals;
-      Normals.reserve(num_vertices);
-      for (int i = 0; i < num_vertices; i++) {
-        Normals.push_back(actualMesh.m_vertexVector.at(i).Nor);
-      }
-      
-      //Get UVs
-      Vector<Vector2> uvs;
-      uvs.reserve(num_vertices);
-      for (int i = 0; i < num_vertices; i++) {
-        uvs.push_back(actualMesh.m_vertexVector.at(i).Tex);
-      }
-      
-      
-      // Add all of the vertices
-      VtArray<GfVec3f> points;
-      points.resize(num_vertices);
-      for (int i = 0; i < num_vertices; i++) {
-        points[i] = GfVec3f(vertex.at(i).x, vertex.at(i).y, vertex.at(i).z);
-      }
-      mesh.CreatePointsAttr(VtValue(points));
-      
-      
-      // Calculate indices for each triangle
-      int num_indices = tmpIndex.size(); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
-      //int num_indices = HW_ARRAY_COUNT(tmpIndex); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
-      VtArray<int> vecIndices;
-      vecIndices.resize(num_indices);
-      for (int i = 0; i < num_indices; i++) {
-        vecIndices[i] = tmpIndex[i];
-      }
-      mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
-      
-      
-      // Add vertex normals
-      int num_normals = Normals.size();
-      //int num_normals = HW_ARRAY_COUNT(Normals);
-      VtArray<GfVec3f> meshNormals;
-      meshNormals.resize(num_vertices);
-      for (int i = 0; i < num_vertices; i++) {
-        meshNormals[i] = GfVec3f(Normals[i].x, Normals[i].y, Normals[i].z);
-      }
-      mesh.CreateNormalsAttr(VtValue(meshNormals));
-      
-      
-      // Add face vertex count
-      VtArray<int> faceVertexCounts;
-      faceVertexCounts.resize(num_indices * 2); // 2 Triangles per face * 6 faces
-      std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
-      mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
-      
-      
-      // Set the color on the mesh
-      UsdPrim meshPrim = mesh.GetPrim();
-      UsdAttribute displayColorAttr = mesh.CreateDisplayColorAttr();
-      {
-        VtVec3fArray valueArray;
-        GfVec3f rgbFace(0.463f, 0.725f, 0.0f);
-        valueArray.push_back(rgbFace);
-        displayColorAttr.Set(valueArray);
-      }
-      
-      
-      // Set the UV (st) values for this mesh
-      UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
-      {
-        int uv_count = uvs.size();
-        //int uv_count = HW_ARRAY_COUNT(uvs);
-        VtVec2fArray valueArray;
-        valueArray.resize(uv_count);
-        for (int i = 0; i < uv_count; ++i){
-          valueArray[i].Set(uvs[i].x, uvs[i].y);
-        }
-      
-        bool status = attr2.Set(valueArray);
-      }
-      attr2.SetInterpolation(UsdGeomTokens->vertex);
-      rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(boxName));
-      noMesh++;
+    UsdGeomXformOp::Precision pr;
+    switch (inPrecision) {
+    case giEngineSDK::GI_OMNI_PRECISION::kDOUBLE:
+      pr = UsdGeomXformOp::PrecisionDouble;
+      break;
+    case giEngineSDK::GI_OMNI_PRECISION::kFLOAT:
+      pr = UsdGeomXformOp::PrecisionFloat;
+      break;
     }
-    // Commit the changes to the USD
+
+    bool resetXformStack = false;
+    UsdGeomXformOp xformOp;
+    Vector<UsdGeomXformOp> xFormOps = xform.GetOrderedXformOps(&resetXformStack);
+
+    if (GI_OMNI_OP::kTRANSLATE == inOp) {
+      xformOp = xFormOps[0];
+    }
+    else if (GI_OMNI_OP::kROTATE == inOp) {
+      xformOp = xFormOps[1];
+    }
+    else if (GI_OMNI_OP::kSCALE == inOp) {
+      xformOp = xFormOps[2];
+    }
+
+    SetOp(xform, xformOp, op, GfVec3d(inData.x, inData.y, inData.z), pr);
+
     gStage->Save();
-    omniUsdLiveProcess();
-
-    return model;
-  }
-
-  SharedPtr<Model> 
-  Omni::modelFromUSD() {
-    
-    auto& sgraph = SceneGraph::instance();
-
-    SharedPtr<Model> tmpModel;
-    String destinationPath = "Resources/usds/battledroid.usd";
-    
-    Vector<Vector3> tmpVertexModel;
-    Vector<Vector3> tmpNormalsModel;
-    Vector<uint32>  tmpFacesModel;
-
-    //Get the USD information
-    UsdGeomMesh tmpUSDMesh;
-    
-    //Get the data of the mesh
-    //tmpUSDMesh = findGeomMesh();
-
-    //Get the information
-    UsdAttribute tmpVertex = tmpUSDMesh.GetPointsAttr();
-    UsdAttribute tmpNormals = tmpUSDMesh.GetNormalsAttr();
-    UsdAttribute tmpFaces = tmpUSDMesh.GetFaceVertexCountsAttr();
-
-    //Points
-    VtArray<GfVec3f> tmpPointArray;
-    tmpVertex.Get(&tmpPointArray);
-
-    Vector<GfVec3f> pointArray;
-
-    uint32 size = tmpPointArray.size();
-    auto tmpStart = reinterpret_cast<GfVec3f*>(tmpPointArray.data());
-    auto tmpEnd = tmpStart + size;
-    pointArray.reserve(size);
-    pointArray.insert(pointArray.end(), tmpStart, tmpEnd);
-
-    for(int i = 0; i < size; ++i) {
-      tmpVertexModel.push_back(Vector3(pointArray[i].GetArray()[0], 
-                                       pointArray[i].GetArray()[1],
-                                       pointArray[i].GetArray()[2]));
-    }
-    
-    //Normals
-    VtArray<GfVec3f> tmpNormalArray;
-    tmpNormals.Get(&tmpNormalArray);
-
-    Vector<GfVec3f> norArray;
-
-    uint32 sizeNor = tmpNormalArray.size();
-    auto tmpStartNor = reinterpret_cast<GfVec3f*>(tmpNormalArray.data());
-    auto tmpEndNor = tmpStartNor + sizeNor;
-    norArray.reserve(sizeNor);
-    norArray.insert(norArray.end(), tmpStartNor, tmpEndNor);
-
-    for (int i = 0; i < size; ++i) {
-      tmpNormalsModel.push_back(Vector3(norArray[i].GetArray()[0],
-                                        norArray[i].GetArray()[1],
-                                        norArray[i].GetArray()[2]));
-    }
-
-    //Faces
-    VtArray<GfVec3f> tmpFacesArray;
-    tmpFaces.Get(&tmpFacesArray);
-
-    Vector<GfVec3f> faceArray;
-
-    uint32 sizeFace = tmpFacesArray.size();
-    auto tmpStartFaces = reinterpret_cast<GfVec3f*>(tmpFacesArray.data());
-    auto tmpEndFaces = tmpStartFaces + sizeFace;
-    faceArray.reserve(sizeFace);
-    faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
-
-    for (int i = 0; i < size; ++i) {
-      tmpFacesModel.push_back(faceArray[i].GetArray()[0]);
-    }
-
-    //Create the mesh.
-    Vector<SimpleVertex> tmpVertexList;
-    //Set the vertex data to the Vector.
-    for (int i = 0; i < size; ++i) {
-      //Create the vertex.
-      SimpleVertex tmpSimpleVertex;
-      //Set positions.
-      tmpSimpleVertex.Pos = tmpVertexModel[i];
-      //Set UVs.
-
-      //Set Normals.
-      tmpSimpleVertex.Nor = tmpNormalsModel[i];
-
-      //Set to the list.
-      tmpVertexList.push_back(tmpSimpleVertex);
-
-    }
-
-    //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
-    Vector<Texture> tmpTexture;
-
-    Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
-
-
-    //Set in the meshes
-    tmpModel->m_meshes.push_back(tmpMesh);
-    
-    return tmpModel;
   }
 
   void
