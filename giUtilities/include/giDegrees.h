@@ -77,6 +77,6 @@ namespace giEngineSDK {
     operator>(const Degrees& inDeg) const;
      
    private:
-     float m_degreesAngle;
+    float m_degreesAngle;
   };
 }
