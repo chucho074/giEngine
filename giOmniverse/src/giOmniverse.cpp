@@ -442,8 +442,7 @@ namespace giEngineSDK {
 
     // Final step, associate the material with the face
     UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
-    usdMaterialBinding.Bind(newMat);    
-
+    usdMaterialBinding.Bind(newMat);
     // Commit the changes to the USD
     gStage->Save();
     omniUsdLiveProcess();
@@ -717,6 +716,7 @@ namespace giEngineSDK {
     Vector<Vector3> tmpVertexModel;
     Vector<Vector3> tmpNormalsModel;
     Vector<uint32>  tmpFacesModel;
+    Vector<Vector2> tmpUVsModel;
 
     // Traverse the stage and return the first UsdGeomMesh we find.
     auto range = gStage->Traverse();
@@ -757,6 +757,7 @@ namespace giEngineSDK {
                   Vector<Vector3> tmpVertexMesh;
                   Vector<Vector3> tmpNormalsMesh;
                   Vector<uint32>  tmpFacesMesh;
+                  Vector<Vector2> tmpUVsMesh;
                   //Points / Vertex.
                   UsdAttribute tmpMeshVertex = meshGeoMesh.GetPointsAttr();
                   VtArray<GfVec3f> tmpMeshPointArray;
@@ -803,6 +804,7 @@ namespace giEngineSDK {
                   Vector<int32> faceMeshArray;
 
                   uint32 sizeFaceMesh = tmpMeshFacesArray.size();
+
                   auto tmpMeshStartFaces = tmpMeshFacesArray.data();
                   auto tmpMeshEndFaces = tmpMeshStartFaces + sizeFaceMesh;
                   faceMeshArray.reserve(sizeFaceMesh);
@@ -810,6 +812,25 @@ namespace giEngineSDK {
 
                   for (int i = 0; i < sizeFaceMesh; ++i) {
                     tmpFacesMesh.push_back(faceMeshArray[i]);
+                  }
+
+
+                  //UVs
+                  auto tmpUVs = meshGeoMesh.GetPrimvar(_tokens->st);
+                  VtArray<GfVec2f> tmpMeshUVsArray;
+                  tmpUVs.Get(&tmpMeshUVsArray);
+                  uint32 tmpSizeUV = tmpMeshUVsArray.size();
+
+                  Vector<GfVec2f> uvsArrayMesh;
+
+                  auto tmpMeshStartUV = reinterpret_cast<GfVec2f*>(tmpMeshUVsArray.data());
+                  auto tmpMeshEndUV = tmpMeshStartUV + tmpSizeUV;
+                  uvsArrayMesh.reserve(tmpSizeUV);
+                  uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
+
+                  for (int i = 0; i < tmpSizeUV; ++i) {
+                    tmpUVsMesh.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
+                                                 uvsArrayMesh[i].GetArray()[1]));
                   }
 
                   //Create the mesh.
@@ -821,7 +842,7 @@ namespace giEngineSDK {
                     //Set positions.
                     tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
                     //Set UVs.
-                    //tmpSimpleVertexMesh.Tex = {0.f, 0.f};
+                    tmpSimpleVertexMesh.Tex = tmpUVsMesh[i];
                     //Set Normals.
                     tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
 
@@ -833,8 +854,18 @@ namespace giEngineSDK {
                   //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
                   Vector<Texture> tmpTextureMesh;
 
+                  //UsdShadeMaterialBindingAPI usdMaterialBinding(meshGeoMesh);
+                  //auto tmpMaterials = usdMaterialBinding.GetDirectBinding();
+                  //auto tmp = tmpMaterials.GetMaterial().GetBaseMaterial();
+                  //tmp.get
+                  //for (auto& iterMaterials : tmpMaterials) {
+                  //  String tmpPath = iterMaterials.GetMaterial().GetPath().GetString();
+                  //
+                  //}
+
                   Texture texture;
                   texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
+
                   SamplerDesc sampDesc;
                   sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
                   sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
@@ -846,6 +877,7 @@ namespace giEngineSDK {
                   texture.samplerState = gapi.createSampler(sampDesc);
                   tmpTextureMesh.push_back(texture);
 
+                  //Create the own mesh.
                   Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
 
                   //Save a reference to the mesh.
@@ -909,6 +941,24 @@ namespace giEngineSDK {
                 tmpFacesModel.push_back(faceArray[i]);
               }
               
+              //UVs
+              auto tmpUVs = geoMesh.GetPrimvar(_tokens->st);
+              VtArray<GfVec2f> tmpMeshUVsArray;
+              tmpUVs.Get(&tmpMeshUVsArray);
+              uint32 tmpSizeUV = tmpMeshUVsArray.size();
+
+              Vector<GfVec2f> uvsArrayMesh;
+
+              auto tmpMeshStartUV = reinterpret_cast<GfVec2f*>(tmpMeshUVsArray.data());
+              auto tmpMeshEndUV = tmpMeshStartUV + tmpSizeUV;
+              uvsArrayMesh.reserve(tmpSizeUV);
+              uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
+
+              for (int i = 0; i < tmpSizeUV; ++i) {
+                tmpUVsModel.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
+                                              uvsArrayMesh[i].GetArray()[1]));
+              }
+
               //Create the mesh.
               Vector<SimpleVertex> tmpVertexList;
               //Set the vertex data to the Vector.
@@ -917,8 +967,10 @@ namespace giEngineSDK {
                 SimpleVertex tmpSimpleVertex;
                 //Set positions.
                 tmpSimpleVertex.Pos = tmpVertexModel[i];
+
                 //Set UVs.
-                
+                tmpSimpleVertex.Tex = tmpUVsModel[i];
+
                 //Set Normals.
                 tmpSimpleVertex.Nor = tmpNormalsModel[i];
               

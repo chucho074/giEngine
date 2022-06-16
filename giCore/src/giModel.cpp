@@ -205,7 +205,7 @@ namespace giEngineSDK {
         vertex.Nor.y = 0.0f;
         vertex.Nor.z = 0.0f;
       }
-      //Texture
+      //Texture / UVs
       if (mesh->mTextureCoords[0]) {
         vertex.Tex.x = mesh->mTextureCoords[0][i].x;
         vertex.Tex.y = mesh->mTextureCoords[0][i].y;

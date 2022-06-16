@@ -708,6 +708,9 @@ UI::init(void* inWindow, Vector2 inWindowSize) {
 
 void
 UI::update(void* inWindow, float inDT) {
+  GI_UNREFERENCED_PARAMETER(inDT);
+  GI_UNREFERENCED_PARAMETER(inWindow);
+
   ImGui_ImplDX11_NewFrame();
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
