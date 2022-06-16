@@ -22,10 +22,7 @@
 
 namespace giEngineSDK {
 
-  void
-  getFromSG();
-
-  
+    
   // Omniverse Log callback
   static void 
   logCallback(const char* threadName,
@@ -338,7 +335,7 @@ namespace giEngineSDK {
 
     // Create a material instance for this in USD.
     TfToken materialNameToken(materialName);
-    // Make path for "/Root/Looks/Fieldstone".
+    // Make path for "/Root/Looks/MODELNAME".
     SdfPath matPath = SdfPath::AbsoluteRootPath()
                                .AppendChild(_tokens->Root)
                                .AppendChild(_tokens->Looks)
@@ -374,12 +371,6 @@ namespace giEngineSDK {
     primStShader.CreateOutput(_tokens->result, SdfValueTypeNames->Float2);
     primStShader.CreateInput(_tokens->varname, SdfValueTypeNames->Token).Set(_tokens->st);
 
-
-    //TODO:
-    // Meter en un for para todas las texturas del mesh
-    // Obtener el tipo de textura que es segun lo que soporta el motor
-    // En base a la informacion del tipo de textura, dar un string para el nombre
-    // Guardar la informacion dentro de un vector de tipo UsdShadeOutput
     String tmpTextureName;
     String tmpFileName;
     TfToken tmpTextureToken;
@@ -413,7 +404,6 @@ namespace giEngineSDK {
 
       // Create the shader.
       String tmpShaderName = materialName + tmpTextureName;
-      //String tmpFilePath = "./Materials/" + tmpFileName + ".png";
       String tmpFilePath = "./Materials" + textures.path;
       shaderPath = matPath.AppendChild(TfToken(tmpShaderName));
       UsdShadeShader tmpShader = UsdShadeShader::Define(gStage, shaderPath);
@@ -432,9 +422,27 @@ namespace giEngineSDK {
       tmpOuputShaders.push_back(tmpShaderOutput);
     }
 
+    // Create the USD Preview Surface shader
+    String usdPreviewSurfaceShaderName = materialName + "PreviewSurface";
+    shaderPath = matPath.AppendChild(TfToken(usdPreviewSurfaceShaderName));
+    UsdShadeShader usdPreviewSurfaceShader = UsdShadeShader::Define(gStage, shaderPath);
+    usdPreviewSurfaceShader.CreateIdAttr(VtValue(_tokens->UsdPreviewSurface));
+    UsdShadeInput diffuseColorInput = usdPreviewSurfaceShader.CreateInput(_tokens->diffuseColor, 
+                                                                          SdfValueTypeNames->Color3f);
+    diffuseColorInput.ConnectToSource(tmpOuputShaders[0]);
+    if (tmpOuputShaders.size() > 1) {
+      UsdShadeInput normalInput = usdPreviewSurfaceShader.CreateInput(_tokens->normal, 
+                                                                      SdfValueTypeNames->Normal3f);
+      normalInput.ConnectToSource(tmpOuputShaders[1]);
+    }
+
+    // Set the linkage between material and USD Preview surface shader
+    UsdShadeOutput usdPreviewSurfaceOutput = newMat.CreateSurfaceOutput();
+    usdPreviewSurfaceOutput.ConnectToSource(usdPreviewSurfaceShader, _tokens->surface);
+
     // Final step, associate the material with the face
     UsdShadeMaterialBindingAPI usdMaterialBinding(inUsdMesh);
-    usdMaterialBinding.Bind(newMat);
+    usdMaterialBinding.Bind(newMat);    
 
     // Commit the changes to the USD
     gStage->Save();
@@ -446,8 +454,8 @@ namespace giEngineSDK {
   createDomeLight(const String& texturePath) {
     // Construct /Root/Light path
     SdfPath lightPath = SdfPath::AbsoluteRootPath()
-      .AppendChild(_tokens->Root)
-      .AppendChild(_tokens->DomeLight);
+                                 .AppendChild(_tokens->Root)
+                                 .AppendChild(_tokens->DomeLight);
     UsdLuxDomeLight newLight = UsdLuxDomeLight::Define(gStage, lightPath);
 
     // Set the attributes
@@ -1007,7 +1015,7 @@ namespace giEngineSDK {
   }
 
   void
-  getFromSG() {
+  Omni::getFromSG() {
     auto& sgraph = SceneGraph::instance();
 
     // Keep the model contained inside of "Root", only need to do this once per model
@@ -1024,6 +1032,16 @@ namespace giEngineSDK {
         // Create the geometry inside of "Root"
         SdfPath modelPath = rootPrimPath.AppendChild(TfToken(actors->m_actorName));
         UsdGeomMesh model = UsdGeomMesh::Define(gStage, modelPath);
+        
+        //Set the reference of the model in omni.
+        actors->m_omniRefPath = modelPath.GetString();
+
+        UsdGeomXformable xform(model);
+
+        xform.AddXformOp(UsdGeomXformOp::TypeTranslate, UsdGeomXformOp::PrecisionDouble);
+        xform.AddXformOp(UsdGeomXformOp::TypeRotateZYX, UsdGeomXformOp::PrecisionFloat);
+        xform.AddXformOp(UsdGeomXformOp::TypeScale, UsdGeomXformOp::PrecisionFloat);
+
 
         if (!model) {
           return;
@@ -1041,6 +1059,15 @@ namespace giEngineSDK {
           meshName.append(std::to_string(noMesh));
           SdfPath meshPath = modelPath.AppendChild(TfToken(meshName));
           UsdGeomMesh mesh = UsdGeomMesh::Define(gStage, meshPath);
+
+          //Set the reference of the mesh in omni.
+          actualMesh.m_omniRefPath = meshPath.GetString();
+
+          UsdGeomXformable xformMesh(mesh);
+
+          xformMesh.AddXformOp(UsdGeomXformOp::TypeTranslate, UsdGeomXformOp::PrecisionDouble);
+          xformMesh.AddXformOp(UsdGeomXformOp::TypeRotateZYX, UsdGeomXformOp::PrecisionFloat);
+          xformMesh.AddXformOp(UsdGeomXformOp::TypeScale, UsdGeomXformOp::PrecisionFloat);
 
           if (!mesh) {
             return;

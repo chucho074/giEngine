@@ -73,11 +73,24 @@ namespace giEngineSDK {
     void
     createSGFromUSD();
 
+    /**
+     * @brief    Function to send the information to Omni.
+     * @param    inData        The data to set to model/mesh in omni.
+     * @param    inOp          The operation to set.
+     * @param    inPrecision   The precision of the operation.
+     * @param    omniPath      The reference path to the model/mesh of Omni.
+     */
     void
     setTransformOp(Vector3 inData,
                    GI_OMNI_OP::E inOp,
                    GI_OMNI_PRECISION::E inPrecision,
                    String omniPath) override;
+
+    /**
+     * @brief    Get the information from the SG.
+     */
+    void
+    getFromSG();
 
    private:
     
@@ -88,8 +101,11 @@ namespace giEngineSDK {
     void 
     liveEdit(Vector<UsdPrim>);
 
+
     UsdGeomMesh tmpMesh;
 
+
+    Vector<UsdGeomXformOp> m_transformXForm;
   };
 
   /**

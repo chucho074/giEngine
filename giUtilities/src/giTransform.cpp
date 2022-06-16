@@ -20,7 +20,7 @@ namespace giEngineSDK {
 
   void 
   Transform::setRotation(Quaternion inRotation) {
-    m_rotation = inRotation;
+    m_rotationQuat = inRotation;
   }
 
   void 

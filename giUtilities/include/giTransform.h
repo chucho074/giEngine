@@ -44,7 +44,9 @@ namespace giEngineSDK {
     getMatrix();
 
    public:
-    Quaternion m_rotation = Quaternion::IDENTITY;
+    Quaternion m_rotationQuat = Quaternion::IDENTITY;
+    
+    Vector3 m_rotation = Vector3::ZERO;
     
     Vector3 m_translation = Vector3::ZERO;
     

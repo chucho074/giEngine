@@ -9,7 +9,7 @@ import ::anno::version;
 import ::tex::gamma_mode;
 import ::state::normal;
 
-export material Vela_mesh_6(*)
+export material Vela_mesh_4(*)
 [[
     ::anno::display_name("Omni PBR "),
     ::anno::description("Omni PBR, supports ORM textures"),
@@ -19,7 +19,7 @@ export material Vela_mesh_6(*)
 ]]
  = ::OmniPBR::OmniPBR(
     diffuse_color_constant: color(0.200000003f, 0.200000003f, 0.200000003f),
-    diffuse_texture: texture_2d("./Vela_Plate_BaseColor.png" /* tag 2828, version 6332211 */, ::tex::gamma_srgb),
+    diffuse_texture: texture_2d("./Vela_Mechanical_BaseColor.png" /* tag 2828, version 6332211 */, ::tex::gamma_srgb),
     albedo_desaturation: 0.f,
     albedo_add: 0.f,
     albedo_brightness: 1.f,
@@ -40,7 +40,7 @@ export material Vela_mesh_6(*)
     emissive_mask_texture: texture_2d(),
     emissive_intensity: 40.f,
     bump_factor: 1.f,
-    normalmap_texture: texture_2d("./Vela_Plate_Normal.png" /* tag 2832, version 3494456508 */, ::tex::gamma_linear),
+    normalmap_texture: texture_2d("./Vela_Mechanical_Normal.png" /* tag 2832, version 3494456508 */, ::tex::gamma_linear),
     detail_bump_factor: 0.300000012f,
     detail_normalmap_texture: texture_2d(),
     project_uvw: false,
@@ -51,4 +51,4 @@ export material Vela_mesh_6(*)
     texture_scale: float2(1.f, -1.f),
     detail_texture_translate: float2(0.f),
     detail_texture_rotate: 0.f,
-    detail_texture_scale: float2(1.f, -1.f));
+    detail_texture_scale: float2(1.f));

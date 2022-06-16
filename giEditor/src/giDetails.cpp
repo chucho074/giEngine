@@ -39,7 +39,7 @@ Details::render() {
     
       ImGui::DragFloat3("Position", &sg.getSelectedActor()->m_transform.m_translation.x);
       if(ImGui::IsItemEdited()) {
-        if (g_omniverse().m_liveEditActivation) {
+        if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
           g_omniverse().setTransformOp(tmpActor->m_transform.m_translation, 
                                        GI_OMNI_OP::kTRANSLATE,
                                        GI_OMNI_PRECISION::kDOUBLE,
@@ -47,17 +47,17 @@ Details::render() {
         }
       }
       ImGui::DragFloat3("Rotation", &sg.getSelectedActor()->m_transform.m_rotation.x);
-      /*if(ImGui::IsItemEdited()) {
+      if(ImGui::IsItemEdited() && !tmpActor->m_omniRefPath.empty()) {
         if (g_omniverse().m_liveEditActivation) {
-          g_omniverse().setTransformOp(tmpActor->m_transform.m_translation, 
-                                       GI_OMNI_OP::kTRANSLATE,
-                                       GI_OMNI_PRECISION::kDOUBLE,
+          g_omniverse().setTransformOp(tmpActor->m_transform.m_rotation, 
+                                       GI_OMNI_OP::kROTATE,
+                                       GI_OMNI_PRECISION::kFLOAT,
                                        tmpActor->m_omniRefPath);
         }
-      }*/
+      }
       ImGui::DragFloat3("Scale",    &sg.getSelectedActor()->m_transform.m_scale.x);
       if(ImGui::IsItemEdited()) {
-        if (g_omniverse().m_liveEditActivation) {
+        if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
           g_omniverse().setTransformOp(tmpActor->m_transform.m_scale, 
                                        GI_OMNI_OP::kSCALE,
                                        GI_OMNI_PRECISION::kFLOAT,

@@ -89,26 +89,17 @@ namespace giEngineSDK {
     createEmptyUSD(String inProjectName) { }
 
     /**
-     * @brief 
-     * @param inData 
-     * @param inOp 
-     * @param inPrecision 
-     * @param omniPath 
+     * @brief    Set the transformation to omni.
+     * @param    inData        Vector data to save.
+     * @param    inOp          The operation to realize.
+     * @param    inPrecision   The precision of the operation.
+     * @param    omniPath      The ref path of the model to change.
      */
     virtual void
     setTransformOp(Vector3 inData,
                    GI_OMNI_OP::E inOp,
                    GI_OMNI_PRECISION::E inPrecision,
                    String omniPath) { }
-
-    /**
-     * @brief    .
-     * @return   Returns .
-     */
-    virtual SharedPtr<Model>
-    modelFromUSD() { 
-      return nullptr;
-    }
 
 
     bool 

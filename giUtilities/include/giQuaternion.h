@@ -63,7 +63,7 @@ namespace giEngineSDK {
     Matrix4
     getMatrix();
 
-    float x, y, z, w;  
+    float x, y, z, w;
 
     static const Quaternion IDENTITY;
   };

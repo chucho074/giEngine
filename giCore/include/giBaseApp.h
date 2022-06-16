@@ -141,17 +141,7 @@ class GI_CORE_EXPORT BaseApp
 
 
  public:
-  /**
-   * @brief    Method that set the events and messages for the game.
-   * @param    inHw      The HWND
-   * @param    msg       The message
-   * @param    wParam    The W Parameter
-   * @param    lParam    The L Parameter
-   * @bug      No known Bugs.
-   * @return   Returns the result of the handle event.
-   */
-  //static LRESULT CALLBACK handleWindowEvent(HWND inHw, UINT msg, WPARAM wParam, LPARAM lParam);
-
+  
   ///The Width of the window with a default size.
   uint32 m_width = EngineConfigs::s_resolution.x;
   
