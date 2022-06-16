@@ -16,6 +16,7 @@
 
 
 namespace giEngineSDK {
+  class Vector3;
   class Vector4i;
 
   class GI_UTILITY_EXPORT Vector4
@@ -29,6 +30,8 @@ namespace giEngineSDK {
     Vector4(Vector4i inVect);
   
     Vector4(Vector4& inVect);
+
+    Vector4(Vector3 inVect, float inScalar);
   
     ~Vector4();
   
@@ -126,6 +129,7 @@ namespace giEngineSDK {
     
     float
     magnitude();
+
 
     float x;
 

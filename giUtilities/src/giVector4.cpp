@@ -11,6 +11,7 @@
  * @include
  */
 #include "giVector4.h"
+#include "giVector3.h"
 #include "giVector4i.h"
 
 namespace giEngineSDK {
@@ -34,6 +35,13 @@ namespace giEngineSDK {
     y = float(inVect.y);
     z = float(inVect.w);
     w = float(inVect.z);
+  }
+
+  Vector4::Vector4(Vector3 inVect, float inScalar) {
+    x = float(inVect.x);
+    y = float(inVect.y);
+    z = float(inVect.z);
+    w = inScalar;
   }
   
   Vector4::Vector4(Vector4& inVect) {

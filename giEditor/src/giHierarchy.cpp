@@ -77,8 +77,8 @@ Hierarchy::renderNodeWithChilds(SharedPtr<SceneNode> inNode) {
     for (auto child : inNode->m_childs) {
       evaluateNode(inNode);
     }
+    ImGui::TreePop();
   }
-  ImGui::TreePop();
   if (ImGui::IsItemClicked()) {
     sg.setSelectedActor(inNode->m_actor);
   }
@@ -89,12 +89,14 @@ void
 Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
   auto& sg = SceneGraph::instance();
   //Create a leaf
-  ImGui::TreeNodeEx((void*)(intptr_t)inNode->m_actor->m_actorId, 
+  if(ImGui::TreeNodeEx((void*)(intptr_t)inNode->m_actor->m_actorId, 
                         m_leafFlags, 
-                        inNode->m_actor->m_actorName.c_str());
+                        inNode->m_actor->m_actorName.c_str())){
     
-  if (ImGui::IsItemClicked()) {
-    sg.setSelectedActor(inNode->m_actor);
+
+    if (ImGui::IsItemClicked()) {
+      sg.setSelectedActor(inNode->m_actor);
+    }
   }
  
 }

@@ -35,31 +35,50 @@ ContentBrowser::render() {
   ImGui::Begin("Content Browser", nullptr, m_windowFlags);
 
   //Back Button
-  if (m_currentDirectory != m_workingDirectory) {
+  if (m_workingDirectory.string() != m_currentDirectory.string()) {
     if (ImGui::Button("<-")) {
       m_currentDirectory = m_currentDirectory.parent_path();
     }
   }
 
+  static float tmpPadding = 16.0f;
+  static float tmpThumbnailSize = 256;
+  float tmpCellSize = tmpThumbnailSize + tmpPadding;
+  float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
+  int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
+
+  ImGui::Columns(tmpColumnCount, 0, false);
+
   //Iterate in directory
-  for (auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
+  for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
 
     const auto& tmpPath = tmpIterator.path();
     auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
-    String relativePathString = tmpPath.string();
+    String relativePathString = relativePath.filename().string();
+
+    ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize });
+    ImGui::Text(relativePathString.c_str());
     //Show Folders
     if (tmpIterator.is_directory()) {
-      if (ImGui::Button(relativePathString.c_str())) {
+      /*if (ImGui::Button(relativePathString.c_str())) {
         m_currentDirectory /= tmpPath.filename();
-      }
+      }*/
     }
     //Show files
     else {
-      if (ImGui::Button(relativePathString.c_str())) {
-        
-      }
+      /*if (ImGui::Button(relativePathString.c_str())) {
+
+      }*/
     }
+    ImGui::NextColumn();
+
   }
+
+  ImGui::Columns(1);
+  
+  //Status bar
+  ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 256);
+  ImGui::SliderFloat("Padding", &tmpPadding, 0, 32);
 
   ImGui::End();
 }

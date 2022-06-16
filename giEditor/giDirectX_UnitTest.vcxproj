@@ -37,6 +37,7 @@
     <ClInclude Include="include\giDetails.h" />
     <ClInclude Include="include\giDXApp.h" />
     <ClInclude Include="include\giEditor.h" />
+    <ClInclude Include="include\giEditorConfigs.h" />
     <ClInclude Include="include\giHierarchy.h" />
     <ClInclude Include="include\giImGui.h" />
   </ItemGroup>

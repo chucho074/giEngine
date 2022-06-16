@@ -74,5 +74,8 @@
     <ClInclude Include="include\giDetails.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\giEditorConfigs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

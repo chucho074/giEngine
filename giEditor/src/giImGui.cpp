@@ -665,7 +665,6 @@
 #include "giImGui.h"
 #include <giBaseGraphicsAPI.h>
 #include <giBaseInput.h>
-
 using namespace giEngineSDK;
 using namespace ImGui;
 
@@ -700,7 +699,7 @@ UI::init(void* inWindow, Vector2 inWindowSize) {
                       (ID3D11DeviceContext*)g_graphicsAPI().getDeviceContext());
 
   //Change font path to engine settings
-  //io.Fonts->AddFontFromFileTTF("data/misc/fonts/CoD.otf", 16.0f);
+  io.Fonts->AddFontFromFileTTF("Resources/Fonts/Inter-Regular.ttf", 15.0f);
 
   m_text.resize(500);
   m_size = 100.0f;
@@ -862,4 +861,5 @@ embraceTheDarkness() {
   style.GrabRounding = 3;
   style.LogSliderDeadzone = 4;
   style.TabRounding = 4;
+  style.WindowMenuButtonPosition = ImGuiDir_None;
 }

@@ -21,7 +21,7 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_ui->init(inHandler, inWindowSize);
 
   //m_contentBrowser.reset(new ContentBrowser(EngineConfigs::s_projectPath));
-  m_contentBrowser.reset(new ContentBrowser("G:/Dev/giTestProject/"));
+  m_contentBrowser.reset(new ContentBrowser("G:/Dev/giTestProject"));
 
   m_hierarchy.reset(new Hierarchy());
 
