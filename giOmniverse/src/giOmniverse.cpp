@@ -754,244 +754,19 @@ namespace giEngineSDK {
                   ConsoleOut << "Found a mesh in: " << node.GetName() << " named: " 
                              << tmpIter.GetName() << ConsoleLine;
 
-                  Vector<Vector3> tmpVertexMesh;
-                  Vector<Vector3> tmpNormalsMesh;
-                  Vector<uint32>  tmpFacesMesh;
-                  Vector<Vector2> tmpUVsMesh;
-                  //Points / Vertex.
-                  UsdAttribute tmpMeshVertex = meshGeoMesh.GetPointsAttr();
-                  VtArray<GfVec3f> tmpMeshPointArray;
-                  tmpMeshVertex.Get(&tmpMeshPointArray);
-
-                  Vector<GfVec3f> pointMeshArray;
-
-                  uint32 sizeMesh = tmpMeshPointArray.size();
-                  auto tmpMeshStart = reinterpret_cast<GfVec3f*>(tmpMeshPointArray.data());
-                  auto tmpMeshEnd = tmpMeshStart + sizeMesh;
-                  pointMeshArray.reserve(sizeMesh);
-                  pointMeshArray.insert(pointMeshArray.end(), tmpMeshStart, tmpMeshEnd);
-
-                  for (int i = 0; i < sizeMesh; ++i) {
-                    tmpVertexMesh.push_back(Vector3(pointMeshArray[i].GetArray()[0],
-                                                    pointMeshArray[i].GetArray()[1],
-                                                    pointMeshArray[i].GetArray()[2]));
-                  }
-
-                  //Normals.
-                  UsdAttribute tmpMeshNormals = meshGeoMesh.GetNormalsAttr();
-                  VtArray<GfVec3f> tmpMeshNormalArray;
-                  tmpMeshNormals.Get(&tmpMeshNormalArray);
-
-                  Vector<GfVec3f> norArrayMesh;
-
-                  uint32 sizeNorMesh = tmpMeshNormalArray.size();
-                  auto tmpMeshStartNor = reinterpret_cast<GfVec3f*>(tmpMeshNormalArray.data());
-                  auto tmpMeshEndNor = tmpMeshStartNor + sizeNorMesh;
-                  norArrayMesh.reserve(sizeNorMesh);
-                  norArrayMesh.insert(norArrayMesh.end(), tmpMeshStartNor, tmpMeshEndNor);
-
-                  for (int i = 0; i < sizeMesh; ++i) {
-                    tmpNormalsMesh.push_back(Vector3(norArrayMesh[i].GetArray()[0],
-                                                     norArrayMesh[i].GetArray()[1],
-                                                     norArrayMesh[i].GetArray()[2]));
-                  }
-
-                  //Faces.
-                  UsdAttribute tmpMeshFaces = meshGeoMesh.GetFaceVertexIndicesAttr();
-                  VtArray<int32> tmpMeshFacesArray;
-                  tmpMeshFaces.Get(&tmpMeshFacesArray);
-
-                  Vector<int32> faceMeshArray;
-
-                  uint32 sizeFaceMesh = tmpMeshFacesArray.size();
-
-                  auto tmpMeshStartFaces = tmpMeshFacesArray.data();
-                  auto tmpMeshEndFaces = tmpMeshStartFaces + sizeFaceMesh;
-                  faceMeshArray.reserve(sizeFaceMesh);
-                  faceMeshArray.insert(faceMeshArray.end(), tmpMeshStartFaces, tmpMeshEndFaces);
-
-                  for (int i = 0; i < sizeFaceMesh; ++i) {
-                    tmpFacesMesh.push_back(faceMeshArray[i]);
-                  }
-
-
-                  //UVs
-                  auto tmpUVs = meshGeoMesh.GetPrimvar(_tokens->st);
-                  VtArray<GfVec2f> tmpMeshUVsArray;
-                  tmpUVs.Get(&tmpMeshUVsArray);
-                  uint32 tmpSizeUV = tmpMeshUVsArray.size();
-
-                  Vector<GfVec2f> uvsArrayMesh;
-
-                  auto tmpMeshStartUV = reinterpret_cast<GfVec2f*>(tmpMeshUVsArray.data());
-                  auto tmpMeshEndUV = tmpMeshStartUV + tmpSizeUV;
-                  uvsArrayMesh.reserve(tmpSizeUV);
-                  uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
-
-                  for (int i = 0; i < tmpSizeUV; ++i) {
-                    tmpUVsMesh.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
-                                                 uvsArrayMesh[i].GetArray()[1]));
-                  }
-
-                  //Create the mesh.
-                  Vector<SimpleVertex> tmpVertexListMesh;
-                  //Set the vertex data to the Vector.
-                  for (int i = 0; i < sizeMesh; ++i) {
-                    //Create the vertex.
-                    SimpleVertex tmpSimpleVertexMesh;
-                    //Set positions.
-                    tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
-                    //Set UVs.
-                    tmpSimpleVertexMesh.Tex = tmpUVsMesh[i];
-                    //Set Normals.
-                    tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
-
-                    //Set to the list.
-                    tmpVertexListMesh.push_back(tmpSimpleVertexMesh);
-
-                  }
-
-                  //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
-                  Vector<Texture> tmpTextureMesh;
-
-
-                  Texture texture;
-                  texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
-
-                  SamplerDesc sampDesc;
-                  sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
-                  sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-                  sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-                  sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-                  sampDesc.comparisonFunc = 1;
-                  sampDesc.minLOD = 0;
-                  sampDesc.maxLOD = 3.402823466e+38f;
-                  texture.samplerState = gapi.createSampler(sampDesc);
-                  tmpTextureMesh.push_back(texture);
-
-                  //Create the own mesh.
-                  Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
-
-                  //Save a reference to the mesh.
-                  tmpMeshMesh.m_omniRefPath = tmpIter.GetPath().GetString();
-
+                  //Create the mesh
                   //Set in the meshes.
-                  tmpModel->m_meshes.push_back(tmpMeshMesh);
+                  tmpModel->m_meshes.push_back(createMeshFromGeoMesh(meshGeoMesh, 
+                                                                     tmpIter.GetPath().GetString()));
 
                 }
               }
             }
             else {
-              //Case of just a model without multiple meshes
-              Vector<GfVec3f> pointArray;
               
-              uint32 size = tmpPointArray.size();
-              auto tmpStart = reinterpret_cast<GfVec3f*>(tmpPointArray.data());
-              auto tmpEnd = tmpStart + size;
-              pointArray.reserve(size);
-              pointArray.insert(pointArray.end(), tmpStart, tmpEnd);
-              
-              for (int i = 0; i < size; ++i) {
-              tmpVertexModel.push_back(Vector3(pointArray[i].GetArray()[0],
-                                               pointArray[i].GetArray()[1],
-                                               pointArray[i].GetArray()[2]));
-              }
-              
-              //Normals.
-              UsdAttribute tmpNormals = geoMesh.GetNormalsAttr();
-              VtArray<GfVec3f> tmpNormalArray;
-              tmpNormals.Get(&tmpNormalArray);
-              
-              Vector<GfVec3f> norArray;
-              
-              uint32 sizeNor = tmpNormalArray.size();
-              auto tmpStartNor = reinterpret_cast<GfVec3f*>(tmpNormalArray.data());
-              auto tmpEndNor = tmpStartNor + sizeNor;
-              norArray.reserve(sizeNor);
-              norArray.insert(norArray.end(), tmpStartNor, tmpEndNor);
-              
-              for (int i = 0; i < size; ++i) {
-                tmpNormalsModel.push_back(Vector3(norArray[i].GetArray()[0],
-                                                  norArray[i].GetArray()[1],
-                                                  norArray[i].GetArray()[2]));
-              }
-              
-              //Faces.
-              UsdAttribute tmpFaces = geoMesh.GetFaceVertexIndicesAttr();
-              VtArray<int32> tmpFacesArray;
-              tmpFaces.Get(&tmpFacesArray);
-              
-              Vector<int32> faceArray;
-              
-              uint32 sizeFace = tmpFacesArray.size();
-              auto tmpStartFaces = tmpFacesArray.data();
-              auto tmpEndFaces = tmpStartFaces + sizeFace;
-              faceArray.reserve(sizeFace);
-              faceArray.insert(faceArray.end(), tmpStartFaces, tmpEndFaces);
-              
-              for (int i = 0; i < sizeFace; ++i) {
-                tmpFacesModel.push_back(faceArray[i]);
-              }
-              
-              //UVs
-              auto tmpUVs = geoMesh.GetPrimvar(_tokens->st);
-              VtArray<GfVec2f> tmpMeshUVsArray;
-              tmpUVs.Get(&tmpMeshUVsArray);
-              uint32 tmpSizeUV = tmpMeshUVsArray.size();
-
-              Vector<GfVec2f> uvsArrayMesh;
-
-              auto tmpMeshStartUV = reinterpret_cast<GfVec2f*>(tmpMeshUVsArray.data());
-              auto tmpMeshEndUV = tmpMeshStartUV + tmpSizeUV;
-              uvsArrayMesh.reserve(tmpSizeUV);
-              uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
-
-              for (int i = 0; i < tmpSizeUV; ++i) {
-                tmpUVsModel.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
-                                              uvsArrayMesh[i].GetArray()[1]));
-              }
-
-              //Create the mesh.
-              Vector<SimpleVertex> tmpVertexList;
-              //Set the vertex data to the Vector.
-              for (int i = 0; i < size; ++i) {
-                //Create the vertex.
-                SimpleVertex tmpSimpleVertex;
-                //Set positions.
-                tmpSimpleVertex.Pos = tmpVertexModel[i];
-
-                //Set UVs.
-                tmpSimpleVertex.Tex = tmpUVsModel[i];
-
-                //Set Normals.
-                tmpSimpleVertex.Nor = tmpNormalsModel[i];
-              
-                //Set to the list.
-                tmpVertexList.push_back(tmpSimpleVertex);
-
-              }
-
-              //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
-              Vector<Texture> tmpTexture;
-              Texture texture;
-              texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
-              SamplerDesc sampDesc;
-              sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
-              sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-              sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-              sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-              sampDesc.comparisonFunc = 1;
-              sampDesc.minLOD = 0;
-              sampDesc.maxLOD = 3.402823466e+38f;
-              texture.samplerState = gapi.createSampler(sampDesc);
-              tmpTexture.push_back(texture);
-              Mesh tmpMesh(tmpVertexList, tmpFacesModel, tmpTexture);
-              
-              //Save a reference to the mesh.
-              tmpMesh.m_omniRefPath = node.GetPath().GetString();
-
               //Set in the meshes.
-              tmpModel->m_meshes.push_back(tmpMesh);
+              tmpModel->m_meshes.push_back(createMeshFromGeoMesh(geoMesh, 
+                                                                 node.GetPath().GetString()));
             }
             
             //Set the actor model to the Root in SG.
@@ -1005,6 +780,135 @@ namespace giEngineSDK {
           }
       }
     }
+  }
+
+  Mesh 
+  Omni::createMeshFromGeoMesh(UsdGeomMesh inMesh, String inPath) {
+    auto& gapi = g_graphicsAPI();
+
+    Vector<Vector3> tmpVertexMesh;
+    Vector<Vector3> tmpNormalsMesh;
+    Vector<uint32>  tmpFacesMesh;
+    Vector<Vector2> tmpUVsMesh;
+
+    //Points / Vertex.
+    UsdAttribute tmpMeshVertex = inMesh.GetPointsAttr();
+    VtArray<GfVec3f> tmpMeshPointArray;
+    tmpMeshVertex.Get(&tmpMeshPointArray);
+
+    Vector<GfVec3f> pointMeshArray;
+
+    uint32 sizeMesh = tmpMeshPointArray.size();
+    auto tmpMeshStart = reinterpret_cast<GfVec3f*>(tmpMeshPointArray.data());
+    auto tmpMeshEnd = tmpMeshStart + sizeMesh;
+    pointMeshArray.reserve(sizeMesh);
+    pointMeshArray.insert(pointMeshArray.end(), tmpMeshStart, tmpMeshEnd);
+
+    for (int i = 0; i < sizeMesh; ++i) {
+      tmpVertexMesh.push_back(Vector3(pointMeshArray[i].GetArray()[0],
+        pointMeshArray[i].GetArray()[1],
+        pointMeshArray[i].GetArray()[2]));
+    }
+
+    //Normals.
+    UsdAttribute tmpMeshNormals = inMesh.GetNormalsAttr();
+    VtArray<GfVec3f> tmpMeshNormalArray;
+    tmpMeshNormals.Get(&tmpMeshNormalArray);
+
+    Vector<GfVec3f> norArrayMesh;
+
+    uint32 sizeNorMesh = tmpMeshNormalArray.size();
+    auto tmpMeshStartNor = reinterpret_cast<GfVec3f*>(tmpMeshNormalArray.data());
+    auto tmpMeshEndNor = tmpMeshStartNor + sizeNorMesh;
+    norArrayMesh.reserve(sizeNorMesh);
+    norArrayMesh.insert(norArrayMesh.end(), tmpMeshStartNor, tmpMeshEndNor);
+
+    for (int i = 0; i < sizeMesh; ++i) {
+      tmpNormalsMesh.push_back(Vector3(norArrayMesh[i].GetArray()[0],
+        norArrayMesh[i].GetArray()[1],
+        norArrayMesh[i].GetArray()[2]));
+    }
+
+    //Faces.
+    UsdAttribute tmpMeshFaces = inMesh.GetFaceVertexIndicesAttr();
+    VtArray<int32> tmpMeshFacesArray;
+    tmpMeshFaces.Get(&tmpMeshFacesArray);
+
+    Vector<int32> faceMeshArray;
+
+    uint32 sizeFaceMesh = tmpMeshFacesArray.size();
+
+    auto tmpMeshStartFaces = tmpMeshFacesArray.data();
+    auto tmpMeshEndFaces = tmpMeshStartFaces + sizeFaceMesh;
+    faceMeshArray.reserve(sizeFaceMesh);
+    faceMeshArray.insert(faceMeshArray.end(), tmpMeshStartFaces, tmpMeshEndFaces);
+
+    for (int i = 0; i < sizeFaceMesh; ++i) {
+      tmpFacesMesh.push_back(faceMeshArray[i]);
+    }
+
+
+    //UVs
+    auto tmpUVs = inMesh.GetPrimvar(_tokens->st);
+    VtArray<GfVec2f> tmpMeshUVsArray;
+    tmpUVs.Get(&tmpMeshUVsArray);
+    uint32 tmpSizeUV = tmpMeshUVsArray.size();
+
+    Vector<GfVec2f> uvsArrayMesh;
+
+    auto tmpMeshStartUV = reinterpret_cast<GfVec2f*>(tmpMeshUVsArray.data());
+    auto tmpMeshEndUV = tmpMeshStartUV + tmpSizeUV;
+    uvsArrayMesh.reserve(tmpSizeUV);
+    uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
+
+    for (int i = 0; i < tmpSizeUV; ++i) {
+      tmpUVsMesh.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
+        uvsArrayMesh[i].GetArray()[1]));
+    }
+
+    //Create the mesh.
+    Vector<SimpleVertex> tmpVertexListMesh;
+    //Set the vertex data to the Vector.
+    for (int i = 0; i < sizeMesh; ++i) {
+      //Create the vertex.
+      SimpleVertex tmpSimpleVertexMesh;
+      //Set positions.
+      tmpSimpleVertexMesh.Pos = tmpVertexMesh[i];
+      //Set UVs.
+      tmpSimpleVertexMesh.Tex = tmpUVsMesh[i];
+      //Set Normals.
+      tmpSimpleVertexMesh.Nor = tmpNormalsMesh[i];
+
+      //Set to the list.
+      tmpVertexListMesh.push_back(tmpSimpleVertexMesh);
+
+    }
+
+    //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
+    Vector<Texture> tmpTextureMesh;
+
+
+    Texture texture;
+    texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
+
+    SamplerDesc sampDesc;
+    sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+    sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+    sampDesc.comparisonFunc = 1;
+    sampDesc.minLOD = 0;
+    sampDesc.maxLOD = 3.402823466e+38f;
+    texture.samplerState = gapi.createSampler(sampDesc);
+    tmpTextureMesh.push_back(texture);
+
+    //Create the own mesh.
+    Mesh tmpMeshMesh(tmpVertexListMesh, tmpFacesMesh, tmpTextureMesh);
+
+    //Save a reference to the mesh.
+    tmpMeshMesh.m_omniRefPath = inPath;
+
+    
   }
 
   void 
