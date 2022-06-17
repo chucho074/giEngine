@@ -854,14 +854,6 @@ namespace giEngineSDK {
                   //TODO: Read the textures binded in the model and charge it from memory.      \\\\\\\\\\\\\\\\\\*
                   Vector<Texture> tmpTextureMesh;
 
-                  //UsdShadeMaterialBindingAPI usdMaterialBinding(meshGeoMesh);
-                  //auto tmpMaterials = usdMaterialBinding.GetDirectBinding();
-                  //auto tmp = tmpMaterials.GetMaterial().GetBaseMaterial();
-                  //tmp.get
-                  //for (auto& iterMaterials : tmpMaterials) {
-                  //  String tmpPath = iterMaterials.GetMaterial().GetPath().GetString();
-                  //
-                  //}
 
                   Texture texture;
                   texture.texture = gapi.TextureFromFile("/missingTexture.png", "Resources/");
@@ -1072,7 +1064,6 @@ namespace giEngineSDK {
 
     // Keep the model contained inside of "Root", only need to do this once per model
     SdfPath rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(_tokens->Root);
-    UsdGeomXform::Define(gStage, rootPrimPath);
 
     //Get the actor from the Scene Graph
     Vector<SharedPtr<Actor>> tmpActors = sgraph.getActorsFromRoot();
@@ -1126,7 +1117,7 @@ namespace giEngineSDK {
           }
 
           // Set orientation
-          mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->leftHanded));
+          mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->rightHanded));
 
           //Get the num of vertex
           int32 num_vertices = actualMesh.m_vertexVector.size();
@@ -1157,7 +1148,7 @@ namespace giEngineSDK {
           // Add all of the vertices
           VtArray<GfVec3f> points;
           points.resize(num_vertices);
-          for (int32 i = 0; i < num_vertices; i++) {
+          for (int32 i = 0; i < num_vertices; ++i) {
             points[i] = GfVec3f(vertex.at(i).x, vertex.at(i).y, vertex.at(i).z);
           }
           mesh.CreatePointsAttr(VtValue(points));
@@ -1166,7 +1157,7 @@ namespace giEngineSDK {
           int32 num_indices = tmpIndex.size(); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
           VtArray<int32> vecIndices;
           vecIndices.resize(num_indices);
-          for (int32 i = 0; i < num_indices; i++) {
+          for (int32 i = 0; i < num_indices; ++i) {
             vecIndices[i] = tmpIndex[i];
           }
           mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
@@ -1175,14 +1166,15 @@ namespace giEngineSDK {
           int32 num_normals = Normals.size();
           VtArray<GfVec3f> meshNormals;
           meshNormals.resize(num_vertices);
-          for (int32 i = 0; i < num_vertices; i++) {
+          for (int32 i = 0; i < num_vertices; ++i) {
             meshNormals[i] = GfVec3f(Normals[i].x, Normals[i].y, Normals[i].z);
           }
           mesh.CreateNormalsAttr(VtValue(meshNormals));
 
           // Add face vertex count
           VtArray<int32> faceVertexCounts;
-          faceVertexCounts.resize(num_indices * 2); // 2 Triangles per face * 6 faces
+          //faceVertexCounts.resize(num_indices * 2); // 2 Triangles per face * 6 faces
+          faceVertexCounts.resize(num_indices / 3); // 2 Triangles per face * 6 faces
           std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
           mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
 
