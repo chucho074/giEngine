@@ -74,6 +74,14 @@ namespace giEngineSDK {
     createSGFromUSD();
 
     /**
+     * @brief    Creates a mesh with the information of a GeoMesh.
+     * @param    inMesh        USD data obtained.
+     * @param    inPath        The reference path for the mesh.
+     */
+    Mesh
+    createMeshFromGeoMesh(UsdGeomMesh inMesh, String inPath);
+
+    /**
      * @brief    Function to send the information to Omni.
      * @param    inData        The data to set to model/mesh in omni.
      * @param    inOp          The operation to set.

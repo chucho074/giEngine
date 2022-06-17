@@ -22,6 +22,8 @@ ContentBrowser::ContentBrowser(Path inWorkingDir) {
 void
 ContentBrowser::init() {
   m_windowFlags |= ImGuiWindowFlags_NoCollapse;
+
+  //Texture2D::Create
 }
 
 void 
@@ -42,7 +44,7 @@ ContentBrowser::render() {
   }
 
   static float tmpPadding = 16.0f;
-  static float tmpThumbnailSize = 256;
+  static float tmpThumbnailSize = 100;
   float tmpCellSize = tmpThumbnailSize + tmpPadding;
   float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
   int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
@@ -56,20 +58,22 @@ ContentBrowser::render() {
     auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
     String relativePathString = relativePath.filename().string();
 
-    ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize });
-    ImGui::Text(relativePathString.c_str());
+    
+    //if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left));
+
     //Show Folders
-    if (tmpIterator.is_directory()) {
-      /*if (ImGui::Button(relativePathString.c_str())) {
+    if (ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize })) {
+      if (tmpIterator.is_directory()) {
         m_currentDirectory /= tmpPath.filename();
-      }*/
+      }
     }
+    ImGui::Text(relativePathString.c_str());
     //Show files
-    else {
+    //else {
       /*if (ImGui::Button(relativePathString.c_str())) {
 
       }*/
-    }
+    //}
     ImGui::NextColumn();
 
   }
