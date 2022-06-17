@@ -1,4 +1,4 @@
-![ ](https://github.com/chucho074/giEngine/blob/testMersh/doc/images/Logo%20giEngineName.png)
+![ ](https://github.com/chucho074/giEngine/blob/dev_omniverse/doc/images/Logo%20giEngineName.png)
 
 ## Dependencies
 **User interface**
