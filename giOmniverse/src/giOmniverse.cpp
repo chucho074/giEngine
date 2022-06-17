@@ -1173,7 +1173,6 @@ namespace giEngineSDK {
 
           // Add face vertex count
           VtArray<int32> faceVertexCounts;
-          //faceVertexCounts.resize(num_indices * 2); // 2 Triangles per face * 6 faces
           faceVertexCounts.resize(num_indices / 3); // 2 Triangles per face * 6 faces
           std::fill(faceVertexCounts.begin(), faceVertexCounts.end(), 3);
           mesh.CreateFaceVertexCountsAttr(VtValue(faceVertexCounts));
@@ -1204,7 +1203,7 @@ namespace giEngineSDK {
           rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(meshName));
           noMesh++;
 
-          createMaterial(mesh, actualMesh, actors->m_actorName + "_" + meshName);
+          //createMaterial(mesh, actualMesh, actors->m_actorName + "_" + meshName);
 
         }
       }
