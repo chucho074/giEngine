@@ -15,9 +15,8 @@
 #include "giStaticMesh.h"
 #include <giSceneGraph.h>
 #include <giBaseGraphicsAPI.h>
-#include <giMath.h>
-#include <giVector3.h>
 #include <giTransform.h>
+#include <giSceneGraph.h>
 //#include "giMesh.h"
 
 namespace giEngineSDK {
@@ -225,49 +224,8 @@ namespace giEngineSDK {
 
   // Opens an existing stage and finds the first UsdGeomMesh
   static Vector<UsdPrim>
-  findGeomMesh(/*const String& existingStage*/) {
-    
-    //omniUsdLiveWaitForPendingUpdates();
-    //// Open this file from Omniverse
-    ////gStage = UsdStage::Open(existingStage);
-    //if (!gStage) {
-    //  failNotify("Failure to open stage in Omniverse:", existingStage.c_str());
-
-    //  g_logger().SetError(ERROR_TYPE::kOmniConnection,
-    //                      "Failure to open stage in Omniverse:" + existingStage);
-    //  return UsdGeomMesh();
-    //}
-
-    //{
-    //  std::unique_lock<std::mutex> lk(gLogMutex);
-    //  ConsoleOut << "Existing stage opened: " << existingStage << ConsoleLine;
-    //}
-
-    //if (UsdGeomTokens->y != UsdGeomGetStageUpAxis(gStage)) {
-    //  std::unique_lock<std::mutex> lk(gLogMutex);
-    //  ConsoleOut << "Stage is not Y-up so live xform edits will be incorrect.  Stage is " 
-    //             << UsdGeomGetStageUpAxis(gStage) << "-up" << ConsoleLine;
-    //}
-
-    //// Traverse the stage and return the first UsdGeomMesh we find
-    //auto range = gStage->Traverse();
-    //for (const auto& node : range) {
-    //  if (node.IsA<UsdGeomMesh>()) {
-    //    {
-    //      std::unique_lock<std::mutex> lk(gLogMutex);
-    //      ConsoleOut << "Found UsdGeomMesh: " << node.GetName() << ConsoleLine;
-    //    }
-    //    return UsdGeomMesh(node);
-    //  }
-    //}
-
-    //// No UsdGeomMesh found in stage.
-    //// (what kind of stage is this anyway!?) - idk man, just in case.
-    //ConsoleOut << "ERROR: No UsdGeomMesh found in stage: " << existingStage << ConsoleLine;
-    //g_logger().SetError(ERROR_TYPE::kOmniConnection,
-    //                    "ERROR: No UsdGeomMesh found in stage: " + existingStage);
-    //return UsdGeomMesh();
-
+  findGeomMesh() {
+   
     omniUsdLiveWaitForPendingUpdates();
     Vector<UsdPrim> geomMeshes;
     auto range = gStage->Traverse();
@@ -279,7 +237,6 @@ namespace giEngineSDK {
       }
     }
     return geomMeshes;
-
 
   }
 
@@ -495,7 +452,6 @@ namespace giEngineSDK {
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection,
                                   "Error creating the conection with NVIDIA Omniverse");
-      //exit(1);
     }
 
     //Get the instance of the SceneGraph
@@ -908,6 +864,7 @@ namespace giEngineSDK {
     //Save a reference to the mesh.
     tmpMeshMesh.m_omniRefPath = inPath;
 
+    return tmpMeshMesh;
     
   }
 

@@ -104,6 +104,12 @@ class GI_CORE_EXPORT BaseApp
   createWindow();
 
   /**
+   * @brief    Method in charge of the creation of the information.
+   */
+  void
+  create();
+
+  /**
    * @brief    Method in charge of updates the logic info.
    * @param    inDeltaTime     The delta time.
    * @bug      No known Bugs.
@@ -117,13 +123,19 @@ class GI_CORE_EXPORT BaseApp
    */
   void 
   render();
+
+  /**
+   * @brief    Method in charge of destroy the information used.
+   */
+  void
+  destroy();
   
   /**
    * @brief    Method that draw the information Not Modified Func.
    * @bug      No known Bugs.
    */
   void 
-  event(MSG inMsg);
+  processEvent(MSG inMsg);
 
   /**
    * @brief    Method that initialize the modules and plug-ins for the engine.
@@ -176,5 +188,5 @@ class GI_CORE_EXPORT BaseApp
 
   sf::Clock m_appClock;
 
-  float m_deltaTime;
+  float m_deltaTime = 0.f;
 };

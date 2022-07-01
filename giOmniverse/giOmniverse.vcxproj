@@ -81,9 +81,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\include;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\winrt;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\um;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\ucrt;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\include\shared;$(IncludePath)</IncludePath>
-    <LibraryPath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\lib\onecore\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\lib\ucrt\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\lib\um\x64;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\vc\bin\HostX64\x64;G:\OMNI\lib\connectsample-103.1.0\_build\host-deps\winsdk\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(DEVLIBS)/Omniverse/includes/vc/include;$(DEVLIBS)/Omniverse/incluides/winsdk/include/winrt;$(DEVLIBS)/Omniverse/includes/winsdk/include/um;$(DEVLIBS)/Omniverse/includes/winsdk/include/ucrt;$(DEVLIBS)/Omniverse/includes/winsdk/include/shared;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DEVLIBS)/Omniverse/libs/vc/lib/onecore/x64;$(DEVLIBS)/Omniverse/libs/winsdk/lib/ucrt/x64;$(DEVLIBS)/Omniverse/libs/winsdk/lib/um/x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(DEVLIBS)/Omniverse/exeDir/vc;$(DEVLIBS)/Omniverse/exeDir/winsdk;$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)bin/$(PlatformShortName)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(PlatformShortName)/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
@@ -131,13 +131,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GI_OMNIVERSE_EXPORTS;TBB_USE_DEBUG=1;_CRT_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps\nv_usd\debug\include;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps\omni_client_library\include;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps\python\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/python/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps/nv_usd/debug/lib;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps/omni_client_library/debug;G:\OMNI\lib\connectsample-103.1.0\_build\target-deps/python/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/lib;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/debug;$(DEVLIBS)/Omniverse/target-deps/python/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>giUtilities_d.lib;giCore_d.lib;ar.lib;arch.lib;gf.lib;js.lib;kind.lib;pcp.lib;plug.lib;sdf.lib;tf.lib;trace.lib;usd.lib;usdGeom.lib;vt.lib;work.lib;usdShade.lib;usdLux.lib;omniclient.lib;python37.lib;boost_python37-vc141-mt-gd-x64-1_68.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>

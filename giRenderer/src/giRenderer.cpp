@@ -539,8 +539,10 @@ namespace giEngineSDK {
     }
 
     for (int i = 0; i < inConstantBuffers.size(); ++i) {
-      gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
-      gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
+      if(inConstantBuffers[i] != nullptr) {
+        gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
+        gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
+      }
     }
 
     int j = 0;

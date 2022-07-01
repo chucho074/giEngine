@@ -12,9 +12,8 @@
  */
 #pragma once
 #include <giBaseOmniverse.h>
-#include <giSceneGraph.h>
-#include "giPrerequisitesOmniverse.h"`
-
+#include "giPrerequisitesOmniverse.h"
+#include "giMesh.h"
 namespace giEngineSDK {
 
   class Model;

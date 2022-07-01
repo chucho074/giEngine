@@ -53,7 +53,6 @@
 
 #include <mutex>
 #include <memory>
-#include <map>
 #include <condition_variable>
 
 #include <OmniClient.h>

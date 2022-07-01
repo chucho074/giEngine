@@ -27,8 +27,8 @@ class Editor
  public:
 
   //Default constructor.
-	Editor() = default;
-	
+  Editor() = default;
+  
   //Default destructor.
   ~Editor() = default;
 

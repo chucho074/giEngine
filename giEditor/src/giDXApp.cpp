@@ -11,7 +11,6 @@
  * @include
  */
 #include <giDegrees.h>
-//#include <giGraphicsDX.h>
 #include <giCamera.h>
 #include <giMatrix4.h>
 #include <giVector4.h>
@@ -35,12 +34,12 @@
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  //m_width = EngineConfigs::s_resolution.x;
   m_width = 1280;
-  //m_height = EngineConfigs::s_resolution.y;
+  //m_width = EngineConfigs::s_resolution.x;
   m_height = 720;
+  //m_height = EngineConfigs::s_resolution.y;
   m_world = Matrix4::IDENTITY;
-  m_editorUI.reset(new Editor);
+  m_editorUI = make_shared<Editor>();
 }
 
 
@@ -195,7 +194,6 @@ DirectXApp::onRender() {
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
-  //g_inputManager().sendEvent(inMsg);
 
   m_editorUI->callBack();
 
