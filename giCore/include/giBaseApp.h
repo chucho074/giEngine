@@ -93,7 +93,9 @@ class GI_CORE_EXPORT BaseApp
    * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(MSG inMsg) {};
+  onEvent(MSG inMsg) {
+    GI_UNREFERENCED_PARAMETER(inMsg);
+  };
 
  private:
   /**

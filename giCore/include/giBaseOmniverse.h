@@ -50,7 +50,7 @@ namespace giEngineSDK {
     ~BaseOmni() = default;
 
     void
-    init(String inStage, String inDestination) { 
+    init(StringView inStage, StringView inDestination) { 
       m_existingStage = inStage;
       m_destinationPath = inDestination;
     }
@@ -86,7 +86,9 @@ namespace giEngineSDK {
      * @param    inProjectName The name of the current project.
      */
     virtual void
-    createEmptyUSD(String inProjectName) { }
+    createEmptyUSD(StringView inProjectName) {
+      GI_UNREFERENCED_PARAMETER(inProjectName);
+    }
 
     /**
      * @brief    Set the transformation to omni.
@@ -99,7 +101,12 @@ namespace giEngineSDK {
     setTransformOp(Vector3 inData,
                    GI_OMNI_OP::E inOp,
                    GI_OMNI_PRECISION::E inPrecision,
-                   String omniPath) { }
+                   StringView omniPath) {
+      GI_UNREFERENCED_PARAMETER(inData);
+      GI_UNREFERENCED_PARAMETER(inOp);
+      GI_UNREFERENCED_PARAMETER(inPrecision);
+      GI_UNREFERENCED_PARAMETER(omniPath);
+    }
 
 
     bool 

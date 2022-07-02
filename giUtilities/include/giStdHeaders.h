@@ -74,6 +74,9 @@
 
 namespace giEngineSDK {
   using String = std::string;
+
+  using StringView = std::string_view;
+
   using wString = std::wstring;
 
   /**

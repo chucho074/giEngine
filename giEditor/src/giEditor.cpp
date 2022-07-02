@@ -14,18 +14,23 @@
 #include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
 #include <giTexture2D.h>
+#include <memory>
 
 void 
 Editor::init(void* inHandler, Vector2 inWindowSize) {
-  m_ui.reset(new UI);
+
+  auto& configs = EngineConfigs::instance();
+
+
+  m_ui = make_shared<UI>();
   m_ui->init(inHandler, inWindowSize);
 
-  //m_contentBrowser.reset(new ContentBrowser(EngineConfigs::s_projectPath));
-  m_contentBrowser.reset(new ContentBrowser("E:/Dev/giTestProject"));
+  //m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
+  m_contentBrowser = make_shared<ContentBrowser>("E:/Dev/giTestProject");
 
-  m_hierarchy.reset(new Hierarchy());
+  m_hierarchy = make_shared<Hierarchy>();
 
-  m_details.reset(new Details());
+  m_details = make_shared<Details>();
 }
 
 void 

@@ -37,7 +37,9 @@ namespace giEngineSDK {
     ~Component() = default;
 
     virtual void 
-    update(float inDeltaTime) { };
+    update(float inDeltaTime) {
+      GI_UNREFERENCED_PARAMETER(inDeltaTime);
+    };
 
 
     virtual void 

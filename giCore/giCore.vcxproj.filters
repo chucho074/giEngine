@@ -66,9 +66,6 @@
     <ClCompile Include="src\giResourceManager.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="include\giEncoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giEncoder.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>

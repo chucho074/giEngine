@@ -62,7 +62,7 @@ namespace giEngineSDK {
      * @param    inProjectName The name of the current project.
      */
     void
-    createEmptyUSD(String inProjectName) override;
+    createEmptyUSD(StringView inProjectName) override;
 
     /**
      * @brief    Creates / Sets data in the Scene Graph from an existent 
@@ -78,7 +78,7 @@ namespace giEngineSDK {
      * @param    inPath        The reference path for the mesh.
      */
     Mesh
-    createMeshFromGeoMesh(UsdGeomMesh inMesh, String inPath);
+    createMeshFromGeoMesh(UsdGeomMesh inMesh, StringView inPath);
 
     /**
      * @brief    Function to send the information to Omni.
@@ -91,7 +91,7 @@ namespace giEngineSDK {
     setTransformOp(Vector3 inData,
                    GI_OMNI_OP::E inOp,
                    GI_OMNI_PRECISION::E inPrecision,
-                   String omniPath) override;
+                   StringView omniPath) override;
 
     /**
      * @brief    Get the information from the SG.

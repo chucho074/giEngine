@@ -16,7 +16,7 @@ namespace giEngineSDK {
   
   void 
   StaticMesh::update(float inDeltaTime) {
-    
+    GI_UNREFERENCED_PARAMETER(inDeltaTime);
   }
 
   void 

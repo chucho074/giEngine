@@ -46,7 +46,7 @@ namespace giEngineSDK {
     Vector3 tmpVecA (x, y, z);
     Vector3 tmpVecB (inOterQuat.x, inOterQuat.y, inOterQuat.z);
 
-    float tmpDot = tmpVecA.dotProd(tmpVecB);
+    //float tmpDot = tmpVecA.dotProd(tmpVecB);
     float tmpCross = tmpVecA.crossProd(tmpVecB);
 
     Vector3 tmpVecRes = (tmpVecB * w) + (tmpVecA * inOterQuat.w) + tmpCross;

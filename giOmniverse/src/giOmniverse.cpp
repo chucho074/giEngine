@@ -628,12 +628,12 @@ namespace giEngineSDK {
   }
 
   void 
-  Omni::createEmptyUSD(String inProjectName) {
+  Omni::createEmptyUSD(StringView inProjectName) {
     
     // Create an empty folder, just as an example
-    createEmptyFolder(m_destinationPath + inProjectName);
+    createEmptyFolder(m_destinationPath + inProjectName.data());
     // Saving the new existing stage
-    m_existingStage = m_destinationPath + inProjectName;
+    m_existingStage = m_destinationPath + inProjectName.data();
     // Saving the destination path with the projectName
     m_destinationPath = m_existingStage;
 
@@ -739,7 +739,7 @@ namespace giEngineSDK {
   }
 
   Mesh 
-  Omni::createMeshFromGeoMesh(UsdGeomMesh inMesh, String inPath) {
+  Omni::createMeshFromGeoMesh(UsdGeomMesh inMesh, StringView inPath) {
     auto& gapi = g_graphicsAPI();
 
     Vector<Vector3> tmpVertexMesh;
@@ -872,9 +872,9 @@ namespace giEngineSDK {
   Omni::setTransformOp(Vector3 inData, 
                        GI_OMNI_OP::E inOp, 
                        GI_OMNI_PRECISION::E inPrecision, 
-                       String omniPath) {
+                       StringView omniPath) {
     
-    UsdGeomXformable xform(gStage->GetPrimAtPath(SdfPath(omniPath)));
+    UsdGeomXformable xform(gStage->GetPrimAtPath(SdfPath(omniPath.data())));
 
 
     UsdGeomXformOp::Type op;

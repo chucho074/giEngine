@@ -130,6 +130,8 @@ namespace giEngineSDK {
 
   bool 
   Model::loadFromMemory(const char* inData, size_T inSizeOfData) {
+    GI_UNREFERENCED_PARAMETER(inData);
+    GI_UNREFERENCED_PARAMETER(inSizeOfData);
     return false;
   }
 
@@ -140,7 +142,7 @@ namespace giEngineSDK {
 
   void 
   Model::saveToFile(const String& inFile) {
-
+    GI_UNREFERENCED_PARAMETER(inFile);
   }
 
   

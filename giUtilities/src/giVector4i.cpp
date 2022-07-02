@@ -216,9 +216,9 @@ namespace giEngineSDK {
   void
   Vector4i::normalize() {
 
-    float mag = magnitude();
+    int32 mag = magnitude();
     if (mag > 0) {
-      int32 tmp = 1.0f / mag;
+      int32 tmp = 1 / mag;
       x *= tmp;
       y *= tmp;
       z *= tmp;
@@ -234,10 +234,10 @@ namespace giEngineSDK {
   
   int32
   Vector4i::magnitude() {
-    return Math::sqrt(pow(x, 2) 
-                      + pow(y, 2) 
-                      + pow(z, 2) 
-                      + pow(w, 2));
+    return (int32)Math::sqrt(pow(x, 2) 
+                             + pow(y, 2) 
+                             + pow(z, 2) 
+                             + pow(w, 2));
   }
 
 }

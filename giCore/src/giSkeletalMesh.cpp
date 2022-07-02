@@ -7,7 +7,8 @@ namespace giEngineSDK {
 
   void 
   SkeletalMesh::update(float inDeltaTime, Vector<Matrix4>& inTransforms) {
-    
+    GI_UNREFERENCED_PARAMETER(inDeltaTime);
+    GI_UNREFERENCED_PARAMETER(inTransforms);
     //for(auto mesh : m_meshes) {
       //mesh.update(inDeltaTime, inTransforms, m_globalInverseTransform);
     //}
@@ -15,12 +16,15 @@ namespace giEngineSDK {
 
 
   bool 
-  SkeletalMesh::loadFromFile(const String& inPath) {
+  SkeletalMesh::loadFromFile(StringView inPath) {
+    GI_UNREFERENCED_PARAMETER(inPath);
     return false;
   }
 
   bool 
   SkeletalMesh::loadFromMemory(const char* inData, size_T inSizeOfData) {
+    GI_UNREFERENCED_PARAMETER(inData);
+    GI_UNREFERENCED_PARAMETER(inSizeOfData);
     return false;
   }
 
@@ -30,8 +34,8 @@ namespace giEngineSDK {
   }
 
   void 
-  SkeletalMesh::saveToFile(const String& inFile) {
-
+  SkeletalMesh::saveToFile(StringView inFile) {
+    GI_UNREFERENCED_PARAMETER(inFile);
   }
 
 

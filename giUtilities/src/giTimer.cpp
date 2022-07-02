@@ -53,24 +53,24 @@ namespace giEngineSDK {
       return 0;
     }
     case TimeType::kMicroSeconds: {
-      return duration_cast<microseconds>(dur).count();
+      return (uint32)duration_cast<microseconds>(dur).count();
     }
 
     case TimeType::kMilliSeconds: {
-      return duration_cast<milliseconds>(dur).count();
+      return (uint32)duration_cast<milliseconds>(dur).count();
     }
     case TimeType::kSeconds: {
-      return duration_cast<seconds>(dur).count();
+      return (uint32)duration_cast<seconds>(dur).count();
     }
     case TimeType::kMinutes: {
-      return duration_cast<seconds>(dur).count() / 60;
+      return (uint32)duration_cast<seconds>(dur).count() / 60;
     }
     case TimeType::kHours: {
-      return duration_cast<seconds>(dur).count() / 3600;
+      return (uint32)duration_cast<seconds>(dur).count() / 3600;
     }
 
     }
-
+    return 0;
   }
 
 

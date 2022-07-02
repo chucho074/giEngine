@@ -73,13 +73,20 @@ namespace giEngineSDK {
                  //const aiScene* inScene,
                  uint32 inNumBones,
                  //Vector<BoneInfo> inBoneInfo,
-                 Map<String, uint32> inBoneMapping) {};
+                 Map<String, uint32> inBoneMapping) {
+      GI_UNREFERENCED_PARAMETER(inVertex);
+      GI_UNREFERENCED_PARAMETER(inIndex);
+      GI_UNREFERENCED_PARAMETER(inTextures);
+      GI_UNREFERENCED_PARAMETER(inNumBones);
+      GI_UNREFERENCED_PARAMETER(inBoneMapping);
+    }; 
+
 
     //Destructor
     ~SkeletalMesh() = default;
 
     bool
-    loadFromFile(const String& inPath);
+    loadFromFile(StringView inPath);
 
     bool
     loadFromMemory(const char* inData, size_T inSizeOfData);
@@ -88,7 +95,7 @@ namespace giEngineSDK {
     unload();
 
     void
-    saveToFile(const String& inFile);
+    saveToFile(StringView inFile);
 
     /**
      * @brief

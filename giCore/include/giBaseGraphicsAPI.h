@@ -246,6 +246,10 @@ namespace giEngineSDK {
                      CULLMODE::E inCullMode,
                      bool inClockwise,
                      bool inScissoringEnable) {
+      GI_UNREFERENCED_PARAMETER(inFillMode);
+      GI_UNREFERENCED_PARAMETER(inCullMode);
+      GI_UNREFERENCED_PARAMETER(inClockwise);
+      GI_UNREFERENCED_PARAMETER(inScissoringEnable);
       return nullptr;
     }
     
@@ -258,6 +262,8 @@ namespace giEngineSDK {
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable,
                      GI_COMPARATION_FUNC::E) {
+      GI_UNREFERENCED_PARAMETER(inStencilEnable);
+      GI_UNREFERENCED_PARAMETER(inDepthEnable);
       return nullptr;
     }
         
@@ -282,6 +288,14 @@ namespace giEngineSDK {
                      BLEND_TYPE::E inAlphaDest,
                      BLEND_OP::E inalphaOperation,
                      Vector4 inBlendFactor) { 
+      GI_UNREFERENCED_PARAMETER(inEnable);
+      GI_UNREFERENCED_PARAMETER(inSource);
+      GI_UNREFERENCED_PARAMETER(inDest);
+      GI_UNREFERENCED_PARAMETER(inOperation);
+      GI_UNREFERENCED_PARAMETER(inAlphaSource);
+      GI_UNREFERENCED_PARAMETER(inAlphaDest);
+      GI_UNREFERENCED_PARAMETER(inalphaOperation);
+      GI_UNREFERENCED_PARAMETER(inBlendFactor);
       return nullptr;                 
     }
 
@@ -326,14 +340,18 @@ namespace giEngineSDK {
      * @bug      No known Bugs.
      */
     virtual void 
-    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {};
+    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {
+      GI_UNREFERENCED_PARAMETER(inRaster);
+    };
 
     /**
      * @brief 
      * @param inDepthState 
      */
     virtual void 
-    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {};
+    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {
+      GI_UNREFERENCED_PARAMETER(inDepthState);
+    };
     
     /**
      * @brief   Set the Unordered Access Views.
@@ -341,7 +359,9 @@ namespace giEngineSDK {
      * @bug     No known Bugs.
      */
     virtual void
-    setUAV(int32, Texture2D* inUAV) {};
+    setUAV(int32, Texture2D* inUAV) {
+      GI_UNREFERENCED_PARAMETER(inUAV);
+    };
 
 
     /**
@@ -447,7 +467,9 @@ namespace giEngineSDK {
      */
     virtual void 
     csSetConstantBuffer(uint32, 
-                        SharedPtr<Buffer> inBuffer) {};
+                        SharedPtr<Buffer> inBuffer) {
+      GI_UNREFERENCED_PARAMETER(inBuffer);
+    };
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
@@ -753,6 +775,12 @@ namespace giEngineSDK {
                    int32 inHeight,
                    GI_FORMAT::E inFormat,
                    GI_BIND_FLAG::E inBindFlags) {
+
+      GI_UNREFERENCED_PARAMETER(inData);
+      GI_UNREFERENCED_PARAMETER(inWidth);
+      GI_UNREFERENCED_PARAMETER(inHeight);
+      GI_UNREFERENCED_PARAMETER(inFormat);
+      GI_UNREFERENCED_PARAMETER(inBindFlags);
       return nullptr;
     };
 
