@@ -22,17 +22,17 @@ namespace giEngineSDK {
    * @struct   Texture.
    */
   struct Texture {
-    uint32 id;              //The id in the proyect.
-    String type;            //The type of the texture.
-    String path;            //The path of the file.
-    Texture2D * texture;    //The texture.
-    SamplerState * samplerState; //The sampler for the texture.
+    uint32 id;                            //The id in the proyect.
+    String type;                          //The type of the texture.
+    String path;                          //The path of the file.
+    SharedPtr<Texture2D> texture;         //The texture.
+    SharedPtr<SamplerState> samplerState; //The sampler for the texture.
   };
   
   /**
    * @class   Material.
    */
-  class Material : Resource
+  class Material final : public Resource
   {
    public:
     //Default Constructor

@@ -14,6 +14,9 @@
 
 namespace giEngineSDK {
 
-  
+  WeakPtr<Material> 
+  ResourceManager::getMaterialByID(uint32 inID) {
+    return m_materials.find(inID)->second;
+  }
 
 }

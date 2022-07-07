@@ -26,7 +26,7 @@ Details::init() {
 
 void 
 Details::update(float inDeltaTime) {
-  
+  GI_UNREFERENCED_PARAMETER(inDeltaTime);
 }
 
 void 
@@ -35,6 +35,9 @@ Details::render() {
   ImGui::Begin("Details", nullptr, m_windowFlags);
   if (sg.getSelectedActor() != nullptr) {
     auto tmpActor = sg.getSelectedActor();
+
+    ImGui::Text(String("Selected Actor: " + tmpActor->m_actorName).c_str());
+
     if (ImGui::CollapsingHeader("Transform", ImGuiWindowFlags_NoNav)) {
     
       ImGui::DragFloat3("Position", &sg.getSelectedActor()->m_transform.m_translation.x);
@@ -64,6 +67,11 @@ Details::render() {
                                        tmpActor->m_omniRefPath);
         }
       }
+    }
+
+    //Verify if the actor has this information, if not, don't present this header.
+    if (ImGui::CollapsingHeader("Materials", ImGuiWindowFlags_NoNav)) {
+      
     }
   }
   ImGui::End();
