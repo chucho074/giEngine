@@ -78,6 +78,8 @@ namespace giEngineSDK {
 
 
     friend class FileSystem;
+    friend class ResourceManager;
     friend class Encoder;
+    friend class Decoder;
   };
 }

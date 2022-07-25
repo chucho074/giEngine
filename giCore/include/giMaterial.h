@@ -14,21 +14,17 @@
 #include "giPrerequisitesCore.h"
 #include "giResource.h"
 #include "giTexture2D.h"
+#include "giTexture.h"  
 #include "giSampler.h"  
 
 namespace giEngineSDK {
-
-  /**
-   * @struct   Texture.
-   */
-  struct Texture {
-    uint32 id;                            //The id in the proyect.
-    String type;                          //The type of the texture.
-    String path;                          //The path of the file.
-    SharedPtr<Texture2D> texture;         //The texture.
-    SharedPtr<SamplerState> samplerState; //The sampler for the texture.
-  };
   
+  namespace MATERIAL_FLAGS {
+    enum E {
+      kTWO_SIDES
+    };
+  }
+
   /**
    * @class   Material.
    */
@@ -41,9 +37,19 @@ namespace giEngineSDK {
     //Destructor
     ~Material() = default;
 
+    /**
+     * @brief    Unload the material.
+     * @bug      No known Bugs.
+     */
+    void
+    unload() override {};
+
    protected:
 
     Vector<Texture> m_textures;
+
+
+    MATERIAL_FLAGS::E m_flags;
 
   };
 }

@@ -72,6 +72,9 @@
     <ClCompile Include="src\giBaseConfig.cpp">
       <Filter>BaseApp</Filter>
     </ClCompile>
+    <ClCompile Include="src\giDecoder.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giTexture2D.h">
@@ -177,6 +180,12 @@
       <Filter>BaseApp</Filter>
     </ClInclude>
     <ClInclude Include="include\giBaseViewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giDecoder.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

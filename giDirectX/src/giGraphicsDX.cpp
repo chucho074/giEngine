@@ -1082,7 +1082,7 @@ namespace giEngineSDK {
     int32 width, height, nrChannels;
     inString = inString.substr(inString.find_last_of('/') + 1, inString.length());
 
-    size_T formatPos = inString.find(".");
+    size_T formatPos = inString.find('.');
     String tmpFormat = inString.substr(formatPos);
 
     if (".dds" == tmpFormat || ".png" == tmpFormat || ".jpg" == tmpFormat || ".tga" == tmpFormat) {

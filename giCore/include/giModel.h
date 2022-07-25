@@ -41,8 +41,8 @@ namespace giEngineSDK {
      * @param    inFileName    File to read a model.
      * @bug      No known Bugs.
      */
-    bool 
-    loadFromFile(const Path& inFile) override;
+    //bool 
+    //loadFromFile(const Path& inFile) override;
 
     /**
      * @brief    Load a model from memory.
@@ -50,22 +50,16 @@ namespace giEngineSDK {
      * @param    inSizeOfData  The size of the data.
      * @bug      No known Bugs.
      */
-    bool
-    loadFromMemory(const char* inData, size_T inSizeOfData) override;
+    //bool
+    //loadFromMemory(const char* inData, size_T inSizeOfData) override;
 
     /**
-    * @brief    Unload the model.
-    * @bug      No known Bugs.
-    */
+     * @brief    Unload the model.
+     * @bug      No known Bugs.
+     */
     void
-    unload();
+    unload() override;
 
-    /**
-    * @brief    Save the model to a file.
-    * @bug      No known Bugs.
-    */
-    void 
-    saveToFile(const String& inFile);
 
     /**
      * @brief    Draw the model.
@@ -77,7 +71,7 @@ namespace giEngineSDK {
      * @brief     Get the num of textures.
      * @return    Return the num of textures in a int.
      */
-    int 
+    int32
     getNumTextures() { 
       return static_cast<int32>(m_texturesNames.size());
     }

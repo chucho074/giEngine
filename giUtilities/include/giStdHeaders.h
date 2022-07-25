@@ -79,6 +79,8 @@ namespace giEngineSDK {
 
   using wString = std::wstring;
 
+  using ifstream = std::ifstream;
+
   /**
    * @brief      Vector.
    * @param      T 

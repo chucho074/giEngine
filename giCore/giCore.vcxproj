@@ -178,6 +178,7 @@
     <ClCompile Include="src\giBaseOmniverse.cpp" />
     <ClCompile Include="src\giBaseRenderer.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
+    <ClCompile Include="src\giDecoder.cpp" />
     <ClCompile Include="src\giEncoder.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="include\giBaseVertexShader.h" />
     <ClInclude Include="include\giBuffer.h" />
     <ClInclude Include="include\giCamera.h" />
+    <ClInclude Include="include\giDecoder.h" />
     <ClInclude Include="include\giDepthState.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
     <ClInclude Include="include\giEncoder.h" />
@@ -221,6 +223,7 @@
     <ClInclude Include="include\giSceneNode.h" />
     <ClInclude Include="include\giSkeletalMesh.h" />
     <ClInclude Include="include\giStaticMesh.h" />
+    <ClInclude Include="include\giTexture.h" />
     <ClInclude Include="include\giTexture2D.h" />
     <ClInclude Include="include\giTextureManager.h" />
   </ItemGroup>

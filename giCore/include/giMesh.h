@@ -14,6 +14,7 @@
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
 #include "giBuffer.h"
+#include "giMaterial.h"
 #include <giVector2.h>
 #include <giVector3.h>
 #include <giTransform.h>
@@ -33,26 +34,19 @@ namespace giEngineSDK {
   };
 
   /**
-   * @brief 
-   */
-  struct Texture {
-    uint32 id;
-    String type;
-    String path;
-    SharedPtr<Texture2D> texture;
-    SharedPtr<SamplerState> samplerState;
-  };
-
-  /**
    * @class    Mesh.
    * @brief    This class have the funtionality for load models.
-   * @bug      No known Bugs.
    */
   class GI_CORE_EXPORT Mesh {
    public:
     //Mesh() = default;
 
-    ///Default constructor
+    /**
+     * @brief    .
+     * @param    inVertex      .
+     * @param    inIndex       .
+     * @param    inTextures    .
+     */
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
          Vector<Texture> inTextures);
@@ -62,20 +56,16 @@ namespace giEngineSDK {
 
     /**
      * @brief    Load a mesh data.
-     * @bug      No known Bugs.
      */
     void 
     loadMesh();
            
     /**
      * @brief    Draw the mesh data.
-     * @bug      No known Bugs.
      */
     void 
     drawMesh();
 
-
-   //protected:
 
     //The vertex buffer for the mesh
     SharedPtr<Buffer> m_vertexBuffer = nullptr;
