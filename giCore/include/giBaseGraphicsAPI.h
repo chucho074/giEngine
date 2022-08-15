@@ -748,43 +748,6 @@ namespace giEngineSDK {
       return nullptr; 
     };
 
-    /**
-     * @brief    Reads a texture form a file.
-     * @param    inString      The name of the file to read.
-     * @param    inDirectory   The directory of the texture to read.
-     * @return   Returns the texture readed from a file.
-     */
-    virtual SharedPtr<Texture2D>
-    TextureFromFile(String inString, 
-                    String inDirectory) { 
-      return nullptr;
-    };
-
-    /**
-     * @brief    Load a texture from memory.
-     * @param    inData        The Data of the loaded texture.
-     * @param    inWidth       The Width of the texture to create.
-     * @param    inHeight      The height of the texture to create.
-     * @param    inFormat      The format of the texture.
-     * @param    inBindFlags   The bind flags for the texture.
-     * @return   Returns a texture 2D.
-     */
-    virtual SharedPtr<Texture2D>
-    TextureFromMem(uint8* inData,
-                   int32 inWidth,
-                   int32 inHeight,
-                   GI_FORMAT::E inFormat,
-                   GI_BIND_FLAG::E inBindFlags) {
-
-      GI_UNREFERENCED_PARAMETER(inData);
-      GI_UNREFERENCED_PARAMETER(inWidth);
-      GI_UNREFERENCED_PARAMETER(inHeight);
-      GI_UNREFERENCED_PARAMETER(inFormat);
-      GI_UNREFERENCED_PARAMETER(inBindFlags);
-      return nullptr;
-    };
-
-
 
     virtual void*
     getDevice() {

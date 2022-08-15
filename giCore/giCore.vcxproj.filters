@@ -75,6 +75,9 @@
     <ClCompile Include="src\giDecoder.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
+    <ClCompile Include="src\giUUID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giTexture2D.h">
@@ -186,6 +189,9 @@
       <Filter>ResourceManager</Filter>
     </ClInclude>
     <ClInclude Include="include\giTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giUUID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

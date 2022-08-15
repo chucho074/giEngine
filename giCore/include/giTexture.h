@@ -16,6 +16,23 @@
 #include "giTexture2D.h"
 
 namespace giEngineSDK {
+  
+  namespace TEXTURE_TYPE {
+    enum E {
+      kUnknown = 0,
+      kAlbedo,
+      kMetalic,
+      kRoughness,
+      kAmbientOclussion,
+      kNormal,
+      kGloss,
+      kSpecular,
+      kOpacity,
+      kSuportedTextureTypes
+    };
+  }
+
+
   class Texture final : public Resource
   {
    public:
@@ -26,15 +43,19 @@ namespace giEngineSDK {
     void
     unload() override {};
 
-    //The id in the proyect.
-    uint32 id;                            
-    //The type of the texture.
-    String type;                          
+    //The name of the Texture.
+    String m_name;
+
+    //The type of the Texture.
+    TEXTURE_TYPE::E m_type;
+
     //The path of the file.
-    String path;                          
+    Path m_path;
+    
     //The texture.
-    SharedPtr<Texture2D> texture;         
+    SharedPtr<Texture2D> m_texture;
+    
     //The sampler for the texture.
-    SharedPtr<SamplerState> samplerState; 
+    SharedPtr<SamplerState> m_samplerState;
   };
 }

@@ -15,9 +15,7 @@
 #include "giFile.h"
 #include "giResource.h"
 
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
+
 
 namespace giEngineSDK {
 
@@ -47,11 +45,11 @@ namespace giEngineSDK {
     decodeGiProject(FILE &inFileData);
 
     /**
-     * @brief    .
+     * @brief    Decode any image type.
      * @param    inFileData    .
      */
     SharedPtr<Resource> 
-    decodePNG(FILE &inFileData);
+    decodeImage(FILE &inFileData);
     
     /**
      * @brief    Decode the information of any kind of model files.
@@ -61,8 +59,9 @@ namespace giEngineSDK {
     SharedPtr<Resource>
     decodeModel(FILE &inFileData);
 
-    Assimp::Importer m_importer;
-  protected:
+    
+   protected:
+    friend class FILE;
   };
 
 }

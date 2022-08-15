@@ -20,7 +20,8 @@ namespace giEngineSDK {
    */
   namespace RESOURCE_TYPE {
     enum E {
-      kModel = 0,
+      kUnknown = 0,
+      kModel,
       kMaterial,
       kTexture,
       kAudio,
@@ -42,24 +43,7 @@ namespace giEngineSDK {
     //Destructor.
     virtual 
     ~Resource() = default;
-  
-    /**
-     * @brief 
-     * @param    inPath 
-     * @return 
-     */
-    //virtual bool 
-    //loadFromFile(const Path& inPath) = 0;
-  
-    /**
-     * @brief 
-     * @param    inData 
-     * @param    inSizeOfData 
-     * @return 
-     */
-    //virtual bool
-    //loadFromMemory(const char* inData, size_T inSizeOfData) = 0;
-  
+
     /**
      * @brief 
      */

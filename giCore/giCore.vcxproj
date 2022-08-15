@@ -187,6 +187,7 @@
     <ClCompile Include="src\giSceneNode.cpp" />
     <ClCompile Include="src\giSkeletalMesh.cpp" />
     <ClCompile Include="src\giStaticMesh.cpp" />
+    <ClCompile Include="src\giUUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giBaseComputeShader.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="include\giTexture.h" />
     <ClInclude Include="include\giTexture2D.h" />
     <ClInclude Include="include\giTextureManager.h" />
+    <ClInclude Include="include\giUUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

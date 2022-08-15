@@ -12,9 +12,10 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
+#include "giResourceManager.h"
+#include "giResource.h"
 #include "giBaseGraphicsAPI.h"
 #include "giMesh.h"
-#include "giResource.h"
 #include <giTransform.h>
 #include <giStdHeaders.h>
 #include <giVector2.h>
@@ -36,23 +37,7 @@ namespace giEngineSDK {
     ///Destructor
     ~Model();
 
-    /**
-     * @brief    Load a model from file.
-     * @param    inFileName    File to read a model.
-     * @bug      No known Bugs.
-     */
-    //bool 
-    //loadFromFile(const Path& inFile) override;
-
-    /**
-     * @brief    Load a model from memory.
-     * @param    inData        The data of the model.
-     * @param    inSizeOfData  The size of the data.
-     * @bug      No known Bugs.
-     */
-    //bool
-    //loadFromMemory(const char* inData, size_T inSizeOfData) override;
-
+    
     /**
      * @brief    Unload the model.
      * @bug      No known Bugs.
@@ -68,46 +53,32 @@ namespace giEngineSDK {
     drawModel();
 
     /**
-     * @brief     Get the num of textures.
-     * @return    Return the num of textures in a int.
+     * @brief    Get the num of textures.
+     * @return   Return the num of textures in a int.
      */
     int32
     getNumTextures() { 
-      return static_cast<int32>(m_texturesNames.size());
+      return static_cast<int32>(m_materialsLoaded.size());
     }
 
     /**
-     * @brief     Get the list of textures.
-     * @return    Return the list of the textures.
+     * @brief    Get the list of textures.
+     * @return   Return the list of the textures.
      */
-    Vector<String> getTextures() { 
-      return m_texturesNames; 
+    Vector<String> getMaterilsNames() {
+      
+      return m_materialsLoaded;
     }
-    
-    /**
-     * @brief 
-     * @param mat 
-     * @param type 
-     * @param typeName 
-     * @return 
-     */
-    /*Vector<Texture> 
-    loadMaterialTextures(Model inModel, 
-                         aiMaterial* mat, 
-                         aiTextureType type, 
-                         String typeName);*/
 
-    //Get the name of the textures linked to the model
-    Vector<String> m_texturesNames;
+    //The references of the Materials.
+    Vector<ResourceRef> m_materialsLoaded;
 
-    //Meshes
+    //Meshes.
     Vector<Mesh> m_meshes;
 
-    String m_directory;
+    //The directory of the model.
+    Path m_directory;
 
-    Vector<Texture> m_texturesLoaded;
-
-    //Transform m_transform;
 
   };
 }

@@ -44,9 +44,8 @@ namespace giEngineSDK {
     void
     unload() override {};
 
-   protected:
 
-    Vector<Texture> m_textures;
+    Vector<ResourceRef> m_textures;
 
 
     MATERIAL_FLAGS::E m_flags;

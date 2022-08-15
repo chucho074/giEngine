@@ -13,6 +13,13 @@
 #include "giDecoder.h"
 #include "giModel.h"
 
+
+#include "stb_image.h"
+
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
 namespace giEngineSDK {
   
   void
@@ -24,6 +31,54 @@ namespace giEngineSDK {
 
   SharedPtr<Resource> 
   Decoder::decodeData(FILE &inFileData) {
+    //Verify if the FILE is empty
+    if (!inFileData.m_data.empty()) {
+      //Use the data to decode it.
+      switch (inFileData.m_extension) {
+
+        case EXTENSION_TYPE::E::kBMP: {
+          return decodeImage(inFileData);
+        }
+
+        case EXTENSION_TYPE::E::kJPEG: {
+          return decodeImage(inFileData);
+        }
+
+        case EXTENSION_TYPE::E::kPNG: {
+          return decodeImage(inFileData);
+        }
+
+        case EXTENSION_TYPE::E::kTGA: {
+          return decodeImage(inFileData);
+        }
+
+        case EXTENSION_TYPE::E::kFBX: {
+          return decodeModel(inFileData);
+        }
+
+        case EXTENSION_TYPE::E::kOBJ: {
+          return decodeModel(inFileData);
+        }
+        case EXTENSION_TYPE::E::kHLSL: {}
+
+        case EXTENSION_TYPE::E::kgiTEX2D: {}
+
+        case EXTENSION_TYPE::E::kgiModel: {}
+
+        case EXTENSION_TYPE::E::kgiShader: {}
+
+      default:
+        break;
+      }
+    }
+
+    else {
+      //Read the FILE and get the data 
+
+      //Decode the data.
+      return decodeData(inFileData);
+
+    }
 
     return SharedPtr<Resource>();
   }
@@ -35,23 +90,71 @@ namespace giEngineSDK {
   }
 
   SharedPtr<Resource> 
-  Decoder::decodePNG(FILE &inFileData) {
+  Decoder::decodeImage(FILE &inFileData) {
+    auto &gapi = g_graphicsAPI().instance();
 
-    return SharedPtr<Resource>();
+    int32 w, h, comp;
+
+    comp = 4;
+
+    SharedPtr<Texture> tmpTexture;
+    
+    //Save the information of the readed data.
+    uint8 tmpData = (uint8)inFileData.m_data.c_str();
+    
+    //Get the information of the image loadead.
+    uint8 * tmpImg = stbi_load_from_memory(&tmpData, 
+                                           inFileData.m_data.length(), 
+                                           &w, 
+                                           &h, 
+                                           &comp, 
+                                           0);
+
+    //Create the texture with the information.
+    if (tmpImg) {
+      tmpTexture->m_texture = gapi.createTex2D(w,
+                                               h,
+                                               1,
+                                               GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                               GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
+      
+      //Unload Data
+      stbi_image_free(tmpImg);
+      tmpTexture->m_path = inFileData.m_path;
+      tmpTexture->m_name = inFileData.m_name;
+
+      SamplerDesc sampDesc;
+      sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+      sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+      sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+      sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+      sampDesc.comparisonFunc = 1;
+      sampDesc.minLOD = 0;
+      sampDesc.maxLOD = 3.402823466e+38f;
+      tmpTexture->m_samplerState = gapi.createSampler(sampDesc);
+
+      return tmpTexture;
+    }
+
+    //Unload Data
+    stbi_image_free(tmpImg);
+    return SharedPtr<Texture>();
   }
 
   SharedPtr<Resource> 
   Decoder::decodeModel(FILE &inFileData) {
     
+    Assimp::Importer importer;
+
     size_T tmpSize(inFileData.m_data.size());
-    m_importer.ReadFileFromMemory(&inFileData.m_data,
+    importer.ReadFileFromMemory(&inFileData.m_data,
                                   tmpSize,
                                   aiProcessPreset_TargetRealtime_MaxQuality |
                                   aiProcess_TransformUVCoords|
                                   aiProcess_ConvertToLeftHanded |
                                   aiProcess_Triangulate);
 
-    const aiScene* tmpScene = m_importer.GetOrphanedScene();
+    const aiScene* tmpScene = importer.GetOrphanedScene();
 
     if (!tmpScene 
         || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
@@ -65,6 +168,82 @@ namespace giEngineSDK {
     processNode(tmpModel, tmpScene->mRootNode, tmpScene);
     return SharedPtr<Resource>();
   }
+
+
+  //
+
+  String 
+  getPathCorrectly(String inFile) {
+    size_T realPos = 0;
+    size_T posInvSlash = inFile.rfind('\\');
+    size_T posSlash = inFile.rfind('/');
+
+    if(posInvSlash == String::npos) {
+      if(posSlash != String::npos) {
+        realPos = posSlash;
+      }
+    }
+    else {
+      realPos = posInvSlash;
+      if (posSlash == String::npos) {
+        if (posSlash > realPos) {
+          posSlash = realPos;
+        }
+      }
+    }
+    if (realPos == 0) {
+      return "/" + inFile;
+    }
+    return "/" + inFile.substr(realPos + 1, inFile.length() - realPos);
+  }
+
+
+  Vector<Texture>
+  loadMaterialTextures(Model inModel,
+                       aiMaterial* mat, 
+                       aiTextureType type, 
+                       String typeName) {
+
+    auto& GAPI = g_graphicsAPI();
+    Vector<Texture> textures;
+    //Get the number of textures in assimp in the material.
+    for (uint32 i = 0; i < mat->GetTextureCount(type); i++) {
+      aiString str;
+      mat->GetTexture(type, i, &str);
+      String path = str.C_Str();
+      path = getPathCorrectly(path);
+      bool skip = false;
+      for (uint32 j = 0; j < inModel.m_materialsLoaded.size(); j++) {
+        if (std::strcmp(inModel.m_materialsLoaded[j].path.data(), path.c_str()) == 0) {
+          textures.push_back(inModel.m_materialsLoaded[j]);
+          skip = true;
+          break;
+        }
+      }
+      if (!skip)  {   // if texture hasn't been loaded already, load it
+        Texture texture;
+        FILE tmpFile(path);
+        texture.m_texture = GAPI.createTex2D(path);
+        texture.m_type = typeName;
+        texture.m_path = path;
+
+        SamplerDesc sampDesc;
+        sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+        sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+        sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+        sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
+        sampDesc.comparisonFunc = 1;
+        sampDesc.minLOD = 0;
+        sampDesc.maxLOD = 3.402823466e+38f;
+        texture.m_samplerState = GAPI.createSampler(sampDesc);
+
+        textures.push_back(texture);
+        inModel.m_materialsLoaded.push_back(texture); // add to loaded textures
+      }
+    }
+    return textures;
+  }
+
 
   void 
   processNode(WeakPtr<Model>inModel, aiNode* node, const aiScene* inScene) {

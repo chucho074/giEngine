@@ -14,20 +14,46 @@
 #include "giPrerequisitesCore.h"
 #include "giEncoder.h"
 #include "giDecoder.h"
-#include "giMaterial.h"
 #include "giModule.h"
-#include "giModel.h"
+#include "giUUID.h"
+
 
 namespace giEngineSDK {
 
-  class ResourceManager : Module<ResourceManager> 
+  /**
+   * @brief    Type for save a reference of a resource.
+   */
+  struct ResourceRef {
+    UUID m_id = UUID::ZERO;
+    RESOURCE_TYPE::E m_type = RESOURCE_TYPE::E::kUnknown;
+  };
+
+  /**
+   * @brief    The Class in charge to manage the creation of the resources.
+   */
+  class ResourceManager : public Module<ResourceManager> 
   {
    public:
-  	//Default Constructor.
+    //Default Constructor.
     ResourceManager() = default;
-  	//Default destructor.
+
+    //Default destructor.
     ~ResourceManager() = default;
 
+    /**
+     * @brief    Prepare the Module.
+     * @bug      No known Bugs.
+     */
+    void 
+    onStartUp() override {};
+    
+    /**
+     * @brief    Clear the Module.
+     * @bug      No known Bugs.
+     */
+    void 
+    onShutDown() override {};
+    
     /**
      * @brief    Function to read a file.
      * @param    inFile        The file to read.
@@ -42,23 +68,48 @@ namespace giEngineSDK {
      * @return   A reference of the resource as a Weak Pointer.
      */
     WeakPtr<Resource>
-    getResource(uint32 inID);
+    getResource(UUID inID);
 
     /**
-     * @brief    .
-     * @return 
+     * @brief    Creates a texture from memory data.
+     * @return   Returns the reference of the resource.
      */
-    uint32
+    ResourceRef
     createTextureFromMem(String inData);
 
     /**
-     * @brief    .
-     * @param    inFileData 
-     * @return   Returns the ID of the created texture.
+     * @brief    Creates a texture from a readed file data.
+     * @param    inFileData    The data to use as a texture.
+     * @return   Returns the reference of the resource.
      */
-    uint32
+    ResourceRef
     createTextureFromFile(FILE inFileData);
 
+    /**
+     * @brief    .
+     * @param    inReferences  .
+     * @return   .
+     */
+    ResourceRef
+    createMaterialFromTexRef(Vector<ResourceRef> inReferences);
+
+    /**
+     * @brief    .
+     * @param    inFileData    .
+     * @return   .
+     */
+    ResourceRef
+    createMaterialFromFile(FILE inFileData);
+
+
+
+    /**
+     * @brief    .
+     * @param    inRef 
+     * @return   .
+     */
+    String
+    getTextureName(ResourceRef & inRef);
 
    protected:
   	
@@ -73,15 +124,18 @@ namespace giEngineSDK {
     //Reference of the encoder.
     SharedPtr<Encoder> m_encoder;
 
-    //Reference of the Decoder.
+    ////Reference of the Decoder.
     SharedPtr<Decoder> m_decoder;
 
     //The map of resources loaded.
-    Map<uint32, SharedPtr<Resource>> m_loadedResources;
+    Map<UUID, SharedPtr<Resource>> m_loadedResources;
 
-    //Temporal solution for UUIDs.
-    uint32 m_nextID = 0;
 
+    friend class Decoder;
+    friend class Encoder;
   };
+
+  GI_CORE_EXPORT ResourceManager&
+  g_resourceManager();
 
 }

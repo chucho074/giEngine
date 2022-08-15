@@ -13,8 +13,9 @@
 #include "giResourceManager.h"
 #include "giBaseGraphicsAPI.h"
 #include "giStdHeaders.h"
-
-#include "stb_image.h"
+#include "giTexture.h"
+#include "giMaterial.h"
+#include "giModel.h"
 
 
 namespace giEngineSDK {
@@ -30,54 +31,45 @@ namespace giEngineSDK {
   }
 
   WeakPtr<Resource>
-  ResourceManager::getResource(uint32 inID) {
+  ResourceManager::getResource(UUID inID) {
     return m_loadedResources.find(inID)->second;
   }
 
-  uint32 
+  ResourceRef
   ResourceManager::createTextureFromMem(String inData) {
     
-    auto &gapi = g_graphicsAPI().instance();
-
-    int32 w, h, comp;
-
-    comp = 4;
     
-    //Save the information of the readed data.
-    uint8 tmpData = (uint8)inData.c_str();
-    
-    //Get the information of the image loadead.
-    uint8 * tmpImg = stbi_load_from_memory(&tmpData, 
-                                           inData.length(), 
-                                           &w, 
-                                           &h, 
-                                           &comp, 
-                                           0);
-
-    //Create the texture with the information.
-    if (tmpImg) {
-      SharedPtr<Texture> tmpTexture;
-      tmpTexture->texture = gapi.createTex2D(w,
-                                             h,
-                                             1,
-                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
-                                             GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
-      
-      //
-      m_loadedResources.insert({m_nextID, tmpTexture});
-    }
-
-    //Unload Data
-    stbi_image_free(tmpImg);
 
   }
 
-  uint32
+  ResourceRef
   ResourceManager::createTextureFromFile(FILE inFileData) {
     readFile(inFileData);
     
     createTextureFromMem(inFileData.m_data);
 
+  }
+
+  ResourceRef 
+  ResourceManager::createMaterialFromTexRef(Vector<ResourceRef> inReferences) {
+    SharedPtr<Material> newMaterial;
+
+    newMaterial->m_textures = inReferences;
+
+    m_loadedResources.insert({UUID(), newMaterial});
+  }
+
+  ResourceRef 
+  ResourceManager::createMaterialFromFile(FILE inFileData) {
+    
+  }
+
+  String
+  ResourceManager::getTextureName(ResourceRef& inRef) {
+    auto tmpVal = m_loadedResources.find(inRef.m_id)->second;
+    if (RESOURCE_TYPE::kTexture == inRef.m_type) {
+      static_pointer_cast<Texture>(tmpVal);
+    }
   }
 
   void
@@ -91,6 +83,11 @@ namespace giEngineSDK {
     }
 
     tmpFile.close();
+  }
+
+  ResourceManager&
+  g_resourceManager() {
+    return ResourceManager::instance();
   }
 
 }
