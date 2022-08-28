@@ -26,6 +26,7 @@ namespace giEngineSDK {
   void 
   Renderer::create() {
     auto& gapi = g_graphicsAPI();
+    auto& RM = g_resourceManager();
     auto& sgraph = SceneGraph::instance();
     
     //Get the main camera
@@ -355,11 +356,8 @@ namespace giEngineSDK {
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &Lightcb);
-    
-    
-    m_SAQ = make_shared<Model>();
-
-    m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
+    FILE tmpFile("Resources/Models/ScreenAlignedQuad.3ds");
+    m_SAQ = RM.readFromFile(tmpFile);
 
 
   }
@@ -507,6 +505,7 @@ namespace giEngineSDK {
                        bool inClear) {
 
     auto& gapi = g_graphicsAPI();
+    auto& RM = g_resourceManager();
 
     auto& sgraph = SceneGraph::instance();
 
@@ -552,7 +551,7 @@ namespace giEngineSDK {
 
     //Draw
     if(inDrawSAQ) {
-      m_SAQ->drawModel();
+      RM.renderResource(m_SAQ);
     } 
     else {
       sgraph.draw();

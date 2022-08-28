@@ -26,6 +26,7 @@
 #include <giSampler.h>
 #include <giMesh.h>
 #include <giModel.h>
+#include <giFile.h>
 #include <giStaticMesh.h>
 #include <giSceneGraph.h>
 #include <SFML/Window.hpp>
@@ -45,6 +46,7 @@ DirectXApp::DirectXApp() {
 
 void 
 DirectXApp::onCreate() {
+  auto& RM = g_resourceManager();
 
   Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
   
@@ -62,11 +64,10 @@ DirectXApp::onCreate() {
   m_sceneGraph->addActor(cameraActor, m_sceneGraph->getRoot());
 
   //Sets Vela's model
-  SharedPtr<Model> tmpModel = make_shared<Model>();
-  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  ResourceRef tmpModel;
+  FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
   //tmpModel->loadFromFile("Resources/Models/cube.fbx");
-  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
-  modelComponent->setModel(tmpModel);
+  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
   tmpActor->m_actorName = "Vela";
@@ -92,6 +93,7 @@ DirectXApp::onCreate() {
   shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f });
+
   SharedPtr<Actor> lightActor = make_shared<Actor>();
   lightActor->m_actorName = "Light";
   lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kCamera);
@@ -124,9 +126,6 @@ DirectXApp::onDestroy() {
 void 
 DirectXApp::onUpdate(float inDeltaTime) {
   GI_UNREFERENCED_PARAMETER(inDeltaTime);
-  //World rotation
-  //m_world = XMMatrixRotationY(inDeltaTime);
-
 
   auto& cameraRef = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 

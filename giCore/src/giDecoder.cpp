@@ -12,9 +12,10 @@
  */
 #include "giDecoder.h"
 #include "giModel.h"
+#include "giMesh.h"
 
-
-#include "stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -25,13 +26,13 @@ namespace giEngineSDK {
   void
   processNode(WeakPtr<Model> inModel, aiNode* node, const aiScene* inScene);
 
-  Mesh 
+  SharedPtr<Mesh>
   processMesh(WeakPtr<Model> inModel, aiMesh* mesh, const aiScene* scene);
 
 
-  SharedPtr<Resource> 
+  SharedPtr<Resource>
   Decoder::decodeData(FILE &inFileData) {
-    //Verify if the FILE is empty
+    //Verify if the FILE is not empty.
     if (!inFileData.m_data.empty()) {
       //Use the data to decode it.
       switch (inFileData.m_extension) {
@@ -71,10 +72,10 @@ namespace giEngineSDK {
         break;
       }
     }
-
+    //If the file is empty.
     else {
-      //Read the FILE and get the data 
-
+      //Read the FILE and get the data.
+      readFile(inFileData);
       //Decode the data.
       return decodeData(inFileData);
 
@@ -83,15 +84,15 @@ namespace giEngineSDK {
     return SharedPtr<Resource>();
   }
 
-  SharedPtr<Resource> 
+  SharedPtr<Resource>
   Decoder::decodeGiProject(FILE &inFileData) {
 
     return SharedPtr<Resource>();
   }
 
-  SharedPtr<Resource> 
+  SharedPtr<Resource>
   Decoder::decodeImage(FILE &inFileData) {
-    auto &gapi = g_graphicsAPI().instance();
+    auto& gapi = g_graphicsAPI().instance();
 
     int32 w, h, comp;
 
@@ -138,10 +139,11 @@ namespace giEngineSDK {
 
     //Unload Data
     stbi_image_free(tmpImg);
+
     return SharedPtr<Texture>();
   }
 
-  SharedPtr<Resource> 
+  SharedPtr<Resource>
   Decoder::decodeModel(FILE &inFileData) {
     
     Assimp::Importer importer;
@@ -169,6 +171,19 @@ namespace giEngineSDK {
     return SharedPtr<Resource>();
   }
 
+
+  void
+  Decoder::readFile(FILE& inFile) {
+    
+    ifstream tmpFile(inFile.m_path);
+    
+    String tmpData;
+    while (getline(tmpFile, tmpData)) {
+      inFile.m_data += tmpData;
+    }
+
+    tmpFile.close();
+  }
 
   //
 
@@ -198,76 +213,61 @@ namespace giEngineSDK {
   }
 
 
-  Vector<Texture>
-  loadMaterialTextures(Model inModel,
+  ResourceRef
+  loadMaterialTextures(WeakPtr<Model> inModel,
                        aiMaterial* mat, 
                        aiTextureType type, 
-                       String typeName) {
+                       TEXTURE_TYPE::E typeName) {
 
     auto& GAPI = g_graphicsAPI();
-    Vector<Texture> textures;
+    auto& RM = g_resourceManager();
+    ResourceRef tmpTextureRef;
     //Get the number of textures in assimp in the material.
     for (uint32 i = 0; i < mat->GetTextureCount(type); i++) {
       aiString str;
       mat->GetTexture(type, i, &str);
-      String path = str.C_Str();
-      path = getPathCorrectly(path);
+      String tmpTextureName = str.C_Str();
+      //Get just the name of the texture.
+      tmpTextureName = getPathCorrectly(tmpTextureName);
       bool skip = false;
-      for (uint32 j = 0; j < inModel.m_materialsLoaded.size(); j++) {
-        if (std::strcmp(inModel.m_materialsLoaded[j].path.data(), path.c_str()) == 0) {
-          textures.push_back(inModel.m_materialsLoaded[j]);
+
+      for (uint32 j = 0; j < inModel.lock()->m_materialsLoaded.size(); j++) {
+        //Get the list of names of textures in the material.
+        auto tmpNames = RM.getTextureNameFromMaterial(inModel.lock()->m_materialsLoaded[j]);
+        //Compare if the texture is already in any material by it name.
+        auto tmpIterNames = find(tmpNames.begin(), tmpNames.end(), tmpTextureName);
+        //If the Texture exist, get the reference of that texture.
+        if (tmpIterNames != tmpNames.end()) {
+          //Get the reference of the texture.
+          tmpTextureRef = RM.getReferenceByNameInMaterial(inModel.lock()->m_materialsLoaded[j], 
+                                                          tmpIterNames->data());
           skip = true;
           break;
         }
       }
+
       if (!skip)  {   // if texture hasn't been loaded already, load it
-        Texture texture;
-        FILE tmpFile(path);
-        texture.m_texture = GAPI.createTex2D(path);
-        texture.m_type = typeName;
-        texture.m_path = path;
+        FILE tmpFile(inModel.lock()->m_directory.string() + tmpTextureName);
 
-        SamplerDesc sampDesc;
-        sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
-        sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-        sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-        sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
-        sampDesc.comparisonFunc = 1;
-        sampDesc.minLOD = 0;
-        sampDesc.maxLOD = 3.402823466e+38f;
-        texture.m_samplerState = GAPI.createSampler(sampDesc);
+        tmpTextureRef.m_id = UUID();
 
-        textures.push_back(texture);
-        inModel.m_materialsLoaded.push_back(texture); // add to loaded textures
+        RM.m_loadedResources.insert({tmpTextureRef.m_id,
+                                     Decoder::decodeData(tmpFile)});
+
+        auto tmpResource = RM.getResource(tmpTextureRef.m_id);
+
+
+        auto tmpTexture = static_pointer_cast<Texture>(tmpResource.lock());
+        
+        tmpTexture->m_type = typeName;
       }
     }
-    return textures;
+    return tmpTextureRef;
   }
 
 
   void 
   processNode(WeakPtr<Model>inModel, aiNode* node, const aiScene* inScene) {
-    ////Check if has meshes
-    //if (!inScene->HasMeshes()) return;
-    //
-    ////Model resize the meshes
-    //inModel.m_meshes.resize(inScene->mNumMeshes);
-
-    ////
-    //for (uint32 i = 0; i < inScene->mNumMeshes; ++i) {
-    //  auto assimpMesh = inScene->mMeshes[i];
-    //  auto& myMesh = inModel.m_meshes[i];
-    //  
-    //  
-    //  
-    //  inModel.m_meshes.push_back(processMesh(inModel, mesh, inScene));
-    //}
-    //// then do the same for each of its children
-    //for (uint32 i = 0; i < node->mNumChildren; i++) {
-    //  processNode(inModel, node->mChildren[i], inScene);
-    //}
-    
-
     // process all the node's meshes (if any)
     for (uint32 i = 0; i < node->mNumMeshes; i++) {
       aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
@@ -280,12 +280,13 @@ namespace giEngineSDK {
   }
 
 
-  Mesh 
+  SharedPtr<Mesh>
   processMesh(WeakPtr<Model>inModel, aiMesh* mesh, const aiScene* scene) {
     auto& GAPI = g_graphicsAPI();
+    auto& RM = g_resourceManager();
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
-    Vector<Texture> textures;
+    Vector<ResourceRef> textures;
 
     for(uint32 i = 0; i < mesh->mNumVertices; i++) {
       SimpleVertex vertex;
@@ -326,7 +327,7 @@ namespace giEngineSDK {
         vertex.Tang.y = 0.0f;
         vertex.Tang.z = 0.0f;
       }
-      //bitangentes
+      //Bitangentes
       if (mesh->mBitangents) {
         vertex.BiNor.x = mesh->mBitangents[i].x;
         vertex.BiNor.y = mesh->mBitangents[i].y;
@@ -340,7 +341,7 @@ namespace giEngineSDK {
 
       vertices.push_back(vertex);
     }
-    // process indices
+    // Process indices
     for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
       aiFace face = mesh->mFaces[i];
       for (uint32 j = 0; j < face.mNumIndices; ++j) {
@@ -386,49 +387,47 @@ namespace giEngineSDK {
 
 
 
-    // process material
+    // Process material
     if(mesh->mMaterialIndex >= 0) {
       aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
       //To change for the creation of the textures in the resource Manager.
-      Vector<Texture> diffuseMaps = loadMaterialTextures(inModel,
-                                                         material,
-                                                         aiTextureType_DIFFUSE, 
-                                                         "texture_diffuse");
+      textures.push_back(loadMaterialTextures(inModel,
+                                              material,
+                                              aiTextureType_DIFFUSE, 
+                                              TEXTURE_TYPE::kAlbedo));
 
-      textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+      
+
       //To change for the creation of the textures in the resource Manager.
-      Vector<Texture> normalMaps = loadMaterialTextures(inModel,
-                                                         material,
-                                                         aiTextureType_NORMALS, 
-                                                         "texture_normal");
+      textures.push_back(loadMaterialTextures(inModel,
+                                              material,
+                                              aiTextureType_NORMALS, 
+                                              TEXTURE_TYPE::kNormal));
 
-      textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
       //To change for the creation of the textures in the resource Manager.
-      Vector<Texture> specularMaps = loadMaterialTextures(inModel,
-                                                          material,
-                                                          aiTextureType_SPECULAR, 
-                                                          "texture_specular");
+      textures.push_back(loadMaterialTextures(inModel,
+                                              material,
+                                              aiTextureType_SPECULAR, 
+                                              TEXTURE_TYPE::kSpecular));
 
-      textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
       //To change for the creation of the textures in the resource Manager.
-      Vector<Texture> roughnessMaps = loadMaterialTextures(inModel,
-                                                          material,
-                                                          aiTextureType_SHININESS, 
-                                                          "texture_shininess");
-
-      textures.insert(textures.end(), roughnessMaps.begin(), roughnessMaps.end());
+      textures.push_back(loadMaterialTextures(inModel,
+                                              material,
+                                              aiTextureType_SHININESS, 
+                                              TEXTURE_TYPE::kGloss));
 
     }
     else {
-      //To change for the creation of the textures in the resource Manager.
-      Texture texture;
-      texture.texture = GAPI.TextureFromFile("Resources/", "missingTexture.png");
-      textures.push_back(texture);
+      //To change for the Setting the reference of the missingTexture only.
+      
+      textures.push_back(RM.m_missingTextureRef);
     }
 
-    return Mesh(vertices, 
-                indices, 
-                textures);
+    SharedPtr<Mesh> tmpMesh = make_shared<Mesh>(vertices, indices, textures);
+
+    return tmpMesh;
   }
 
 }

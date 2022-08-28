@@ -77,7 +77,7 @@ namespace giEngineSDK {
      * @param    inMesh        USD data obtained.
      * @param    inPath        The reference path for the mesh.
      */
-    Mesh
+    SharedPtr<Mesh>
     createMeshFromGeoMesh(UsdGeomMesh inMesh, StringView inPath);
 
     /**

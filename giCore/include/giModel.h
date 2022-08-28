@@ -36,7 +36,6 @@ namespace giEngineSDK {
 
     ///Destructor
     ~Model();
-
     
     /**
      * @brief    Unload the model.
@@ -61,20 +60,11 @@ namespace giEngineSDK {
       return static_cast<int32>(m_materialsLoaded.size());
     }
 
-    /**
-     * @brief    Get the list of textures.
-     * @return   Return the list of the textures.
-     */
-    Vector<String> getMaterilsNames() {
-      
-      return m_materialsLoaded;
-    }
-
     //The references of the Materials.
     Vector<ResourceRef> m_materialsLoaded;
 
     //Meshes.
-    Vector<Mesh> m_meshes;
+    Vector<SharedPtr<Mesh>> m_meshes;
 
     //The directory of the model.
     Path m_directory;

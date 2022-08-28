@@ -20,6 +20,8 @@
 
 namespace giEngineSDK {
 
+  class Mesh;
+
   /**
    * @brief    Type for save a reference of a resource.
    */
@@ -35,7 +37,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor.
-    ResourceManager() = default;
+    ResourceManager();
 
     //Default destructor.
     ~ResourceManager() = default;
@@ -57,10 +59,10 @@ namespace giEngineSDK {
     /**
      * @brief    Function to read a file.
      * @param    inFile        The file to read.
-     * @return   Returns the result from the reading file.
+     * @return   Returns the reference of the resource created by reading the file.
      */
-    SharedPtr<Resource>
-    readFromFile(FILE inFile);
+    ResourceRef
+    readFromFile(FILE& inFile);
 
     /**
      * @brief    Getter for the resources by an a ID.
@@ -71,21 +73,6 @@ namespace giEngineSDK {
     getResource(UUID inID);
 
     /**
-     * @brief    Creates a texture from memory data.
-     * @return   Returns the reference of the resource.
-     */
-    ResourceRef
-    createTextureFromMem(String inData);
-
-    /**
-     * @brief    Creates a texture from a readed file data.
-     * @param    inFileData    The data to use as a texture.
-     * @return   Returns the reference of the resource.
-     */
-    ResourceRef
-    createTextureFromFile(FILE inFileData);
-
-    /**
      * @brief    .
      * @param    inReferences  .
      * @return   .
@@ -94,41 +81,50 @@ namespace giEngineSDK {
     createMaterialFromTexRef(Vector<ResourceRef> inReferences);
 
     /**
-     * @brief    .
-     * @param    inFileData    .
-     * @return   .
+     * @brief    Get the name of the textures used in a material.
+     * @param    inRef         The reference of the material.
+     * @return   Returns the Vector of names of the textures.
+     */
+    Vector<StringView>
+    getTextureNameFromMaterial(ResourceRef& inRef);
+
+    /**
+     * @brief 
+     * @param inMaterialRef 
+     * @param inTextureName 
+     * @return 
      */
     ResourceRef
-    createMaterialFromFile(FILE inFileData);
+    getReferenceByNameInMaterial(ResourceRef& inMaterialRef, 
+                                 StringView inTextureName);
 
 
+    ResourceRef
+    createModelFromMem(Vector<SharedPtr<Mesh>> inMeshes,
+                       Vector<ResourceRef> inMaterials = Vector<ResourceRef>());
 
     /**
      * @brief    .
-     * @param    inRef 
-     * @return   .
-     */
-    String
-    getTextureName(ResourceRef & inRef);
-
-   protected:
-  	
-    /**
-     * @brief    Read file information and save it in File type.
-     * @param    inFile        File type to read and save the information.
+     * @param    inReference   .
      */
     void
-    readFile(FILE & inFile);
+    renderResource(ResourceRef inReference);
 
-   private:
-    //Reference of the encoder.
-    SharedPtr<Encoder> m_encoder;
-
-    ////Reference of the Decoder.
-    SharedPtr<Decoder> m_decoder;
+   public:
 
     //The map of resources loaded.
     Map<UUID, SharedPtr<Resource>> m_loadedResources;
+
+    //
+    ResourceRef m_missingTextureRef;
+
+   private:
+
+    /**
+     * @brief    Creates a texture and bind it as a missingTexture and creates it Ref.
+     */
+    void
+    createMissingTexture();
 
 
     friend class Decoder;

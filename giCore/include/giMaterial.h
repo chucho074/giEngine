@@ -12,6 +12,7 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
+#include "giResourceManager.h"
 #include "giResource.h"
 #include "giTexture2D.h"
 #include "giTexture.h"  

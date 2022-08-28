@@ -18,7 +18,11 @@ namespace giEngineSDK {
   namespace COMPONENT_TYPE {
     enum E {
       kStaticMesh = 0,
-      kCamera, 
+      kCamera,
+      /*
+      Lights
+      Sound
+      */
     };
   }
 

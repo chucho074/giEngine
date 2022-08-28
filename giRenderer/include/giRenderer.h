@@ -12,6 +12,7 @@
  */
 #pragma once
 #include <giBaseRenderer.h>
+#include <giResourceManager.h>
 #include <giCamera.h>
 #include <giVector2i.h>
 #include "giPrerequisitesRenderer.h"
@@ -113,7 +114,7 @@ namespace giEngineSDK {
     render() override;
 
     /**
-     * brief
+     * brief     .
      */
     void
     renderData(Vector<SharedPtr<Texture2D>> inRendertarget,
@@ -128,7 +129,7 @@ namespace giEngineSDK {
                bool inClear = true);
 
     /**
-     * @brief
+     * @brief    .
      */
     void 
     dispatchData(Vector<SharedPtr<Buffer>> inConstantBuffers,
@@ -197,7 +198,7 @@ namespace giEngineSDK {
     Vector<SharedPtr<Texture2D>> m_SSAOTexture;
 
     //SAQ
-    SharedPtr<Model> m_SAQ;
+    ResourceRef m_SAQ;
 
                 //Blur
     //The Vertex Shader

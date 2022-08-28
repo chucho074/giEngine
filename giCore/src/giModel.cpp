@@ -14,11 +14,6 @@
 
 namespace giEngineSDK {
 
-  
-  
-
-
-
   Model::~Model() {
     unload();
   }
@@ -33,7 +28,7 @@ namespace giEngineSDK {
 
     //Draw every mesh into the map
     for (uint32 i = 0; i < m_meshes.size(); i++) {
-      m_meshes[i].drawMesh();
+      m_meshes[i]->drawMesh();
     }
   }
 }

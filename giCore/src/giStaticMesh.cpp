@@ -11,6 +11,7 @@
  * @include
  */
 #include "giStaticMesh.h"
+#include "giResourceManager.h"
 
 namespace giEngineSDK {
   
@@ -21,15 +22,12 @@ namespace giEngineSDK {
 
   void 
   StaticMesh::render() {
-    m_model->drawModel();
+    auto& RM = g_resourceManager().instance();
+
+    RM.renderResource(m_model);
   }
   
-  void 
-  StaticMesh::setModel(SharedPtr<Model> inModel) {
-    m_model = inModel;
-  }
-  
-  SharedPtr<Model> 
+  ResourceRef 
   StaticMesh::getModel() {
       return m_model;
   }

@@ -20,7 +20,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor
-    StaticMesh() = default;
+    StaticMesh(ResourceRef inRes) :m_model(inRes) {};
 
     //Desturctor
     ~StaticMesh() = default;
@@ -31,14 +31,11 @@ namespace giEngineSDK {
     void 
     render() override;
 
-    void
-    setModel(SharedPtr<Model> inModel);
-
-    SharedPtr<Model>
+    ResourceRef
     getModel();
 
    private:
 
-    SharedPtr<Model> m_model;
+    ResourceRef m_model;
   };
 }

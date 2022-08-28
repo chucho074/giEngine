@@ -15,11 +15,14 @@
 
 namespace giEngineSDK {
 
-  class UUID
+  class GI_CORE_EXPORT UUID
   {
    public:
   	//Default constructor.
     UUID();
+
+    //Constructor for own purposes.
+    UUID(int32 inData);
 
     //Copy constructor.
     UUID(const UUID& inUUID) = default;
@@ -35,9 +38,6 @@ namespace giEngineSDK {
     ZERO;
 
    private:
-
-    //Constructor for own purposes.
-    UUID(int32);
 
     uint64 m_uuid;
 

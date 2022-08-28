@@ -34,7 +34,7 @@ namespace giEngineSDK {
    * @class    Resource.
    * @brief    .
    */
-  class Resource
+  class GI_CORE_EXPORT Resource
   {
    public:
     //Default Constructor.

@@ -14,7 +14,7 @@
 #include "giPrerequisitesCore.h"
 #include "giFile.h"
 #include "giResource.h"
-
+#include "giResourceManager.h"
 
 
 namespace giEngineSDK {
@@ -31,9 +31,15 @@ namespace giEngineSDK {
      * @brief    .
      * @param    inFileData    .
      */
-    SharedPtr<Resource>
+    static SharedPtr<Resource>
     decodeData(FILE &inFileData);
 
+    /**
+     * @brief    Read file information and save it in File type.
+     * @param    inFile        File type to read and save the information.
+     */
+    static void
+    readFile(FILE& inFile);
 
   private:
 
@@ -41,14 +47,14 @@ namespace giEngineSDK {
      * @brief    Encode the information for the giProject Files.
      * @param    inFileData    The file data structure.
      */
-    SharedPtr<Resource>
+    static SharedPtr<Resource>
     decodeGiProject(FILE &inFileData);
 
     /**
      * @brief    Decode any image type.
      * @param    inFileData    .
      */
-    SharedPtr<Resource> 
+    static SharedPtr<Resource>
     decodeImage(FILE &inFileData);
     
     /**
@@ -56,7 +62,7 @@ namespace giEngineSDK {
      * @param    inFileData    .
      * @return   Returns the model as a Shared Pointer of Resource .
      */
-    SharedPtr<Resource>
+    static SharedPtr<Resource>
     decodeModel(FILE &inFileData);
 
     

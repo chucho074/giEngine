@@ -28,7 +28,7 @@ namespace giEngineSDK {
      * @brief    .
      * @param    inFileData    .
      */
-    void
+    static void
     encodeData(FILE inFileData);
 
 
@@ -38,7 +38,7 @@ namespace giEngineSDK {
   	 * @brief    Encode the information for the giProject Files.
   	 * @param    inFileData    The file data structure.
   	 */
-  	void
+  	static void
     encodeGiProject(FILE inFileData);
 
    protected:

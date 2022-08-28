@@ -9,6 +9,7 @@
 
 #include "giMesh.h"
 #include "giBaseGraphicsAPI.h"
+#include "giResourceManager.h"
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
@@ -16,7 +17,7 @@
 namespace giEngineSDK {
   Mesh::Mesh(Vector<SimpleVertex> inVertex, 
              Vector<uint32> inIndex, 
-             Vector<Texture> inTextures) {
+             Vector<ResourceRef> inTextures) {
     m_vertexVector = inVertex;
     m_facesList = inIndex;
     m_textures = inTextures;
@@ -50,10 +51,17 @@ namespace giEngineSDK {
   void
   Mesh::drawMesh() {
     auto& GAPI = g_graphicsAPI();
+    auto& RM = g_resourceManager();
 
     for(uint32 i = 0; i < m_textures.size(); i++) {
-      GAPI.psSetShaderResource(i, m_textures[i].texture);
-      GAPI.psSetSamplerState(i, 1, m_textures[i].samplerState);
+
+      auto tmpResoruce = RM.getResource(m_textures[i].m_id);
+      GAPI.psSetShaderResource(i, 
+                               static_pointer_cast<Texture>(tmpResoruce.lock())->m_texture);
+    
+      GAPI.psSetSamplerState(i, 
+                             1, 
+                             static_pointer_cast<Texture>(tmpResoruce.lock())->m_samplerState);
     }
 
 

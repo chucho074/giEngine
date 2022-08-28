@@ -49,7 +49,7 @@ namespace giEngineSDK {
      */
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
-         Vector<Texture> inTextures);
+         Vector<ResourceRef> inTextures);
 
     ///Destructor
     ~Mesh();
@@ -83,9 +83,9 @@ namespace giEngineSDK {
     //int32 m_indexNum = 0;
 
     //Textures in the mesh
-    Vector<Texture> m_textures;
+    Vector<ResourceRef> m_textures;
 
-
+    //The reference for the path in Omniverse.
     String m_omniRefPath = "";
   };
 }

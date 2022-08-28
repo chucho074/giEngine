@@ -638,33 +638,6 @@ namespace giEngineSDK {
       return m_defaultDSV;
     }
     
-    /**
-     * @brief 
-     * @param    inString 
-     * @param    inDirectory 
-     * @return 
-     */
-    SharedPtr<Texture2D>
-    TextureFromFile(String inString, 
-                    String inDirectory) override;
-
-
-    /**
-     * @brief    Load a texture from memory.
-     * @param    inData
-     * @param    inWidth
-     * @param    inHeight
-     * @return   Returns a texture 2D.
-     */
-    SharedPtr<Texture2D>
-    TextureFromMem(uint8* inData, 
-                   int32 inWidth, 
-                   int32 inHeight, 
-                   GI_FORMAT::E inFormat,
-                   GI_BIND_FLAG::E inBindFlags) override;
-
-
-
     void * 
     getDevice() override {
       return m_device;

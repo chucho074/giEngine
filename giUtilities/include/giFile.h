@@ -58,7 +58,7 @@ namespace giEngineSDK {
     //Default destructor.
     ~FILE() = default;
 
-   private:
+   //private:
     /**
      * @brief    Evaluates the extension and sets the value in m_extension.
      * @param    inExtension   The string of the extension to evaluate.
@@ -66,7 +66,7 @@ namespace giEngineSDK {
     void
     evaluateExtension(wString inExtension);
 
-   protected:
+   //protected:
 
     Path m_path;
 

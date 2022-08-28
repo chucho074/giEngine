@@ -1,4 +1,4 @@
-/**
+      /**
  * @file    giTexture.h
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
@@ -47,7 +47,7 @@ namespace giEngineSDK {
     String m_name;
 
     //The type of the Texture.
-    TEXTURE_TYPE::E m_type;
+    TEXTURE_TYPE::E m_type = TEXTURE_TYPE::kUnknown;
 
     //The path of the file.
     Path m_path;

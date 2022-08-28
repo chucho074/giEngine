@@ -18,6 +18,7 @@
 using giEngineSDK::Buffer;
 using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;
+using giEngineSDK::FILE;
 
 /**
  * @struct   CameraConstantBuffer.
