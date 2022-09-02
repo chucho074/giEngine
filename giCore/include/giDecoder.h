@@ -18,6 +18,8 @@
 
 namespace giEngineSDK {
 
+  struct ResourceRef;
+
   class Decoder
   {
   public:
