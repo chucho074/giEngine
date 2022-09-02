@@ -20,7 +20,7 @@ namespace giEngineSDK {
   {
    public:
     //Default Constructor
-    StaticMesh(ResourceRef inRes) :m_model(inRes) {};
+    StaticMesh(ResourceRef inRes) : m_model(inRes) {};
 
     //Desturctor
     ~StaticMesh() = default;

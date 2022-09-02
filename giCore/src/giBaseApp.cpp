@@ -183,6 +183,11 @@ BaseApp::initSystems() {
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
 
+  //Start the Resource Manager
+  ResourceManager::startUp();
+  m_resoureceManager = &g_resourceManager();
+  m_resoureceManager->init();
+
   //Start the Renderer
   if (m_loaderRenderer.loadPlugin("giRenderer_d.dll")) {
     auto createRenderer = reinterpret_cast<funCreateRenderer>(m_loaderRenderer.getProcedureByName("createRenderer"));

@@ -33,11 +33,11 @@ namespace giEngineSDK {
   /**
    * @brief    The Class in charge to manage the creation of the resources.
    */
-  class ResourceManager : public Module<ResourceManager> 
+  class GI_CORE_EXPORT ResourceManager : public Module<ResourceManager> 
   {
    public:
     //Default Constructor.
-    ResourceManager();
+    ResourceManager() = default;
 
     //Default destructor.
     ~ResourceManager() = default;
@@ -56,6 +56,12 @@ namespace giEngineSDK {
     void 
     onShutDown() override {};
     
+    /**
+     * @brief    Initialize the Resource Manager info.
+     */
+    void
+    init();
+
     /**
      * @brief    Function to read a file.
      * @param    inFile        The file to read.

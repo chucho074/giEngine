@@ -11,6 +11,7 @@
  * @include
  */
 #include "giDecoder.h"
+#include "giResourceManager.h"
 #include "giModel.h"
 #include "giMesh.h"
 
@@ -30,58 +31,49 @@ namespace giEngineSDK {
   processMesh(WeakPtr<Model> inModel, aiMesh* mesh, const aiScene* scene);
 
 
-  SharedPtr<Resource>
+  ResourceRef
   Decoder::decodeData(FILE &inFileData) {
-    //Verify if the FILE is not empty.
-    if (!inFileData.m_data.empty()) {
-      //Use the data to decode it.
-      switch (inFileData.m_extension) {
 
-        case EXTENSION_TYPE::E::kBMP: {
-          return decodeImage(inFileData);
-        }
+    auto& RM = g_resourceManager();
 
-        case EXTENSION_TYPE::E::kJPEG: {
-          return decodeImage(inFileData);
-        }
+    ResourceRef tmpRef;
+    tmpRef.m_id = UUID();
+    
+    if(EXTENSION_TYPE::E::kBMP == inFileData.m_extension
+      || EXTENSION_TYPE::E::kJPEG == inFileData.m_extension
+      || EXTENSION_TYPE::E::kPNG == inFileData.m_extension
+      || EXTENSION_TYPE::E::kTGA == inFileData.m_extension) {
 
-        case EXTENSION_TYPE::E::kPNG: {
-          return decodeImage(inFileData);
-        }
+      RM.m_loadedResources.insert({tmpRef.m_id,
+                                   Decoder::decodeImage(inFileData)});
 
-        case EXTENSION_TYPE::E::kTGA: {
-          return decodeImage(inFileData);
-        }
-
-        case EXTENSION_TYPE::E::kFBX: {
-          return decodeModel(inFileData);
-        }
-
-        case EXTENSION_TYPE::E::kOBJ: {
-          return decodeModel(inFileData);
-        }
-        case EXTENSION_TYPE::E::kHLSL: {}
-
-        case EXTENSION_TYPE::E::kgiTEX2D: {}
-
-        case EXTENSION_TYPE::E::kgiModel: {}
-
-        case EXTENSION_TYPE::E::kgiShader: {}
-
-      default:
-        break;
-      }
-    }
-    //If the file is empty.
-    else {
-      //Read the FILE and get the data.
-      readFile(inFileData);
-      //Decode the data.
-      return decodeData(inFileData);
-
+      tmpRef.m_type = RESOURCE_TYPE::kTexture;
+      return tmpRef;
     }
 
-    return SharedPtr<Resource>();
+        
+
+    if(EXTENSION_TYPE::E::kFBX == inFileData.m_extension
+      || EXTENSION_TYPE::E::k3DS == inFileData.m_extension
+      || EXTENSION_TYPE::E::kOBJ == inFileData.m_extension) {
+
+      RM.m_loadedResources.insert({ tmpRef.m_id,
+                                   Decoder::decodeModel(inFileData) });
+
+      tmpRef.m_type = RESOURCE_TYPE::kModel;
+
+      return tmpRef;
+    }
+
+    //case EXTENSION_TYPE::E::kHLSL: {}
+    
+    //case EXTENSION_TYPE::E::kgiTEX2D: {}
+    
+    //case EXTENSION_TYPE::E::kgiModel: {}
+    
+    //case EXTENSION_TYPE::E::kgiShader: {}
+
+      
   }
 
   SharedPtr<Resource>
@@ -94,22 +86,20 @@ namespace giEngineSDK {
   Decoder::decodeImage(FILE &inFileData) {
     auto& gapi = g_graphicsAPI().instance();
 
-    int32 w, h, comp;
+    int32 w = 0, h = 0, comp = 0;
 
     comp = 4;
 
-    SharedPtr<Texture> tmpTexture;
-    
+    SharedPtr<Texture> tmpTexture = make_shared<Texture>();
+
     //Save the information of the readed data.
-    uint8 tmpData = (uint8)inFileData.m_data.c_str();
+    //uint8 tmpData = (uint8)inFileData.m_data.c_str();
     
     //Get the information of the image loadead.
-    uint8 * tmpImg = stbi_load_from_memory(&tmpData, 
-                                           inFileData.m_data.length(), 
-                                           &w, 
-                                           &h, 
-                                           &comp, 
-                                           0);
+    uint8 * tmpImg = stbi_load(inFileData.m_path.string().c_str(),
+                               &w, 
+                               &h, 
+                               &comp, 4);
 
     //Create the texture with the information.
     if (tmpImg) {
@@ -140,7 +130,7 @@ namespace giEngineSDK {
     //Unload Data
     stbi_image_free(tmpImg);
 
-    return SharedPtr<Texture>();
+    return tmpTexture;
   }
 
   SharedPtr<Resource>
@@ -149,12 +139,11 @@ namespace giEngineSDK {
     Assimp::Importer importer;
 
     size_T tmpSize(inFileData.m_data.size());
-    importer.ReadFileFromMemory(&inFileData.m_data,
-                                  tmpSize,
-                                  aiProcessPreset_TargetRealtime_MaxQuality |
-                                  aiProcess_TransformUVCoords|
-                                  aiProcess_ConvertToLeftHanded |
-                                  aiProcess_Triangulate);
+    importer.ReadFile(inFileData.m_path.string(),
+                      aiProcessPreset_TargetRealtime_MaxQuality |
+                      aiProcess_TransformUVCoords|
+                      aiProcess_ConvertToLeftHanded |
+                      aiProcess_Triangulate);
 
     const aiScene* tmpScene = importer.GetOrphanedScene();
 
@@ -165,17 +154,21 @@ namespace giEngineSDK {
       return SharedPtr<Resource>();
     }
 
-    SharedPtr<Model> tmpModel;
+    SharedPtr<Model> tmpModel = make_shared<Model>();
+
+    tmpModel->m_directory = inFileData.m_path;
+
+    tmpModel->m_resourceType = RESOURCE_TYPE::kModel;
 
     processNode(tmpModel, tmpScene->mRootNode, tmpScene);
-    return SharedPtr<Resource>();
+    return tmpModel;
   }
 
 
   void
   Decoder::readFile(FILE& inFile) {
     
-    ifstream tmpFile(inFile.m_path);
+    ifstream tmpFile(inFile.m_path.c_str());
     
     String tmpData;
     while (getline(tmpFile, tmpData)) {
@@ -222,8 +215,10 @@ namespace giEngineSDK {
     auto& GAPI = g_graphicsAPI();
     auto& RM = g_resourceManager();
     ResourceRef tmpTextureRef;
+    bool noTexture = true;
     //Get the number of textures in assimp in the material.
     for (uint32 i = 0; i < mat->GetTextureCount(type); i++) {
+      noTexture = false;
       aiString str;
       mat->GetTexture(type, i, &str);
       String tmpTextureName = str.C_Str();
@@ -246,22 +241,26 @@ namespace giEngineSDK {
         }
       }
 
-      if (!skip)  {   // if texture hasn't been loaded already, load it
-        FILE tmpFile(inModel.lock()->m_directory.string() + tmpTextureName);
+      if (!skip)  {   // if texture hasn't been loaded already, load it.
 
-        tmpTextureRef.m_id = UUID();
+        //Get the path without the name of the model name.
 
-        RM.m_loadedResources.insert({tmpTextureRef.m_id,
-                                     Decoder::decodeData(tmpFile)});
+        FILE tmpFile(inModel.lock()->m_directory.parent_path().string() + tmpTextureName);
+
+        tmpTextureRef = Decoder::decodeData(tmpFile);
 
         auto tmpResource = RM.getResource(tmpTextureRef.m_id);
-
 
         auto tmpTexture = static_pointer_cast<Texture>(tmpResource.lock());
         
         tmpTexture->m_type = typeName;
       }
     }
+
+    if (noTexture) {
+      tmpTextureRef = RM.m_missingTextureRef;
+    }
+
     return tmpTextureRef;
   }
 

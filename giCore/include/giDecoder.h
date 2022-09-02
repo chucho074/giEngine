@@ -14,7 +14,6 @@
 #include "giPrerequisitesCore.h"
 #include "giFile.h"
 #include "giResource.h"
-#include "giResourceManager.h"
 
 
 namespace giEngineSDK {
@@ -31,7 +30,7 @@ namespace giEngineSDK {
      * @brief    .
      * @param    inFileData    .
      */
-    static SharedPtr<Resource>
+    static ResourceRef
     decodeData(FILE &inFileData);
 
     /**

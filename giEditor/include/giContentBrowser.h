@@ -51,12 +51,6 @@ class ContentBrowser
 	void
 	destroy();
 
-
-	
- 
- protected:
-	
-
  private:
 
 	 Path m_workingDirectory;

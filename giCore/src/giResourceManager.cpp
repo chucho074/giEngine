@@ -20,7 +20,8 @@
 
 namespace giEngineSDK {
 
-  ResourceManager::ResourceManager() {
+  void 
+  ResourceManager::init() {
     createMissingTexture();
   }
 
@@ -31,14 +32,13 @@ namespace giEngineSDK {
     Decoder::readFile(inFile);
 
     //Creates the References of the Resource.
-    ResourceRef tmpRef;
+    ResourceRef tmpRef = Decoder::decodeData(inFile);
 
     //Decide the type of file and send to the correct function.
-    tmpRef.m_id = UUID();
+    //tmpRef.m_id = UUID();
 
-    //Adds the Resource to the loaded resources map.
-    m_loadedResources.insert({tmpRef.m_id,
-                              Decoder::decodeData(inFile)});
+    //Adds the Resource to the loaded resources map.    
+    //m_loadedResources.insert({tmpRef.m_id, Decoder::decodeData(inFile)});
     
     //Return the reference.
     return tmpRef;
@@ -152,10 +152,7 @@ namespace giEngineSDK {
 
     FILE tmpMissingTextureFile("Resources/missingTexture.png");
 
-    m_missingTextureRef.m_id = UUID();
-
-    m_loadedResources.insert({m_missingTextureRef.m_id, 
-                              Decoder::decodeData(tmpMissingTextureFile)});
+    m_missingTextureRef = Decoder::decodeData(tmpMissingTextureFile);
 
   }
 

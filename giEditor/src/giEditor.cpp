@@ -26,7 +26,7 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_ui->init(inHandler, inWindowSize);
 
   //m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
-  m_contentBrowser = make_shared<ContentBrowser>("E:/Dev/giTestProject");
+  m_contentBrowser = make_shared<ContentBrowser>("G:/Dev/giTestProject");
 
   m_hierarchy = make_shared<Hierarchy>();
 

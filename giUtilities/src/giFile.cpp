@@ -16,49 +16,52 @@ namespace giEngineSDK {
 
   void
   FILE::evaluateExtension(wString inExtension) {
-    if(inExtension == L"json") {
+    if(inExtension == L".json") {
       m_extension = EXTENSION_TYPE::kJSON;
     }
-    else if(inExtension == L"bmp") {
+    else if(inExtension == L".bmp") {
       m_extension = EXTENSION_TYPE::kBMP;
     }
-    else if(inExtension == L"jpeg") {
+    else if(inExtension == L".jpeg") {
       m_extension = EXTENSION_TYPE::kJPEG;
     }
-    else if(inExtension == L"png") {
+    else if(inExtension == L".png") {
       m_extension = EXTENSION_TYPE::kPNG;
     }
-    else if(inExtension == L"tga") {
+    else if(inExtension == L".tga") {
       m_extension = EXTENSION_TYPE::kTGA;
     }
-    else if(inExtension == L"fbx") {
+    else if(inExtension == L".fbx") {
       m_extension = EXTENSION_TYPE::kFBX;
     }
-    else if(inExtension == L"obj") {
+    else if(inExtension == L".3ds") {
+      m_extension = EXTENSION_TYPE::k3DS;
+    }
+    else if(inExtension == L".obj") {
       m_extension = EXTENSION_TYPE::kOBJ;
     }
-    else if(inExtension == L"txt") {
+    else if(inExtension == L".txt") {
       m_extension = EXTENSION_TYPE::kTXT;
     }
-    else if(inExtension == L"hlsl") {
+    else if(inExtension == L".hlsl") {
       m_extension = EXTENSION_TYPE::kHLSL;
     }
-    else if(inExtension == L"giTex2D") {
+    else if(inExtension == L".giTex2D") {
       m_extension = EXTENSION_TYPE::kgiTEX2D;
     }
-    else if(inExtension == L"giModel") {
+    else if(inExtension == L".giModel") {
       m_extension = EXTENSION_TYPE::kgiModel;
     }
-    else if(inExtension == L"giShader") {
+    else if(inExtension == L".giShader") {
       m_extension = EXTENSION_TYPE::kgiShader;
     }
-    else if(inExtension == L"giProject") {
+    else if(inExtension == L".giProject") {
       m_extension = EXTENSION_TYPE::kgiProject;
     }
-    else if(inExtension == L"giFile") {
+    else if(inExtension == L".giFile") {
       m_extension = EXTENSION_TYPE::kgiFile;
     }
-    else if(inExtension == L"giSettings") {
+    else if(inExtension == L".giSettings") {
       m_extension = EXTENSION_TYPE::kgiSettings;
     }
   }

@@ -67,6 +67,7 @@ DirectXApp::onCreate() {
   ResourceRef tmpModel;
   FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
   //tmpModel->loadFromFile("Resources/Models/cube.fbx");
+  tmpModel = RM.readFromFile(tmpFileModel);
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);

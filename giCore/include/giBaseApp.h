@@ -179,6 +179,8 @@ class GI_CORE_EXPORT BaseApp
   BaseRenderer* m_renderer = nullptr;
 
   SceneGraph * m_sceneGraph = nullptr;
+  
+  ResourceManager * m_resoureceManager = nullptr;
 
   Time * m_time = nullptr;
 

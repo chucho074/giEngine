@@ -23,6 +23,7 @@ namespace giEngineSDK {
         kPNG,
         kTGA,
         kFBX,
+        k3DS,
         kOBJ,
         kTXT,
         kHLSL,

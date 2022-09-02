@@ -651,7 +651,7 @@ namespace giEngineSDK {
   Omni::createSGFromUSD() {
 
     auto& gapi = g_graphicsAPI();
-    auto& RM = g_resourceManager();
+    auto& RM = ResourceManager::instance();
     auto& sgraph = SceneGraph::instance();
 
     omniUsdLiveWaitForPendingUpdates();
@@ -912,7 +912,7 @@ namespace giEngineSDK {
 
   void
   Omni::getFromSG() {
-    auto& RM = g_resourceManager().instance();
+    auto& RM = ResourceManager::instance();
     auto& sgraph = SceneGraph::instance();
 
     // Keep the model contained inside of "Root", only need to do this once per model
