@@ -45,7 +45,7 @@ namespace giEngineSDK {
     sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.comparisonFunc = 1;
     sampDesc.minLOD = 0;
-    sampDesc.maxLOD = 3.402823466e+38f;
+    sampDesc.maxLOD = Math::PI;
     m_sampler = gapi.createSampler(sampDesc);
 
     //Main Camera

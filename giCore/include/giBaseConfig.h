@@ -11,9 +11,10 @@
  * @include
  */
 #pragma once
-#include <giModule.h>
-#include <giVector2i.h>
-#include <giStdHeaders.h>
+#include "giModule.h"
+#include "giVector2i.h"
+#include "giStdHeaders.h">
+#include "giPrerequisitesCore.h"
 
 using namespace giEngineSDK;
 
@@ -35,7 +36,7 @@ namespace GIPLUGINS {
   };
 }
 
-class EngineConfigs : public Module<EngineConfigs>
+class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 {
  public:
    EngineConfigs() = default;

@@ -11,6 +11,7 @@
  * @include
  */
 #include "giContentBrowser.h"
+#include "giResourceManager.h"
 
 
 ContentBrowser::ContentBrowser(Path inWorkingDir) {
@@ -23,7 +24,7 @@ void
 ContentBrowser::init() {
   m_windowFlags |= ImGuiWindowFlags_NoCollapse;
 
-  //Texture2D::Create
+  //ResourceRef
 }
 
 void 
@@ -62,6 +63,7 @@ ContentBrowser::render() {
     //if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left));
 
     //Show Folders
+    //if (ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize })) {
     if (ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize })) {
       if (tmpIterator.is_directory()) {
         m_currentDirectory /= tmpPath.filename();
@@ -81,8 +83,8 @@ ContentBrowser::render() {
   ImGui::Columns(1);
   
   //Status bar
-  ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 256);
-  ImGui::SliderFloat("Padding", &tmpPadding, 0, 32);
+  ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 100);
+  //ImGui::SliderFloat("Padding", &tmpPadding, 0, 32);
 
   ImGui::End();
 }

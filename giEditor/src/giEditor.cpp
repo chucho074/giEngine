@@ -21,12 +21,10 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
 
   auto& configs = EngineConfigs::instance();
 
-
   m_ui = make_shared<UI>();
   m_ui->init(inHandler, inWindowSize);
 
-  //m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
-  m_contentBrowser = make_shared<ContentBrowser>("G:/Dev/giTestProject");
+  m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
 
   m_hierarchy = make_shared<Hierarchy>();
 
@@ -48,7 +46,6 @@ Editor::update(float inDeltaTime) {
 void 
 Editor::render() {
   
-
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
       if (ImGui::MenuItem("New")) {}

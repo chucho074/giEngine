@@ -18,6 +18,8 @@
 int32 
 BaseApp::run() {
 
+  //EngineConfigs::s_activePlugins.insert({GIPLUGINS::kOmniverse, true});
+
   //Create the main window.
   createWindow();
 
@@ -104,7 +106,6 @@ BaseApp::create() {
   m_renderer->create();
 
   auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
-
   if (iter != EngineConfigs::s_activePlugins.end()) {
 
     //Create the Omniverse conection.
