@@ -51,14 +51,11 @@ class Hierarchy
   void
   destroy();
 
-  void
-  renderNodeWithChilds(SharedPtr<SceneNode> inNode);
-
+  /**
+   * @brief      Renders the information of the node into the table of hierarchy.
+   */
   void
   renderNode(SharedPtr<SceneNode> inNode);
-
-  void
-  evaluateNode(SharedPtr<SceneNode> inNode);
 
  private:
  

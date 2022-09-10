@@ -14,6 +14,7 @@
 #include "giPrerequisitesCore.h"
 #include "giResource.h"
 #include "giTexture2D.h"
+#include "giSampler.h"
 
 namespace giEngineSDK {
   

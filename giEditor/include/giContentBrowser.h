@@ -21,11 +21,10 @@ class ContentBrowser
 {
  public:
 	//Default constructor.
-	ContentBrowser(Path inWorkingDir);
+  ContentBrowser(Path inWorkingDir);
 	
 	//Default destructor.
 	~ContentBrowser() = default;
-	
 	
 	/**
 	 * @brief      Initialize the content Browser.
@@ -52,10 +51,10 @@ class ContentBrowser
 	destroy();
 
  private:
+  
+	Path m_workingDirectory;
 
-	 Path m_workingDirectory;
-
-	 Path m_currentDirectory;
-
-   ImGuiWindowFlags m_windowFlags = 0;
+	Path m_currentDirectory;
+  
+  ImGuiWindowFlags m_windowFlags = 0;
 };

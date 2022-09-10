@@ -22,6 +22,7 @@ namespace giEngineSDK {
 
   void 
   ResourceManager::init() {
+    createEditorIconsTextures();
     createMissingTexture();
   }
 
@@ -154,6 +155,25 @@ namespace giEngineSDK {
 
     m_missingTextureRef = Decoder::decodeData(tmpMissingTextureFile);
 
+  }
+
+  void 
+  ResourceManager::createEditorIconsTextures() {
+    //Left Arrow Icon.
+    FILE tmpLeftArrowIcon("Resources/Icons/leftArrow.png");
+    m_leftArrow = Decoder::decodeData(tmpLeftArrowIcon);
+
+    //Right Arrow Icon.
+    FILE tmpRightArrowIcon("Resources/Icons/rightArrow.png");
+    m_rightArrow = Decoder::decodeData(tmpRightArrowIcon);
+
+    //Folder Icon.
+    FILE tmpFolderIcon("Resources/Icons/folderIcon.png");
+    m_folderIcon = Decoder::decodeData(tmpFolderIcon);
+
+    //File icon.
+    FILE tmpFileIcon("Resources/Icons/fileIcon.png");
+    m_fileIcon = Decoder::decodeData(tmpFileIcon);
   }
 
   ResourceManager&

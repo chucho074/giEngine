@@ -13,7 +13,9 @@
 #include "giEditor.h"
 #include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
+#include <giTexture.h>
 #include <giTexture2D.h>
+#include <giResourceManager.h>
 #include <memory>
 
 void 
@@ -45,6 +47,9 @@ Editor::update(float inDeltaTime) {
 
 void 
 Editor::render() {
+
+  auto& RM = g_resourceManager().instance();
+
   
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
@@ -79,6 +84,7 @@ Editor::render() {
 
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
   //Render the hierarchy of the scene.
   m_hierarchy->render();
 

@@ -27,12 +27,13 @@ Hierarchy::init() {
 
   m_rootFlags = ImGuiTreeNodeFlags_OpenOnArrow
                 | ImGuiTreeNodeFlags_OpenOnDoubleClick 
-                | ImGuiTreeNodeFlags_SpanAvailWidth;
+                | ImGuiTreeNodeFlags_SpanFullWidth;
 
   m_treeSelectableFlags = m_rootFlags | ImGuiTreeNodeFlags_Selected;
 
 
   m_leafFlags = m_treeSelectableFlags |= ImGuiTreeNodeFlags_Leaf
+                                      | ImGuiTreeNodeFlags_Bullet
                                       | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 }
 
@@ -46,16 +47,21 @@ Hierarchy::render() {
   auto& sg = SceneGraph::instance();
   auto root = sg.getRoot();
   auto tmpNodes = sg.getNodesByParent(root);
+
   ImGui::Begin("Hierarchy", nullptr, m_windowFlags); {
     
-    ImGui::SetNextItemOpen(true);
-    
-    if (ImGui::TreeNode("Root")) {
-      for (auto node : tmpNodes) {
-        evaluateNode(node);
+    if(ImGui::BeginTable("Hierarchy List", 3, ImGuiTableFlags_Resizable | 
+                                              ImGuiTableFlags_NoBordersInBody |
+                                              ImGuiTableFlags_BordersV)) {
+      ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableSetupColumn("Active", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableHeadersRow();
+      for (auto& nodes : sg.getRoot()->m_childs) {
+        renderNode(nodes);
       }
     }
-    ImGui::TreePop();
+    ImGui::EndTable();
 
     ImGui::End();
   }
@@ -67,48 +73,33 @@ Hierarchy::destroy() {
 }
 
 void 
-Hierarchy::renderNodeWithChilds(SharedPtr<SceneNode> inNode) {
-  auto& sg = SceneGraph::instance();
-  
-  //ImGui::SetNextItemOpen(true);
+Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
 
-  if (ImGui::TreeNode(inNode->m_actor->m_actorName.c_str())) {
-    //Get all the childs and create leafs with them information.
-    for (auto child : inNode->m_childs) {
-      evaluateNode(inNode);
-    }
-    ImGui::TreePop();
+  auto& sg = SceneGraph::instance();
+
+  ImGui::TableNextRow();
+  ImGui::TableNextColumn();
+
+  bool tmpOpenNode = false;
+
+  if (0 < inNode->m_childs.size()) {  //It has a child
+    tmpOpenNode = ImGui::TreeNodeEx(inNode->m_actor->m_actorName.c_str(), m_rootFlags);
   }
+  else {  //It hasn't childs
+    ImGui::TreeNodeEx(inNode->m_actor->m_actorName.c_str(), m_leafFlags);
+  }
+
   if (ImGui::IsItemClicked()) {
     sg.setSelectedActor(inNode->m_actor);
   }
-  
-}
 
-void 
-Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
-  auto& sg = SceneGraph::instance();
-  //Create a leaf
-  if(ImGui::TreeNodeEx((void*)(intptr_t)inNode->m_actor->m_actorId, 
-                        m_leafFlags, 
-                        inNode->m_actor->m_actorName.c_str())){
-    
+  ImGui::TableNextColumn();
+  ImGui::TextDisabled("Actor");
 
-    if (ImGui::IsItemClicked()) {
-      sg.setSelectedActor(inNode->m_actor);
+  if (0 < inNode->m_childs.size() && tmpOpenNode) {
+    for (auto& nodes : sg.getRoot()->m_childs) {
+      renderNode(nodes);
     }
-  }
- 
-}
-
-void 
-Hierarchy::evaluateNode(SharedPtr<SceneNode> inNode) {
-  //The actor have childs.
-  if (0 < inNode->m_childs.size()) {
-    renderNodeWithChilds(inNode);
-  }
-  //The actor doesn't have childs.
-  else if (0 == inNode->m_childs.size()) {
-    renderNode(inNode);
+    ImGui::TreePop();
   }
 }

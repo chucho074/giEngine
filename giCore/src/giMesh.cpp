@@ -56,6 +56,7 @@ namespace giEngineSDK {
     for(uint32 i = 0; i < m_textures.size(); i++) {
 
       auto tmpResoruce = RM.getResource(m_textures[i].m_id);
+
       GAPI.psSetShaderResource(i, 
                                static_pointer_cast<Texture>(tmpResoruce.lock())->m_texture);
     

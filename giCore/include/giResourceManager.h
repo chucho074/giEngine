@@ -44,14 +44,12 @@ namespace giEngineSDK {
 
     /**
      * @brief    Prepare the Module.
-     * @bug      No known Bugs.
      */
     void 
     onStartUp() override {};
     
     /**
      * @brief    Clear the Module.
-     * @bug      No known Bugs.
      */
     void 
     onShutDown() override {};
@@ -95,10 +93,10 @@ namespace giEngineSDK {
     getTextureNameFromMaterial(ResourceRef& inRef);
 
     /**
-     * @brief 
-     * @param inMaterialRef 
-     * @param inTextureName 
-     * @return 
+     * @brief    .
+     * @param    inMaterialRef 
+     * @param    inTextureName 
+     * @return   .
      */
     ResourceRef
     getReferenceByNameInMaterial(ResourceRef& inMaterialRef, 
@@ -121,16 +119,35 @@ namespace giEngineSDK {
     //The map of resources loaded.
     Map<UUID, SharedPtr<Resource>> m_loadedResources;
 
-    //
+    //The reference to the missing texture.
     ResourceRef m_missingTextureRef;
+
+    //The reference to the left arrow texture.
+    ResourceRef m_leftArrow;
+
+    //The reference to the right arrow texture.
+    ResourceRef m_rightArrow;
+
+    //The reference to the folder icon texture.
+    ResourceRef m_folderIcon;
+
+    //The reference to the file icon texture.
+    ResourceRef m_fileIcon;
 
    private:
 
     /**
-     * @brief    Creates a texture and bind it as a missingTexture and creates it Ref.
+     * @brief    Creates a texture and bind it as a missingTexture.
      */
     void
     createMissingTexture();
+
+    /**
+     * @brief    Creates the textures for the icons used for the editor.
+     */
+    void
+    createEditorIconsTextures();
+
 
 
     friend class Decoder;

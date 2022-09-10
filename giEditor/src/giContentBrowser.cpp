@@ -12,6 +12,7 @@
  */
 #include "giContentBrowser.h"
 #include "giResourceManager.h"
+#include <giTexture.h>
 
 
 ContentBrowser::ContentBrowser(Path inWorkingDir) {
@@ -23,8 +24,6 @@ ContentBrowser::ContentBrowser(Path inWorkingDir) {
 void
 ContentBrowser::init() {
   m_windowFlags |= ImGuiWindowFlags_NoCollapse;
-
-  //ResourceRef
 }
 
 void 
@@ -35,6 +34,8 @@ ContentBrowser::update(float inDeltaTime) {
 void 
 ContentBrowser::render() {
 
+  auto& RM = g_resourceManager().instance();
+
   ImGui::Begin("Content Browser", nullptr, m_windowFlags);
 
   //Back Button
@@ -44,47 +45,62 @@ ContentBrowser::render() {
     }
   }
 
-  static float tmpPadding = 16.0f;
-  static float tmpThumbnailSize = 100;
-  float tmpCellSize = tmpThumbnailSize + tmpPadding;
-  float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
-  int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
 
-  ImGui::Columns(tmpColumnCount, 0, false);
+  if (ImGui::BeginTable("BrowserTable", 2, ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_Resizable)) {
 
-  //Iterate in directory
-  for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
+    ImGui::TableNextColumn();
+    ImGui::Text("Holis, soy la columna 0");
 
-    const auto& tmpPath = tmpIterator.path();
-    auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
-    String relativePathString = relativePath.filename().string();
 
-    
-    //if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left));
 
-    //Show Folders
-    //if (ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize })) {
-    if (ImGui::Button(relativePathString.c_str(), { tmpThumbnailSize, tmpThumbnailSize })) {
-      if (tmpIterator.is_directory()) {
-        m_currentDirectory /= tmpPath.filename();
+    ImGui::TableNextColumn();
+    static float tmpPadding = 16.0f;
+    static float tmpThumbnailSize = 74;
+    float tmpCellSize = tmpThumbnailSize + tmpPadding;
+    float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
+    int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
+
+    if (ImGui::BeginTable("Browser", tmpColumnCount, ImGuiTableFlags_None)) {
+
+      
+      //ImGui::Columns(tmpColumnCount, 0, false);
+      ImGui::TableNextColumn();
+
+      //Iterate in directory
+      for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
+
+        const auto& tmpPath = tmpIterator.path();
+        auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
+        String relativePathString = relativePath.filename().string();
+
+        //Show Folders
+        SharedPtr<Texture> tmpFolderTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
+        if (ImGui::ImageButton(tmpFolderTexture->m_texture->getApiTexture(), 
+                               { tmpThumbnailSize, tmpThumbnailSize })) {
+          if (tmpIterator.is_directory()) {
+            m_currentDirectory /= tmpPath.filename();
+          }
+        }
+        ImGui::Text(relativePathString.c_str());
+        //Show files
+        //else {
+          /*if (ImGui::Button(relativePathString.c_str())) {
+
+          }*/
+        //}
+        ImGui::TableNextColumn();
+
       }
+
+      ImGui::Columns(1);
+      ImGui::EndTable();
     }
-    ImGui::Text(relativePathString.c_str());
-    //Show files
-    //else {
-      /*if (ImGui::Button(relativePathString.c_str())) {
+    //Status bar
+    ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 100);
+    //ImGui::SliderFloat("Padding", &tmpPadding, 0, 32);
 
-      }*/
-    //}
-    ImGui::NextColumn();
-
+    ImGui::EndTable();
   }
-
-  ImGui::Columns(1);
-  
-  //Status bar
-  ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 100);
-  //ImGui::SliderFloat("Padding", &tmpPadding, 0, 32);
 
   ImGui::End();
 }
