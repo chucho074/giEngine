@@ -21,9 +21,11 @@
 void 
 Editor::init(void* inHandler, Vector2 inWindowSize) {
 
-  auto& configs = EngineConfigs::instance();
+  auto& configs = g_engineConfigs().instance();
+
 
   m_ui = make_shared<UI>();
+
   m_ui->init(inHandler, inWindowSize);
 
   m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
@@ -50,9 +52,6 @@ void
 Editor::render() {
 
   auto& RM = g_resourceManager().instance();
-
-
-
   
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
@@ -77,7 +76,7 @@ Editor::render() {
       if (ImGui::MenuItem("Viewport")) {}
       if (ImGui::MenuItem("Scene")) {}
       if (ImGui::MenuItem("Performance")) {
-        tmpRenderPerformance = true;
+        m_RenderPerformance = true;
       }
       ImGui::EndMenu();
     }
@@ -91,7 +90,7 @@ Editor::render() {
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-  if (tmpRenderPerformance) {
+  if (m_RenderPerformance) {
     renderPerformanceWindow();
   }
 
@@ -139,9 +138,10 @@ Editor::callBack() {
 void 
 Editor::renderPerformanceWindow() {
 
-  bool * tmpValue = &tmpRenderPerformance;
+  bool * tmpValue = &m_RenderPerformance;
 
-  ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+  ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                        | ImGuiWindowFlags_NoCollapse);
 
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
               / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

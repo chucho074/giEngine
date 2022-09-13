@@ -54,12 +54,15 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
   //Plugins
   static Map<GIPLUGINS::E, bool> s_activePlugins;
 
-  //Omniverse settings
+  //Omniverse Settings
   static String s_existingStage;
   static String s_destinationPath;
 
-  //Editor settings
 
+  //Editor Settings
+
+
+  //Renderer Settings
 
 };
 

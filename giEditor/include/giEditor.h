@@ -91,7 +91,7 @@ class Editor
 
 
 
-   bool tmpRenderPerformance = true;
+   bool m_RenderPerformance = true;
 
 
 };

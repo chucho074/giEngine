@@ -35,6 +35,9 @@ String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProject
 //Editor Settings
 
 
+//Renderer Settings
+
+
 
 EngineConfigs&
 g_engineConfigs() {
