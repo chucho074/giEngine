@@ -39,8 +39,7 @@ namespace giEngineSDK {
     ~Material() = default;
 
     /**
-     * @brief    Unload the material.
-     * @bug      No known Bugs.
+     * @brief    Unload the material.     
      */
     void
     unload() override {};

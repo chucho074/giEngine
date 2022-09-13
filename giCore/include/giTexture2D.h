@@ -3,8 +3,7 @@
  * @author   Jesus Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
- * @brief    Management of the Textures.
- * @bug      No known Bugs.
+ * @brief    Management of the Textures. 
  */
 
 /**

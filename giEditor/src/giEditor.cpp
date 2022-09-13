@@ -23,7 +23,6 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
 
   auto& configs = g_engineConfigs().instance();
 
-
   m_ui = make_shared<UI>();
 
   m_ui->init(inHandler, inWindowSize);
@@ -38,7 +37,6 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
 void 
 Editor::update(float inDeltaTime) {
   m_ui->update(m_windowHandle, inDeltaTime);
-
   
   m_contentBrowser->update(inDeltaTime);
 

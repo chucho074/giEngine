@@ -21,8 +21,7 @@ namespace giEngineSDK {
 
   /**
    * @class    Matrix4.
-   * @brief    Basic Matrix 4.
-   * @bug      No known Bugs.
+   * @brief    Basic Matrix 4.   
    */
   class GI_UTILITY_EXPORT Matrix4
   {
@@ -168,15 +167,13 @@ namespace giEngineSDK {
     transpose() const;
 
     /**
-     * @brief    Intercambiar valores de 2 matrices
-     * @bug      No known Bugs.
+     * @brief    Intercambiar valores de 2 matrices     
      */
     void 
     swap();
     
     /**
-     * @brief    Negate every value of the matrix.
-     * @bug      No known Bugs.
+     * @brief    Negate every value of the matrix.     
      */
     void 
     negateMatrix();

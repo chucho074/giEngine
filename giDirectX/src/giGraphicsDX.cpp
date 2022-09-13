@@ -936,9 +936,11 @@ namespace giEngineSDK {
     return tmpScissor;
   }
   
-  void 
-  CGraphicsDX::rsGetViewports(uint32 inNumViewports, void* inViewport) {
-    m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)inViewport);
+  void *
+  CGraphicsDX::rsGetViewports(uint32 inNumViewports) {
+    void* tmpViewport;
+    m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)tmpViewport);
+    return tmpViewport;
   }
 
   SharedPtr<BaseRasterizerState>

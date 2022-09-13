@@ -19,8 +19,7 @@ namespace giEngineSDK {
   
   /**
    * @class    Time.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT Time : public Module<Time>
   {

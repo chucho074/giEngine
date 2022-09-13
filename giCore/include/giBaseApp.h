@@ -34,8 +34,7 @@ using sf::Event;
 
 /**
  * @class    BaseApp.
- * @brief    A class for the basics functions of the apps.
- * @bug      No known Bugs.
+ * @brief    A class for the basics functions of the apps. 
  */
 class GI_CORE_EXPORT BaseApp
 {
@@ -50,7 +49,6 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Runs the app.
-   * @bug      No known Bugs.
    * @return   Returns a 0 if it's ok.
    */
   int32 
@@ -58,22 +56,19 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual Method in charge of creating a virtual method.
-   * @bug      No known Bugs.
    */
   virtual void 
   onCreate() {};
 
   /**
    * @brief    Virtual Method in charge of destroying the settings and members.
-   * @bug      No known Bugs.
    */
   virtual void 
   onDestroy() {};
 
   /**
    * @brief    Virtual method in charge to updating the logical information.
-   * @param    inDeltaTime     For update the game time.
-   * @bug      No known Bugs.
+   * @param    inDeltaTime     For update the game time.`
    */
   virtual void 
   onUpdate(float inDeltaTime = 0) { 
@@ -82,7 +77,6 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual method in charge of drawing on screen all the visual info.
-   * @bug      No known Bugs.
    */
   virtual void 
   onRender() {};
@@ -90,7 +84,6 @@ class GI_CORE_EXPORT BaseApp
   /**
    * @brief    Method in charge of get the events of the window
    * @param    inMsg           The message to process.
-   * @bug      No known Bugs.
    */
   virtual void 
   onEvent(MSG inMsg) {
@@ -100,7 +93,6 @@ class GI_CORE_EXPORT BaseApp
  private:
   /**
    * @brief    Method in charge of drawing on the screen all the visual info.
-   * @bug      No known Bugs.
    */
   void 
   createWindow();
@@ -114,14 +106,12 @@ class GI_CORE_EXPORT BaseApp
   /**
    * @brief    Method in charge of updates the logic info.
    * @param    inDeltaTime     The delta time.
-   * @bug      No known Bugs.
    */
   void 
   update(float inDeltaTime);
 
   /**
    * @brief    Method that draw the information Not Modified Func.
-   * @bug      No known Bugs.
    */
   void 
   render();
@@ -134,21 +124,18 @@ class GI_CORE_EXPORT BaseApp
   
   /**
    * @brief    Method that draw the information Not Modified Func.
-   * @bug      No known Bugs.
    */
   void 
   processEvent(MSG inMsg);
 
   /**
    * @brief    Method that initialize the modules and plug-ins for the engine.
-   * @bug      No known Bugs.
    */
   void 
   initSystems();
   
   /**
    * @brief    Method that destroys the systems of the engine.
-   * @bug      No known Bugs.
    */
   void 
   destroySystems();

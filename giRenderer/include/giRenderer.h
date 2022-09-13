@@ -29,8 +29,7 @@ namespace giEngineSDK {
 namespace giEngineSDK {
   /**
    * @struct   CameraConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct CameraConstantBuffer {
     Matrix4 mView;
@@ -39,8 +38,7 @@ namespace giEngineSDK {
 
   /**
    * @struct   CBChangesEveryFrame.
-   * @brief    The Changes Every Frames Constant Buffer.
-   * @bug      No known Bugs.
+   * @brief    The Changes Every Frames Constant Buffer.   
    */
   struct CBChangesEveryFrame {
     Matrix4 mWorld;
@@ -50,8 +48,7 @@ namespace giEngineSDK {
 
   /**
    * @struct   SSAOConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct SSAOConstantBuffer {
     float SampleRadius;
@@ -63,8 +60,7 @@ namespace giEngineSDK {
   };
   /**
    * @struct   LightConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct LightConstantBuffer {
     Vector3 LightPos;
@@ -75,8 +71,7 @@ namespace giEngineSDK {
 
   /**
    * @struct   BlurConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct BlurConstantBuffer {
     Vector2 Viewport;   

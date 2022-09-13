@@ -24,7 +24,7 @@ Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject");
 //Plugins
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;
 
-//Omniverse settings
+//Omniverse Settings
 //String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/giTestProject/scene.usd";
 //String EngineConfigs::s_existingStage = "http://localhost:8080/omniverse://127.0.0.1/Users/giProjects/giTestProject/sceneSphere.usd";
 //String EngineConfigs::s_existingStage = "http://localhost:8080/omniverse://127.0.0.1/Users/chucho074/ovEngine1.usd";

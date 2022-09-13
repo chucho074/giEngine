@@ -37,8 +37,7 @@ namespace giEngineSDK {
 
   /**
    * @class    BaseOmni.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class BaseOmni : public Module<BaseOmni>
   {

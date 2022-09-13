@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    Texture2DOGL.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class Texture2DOGL : public Texture2D
   {

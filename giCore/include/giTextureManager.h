@@ -18,8 +18,7 @@ namespace giEngineSDK {
 
   /**
    * @class    TextureManager.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class TextureManager
   {

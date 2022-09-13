@@ -20,8 +20,7 @@ namespace giEngineSDK {
 
   /**
    * @class    Omni.
-   * @brief    A conection to Nvidia Omniverse.
-   * @bug      No known Bugs.
+   * @brief    A conection to Nvidia Omniverse.   
    */
   class Omni : public BaseOmni
   {

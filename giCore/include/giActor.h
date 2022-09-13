@@ -21,7 +21,6 @@ namespace giEngineSDK {
   /**
    * @class    Actor.
    * @brief    .
-   * @bug      No known Bugs.
    */
   class GI_CORE_EXPORT Actor final : public Object
   {

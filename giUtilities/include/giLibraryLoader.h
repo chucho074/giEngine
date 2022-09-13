@@ -20,8 +20,7 @@
 namespace giEngineSDK {
 
   /**
-   * @class    LibraryLoader.
-   * @bug      No known Bugs.
+   * @class    LibraryLoader.   
    */
   class LibraryLoader
   {

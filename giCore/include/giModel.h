@@ -38,8 +38,7 @@ namespace giEngineSDK {
     ~Model();
     
     /**
-     * @brief    Unload the model.
-     * @bug      No known Bugs.
+     * @brief    Unload the model.     
      */
     void
     unload() override;

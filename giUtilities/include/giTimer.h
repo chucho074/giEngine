@@ -36,8 +36,7 @@ namespace giEngineSDK {
 
   /**
    * @class    Timer.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT Timer
   {

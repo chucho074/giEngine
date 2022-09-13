@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    BufferOGL.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class BufferOGL : public Buffer
   {

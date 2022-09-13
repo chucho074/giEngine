@@ -16,8 +16,7 @@
 namespace giEngineSDK {
   /**
    * @class    BaseViewport.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class BaseViewport
   {

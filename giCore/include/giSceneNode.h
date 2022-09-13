@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    SceneNode.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_CORE_EXPORT SceneNode
   {

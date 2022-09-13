@@ -16,8 +16,7 @@
 namespace giEngineSDK {
   /**
    * @class    Object.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_CORE_EXPORT Object
   {

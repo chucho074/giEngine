@@ -17,8 +17,7 @@
 
 
 /**
- * @class    Radians.
- * @bug      No known Bugs.
+ * @class    Radians. 
  */
 namespace giEngineSDK {
 

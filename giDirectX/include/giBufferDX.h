@@ -16,8 +16,7 @@
 
 /**
  * @class    BufferDX.
- * @brief    A buffer interface for own buffers for DX.
- * @bug      No known Bugs.
+ * @brief    A buffer interface for own buffers for DX. 
  */
 namespace giEngineSDK {
   class BufferDX final : public Buffer

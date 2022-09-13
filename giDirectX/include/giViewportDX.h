@@ -18,8 +18,7 @@
 namespace giEngineSDK {
   /**
    * @class    ViewportDX.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class ViewportDX final : public BaseViewport
   {

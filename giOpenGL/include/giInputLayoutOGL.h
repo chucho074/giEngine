@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    InputLayoutOGL.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class InputLayoutOGL : public InputLayout
   {

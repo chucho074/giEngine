@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    FileSystem.
-   * @brief    File Writer and reader.
-   * @bug      No known Bugs.
+   * @brief    File Writer and reader.   
    */
   class FileSystem
   {

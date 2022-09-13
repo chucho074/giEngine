@@ -17,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    CDepthStencilViewDX.
-   * @brief    Manage the graphics of DirectX.
-   * @bug      No known Bugs.
+   * @brief    Manage the graphics of DirectX.   
    */
   class CDepthStencilViewDX final : public DepthStencilView
   {

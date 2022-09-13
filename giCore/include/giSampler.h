@@ -3,8 +3,7 @@
  * @author   Jesus Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
- * @brief    Management of the SamplerState.
- * @bug      No known Bugs.
+ * @brief    Management of the SamplerState. 
  */
 
 /**
@@ -16,8 +15,7 @@
 namespace giEngineSDK {
   /**
    * @struct   SamplerDesc.
-   * @brief    Manage the information for the SamplerState.
-   * @bug      No known Bugs.
+   * @brief    Manage the information for the SamplerState.   
    */
   struct SamplerDesc {
     GI_FILTER::E filter = GI_FILTER::kFILTER_MIN_MAG_MIP_POINT;
@@ -31,8 +29,7 @@ namespace giEngineSDK {
   
   /**
    * @class    SamplerState.
-   * @brief    Manage the SamplerState State.
-   * @bug      No known Bugs.
+   * @brief    Manage the SamplerState State.   
    */
   class SamplerState {
    public:

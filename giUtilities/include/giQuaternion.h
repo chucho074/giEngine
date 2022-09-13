@@ -21,8 +21,7 @@ namespace giEngineSDK {
 
   /**
    * @class    Quaternion.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT Quaternion
   {

@@ -18,8 +18,7 @@ struct TextureDesc;
 
 /**
  * @class    Texture2DDX.
- * @brief    Manage the textures of DirectX.
- * @bug      No known Bugs.
+ * @brief    Manage the textures of DirectX. 
  */
 namespace giEngineSDK {
   class Texture2DDX : public Texture2D 

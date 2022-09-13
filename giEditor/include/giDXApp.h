@@ -22,8 +22,7 @@ using giEngineSDK::FILE;
 
 /**
  * @struct   CameraConstantBuffer.
- * @brief    The Camera constant buffer.
- * @bug      No known Bugs.
+ * @brief    The Camera constant buffer. 
  */
 struct CameraConstantBuffer {
   Matrix4 mView;
@@ -32,8 +31,7 @@ struct CameraConstantBuffer {
 
 /**
  * @struct   CBChangesEveryFrame.
- * @brief    The Changes Every Frames Constant Buffer.
- * @bug      No known Bugs.
+ * @brief    The Changes Every Frames Constant Buffer. 
  */
 struct CBChangesEveryFrame {
   Matrix4 mWorld;
@@ -42,8 +40,7 @@ struct CBChangesEveryFrame {
 
 /**
  * @class    DirectXApp.
- * @brief    App for DirectX API
- * @bug      No known Bugs.
+ * @brief    App for DirectX API 
  */
 class DirectXApp : public BaseApp {
  public:

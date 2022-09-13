@@ -16,8 +16,7 @@
 
 
 /**
- * @class    Degrees.
- * @bug      No known Bugs.
+ * @class    Degrees. 
  */
 namespace giEngineSDK {
   
