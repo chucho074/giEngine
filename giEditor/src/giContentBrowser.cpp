@@ -10,9 +10,10 @@
 /**
  * @include
  */
-#include "giContentBrowser.h"
-#include "giResourceManager.h"
+#include <giBaseConfig.h>
+#include <giResourceManager.h>
 #include <giTexture.h>
+#include "giContentBrowser.h"
 
 
 ContentBrowser::ContentBrowser(Path inWorkingDir) {
@@ -34,6 +35,7 @@ ContentBrowser::update(float inDeltaTime) {
 void 
 ContentBrowser::render() {
 
+  auto& configs = g_engineConfigs().instance();
   auto& RM = g_resourceManager().instance();
 
   ImGui::Begin("Content Browser", nullptr, m_windowFlags);
@@ -46,12 +48,41 @@ ContentBrowser::render() {
   }
 
 
-  if (ImGui::BeginTable("BrowserTable", 2, ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_Resizable)) {
+  if (ImGui::BeginTable("BrowserTable", 2, ImGuiTableFlags_BordersInnerV 
+                                           | ImGuiTableFlags_Resizable)) {
 
     ImGui::TableNextColumn();
-    ImGui::Text("Holis, soy la columna 0");
 
+    int tmpTreeCount = 0;
+    int selection_mask = (1 << 2);
+    ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow 
+                                    | ImGuiTreeNodeFlags_OpenOnDoubleClick 
+                                    | ImGuiTreeNodeFlags_SpanAvailWidth;
 
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    //Create the root folder for the project.
+    bool root_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount, 
+                                       base_flags,
+                                       configs.s_projectName.c_str());
+    tmpTreeCount++;
+    //if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
+      if(root_open) {
+        for(auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
+          auto& tmpPath = tmpIterator.path();
+          String tmpName = tmpPath.stem().string();
+          if (tmpIterator.is_directory()) {
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount, 
+                                               base_flags, 
+                                               tmpName.c_str());
+
+            //ImGui::TreePop();
+
+          }
+          tmpTreeCount++;
+        }
+      }
+    //}
+    ImGui::TreePop();
 
     ImGui::TableNextColumn();
     static float tmpPadding = 16.0f;
@@ -62,8 +93,6 @@ ContentBrowser::render() {
 
     if (ImGui::BeginTable("Browser", tmpColumnCount, ImGuiTableFlags_None)) {
 
-      
-      //ImGui::Columns(tmpColumnCount, 0, false);
       ImGui::TableNextColumn();
 
       //Iterate in directory

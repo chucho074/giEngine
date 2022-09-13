@@ -63,5 +63,5 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 
 };
 
-EngineConfigs&
+GI_CORE_EXPORT EngineConfigs&
 g_engineConfigs();
