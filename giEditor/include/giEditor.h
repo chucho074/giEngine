@@ -62,6 +62,12 @@ class Editor
   void
   callBack();
 
+  /**
+   * @brief      .
+   */
+  void
+  renderPerformanceWindow();
+
  private:
    
    SharedPtr<UI> m_ui;
@@ -81,5 +87,11 @@ class Editor
    bool m_startOmniverse = false;
 
    bool m_isRunningOmniverse = false;
+
+
+
+
+   bool tmpRenderPerformance = true;
+
 
 };

@@ -120,6 +120,7 @@ void
 BaseApp::update(float inDeltaTime) {
   onUpdate(inDeltaTime);
   m_inputManager->update();
+
   if(m_omniverse != nullptr) {
     m_omniverse->update();
   }

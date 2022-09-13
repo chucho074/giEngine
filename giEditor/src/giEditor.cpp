@@ -37,6 +37,7 @@ void
 Editor::update(float inDeltaTime) {
   m_ui->update(m_windowHandle, inDeltaTime);
 
+  
   m_contentBrowser->update(inDeltaTime);
 
   m_hierarchy->update(inDeltaTime);
@@ -49,6 +50,8 @@ void
 Editor::render() {
 
   auto& RM = g_resourceManager().instance();
+
+
 
   
   ImGui::BeginMainMenuBar(); {
@@ -73,6 +76,9 @@ Editor::render() {
       if (ImGui::MenuItem("Details")) {}
       if (ImGui::MenuItem("Viewport")) {}
       if (ImGui::MenuItem("Scene")) {}
+      if (ImGui::MenuItem("Performance")) {
+        tmpRenderPerformance = true;
+      }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Help")) {
@@ -84,6 +90,11 @@ Editor::render() {
 
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+  if (tmpRenderPerformance) {
+    renderPerformanceWindow();
+  }
+
 
   //Render the hierarchy of the scene.
   m_hierarchy->render();
@@ -105,6 +116,10 @@ Editor::render() {
 
   //After the own editor ui objects, call the render of ImGui.
   m_ui->render();
+
+
+  
+
 }
 
 void 
@@ -118,4 +133,18 @@ Editor::destroy() {
 void 
 Editor::callBack() {
   m_ui->callBack();
+}
+
+
+void 
+Editor::renderPerformanceWindow() {
+
+  bool * tmpValue = &tmpRenderPerformance;
+
+  ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
+              / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+  ImGui::End();
 }
