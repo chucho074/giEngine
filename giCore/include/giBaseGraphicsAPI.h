@@ -535,7 +535,9 @@ namespace giEngineSDK {
      * @return
      */
     virtual void *
-    rsGetViewports(uint32) {};
+    rsGetViewports(uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
