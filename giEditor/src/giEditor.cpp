@@ -69,17 +69,15 @@ Editor::render() {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Window")) {
-      if (ImGui::MenuItem("Browser")) {}
-      if (ImGui::MenuItem("Details")) {}
-      if (ImGui::MenuItem("Viewport")) {}
-      if (ImGui::MenuItem("Scene")) {}
       if (ImGui::MenuItem("Performance")) {
-        m_RenderPerformance = true;
+        m_renderPerformance = true;
       }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Help")) {
-      if (ImGui::MenuItem("About")) {}
+      if (ImGui::MenuItem("About")) {
+        m_renderAbout = true;
+      }
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
@@ -88,8 +86,11 @@ Editor::render() {
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-  if (m_RenderPerformance) {
+  if (m_renderPerformance) {
     renderPerformanceWindow();
+  }
+  if (m_renderAbout) {
+    renderAboutWindow();
   }
 
 
@@ -136,13 +137,28 @@ Editor::callBack() {
 void 
 Editor::renderPerformanceWindow() {
 
-  bool * tmpValue = &m_RenderPerformance;
+  bool * tmpValue = &m_renderPerformance;
 
   ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar 
                                         | ImGuiWindowFlags_NoCollapse);
 
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
               / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+  ImGui::End();
+}
+
+void 
+Editor::renderAboutWindow() {
+  bool* tmpValue = &m_renderAbout;
+  ImGui::Begin("About giEngine", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                           | ImGuiWindowFlags_NoDocking
+                                           | ImGuiWindowFlags_NoCollapse);
+
+  ImGui::Text("Gioco Engine developed by: Jesus Alberto Del Moral Cupil");
+  ImGui::Separator();
+  ImGui::Text("Contact: idv18c.jmoral@uartesdigitales.edu.mx");
+  ImGui::Separator();
 
   ImGui::End();
 }

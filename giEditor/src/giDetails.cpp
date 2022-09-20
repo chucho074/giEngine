@@ -34,7 +34,7 @@ void
 Details::render() {
   auto& sg = SceneGraph::instance();
   ImGui::Begin("Details", nullptr, m_windowFlags);
-  if (sg.getSelectedActor() != nullptr) {
+  if (sg.getSelectedActor() != nullptr) { 
     auto tmpActor = sg.getSelectedActor();
 
     ImGui::Text(String("Selected Actor: " + tmpActor->m_actorName).c_str());

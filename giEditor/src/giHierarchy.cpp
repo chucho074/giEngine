@@ -11,6 +11,7 @@
  * @include
  */
 #include "giHierarchy.h"
+#include <giSceneNode.h>
 #include <giSceneGraph.h>
 
 

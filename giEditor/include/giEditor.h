@@ -63,10 +63,17 @@ class Editor
   callBack();
 
   /**
-   * @brief      .
+   * @brief      Renders a Window with the performance information.
    */
   void
   renderPerformanceWindow();
+
+
+  /**
+   * @brief      Renders a window with the information about the engine dev.
+   */
+  void
+  renderAboutWindow();
 
  private:
    
@@ -89,9 +96,10 @@ class Editor
    bool m_isRunningOmniverse = false;
 
 
+   //Bools for rendering the diferent windows.
 
+   bool m_renderPerformance = true;
 
-   bool m_RenderPerformance = true;
-
+   bool m_renderAbout = false;
 
 };
