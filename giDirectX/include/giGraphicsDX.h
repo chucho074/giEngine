@@ -409,6 +409,7 @@ namespace giEngineSDK {
 
     void
     unbindRenderTarget() override;
+
     /** 
      * @brief    Set Blend State.
      * @param    inBlendState  Pointer to a blend-state interface. NULL for a default.

@@ -25,20 +25,17 @@ namespace giEngineSDK {
   {
    public:
     /**
-     * @brief  : Constructor.
-     * @bug    : No Bugs known.
+     * @brief    Constructor.
      */
     Texture2DDX() = default;
   
     /**
-     * @brief  : Destructor.
-     * @bug    : No Bugs known.
+     * @brief    Destructor.
      */
     ~Texture2DDX() = default;
   
     /**
-     * @brief  : Object for direct management of the texture.
-     * @bug    : No Bugs known.
+     * @brief    Object for direct management of the texture.
      */
     ID3D11ShaderResourceView* 
     getSRV() { 
@@ -46,7 +43,7 @@ namespace giEngineSDK {
     }
 
     /**
-     * @brief    .
+     * @brief    Getter for the texture as void*.
      * @return   The texture of the specific API.
      */
     void *

@@ -14,6 +14,7 @@
 #include "giResourceManager.h"
 #include "giModel.h"
 #include "giMesh.h"
+#include "giTexture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -108,6 +109,8 @@ namespace giEngineSDK {
                                                1,
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                                GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
+
+      gapi.updateTexture(tmpTexture->m_texture, tmpImg, w * comp, 0);
       
       //Unload Data
       stbi_image_free(tmpImg);

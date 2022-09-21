@@ -33,25 +33,26 @@ namespace giEngineSDK {
   };  
 
   /**
-   * @class   CTexutre2D.
+   * @class   Texutre2D.
    * @brief   Management for textures2D.
-   * @bug     No known Bugs.
    */
   class Texture2D {
    public:
      /**
-      * @brief  Constructor.
-      * @bug    No Bugs known.
+      * @brief   Constructor.
       */
      Texture2D() = default;
      
      /**
       * @brief    Destructor.
-      * @bug      No Bugs known.
       */
      virtual
      ~Texture2D() = default;
 
+     /**
+      * @brief    Getter for the texture as void*.
+      * @return   The texture of the specific API.
+      */
      virtual void *
      getApiTexture() {
        return nullptr;

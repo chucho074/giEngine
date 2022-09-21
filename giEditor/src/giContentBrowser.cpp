@@ -47,7 +47,7 @@ ContentBrowser::render() {
     }
   }
 
-
+  //Left Panel
   if (ImGui::BeginTable("BrowserTable", 2, ImGuiTableFlags_BordersInnerV 
                                            | ImGuiTableFlags_Resizable)) {
 
@@ -84,6 +84,7 @@ ContentBrowser::render() {
     //}
     ImGui::TreePop();
 
+    //Right Panel
     ImGui::TableNextColumn();
     static float tmpPadding = 16.0f;
     static float tmpThumbnailSize = 74;
