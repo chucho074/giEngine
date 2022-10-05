@@ -1,10 +1,9 @@
 /**
  * @file    giPrerequisitesDX.h
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**

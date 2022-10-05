@@ -335,7 +335,6 @@ namespace giEngineSDK {
     /**
      * @brief   Set the Unordered Access Views.
      * @param   inUAV         The unordered Accesss View to set.
-     * @bug     No known Bugs.
      */
     virtual void
     setUAV(int32, Texture2D* inUAV) {

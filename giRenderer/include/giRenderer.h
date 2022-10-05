@@ -1,10 +1,9 @@
 /**
  * @file    giRenderer.h
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -15,6 +14,7 @@
 #include <giResourceManager.h>
 #include <giCamera.h>
 #include <giVector2i.h>
+#include <giVector3i.h>
 #include "giPrerequisitesRenderer.h"
 
 namespace giEngineSDK {
@@ -132,7 +132,7 @@ namespace giEngineSDK {
                  Vector<SharedPtr<Texture2D>> inShaderResources,
                  Vector<SharedPtr<Texture2D>> inUAVS,
                  SharedPtr<SamplerState> inSampler,
-                 Vector3 inDispatch);
+                 Vector3i inDispatch);
     /**
      * @brief    .
      */
@@ -192,8 +192,7 @@ namespace giEngineSDK {
     
     Vector<SharedPtr<Texture2D>> m_SSAOTexture;
 
-    //SAQ
-    ResourceRef m_SAQ;
+    
 
                 //Blur
     //The Vertex Shader

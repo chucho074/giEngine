@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/07/2021
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   A basic Actors Objects implementation.
  */
  
 /**
@@ -26,12 +25,14 @@ namespace giEngineSDK {
   //  return false;
   //}
 
-  Actor::Actor() {
-    
+
+  Actor::~Actor() {
+    destroy();
   }
 
   bool
-  Actor::addComponent(SharedPtr<Component> inComponent, COMPONENT_TYPE::E inComponentType) {
+  Actor::addComponent(SharedPtr<Component> inComponent, 
+                      COMPONENT_TYPE::E inComponentType) {
     if (m_components.count(inComponentType) == 0) {
       auto tmpComponent = std::pair<COMPONENT_TYPE::E, SharedPtr<Component>>();
       tmpComponent.first = inComponentType;
@@ -66,7 +67,15 @@ namespace giEngineSDK {
     }
   }
 
-  SharedPtr<Component>& 
+  void 
+  Actor::destroy() {
+    for (auto iterComp : m_components) {
+      iterComp.second->destroy();
+    }
+    m_components.clear();
+  }
+
+  SharedPtr<Component>&
   Actor::getComponent(COMPONENT_TYPE::E inComponent) {
     auto tmp = m_components.find(inComponent);
     

@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/08/2022
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   An implementation for the Universal Unique IDentifiers.
  */
  
 /**
@@ -26,7 +25,7 @@ namespace giEngineSDK {
     
   }
 
-  UUID::UUID(int32 inData) {
+  UUID::UUID(uint64 inData) {
     m_uuid = inData;
   }
 

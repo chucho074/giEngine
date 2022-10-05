@@ -4,12 +4,13 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
+#include "giDXApp.h"
+
 #include <giDegrees.h>
 #include <giCamera.h>
 #include <giMatrix4.h>
@@ -31,7 +32,6 @@
 #include <giSceneGraph.h>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
-#include "giDXApp.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
@@ -42,7 +42,6 @@ DirectXApp::DirectXApp() {
   m_world = Matrix4::IDENTITY;
   m_editorUI = make_shared<Editor>();
 }
-
 
 void 
 DirectXApp::onCreate() {
@@ -66,23 +65,12 @@ DirectXApp::onCreate() {
   //Sets Vela's model
   ResourceRef tmpModel;
   FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
-  //tmpModel->loadFromFile("Resources/Models/cube.fbx");
-  tmpModel = RM.readFromFile(tmpFileModel);
+  tmpModel = RM.resourceFromFile(tmpFileModel);
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
   tmpActor->m_actorName = "Vela";
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
-
-  //Sets plane model
-  //SharedPtr<Model> tmpModelPlane = make_shared<Model>();
-  //tmpModelPlane->loadFromFile("Resources/Models/plano.fbx");
-  //SharedPtr<StaticMesh> modelComponentPlane = make_shared<StaticMesh>();
-  //modelComponentPlane->setModel(tmpModelPlane);
-  //SharedPtr<Actor> tmpActorPlane = make_shared<Actor>();
-  //tmpActorPlane->addComponent(modelComponentPlane, COMPONENT_TYPE::kStaticMesh);
-  //tmpActorPlane->m_actorName = "Plane";
-  //m_sceneGraph->addActor(tmpActorPlane, m_sceneGraph->getRoot());
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
@@ -117,12 +105,10 @@ DirectXApp::onCreate() {
   m_world = Matrix4::IDENTITY;
 }
 
-
 void 
 DirectXApp::onDestroy() {
   m_editorUI->destroy();
 }
-
 
 void 
 DirectXApp::onUpdate(float inDeltaTime) {
@@ -182,7 +168,6 @@ DirectXApp::onUpdate(float inDeltaTime) {
   
 }
 
-
 void 
 DirectXApp::onRender() {
   
@@ -190,10 +175,11 @@ DirectXApp::onRender() {
 
 }
 
-
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
+  GI_UNREFERENCED_PARAMETER(inMsg);
+
 
   m_editorUI->callBack();
 

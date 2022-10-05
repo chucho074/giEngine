@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -29,11 +28,17 @@ namespace giEngineSDK {
     ~Decoder() = default;
 
     /**
-     * @brief    .
-     * @param    inFileData    .
+     * @brief    Decode data of the given file and create a resource.
+     * @param    inFileData    The file data structure.
      */
     static ResourceRef
-    decodeData(FILE &inFileData);
+    decodeData(FILE& inFileData);
+
+    /**
+     * @brief    Decode files than don't need to create a resource.
+     */
+    static void
+    decodeFile(FILE& inFileData);
 
     /**
      * @brief    Read file information and save it in File type.
@@ -48,23 +53,31 @@ namespace giEngineSDK {
      * @brief    Encode the information for the giProject Files.
      * @param    inFileData    The file data structure.
      */
-    static SharedPtr<Resource>
+    static void
     decodeGiProject(FILE &inFileData);
 
     /**
      * @brief    Decode any image type.
-     * @param    inFileData    .
+     * @param    inFileData    The file data structure.
      */
     static SharedPtr<Resource>
     decodeImage(FILE &inFileData);
     
     /**
      * @brief    Decode the information of any kind of model files.
-     * @param    inFileData    .
+     * @param    inFileData    The file data structure.
      * @return   Returns the model as a Shared Pointer of Resource .
      */
     static SharedPtr<Resource>
     decodeModel(FILE &inFileData);
+
+    /**
+     * @brief    Decode the information of any kind of scene files.
+     * @param    inFileData    The file data structure.
+     */
+    static void
+    decodeGiScene(FILE &inFileData);
+
 
     
    protected:

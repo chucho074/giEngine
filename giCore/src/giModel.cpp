@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   For load models.
- * @bug     No known Bugs.
  */
  
 /**

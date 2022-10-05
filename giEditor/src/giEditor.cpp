@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    01/06/2022
  * @brief   A basic implementation of the editor of the engine.
- * @bug     No known Bugs.
  */
  
 /**
@@ -16,6 +15,7 @@
 #include <giTexture.h>
 #include <giTexture2D.h>
 #include <giResourceManager.h>
+#include <giPrerequisitesCore.h>
 #include <memory>
 
 void 
@@ -26,6 +26,8 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_ui = make_shared<UI>();
 
   m_ui->init(inHandler, inWindowSize);
+
+  m_windowHandle = inHandler;
 
   m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
 
@@ -48,15 +50,19 @@ Editor::update(float inDeltaTime) {
 
 void 
 Editor::render() {
-
-  auto& RM = g_resourceManager().instance();
   
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
-      if (ImGui::MenuItem("New")) {}
-      if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+      if (ImGui::MenuItem("New")) {
+        
+      }
+      if (ImGui::MenuItem("Open...", "Ctrl+O")) {
+        openFileDilog();
+      }
       if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-      if (ImGui::MenuItem("Save As..")) {}
+      if (ImGui::MenuItem("Save As...")) {
+        saveFileDilog();
+      }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit")) {
@@ -86,13 +92,15 @@ Editor::render() {
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
+  //Renders the performance window if is active.
   if (m_renderPerformance) {
     renderPerformanceWindow();
   }
+
+  //Renders the about window if is active.
   if (m_renderAbout) {
     renderAboutWindow();
   }
-
 
   //Render the hierarchy of the scene.
   m_hierarchy->render();
@@ -114,10 +122,7 @@ Editor::render() {
 
   //After the own editor ui objects, call the render of ImGui.
   m_ui->render();
-
-
   
-
 }
 
 void 
@@ -132,7 +137,6 @@ void
 Editor::callBack() {
   m_ui->callBack();
 }
-
 
 void 
 Editor::renderPerformanceWindow() {
@@ -162,3 +166,26 @@ Editor::renderAboutWindow() {
 
   ImGui::End();
 }
+
+ResourceRef
+Editor::openFileDilog() {
+  auto& RM = g_resourceManager().instance();
+
+  if (auto tmpPath = FileDialogs::openFileDialog(m_windowHandle); !tmpPath.empty()) {
+    giEngineSDK::FILE tmpOpenFile(tmpPath);
+    RM.readFromFile(tmpOpenFile);
+    return ResourceRef();
+  }
+
+  return ResourceRef();
+}
+
+void 
+Editor::saveFileDilog() {
+  auto& RM = g_resourceManager().instance();
+  auto tmpPath = FileDialogs::saveFileDialog(m_windowsHandle);
+  giEngineSDK::FILE tmpFileToOpen(tmpPath);
+  RM.saveFile(tmpFileToOpen);
+
+}
+

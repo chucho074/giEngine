@@ -192,8 +192,10 @@
     <ClCompile Include="src\giVector3i.cpp" />
     <ClCompile Include="src\giVector4.cpp" />
     <ClCompile Include="src\giVector4i.cpp" />
+    <ClCompile Include="src\giWindowsImplementations.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseImplementations.h" />
     <ClInclude Include="include\giFile.h" />
     <ClInclude Include="include\giFileSystem.h" />
     <ClInclude Include="include\giLogger.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="include\giPlatformTypes.h" />
     <ClInclude Include="include\giPrerequisitesUtilities.h" />
     <ClInclude Include="include\giRadians.h" />
+    <ClInclude Include="include\giSpecificImplementations.h" />
     <ClInclude Include="include\giStdHeaders.h" />
     <ClInclude Include="include\giTime.h" />
     <ClInclude Include="include\giTransform.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="include\giVector3i.h" />
     <ClInclude Include="include\giVector4.h" />
     <ClInclude Include="include\giVector4i.h" />
+    <ClInclude Include="include\giWindowsImplementations.h" />
     <ClInclude Include="include\giWindowsMath.h" />
     <ClInclude Include="include\giTimer.h" />
   </ItemGroup>

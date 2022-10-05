@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/08/2022
- * @brief   Universal Unique Identifiers.
- * @bug     No known Bugs.
+ * @brief   An implementation for the Universal Unique IDentifiers.
  */
  
 /**
@@ -22,7 +21,7 @@ namespace giEngineSDK {
     UUID();
 
     //Constructor for own purposes.
-    UUID(int32 inData);
+    UUID(uint64 inData);
 
     //Copy constructor.
     UUID(const UUID& inUUID) = default;

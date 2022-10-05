@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    17/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -15,7 +14,11 @@
 
 namespace giEngineSDK {
   
-  void 
+  StaticMesh::~StaticMesh() {
+    destroy();
+  }
+
+  void
   StaticMesh::update(float inDeltaTime) {
     GI_UNREFERENCED_PARAMETER(inDeltaTime);
   }
@@ -27,7 +30,12 @@ namespace giEngineSDK {
     RM.renderResource(m_model);
   }
   
-  ResourceRef 
+  void 
+  StaticMesh::destroy() {
+    
+  }
+
+  ResourceRef
   StaticMesh::getModel() {
       return m_model;
   }

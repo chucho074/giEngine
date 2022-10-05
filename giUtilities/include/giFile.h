@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/03/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -30,9 +29,9 @@ namespace giEngineSDK {
         kgiTEX2D,
         kgiModel,
         kgiShader,
+        kgiScene,
         kgiProject,
         kgiFile,
-        kgiSettings,
         kUnknown,
         kTotalExtansions
     };

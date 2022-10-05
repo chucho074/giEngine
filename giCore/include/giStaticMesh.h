@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    17/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -23,13 +22,16 @@ namespace giEngineSDK {
     StaticMesh(ResourceRef inRes) : m_model(inRes) {};
 
     //Desturctor
-    ~StaticMesh() = default;
+    ~StaticMesh();
 
     void 
     update(float inDeltaTime) override;
 
     void 
     render() override;
+
+    void 
+    destroy() override;
 
     ResourceRef
     getModel();

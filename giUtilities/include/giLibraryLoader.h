@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/04/2021
  * @brief   For export the librarys of the proyects.
- * @bug     No known Bugs.
  */
 
  /**

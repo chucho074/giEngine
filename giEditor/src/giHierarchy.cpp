@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/06/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -40,7 +39,7 @@ Hierarchy::init() {
 
 void 
 Hierarchy::update(float inDeltaTime) {
-  
+  GI_UNREFERENCED_PARAMETER(inDeltaTime);
 }
 
 void

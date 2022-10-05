@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Everything about buffers for DX.
- * @bug     No known Bugs.
  */
 
 /**

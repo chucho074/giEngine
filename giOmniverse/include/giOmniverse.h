@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
  * @brief   A basic conection to NVIDIA Omniverse Service.
- * @bug     No known Bugs.
  */
  
 /**

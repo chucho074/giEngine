@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    07/04/2021
  * @brief   A basic Vertex shader for DirectX.
- * @bug     No known Bugs.
  */
  
 /**

@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/07/2021
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   An implementation of a Scene Graph.
  */
  
 /**
@@ -17,6 +16,7 @@ namespace giEngineSDK {
 
 
   SceneGraph::SceneGraph() {
+    m_sceneID = UUID();
     m_numActors = 0;
     SharedPtr<Actor> sceneActor;
     m_root = make_shared<SceneNode>();
@@ -25,14 +25,14 @@ namespace giEngineSDK {
     m_root->m_actor->m_actorName = "Root";
   }
 
-  void 
+  void
   SceneGraph::addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent) {
     m_numActors++;
     inActor->m_actorId = m_numActors;
     SharedPtr<SceneNode> tmpNode = make_shared<SceneNode>();
     tmpNode->m_actor = inActor;
     tmpNode->m_parent = inParent;
-    m_root->getNodesByParent(inParent).push_back(tmpNode);
+    m_root->m_childs.push_back(tmpNode);
   }
 
   SharedPtr<Actor>
@@ -55,7 +55,7 @@ namespace giEngineSDK {
     return tmpVector;
   }
 
-  List<SharedPtr<SceneNode>>&
+  List<SharedPtr<SceneNode>>
   SceneGraph::getNodesByParent(WeakPtr<SceneNode> inParent) {
     if (SharedPtr<SceneNode>(nullptr) == inParent.lock()) {
       List<SharedPtr<SceneNode>> tmpList;
@@ -87,6 +87,15 @@ namespace giEngineSDK {
   }
 
   
+  void 
+  SceneGraph::clearGraph() {
+    m_sceneName = "Untitled scene";
+    m_selectedActor.reset();
+    m_numActors = 0;
+
+    m_root->destroy();
+  }
+
   SceneGraph&
   g_sceneGraph() {
     return SceneGraph::instance();

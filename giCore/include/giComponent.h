@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/06/2021
  * @brief   .
- * @bug     No known Bugs.
  */
  
 /**
@@ -47,6 +46,9 @@ namespace giEngineSDK {
 
     virtual void 
     render() { };
+
+    virtual void 
+    destroy() { };
     
    protected:
     

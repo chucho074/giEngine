@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    23/09/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -37,7 +36,8 @@ namespace giEngineSDK {
       << "\nManager: "         << m_inputManager->inputSystemName()
       << "\nTotal Keyboards: " << m_inputManager->getNumberOfDevices(OIS::OISKeyboard)
       << "\nTotal Mouses: "      << m_inputManager->getNumberOfDevices(OIS::OISMouse)
-      << "\nTotal JoySticks: " << m_inputManager->getNumberOfDevices(OIS::OISJoyStick);
+      << "\nTotal JoySticks: " << m_inputManager->getNumberOfDevices(OIS::OISJoyStick)
+      << ConsoleLine;
 
     m_keyBoard = static_cast<OIS::Keyboard*>(m_inputManager->createInputObject(OIS::OISKeyboard, true));
     m_keyBoard->setEventCallback(this);
@@ -70,13 +70,12 @@ namespace giEngineSDK {
   bool
   Input::isKeyReleassed(KEYBOARD_KEYS::E inKey) {
     if (m_keyState[inKey] == STATUS_BUTTONS::kRELEASED) {
-      m_keyState[inKey] == STATUS_BUTTONS::kIDLE;
+      m_keyState[inKey] = STATUS_BUTTONS::kIDLE;
       return true;
     }
     else {
       return false;
     }
-    //return m_keyState[inKey] == STATUS_BUTTONS::kRELEASED ? true : false;
   }
 
   bool 
@@ -87,22 +86,23 @@ namespace giEngineSDK {
   bool
   Input::isMouseButtonReleassed(MOUSE_BUTTONS::E inButton) {
     if(m_mouseState[inButton] == STATUS_BUTTONS::kRELEASED) {
-      m_mouseState[inButton] == STATUS_BUTTONS::kIDLE;
+      m_mouseState[inButton] = STATUS_BUTTONS::kIDLE;
       return true;
     }
     else {
       return false;
     }
-    //return m_mouseState[inButton] == STATUS_BUTTONS::kRELEASED ? true : false;
   }
 
   bool 
   Input::isButtonPressed(CONTROL_BUTTONS::E inButton) {
+    GI_UNREFERENCED_PARAMETER(inButton);
     return false; 
   }
 
   bool 
   Input::isButtonReleassed(CONTROL_BUTTONS::E inButton) {
+    GI_UNREFERENCED_PARAMETER(inButton);
     return false;
   }
 
@@ -231,7 +231,7 @@ namespace giEngineSDK {
   
   bool 
   Input::keyPressed(const OIS::KeyEvent& arg) {
-    if(m_keyState[m_keys[arg.key]] = STATUS_BUTTONS::kPRESSED) {
+    if(m_keyState[m_keys[arg.key]] == STATUS_BUTTONS::kPRESSED) {
       return true;
     }
     return false;

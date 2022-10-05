@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
  * @brief   A basic camera.
- * @bug     No known Bugs.
  */
  
 /**

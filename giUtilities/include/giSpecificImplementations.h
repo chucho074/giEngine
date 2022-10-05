@@ -1,9 +1,9 @@
 /**
- * @file    giMath.h
+ * @file    giSpecificImplementations.h
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
- * @date    26/03/2021
- * @brief   Management of the Math.
+ * @date    27/09/2022
+ * @brief   Management of specific things for platforms.
  */
  
 /**
@@ -12,20 +12,20 @@
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
-#include "giPlatformMath.h"
+#include "giBaseImplementations.h"
 
 #if GI_PLATFORM == GI_PLATFORM_WIN32
-#include "giWindowsMath.h"
+#include "giWindowsImplementations.h"
 #elif GI_PLATFORM == GI_PLATFORM_LINUX
-#include "giLinuxMath.h"
+#include "giLinuxImplementations.h"
 #endif
 
 namespace giEngineSDK {
 #if GI_PLATFORM == GI_PLATFORM_WIN32
-  using Math = windowsMath;
+  using FileDialogs = WindowsFileDialogs;
 #elif GI_PLATFORM == GI_PLATFORM_LINUX
-  using Math = linuxMath;
+  using FileDialogs = LinuxFileDialogs;
 #else
-  using Math = platformMath;
+  using FileDialogs = BaseFileDialogs;
 #endif
 }

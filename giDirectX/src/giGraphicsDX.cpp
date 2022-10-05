@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   The Graphics API in charge to use DX11.
- * @bug     No known Bugs.
  */
  
 /**
@@ -269,10 +268,10 @@ namespace giEngineSDK {
 
   void
   CGraphicsDX::createViewport(uint32 inNumVP, 
-                        int32 inWidth, 
-                        int32 inHeight, 
-                        int32 inTopX, 
-                        int32 inTopY) {
+                              int32 inWidth, 
+                              int32 inHeight, 
+                              int32 inTopX, 
+                              int32 inTopY) {
 
     CD3D11_VIEWPORT VP(static_cast<float>(inTopX), 
                        static_cast<float>(inTopY), 
@@ -439,10 +438,10 @@ namespace giEngineSDK {
     SharedPtr<BufferDX> tmpBuffer;
     tmpBuffer.reset(new BufferDX);
 
-    CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
+    CD3D11_BUFFER_DESC tmpDesc((uint32)inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
-    tmpData.SysMemPitch = inByteWidth;
+    tmpData.SysMemPitch = (uint32)inByteWidth;
     tmpData.SysMemSlicePitch = 0;
     tmpDesc.StructureByteStride = 0;
 
@@ -514,13 +513,13 @@ namespace giEngineSDK {
     memset(&tmpDesc, 0, sizeof(tmpDesc));
     switch (inFillMode) {
     case FILLMODE::kSolid:
-      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      tmpDesc.FillMode = D3D11_FILL_SOLID;
       break;
     case FILLMODE::kWireFrame:
-      tmpDesc.FillMode == D3D11_FILL_WIREFRAME;
+      tmpDesc.FillMode = D3D11_FILL_WIREFRAME;
       break;
     default:
-      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      tmpDesc.FillMode = D3D11_FILL_SOLID;
       break;
     }  
 
@@ -925,11 +924,11 @@ namespace giEngineSDK {
   Vector4 * 
   CGraphicsDX::rsGetScissorRects(uint32 inNumRects) {
     Vector4 * tmpScissor;
-    for (int i = 0; i < inNumRects; ++i) {
-       D3D11_RECT r = { tmpScissor[i].x,
-                        tmpScissor[i].y,
-                        tmpScissor[i].z,
-                        tmpScissor[i].w };
+    for (uint32 i = 0; i < inNumRects; ++i) {
+       D3D11_RECT r = { (LONG)tmpScissor[i].x,
+                        (LONG)tmpScissor[i].y,
+                        (LONG)tmpScissor[i].z,
+                        (LONG)tmpScissor[i].w };
 
       m_devContext->RSGetScissorRects(&inNumRects, &r);
     }
@@ -1057,19 +1056,19 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::rsSetScissorRects(uint32 inNumRects, Vector4* inRects) {
-    const D3D11_RECT tmpRect;
+    D3D11_RECT tmpRect;
     m_devContext->RSSetScissorRects(inNumRects, &tmpRect);
-    inRects->x = tmpRect.top;
-    inRects->y = tmpRect.left;
-    inRects->z = tmpRect.right;
-    inRects->w = tmpRect.bottom;
+    inRects->x = (float)tmpRect.top;
+    inRects->y = (float)tmpRect.left;
+    inRects->z = (float)tmpRect.right;
+    inRects->w = (float)tmpRect.bottom;
   }
   
 
   void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
-    m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
+    m_devContext->DrawIndexed((uint32)inNumIndexes, inStartLocation, 0);
   }
 
   void 

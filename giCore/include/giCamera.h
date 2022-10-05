@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
  * @brief   A basic camera.
- * @bug     No known Bugs.
  */
  
 /**
@@ -17,6 +16,16 @@
 #include "giComponent.h"
 
 namespace giEngineSDK {
+
+  namespace CAMERA_TYPE {
+    enum E {
+      kDefaultCamera = 0,
+      kEditorCamera,
+      kPlayerCamera,
+      kShadowCamera
+    };
+  }
+
   /**
    * @class   Camera. 
    * @brief   A basic uses for the camera.
@@ -107,5 +116,7 @@ namespace giEngineSDK {
 
     bool m_front, m_back, m_left, m_right = false;
     bool m_up, m_down = false;
+
+    CAMERA_TYPE::E m_cameraType;
   };
 }

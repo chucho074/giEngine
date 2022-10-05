@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -55,14 +54,14 @@ namespace giEngineSDK {
     else if(inExtension == L".giShader") {
       m_extension = EXTENSION_TYPE::kgiShader;
     }
+    else if(inExtension == L".giScene") {
+      m_extension = EXTENSION_TYPE::kgiScene;
+    }
     else if(inExtension == L".giProject") {
       m_extension = EXTENSION_TYPE::kgiProject;
     }
     else if(inExtension == L".giFile") {
       m_extension = EXTENSION_TYPE::kgiFile;
-    }
-    else if(inExtension == L".giSettings") {
-      m_extension = EXTENSION_TYPE::kgiSettings;
     }
   }
 

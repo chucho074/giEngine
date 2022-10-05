@@ -4,24 +4,26 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #include "giDecoder.h"
-#include "giResourceManager.h"
-#include "giModel.h"
-#include "giMesh.h"
-#include "giTexture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <yaml-cpp/yaml.h>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
+
+#include "giResourceManager.h"
+#include "giModel.h"
+#include "giMesh.h"
+#include "giTexture.h"
+#include "giBaseConfig.h"
 
 namespace giEngineSDK {
   
@@ -73,14 +75,52 @@ namespace giEngineSDK {
     //case EXTENSION_TYPE::E::kgiModel: {}
     
     //case EXTENSION_TYPE::E::kgiShader: {}
-
-      
+    return tmpRef;
   }
 
-  SharedPtr<Resource>
-  Decoder::decodeGiProject(FILE &inFileData) {
+  void 
+  Decoder::decodeFile(FILE& inFileData) {
+    if (EXTENSION_TYPE::E::kgiScene == inFileData.m_extension) {
+      Decoder::decodeGiScene(inFileData);
 
-    return SharedPtr<Resource>();
+    }
+
+    if (EXTENSION_TYPE::E::kgiProject == inFileData.m_extension) {
+      decodeGiProject(inFileData);
+    }
+  }
+
+  void
+  Decoder::decodeGiProject(FILE &inFileData) {
+    auto& configs = g_engineConfigs();
+
+    ifstream tmpStream(inFileData.m_path);
+    std::stringstream tmpStr;
+    tmpStr << tmpStream.rdbuf();
+
+    YAML::Node tmpData = YAML::Load(tmpStr.str());
+    //Validate if is the file with the firts data in it
+    if (!tmpData["Project Name"]) {
+      return;
+    }
+
+    //Save the Project Name
+    String tmpProjectName = tmpData["Project Name"].as<String>();
+    ConsoleOut << "Deserializing " << tmpProjectName << " project." << ConsoleLine;
+    configs.s_projectName = tmpProjectName;
+
+    //Save the Project Path
+    Path tmpProjectPath = tmpData["Project Path"].as<String>();
+    configs.s_projectPath = tmpProjectPath;
+
+    //Save the active Graphics API
+    GIENGINE_API::E tmpActiveAPI = (GIENGINE_API::E)tmpData["Active Graphic API"].as<int32>();
+    configs.s_activeGraphicApi = tmpActiveAPI;
+
+    //Save the Omniverse Stage
+    String tmpStage = tmpData["Omniverse stage"].as<String>();
+    configs.s_existingStage = tmpStage;
+
   }
 
   SharedPtr<Resource>
@@ -110,7 +150,7 @@ namespace giEngineSDK {
                                                GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                                GI_BIND_FLAG::kBIND_SHADER_RESOURCE);
 
-      gapi.updateTexture(tmpTexture->m_texture, tmpImg, w * comp, 0);
+      gapi.updateTexture(tmpTexture->m_texture, tmpImg, w * 4, 0);
       
       //Unload Data
       stbi_image_free(tmpImg);
@@ -141,7 +181,7 @@ namespace giEngineSDK {
     
     Assimp::Importer importer;
 
-    size_T tmpSize(inFileData.m_data.size());
+    //size_T tmpSize(inFileData.m_data.size());
     importer.ReadFile(inFileData.m_path.string(),
                       aiProcessPreset_TargetRealtime_MaxQuality |
                       aiProcess_TransformUVCoords|
@@ -163,8 +203,40 @@ namespace giEngineSDK {
 
     tmpModel->m_resourceType = RESOURCE_TYPE::kModel;
 
+    
     processNode(tmpModel, tmpScene->mRootNode, tmpScene);
+    
     return tmpModel;
+  }
+
+  void 
+  Decoder::decodeGiScene(FILE& inFileData) {
+    //auto& configs = g_engineConfigs();
+
+    ifstream tmpStream(inFileData.m_path);
+    std::stringstream tmpStr;
+    tmpStr << tmpStream.rdbuf();
+
+    YAML::Node tmpData = YAML::Load(tmpStr.str());
+    if (!tmpData["Scene Name"]) {
+      return;
+    }
+    String tmpSceneName = tmpData["Scene Name"].as<String>();
+    ConsoleOut << "Deserializing " << tmpSceneName << " scene." << ConsoleLine;
+
+    //Getting the number of actors in the scene.
+    auto tmpNumActors = tmpData["Number of actors in scene"];
+    //int32 tmpSceneName = tmpData["Number of actors in scene"].as<int32>();
+    //There's no actors in the scene.
+    if (tmpNumActors) {
+      
+    }
+
+    //Clears the scene Graph and sets the new information with the
+    //given information from the readed file.
+
+    auto tmpActors = tmpData["Actors in Scene"];
+
   }
 
 
@@ -214,8 +286,7 @@ namespace giEngineSDK {
                        aiMaterial* mat, 
                        aiTextureType type, 
                        TEXTURE_TYPE::E typeName) {
-
-    auto& GAPI = g_graphicsAPI();
+                       
     auto& RM = g_resourceManager();
     ResourceRef tmpTextureRef;
     bool noTexture = true;
@@ -284,7 +355,6 @@ namespace giEngineSDK {
 
   SharedPtr<Mesh>
   processMesh(WeakPtr<Model>inModel, aiMesh* mesh, const aiScene* scene) {
-    auto& GAPI = g_graphicsAPI();
     auto& RM = g_resourceManager();
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
@@ -425,6 +495,7 @@ namespace giEngineSDK {
       //To change for the Setting the reference of the missingTexture only.
       
       textures.push_back(RM.m_missingTextureRef);
+      
     }
 
     SharedPtr<Mesh> tmpMesh = make_shared<Mesh>(vertices, indices, textures);

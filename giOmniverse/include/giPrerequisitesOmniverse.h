@@ -4,12 +4,11 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
  * @brief   The prerequisites for the core.
- * @bug     No known Bugs.
  */
 
- /**
-  * @include
-  */
+/**
+ * @include
+ */
 #pragma once
 
 #include <giPrerequisitesUtilities.h>

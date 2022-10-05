@@ -4,13 +4,14 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    01/06/2022
  * @brief   A basic implementation of the editor of the engine.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #pragma once
+#include <giResourceManager.h>
+#include <giFile.h>
 #include "giImGui.h"
 #include "giContentBrowser.h"
 #include "giHierarchy.h"
@@ -68,12 +69,25 @@ class Editor
   void
   renderPerformanceWindow();
 
-
   /**
    * @brief      Renders a window with the information about the engine dev.
    */
   void
   renderAboutWindow();
+
+  /**
+   * @brief      .
+   * @return     Returns the reference of the .
+   */
+  ResourceRef 
+  openFileDilog();
+
+  /**
+   * @brief      .
+   */
+  void 
+  saveFileDilog();
+
 
  private:
    

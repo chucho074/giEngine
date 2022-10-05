@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -28,7 +27,10 @@ namespace giEngineSDK {
   logCallback(const char* threadName,
               const char* component, 
               OmniClientLogLevel level, 
-              const char* message) noexcept{
+              const char* message) noexcept {
+    GI_UNREFERENCED_PARAMETER(threadName);
+    GI_UNREFERENCED_PARAMETER(component);
+    GI_UNREFERENCED_PARAMETER(level);
     std::unique_lock<std::mutex> lk(gLogMutex);
     if (gOmniverseLoggingEnabled) {
       puts(message);
@@ -38,7 +40,8 @@ namespace giEngineSDK {
   static void 
   OmniClientConnectionStatusCallbackImpl(void* userData, 
                                          const char* url, 
-                                         OmniClientConnectionStatus status) noexcept{
+                                         OmniClientConnectionStatus status) noexcept {
+    GI_UNREFERENCED_PARAMETER(userData);
     // Let's just print this regardless
     {
       std::unique_lock<std::mutex> lk(gLogMutex);
@@ -89,6 +92,7 @@ namespace giEngineSDK {
                                            [](void* userData, 
                                               OmniClientResult result, 
                                               struct OmniClientServerInfo const* info) noexcept {
+        GI_UNREFERENCED_PARAMETER(result);
         String* userName = static_cast<String*>(userData);
         if (userData && userName && info && info->username) {
           userName->assign(info->username);
@@ -195,8 +199,12 @@ namespace giEngineSDK {
     if (bCheckpointsSupported) {
       const bool bForceCheckpoint = true;
       omniClientWait(omniClientCreateCheckpoint(stageUrl.c_str(), comment, bForceCheckpoint, nullptr,
-        [](void* userData, OmniClientResult result, char const* checkpointQuery) noexcept
-        {}));
+        [](void* userData, OmniClientResult result, char const* checkpointQuery) noexcept {
+          GI_UNREFERENCED_PARAMETER(checkpointQuery);
+          GI_UNREFERENCED_PARAMETER(result);
+          GI_UNREFERENCED_PARAMETER(userData);
+        
+        }));
     }
   }
 
@@ -507,7 +515,7 @@ namespace giEngineSDK {
   void
   Omni::createUSDFromSG() {
     
-    UsdGeomMesh tmpMesh;
+    //UsdGeomMesh tmpMesh;
 
     if (!startOmniverse(m_liveEditActivation)) {
       Logger::instance().SetError(ERROR_TYPE::kOmniConnection, 
@@ -608,9 +616,9 @@ namespace giEngineSDK {
 
         //Get corresponding actor in scenegraph      
         SharedPtr<Actor> tmpActor = sgraph.getActorByName(prim.GetName().GetString());
-        Vector3 tmpPos(position.GetArray()[0],
-                       position.GetArray()[1],
-                       position.GetArray()[2]);
+        Vector3 tmpPos((float)position.GetArray()[0],
+                       (float)position.GetArray()[1],
+                       (float)position.GetArray()[2]);
 
         Vector3 tmpScale(scale.GetArray()[0],
                          scale.GetArray()[1],
@@ -650,7 +658,6 @@ namespace giEngineSDK {
   void 
   Omni::createSGFromUSD() {
 
-    auto& gapi = g_graphicsAPI();
     auto& RM = ResourceManager::instance();
     auto& sgraph = SceneGraph::instance();
 
@@ -742,7 +749,6 @@ namespace giEngineSDK {
 
   SharedPtr<Mesh> 
   Omni::createMeshFromGeoMesh(UsdGeomMesh inMesh, StringView inPath) {
-    auto& gapi = g_graphicsAPI();
     auto& RM = g_resourceManager();
 
     Vector<Vector3> tmpVertexMesh;
@@ -757,13 +763,13 @@ namespace giEngineSDK {
 
     Vector<GfVec3f> pointMeshArray;
 
-    uint32 sizeMesh = tmpMeshPointArray.size();
+    size_T sizeMesh = tmpMeshPointArray.size();
     auto tmpMeshStart = reinterpret_cast<GfVec3f*>(tmpMeshPointArray.data());
     auto tmpMeshEnd = tmpMeshStart + sizeMesh;
     pointMeshArray.reserve(sizeMesh);
     pointMeshArray.insert(pointMeshArray.end(), tmpMeshStart, tmpMeshEnd);
 
-    for (int i = 0; i < sizeMesh; ++i) {
+    for (uint32 i = 0; i < sizeMesh; ++i) {
       tmpVertexMesh.push_back(Vector3(pointMeshArray[i].GetArray()[0],
         pointMeshArray[i].GetArray()[1],
         pointMeshArray[i].GetArray()[2]));
@@ -776,13 +782,13 @@ namespace giEngineSDK {
 
     Vector<GfVec3f> norArrayMesh;
 
-    uint32 sizeNorMesh = tmpMeshNormalArray.size();
+    size_T sizeNorMesh = tmpMeshNormalArray.size();
     auto tmpMeshStartNor = reinterpret_cast<GfVec3f*>(tmpMeshNormalArray.data());
     auto tmpMeshEndNor = tmpMeshStartNor + sizeNorMesh;
     norArrayMesh.reserve(sizeNorMesh);
     norArrayMesh.insert(norArrayMesh.end(), tmpMeshStartNor, tmpMeshEndNor);
 
-    for (int i = 0; i < sizeMesh; ++i) {
+    for (uint32 i = 0; i < sizeMesh; ++i) {
       tmpNormalsMesh.push_back(Vector3(norArrayMesh[i].GetArray()[0],
         norArrayMesh[i].GetArray()[1],
         norArrayMesh[i].GetArray()[2]));
@@ -795,14 +801,14 @@ namespace giEngineSDK {
 
     Vector<int32> faceMeshArray;
 
-    uint32 sizeFaceMesh = tmpMeshFacesArray.size();
+    size_T sizeFaceMesh = tmpMeshFacesArray.size();
 
     auto tmpMeshStartFaces = tmpMeshFacesArray.data();
     auto tmpMeshEndFaces = tmpMeshStartFaces + sizeFaceMesh;
     faceMeshArray.reserve(sizeFaceMesh);
     faceMeshArray.insert(faceMeshArray.end(), tmpMeshStartFaces, tmpMeshEndFaces);
 
-    for (int i = 0; i < sizeFaceMesh; ++i) {
+    for (uint32 i = 0; i < sizeFaceMesh; ++i) {
       tmpFacesMesh.push_back(faceMeshArray[i]);
     }
 
@@ -811,7 +817,7 @@ namespace giEngineSDK {
     auto tmpUVs = inMesh.GetPrimvar(_tokens->st);
     VtArray<GfVec2f> tmpMeshUVsArray;
     tmpUVs.Get(&tmpMeshUVsArray);
-    uint32 tmpSizeUV = tmpMeshUVsArray.size();
+    size_T tmpSizeUV = tmpMeshUVsArray.size();
 
     Vector<GfVec2f> uvsArrayMesh;
 
@@ -820,7 +826,7 @@ namespace giEngineSDK {
     uvsArrayMesh.reserve(tmpSizeUV);
     uvsArrayMesh.insert(uvsArrayMesh.end(), tmpMeshStartUV, tmpMeshEndUV);
 
-    for (int i = 0; i < tmpSizeUV; ++i) {
+    for (uint32 i = 0; i < tmpSizeUV; ++i) {
       tmpUVsMesh.push_back(Vector2(uvsArrayMesh[i].GetArray()[0],
         uvsArrayMesh[i].GetArray()[1]));
     }
@@ -828,7 +834,7 @@ namespace giEngineSDK {
     //Create the mesh.
     Vector<SimpleVertex> tmpVertexListMesh;
     //Set the vertex data to the Vector.
-    for (int i = 0; i < sizeMesh; ++i) {
+    for (uint32 i = 0; i < sizeMesh; ++i) {
       //Create the vertex.
       SimpleVertex tmpSimpleVertexMesh;
       //Set positions.
@@ -976,7 +982,7 @@ namespace giEngineSDK {
           mesh.CreateOrientationAttr(VtValue(UsdGeomTokens->rightHanded));
 
           //Get the num of vertex
-          int32 num_vertices = actualMesh->m_vertexVector.size();
+          int32 num_vertices = (int32)actualMesh->m_vertexVector.size();
           //Get the vertex
           Vector<Vector3> vertex;
           vertex.reserve(num_vertices);
@@ -1010,7 +1016,7 @@ namespace giEngineSDK {
           mesh.CreatePointsAttr(VtValue(points));
 
           // Calculate indices for each triangle
-          int32 num_indices = tmpIndex.size(); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
+          int32 num_indices = (int32)tmpIndex.size(); // 2 Triangles per face * 3 Vertices per Triangle * 6 Faces
           VtArray<int32> vecIndices;
           vecIndices.resize(num_indices);
           for (int32 i = 0; i < num_indices; ++i) {
@@ -1019,7 +1025,7 @@ namespace giEngineSDK {
           mesh.CreateFaceVertexIndicesAttr(VtValue(vecIndices));
 
           // Add vertex normals
-          int32 num_normals = Normals.size();
+          //int32 num_normals = (int32)Normals.size();
           VtArray<GfVec3f> meshNormals;
           meshNormals.resize(num_vertices);
           for (int32 i = 0; i < num_vertices; ++i) {
@@ -1046,14 +1052,14 @@ namespace giEngineSDK {
           // Set the UV (st) values for this mesh
           UsdGeomPrimvar attr2 = mesh.CreatePrimvar(_tokens->st, SdfValueTypeNames->TexCoord2fArray);
           {
-            int32 uv_count = uvs.size();
+            int32 uv_count = (int32)uvs.size();
             VtVec2fArray valueArray;
             valueArray.resize(uv_count);
             for (int32 i = 0; i < uv_count; ++i) {
               valueArray[i].Set(uvs[i].x, uvs[i].y);
             }
 
-            bool status = attr2.Set(valueArray);
+            //bool status = attr2.Set(valueArray);
           }
           attr2.SetInterpolation(UsdGeomTokens->vertex);
           rootPrimPath = SdfPath::AbsoluteRootPath().AppendChild(TfToken(meshName));

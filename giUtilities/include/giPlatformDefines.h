@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    22/01/2021
  * @brief   
- * @bug     No known Bugs.
  */
 
 #pragma once

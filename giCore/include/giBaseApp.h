@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/08/2020
  * @brief   A class for the basics functions of the apps.
- * @bug     No known Bugs.
  */
 
 /**

@@ -1,10 +1,9 @@
 /**
  * @file    giRenderer.cpp
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -26,14 +25,13 @@ namespace giEngineSDK {
   void 
   Renderer::create() {
     auto& gapi = g_graphicsAPI();
-    auto& RM = g_resourceManager();
     auto& sgraph = SceneGraph::instance();
     
     //Get the main camera
     auto& camera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
     m_mainCamera = static_pointer_cast<Camera>(camera);
+
     //Get the Shadow Camera
-    
     auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
     m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
@@ -314,10 +312,14 @@ namespace giEngineSDK {
     /*                               LIGHT                                  */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderLight = gapi.createVShaderFromFile(L"Resources/Light.hlsl", "vs_main", "vs_4_0");
+    m_vertexShaderLight = gapi.createVShaderFromFile(L"Resources/Light.hlsl", 
+                                                     "vs_main", 
+                                                     "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderLight = gapi.createPShaderFromFile(L"Resources/Light.hlsl", "ps_main", "ps_4_0");
+    m_pixelShaderLight = gapi.createPShaderFromFile(L"Resources/Light.hlsl", 
+                                                    "ps_main", 
+                                                    "ps_4_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescLight;
@@ -356,9 +358,6 @@ namespace giEngineSDK {
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &Lightcb);
-    FILE tmpFile("Resources/Models/ScreenAlignedQuad.3ds");
-    m_SAQ = RM.readFromFile(tmpFile);
-
 
   }
 
@@ -371,7 +370,6 @@ namespace giEngineSDK {
   Renderer::render() {
 
     auto& gapi = g_graphicsAPI();
-    auto& sgraph = SceneGraph::instance();
 
     /************************************************************************/
     /*                           GBUFFER                                    */
@@ -551,7 +549,7 @@ namespace giEngineSDK {
 
     //Draw
     if(inDrawSAQ) {
-      RM.renderResource(m_SAQ);
+      RM.renderResource(RM.m_SAQ);
     } 
     else {
       sgraph.draw();
@@ -571,7 +569,7 @@ namespace giEngineSDK {
                          Vector<SharedPtr<Texture2D>> inShaderResources,
                          Vector<SharedPtr<Texture2D>> inUAVS,
                          SharedPtr<SamplerState> inSampler,
-                         Vector3 inDispatch) {
+                         Vector3i inDispatch) {
     //Get the Gapi
     auto& gapi = g_graphicsAPI();
     //Set Compute

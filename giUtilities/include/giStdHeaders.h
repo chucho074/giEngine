@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/04/2021
  * @brief   .
- * @bug     No known Bugs.
  */
  
 /**
@@ -80,6 +79,8 @@ namespace giEngineSDK {
   using wString = std::wstring;
 
   using ifstream = std::ifstream;
+
+  using ofstream = std::ofstream;
 
   /**
    * @brief      Vector.

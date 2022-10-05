@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Management of the graphics APIs.
- * @bug     No known Bugs.
  */
 
 /**
@@ -254,7 +253,6 @@ namespace giEngineSDK {
     /**
      * @brief   Set the Unordered Access Views.
      * @param   inUAV          The unordered Accesss View to set.
-     * @bug     No known Bugs.
      */
     void
     setUAV(int32, Texture2D* inUAV) override;

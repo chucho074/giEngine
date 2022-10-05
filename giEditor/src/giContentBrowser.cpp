@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    01/06/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -29,7 +28,8 @@ ContentBrowser::init() {
 
 void 
 ContentBrowser::update(float inDeltaTime) {
-  
+  GI_UNREFERENCED_PARAMETER(inDeltaTime);
+
 }
 
 void 
@@ -53,8 +53,8 @@ ContentBrowser::render() {
 
     ImGui::TableNextColumn();
 
-    int tmpTreeCount = 0;
-    int selection_mask = (1 << 2);
+    int32 tmpTreeCount = 0;
+    //int selection_mask = (1 << 2);
     ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow 
                                     | ImGuiTreeNodeFlags_OpenOnDoubleClick 
                                     | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -74,6 +74,8 @@ ContentBrowser::render() {
             bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount, 
                                                base_flags, 
                                                tmpName.c_str());
+
+            GI_UNREFERENCED_PARAMETER(node_open);
 
             //ImGui::TreePop();
 

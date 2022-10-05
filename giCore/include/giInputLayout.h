@@ -15,8 +15,7 @@
 namespace giEngineSDK {
   /**
    * @struct  InputLayoutDesc.
-   * @brief   Data to the Input Layout.
-   * @bug     No known Bugs.
+   * @brief   Data to the Input Layout. 
    */
   struct InputLayoutDesc {
     String semanticName;

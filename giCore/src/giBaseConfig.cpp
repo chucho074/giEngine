@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -25,15 +24,10 @@ Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject");
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;
 
 //Omniverse Settings
-//String EngineConfigs::s_existingStage = "omniverse://localhost/Users/giProjects/giTestProject/scene.usd";
-//String EngineConfigs::s_existingStage = "http://localhost:8080/omniverse://127.0.0.1/Users/giProjects/giTestProject/sceneSphere.usd";
-//String EngineConfigs::s_existingStage = "http://localhost:8080/omniverse://127.0.0.1/Users/chucho074/ovEngine1.usd";
-//String EngineConfigs::s_existingStage = "C:/Users/HEADQUARTERV2/Downloads/scene.usd";
 String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
 
 //Editor Settings
-
 
 //Renderer Settings
 

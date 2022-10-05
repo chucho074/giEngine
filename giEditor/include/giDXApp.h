@@ -4,14 +4,12 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #pragma once
-
 #include <giBaseApp.h>
 #include "giEditor.h"
 

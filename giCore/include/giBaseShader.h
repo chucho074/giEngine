@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    02/02/2021
  * @brief   A basic shader class.
- * @bug     No known Bugs.
  */
 
 /**

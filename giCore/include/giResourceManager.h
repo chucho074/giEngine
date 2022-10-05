@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -61,11 +60,18 @@ namespace giEngineSDK {
     init();
 
     /**
-     * @brief    Function to read a file.
+     * @brief    Function to read a file and create a resource.
      * @param    inFile        The file to read.
      * @return   Returns the reference of the resource created by reading the file.
      */
     ResourceRef
+    resourceFromFile(FILE& inFile);
+
+    /**
+     * @brief    Function to read a file and make internal changes in the engine.
+     * @param    inFile        The file to read.
+     */
+    void
     readFromFile(FILE& inFile);
 
     /**
@@ -114,6 +120,11 @@ namespace giEngineSDK {
     void
     renderResource(ResourceRef inReference);
 
+
+    void
+    saveFile(FILE& inFile);
+
+
    public:
 
     //The map of resources loaded.
@@ -134,6 +145,9 @@ namespace giEngineSDK {
     //The reference to the file icon texture.
     ResourceRef m_fileIcon;
 
+    //SAQ
+    ResourceRef m_SAQ;
+
    private:
 
     /**
@@ -147,7 +161,6 @@ namespace giEngineSDK {
      */
     void
     createEditorIconsTextures();
-
 
 
     friend class Decoder;

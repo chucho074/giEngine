@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    28/11/2020
  * @brief   This class have the funtionality for load models.
- * @bug     No known Bugs.
  */
 
 /**

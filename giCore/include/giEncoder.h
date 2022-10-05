@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic implementation to set the information for own types files.
- * @bug     No known Bugs.
  */
  
 /**
@@ -13,6 +12,8 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 #include "giFile.h"
+#include "giSceneNode.h"
+
 
 namespace giEngineSDK {
 
@@ -25,11 +26,11 @@ namespace giEngineSDK {
   	~Encoder() = default;
 
     /**
-     * @brief    .
-     * @param    inFileData    .
+     * @brief    Encode the data.
+     * @param    inFileData    The file data structure.
      */
     static void
-    encodeData(FILE inFileData);
+    encodeData(FILE& inFileData);
 
 
    private:
@@ -39,9 +40,19 @@ namespace giEngineSDK {
   	 * @param    inFileData    The file data structure.
   	 */
   	static void
-    encodeGiProject(FILE inFileData);
+    encodeGiProject(FILE& inFileData);
+
+  	/**
+  	 * @brief    Encode the information for the Scene Files.
+  	 * @param    inFileData    The file data structure.
+  	 */
+  	static void
+    encodeGiScene(FILE& inFileData);
+
 
    protected:
+
+
   };
 
 }

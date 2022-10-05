@@ -16,7 +16,7 @@ namespace giEngineSDK {
   /**
    * @struct  TextureDesc.
    * @brief   Data to the Textures.
-   * @bug     No known Bugs.
+ 
    */
   struct TextureDesc {
     uint32 W;

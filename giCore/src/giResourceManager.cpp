@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -24,10 +23,21 @@ namespace giEngineSDK {
   ResourceManager::init() {
     createEditorIconsTextures();
     createMissingTexture();
+
+    //Load the Screen Aligned Quad
+    FILE tmpFile("Resources/Models/ScreenAlignedQuad.3ds");
+    m_SAQ = resourceFromFile(tmpFile);
+    auto tmpModel = static_pointer_cast<Model>(getResource(m_SAQ.m_id).lock());
+    for (auto mesh : tmpModel->m_meshes) {
+      for (int32 i = 0; i < mesh->m_textures.size(); ++i) {
+        mesh->m_textures.pop_back();
+      }
+    }
+
   }
 
   ResourceRef
-  ResourceManager::readFromFile(FILE& inFile) {
+  ResourceManager::resourceFromFile(FILE& inFile) {
 
     //Send to read the file.
     Decoder::readFile(inFile);
@@ -44,6 +54,11 @@ namespace giEngineSDK {
     //Return the reference.
     return tmpRef;
 
+  }
+
+  void 
+  ResourceManager::readFromFile(FILE& inFile) {
+    Decoder::decodeFile(inFile);
   }
 
   WeakPtr<Resource>
@@ -72,8 +87,8 @@ namespace giEngineSDK {
   ResourceManager::getTextureNameFromMaterial(ResourceRef& inRef) {
     Vector<StringView> tmpNames;
     //Get the resource of the Material.
-    auto tmpResource = m_loadedResources.find(inRef.m_id)->second;
-    if (RESOURCE_TYPE::kMaterial == inRef.m_type) {
+    if (auto tmpResource = m_loadedResources.find(inRef.m_id)->second; 
+        RESOURCE_TYPE::kMaterial == inRef.m_type) {
       //Get the material.
       auto tmpMaterial = static_pointer_cast<Material>(tmpResource);
       //Iterate into the textures.
@@ -95,23 +110,23 @@ namespace giEngineSDK {
   ResourceManager::getReferenceByNameInMaterial(ResourceRef& inMaterialRef, 
                                                 StringView inTextureName) {
     //Get the resource of the Material.
-    auto tmpResource = m_loadedResources.find(inMaterialRef.m_id)->second;
-    if (RESOURCE_TYPE::kMaterial == inMaterialRef.m_type) {
+    if (auto tmpResource = m_loadedResources.find(inMaterialRef.m_id)->second; 
+        RESOURCE_TYPE::kMaterial == inMaterialRef.m_type) {
       //Get the material.
       auto tmpMaterial = static_pointer_cast<Material>(tmpResource);
       for (auto iterTex : tmpMaterial->m_textures) {
         //Get the resource of the texture.
         auto tmpRef = m_loadedResources.find(iterTex.m_id)->second;
         //Get the texture.
-        auto tmpTexture = static_pointer_cast<Texture>(tmpRef);
-        //
-        if(inTextureName == tmpTexture->m_name) {
+        if(auto tmpTexture = static_pointer_cast<Texture>(tmpRef); 
+           inTextureName == tmpTexture->m_name) {
           return iterTex;
         }
       }
 
       return ResourceRef();
     }
+    return ResourceRef();
   }
 
   ResourceRef 
@@ -146,6 +161,11 @@ namespace giEngineSDK {
      }
 
 
+  }
+
+  void 
+  ResourceManager::saveFile(FILE& inFile) {
+    Encoder::encodeData(inFile);
   }
 
   void

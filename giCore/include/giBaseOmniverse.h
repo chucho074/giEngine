@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    24/01/2022
  * @brief   A basic implementation for NVIDIA Omniverse conection.
- * @bug     No known Bugs.
  */
  
 /**
