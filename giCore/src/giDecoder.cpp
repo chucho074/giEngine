@@ -20,6 +20,7 @@
 #include <assimp/postprocess.h>     // Post processing flags
 
 #include "giResourceManager.h"
+#include "giSceneGraph.h"
 #include "giModel.h"
 #include "giMesh.h"
 #include "giTexture.h"
@@ -28,14 +29,21 @@
 namespace giEngineSDK {
   
   void
-  processNode(WeakPtr<Model> inModel, aiNode* node, const aiScene* inScene);
+  processNode(WeakPtr<Model> inModel, 
+              aiNode* node, 
+              const aiScene* inScene, 
+              bool saveMat = true);
 
   SharedPtr<Mesh>
-  processMesh(WeakPtr<Model> inModel, aiMesh* mesh, const aiScene* scene);
+  processMesh(WeakPtr<Model> inModel, 
+              aiMesh* mesh, 
+              const aiScene* scene, 
+              bool saveMat);
 
 
   ResourceRef
-  Decoder::decodeData(FILE &inFileData) {
+  Decoder::decodeData(FILE& inFileData, 
+                      DECODER_FLAGS::E inFlags) {
 
     auto& RM = g_resourceManager();
 
@@ -48,7 +56,7 @@ namespace giEngineSDK {
       || EXTENSION_TYPE::E::kTGA == inFileData.m_extension) {
 
       RM.m_loadedResources.insert({tmpRef.m_id,
-                                   Decoder::decodeImage(inFileData)});
+                                   Decoder::decodeImage(inFileData, inFlags)});
 
       tmpRef.m_type = RESOURCE_TYPE::kTexture;
       return tmpRef;
@@ -61,7 +69,7 @@ namespace giEngineSDK {
       || EXTENSION_TYPE::E::kOBJ == inFileData.m_extension) {
 
       RM.m_loadedResources.insert({ tmpRef.m_id,
-                                   Decoder::decodeModel(inFileData) });
+                                   Decoder::decodeModel(inFileData, inFlags)});
 
       tmpRef.m_type = RESOURCE_TYPE::kModel;
 
@@ -91,7 +99,7 @@ namespace giEngineSDK {
   }
 
   void
-  Decoder::decodeGiProject(FILE &inFileData) {
+  Decoder::decodeGiProject(FILE& inFileData) {
     auto& configs = g_engineConfigs();
 
     ifstream tmpStream(inFileData.m_path);
@@ -124,7 +132,7 @@ namespace giEngineSDK {
   }
 
   SharedPtr<Resource>
-  Decoder::decodeImage(FILE &inFileData) {
+  Decoder::decodeImage(FILE& inFileData, DECODER_FLAGS::E inFlags) {
     auto& gapi = g_graphicsAPI().instance();
 
     int32 w = 0, h = 0, comp = 0;
@@ -177,7 +185,7 @@ namespace giEngineSDK {
   }
 
   SharedPtr<Resource>
-  Decoder::decodeModel(FILE &inFileData) {
+  Decoder::decodeModel(FILE& inFileData, DECODER_FLAGS::E inFlags) {
     
     Assimp::Importer importer;
 
@@ -203,15 +211,19 @@ namespace giEngineSDK {
 
     tmpModel->m_resourceType = RESOURCE_TYPE::kModel;
 
-    
-    processNode(tmpModel, tmpScene->mRootNode, tmpScene);
+    if(inFlags == DECODER_FLAGS::kNoMaterial) {
+      processNode(tmpModel, tmpScene->mRootNode, tmpScene, false);
+    }
+    else {
+      processNode(tmpModel, tmpScene->mRootNode, tmpScene);
+    }
     
     return tmpModel;
   }
 
   void 
   Decoder::decodeGiScene(FILE& inFileData) {
-    //auto& configs = g_engineConfigs();
+    auto& SG = g_sceneGraph();
 
     ifstream tmpStream(inFileData.m_path);
     std::stringstream tmpStr;
@@ -221,24 +233,50 @@ namespace giEngineSDK {
     if (!tmpData["Scene Name"]) {
       return;
     }
+    
     String tmpSceneName = tmpData["Scene Name"].as<String>();
     ConsoleOut << "Deserializing " << tmpSceneName << " scene." << ConsoleLine;
 
     //Getting the number of actors in the scene.
     auto tmpNumActors = tmpData["Number of actors in scene"];
-    //int32 tmpSceneName = tmpData["Number of actors in scene"].as<int32>();
-    //There's no actors in the scene.
+
+    //There's actors in the scene.
     if (tmpNumActors) {
-      
+      //Clears the scene Graph and sets the new information with the
+      //given information from the readed file.
+      SG.clearGraph();
+
+      auto tmpActors = tmpData["Actors in Scene"];
+
+      if(tmpActors) {
+        for(auto actor : tmpActors) {
+          auto tmpActor = make_shared<Actor>();
+          auto tmpSceneNode = make_shared<SceneNode>();
+          //Get the scene node ID.
+          tmpSceneNode->m_nodeId = actor["SceneNode"].as<uint64>();
+          //Parent
+          if("None" != actor["Parent"].as<String>()) {
+            auto tmpParent = actor["Parent"].as<uint64>();
+
+          }
+          //Actor name
+          auto tmpActorName = actor["Actor Name"].as<String>();
+          //Actor ID
+          auto tmpActorID = actor["Actor ID"].as<int32>();
+          //Transform
+          auto tmpTransform = actor["Transform"];
+          for(auto iterTransform : tmpTransform) {
+            iterTransform["Translation"];
+          }
+          //Components
+          
+          //Childs
+          
+        }
+      }
+
     }
-
-    //Clears the scene Graph and sets the new information with the
-    //given information from the readed file.
-
-    auto tmpActors = tmpData["Actors in Scene"];
-
   }
-
 
   void
   Decoder::readFile(FILE& inFile) {
@@ -279,7 +317,6 @@ namespace giEngineSDK {
     }
     return "/" + inFile.substr(realPos + 1, inFile.length() - realPos);
   }
-
 
   ResourceRef
   loadMaterialTextures(WeakPtr<Model> inModel,
@@ -338,27 +375,31 @@ namespace giEngineSDK {
     return tmpTextureRef;
   }
 
-
   void 
-  processNode(WeakPtr<Model>inModel, aiNode* node, const aiScene* inScene) {
+  processNode(WeakPtr<Model>inModel, 
+              aiNode* node, 
+              const aiScene* inScene, 
+              bool saveMat) {
     // process all the node's meshes (if any)
     for (uint32 i = 0; i < node->mNumMeshes; i++) {
       aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
-      inModel.lock()->m_meshes.push_back(processMesh(inModel, mesh, inScene));
+      inModel.lock()->m_meshes.push_back(processMesh(inModel, mesh, inScene, saveMat));
     }
     // then do the same for each of its children
     for (uint32 i = 0; i < node->mNumChildren; i++) {
-      processNode(inModel, node->mChildren[i], inScene);
+      processNode(inModel, node->mChildren[i], inScene, saveMat);
     }
   }
 
 
   SharedPtr<Mesh>
-  processMesh(WeakPtr<Model>inModel, aiMesh* mesh, const aiScene* scene) {
+  processMesh(WeakPtr<Model>inModel, 
+              aiMesh* mesh, 
+              const aiScene* scene, 
+              bool saveMat) {
     auto& RM = g_resourceManager();
     Vector<SimpleVertex> vertices;
     Vector<uint32> indices;
-    Vector<ResourceRef> textures;
 
     for(uint32 i = 0; i < mesh->mNumVertices; i++) {
       SimpleVertex vertex;
@@ -457,45 +498,47 @@ namespace giEngineSDK {
       }
     }*/
 
+    Vector<ResourceRef> textures;
+    
+    if (saveMat) {
+
+      // Process material
+      if(mesh->mMaterialIndex >= 0) {
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        //To change for the creation of the textures in the resource Manager.
+        textures.push_back(loadMaterialTextures(inModel,
+                                                material,
+                                                aiTextureType_DIFFUSE, 
+                                                TEXTURE_TYPE::kAlbedo));
+
+        
+
+        //To change for the creation of the textures in the resource Manager.
+        textures.push_back(loadMaterialTextures(inModel,
+                                                material,
+                                                aiTextureType_NORMALS, 
+                                                TEXTURE_TYPE::kNormal));
 
 
-    // Process material
-    if(mesh->mMaterialIndex >= 0) {
-      aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-      //To change for the creation of the textures in the resource Manager.
-      textures.push_back(loadMaterialTextures(inModel,
-                                              material,
-                                              aiTextureType_DIFFUSE, 
-                                              TEXTURE_TYPE::kAlbedo));
-
-      
-
-      //To change for the creation of the textures in the resource Manager.
-      textures.push_back(loadMaterialTextures(inModel,
-                                              material,
-                                              aiTextureType_NORMALS, 
-                                              TEXTURE_TYPE::kNormal));
+        //To change for the creation of the textures in the resource Manager.
+        textures.push_back(loadMaterialTextures(inModel,
+                                                material,
+                                                aiTextureType_SPECULAR, 
+                                                TEXTURE_TYPE::kSpecular));
 
 
-      //To change for the creation of the textures in the resource Manager.
-      textures.push_back(loadMaterialTextures(inModel,
-                                              material,
-                                              aiTextureType_SPECULAR, 
-                                              TEXTURE_TYPE::kSpecular));
+        //To change for the creation of the textures in the resource Manager.
+        textures.push_back(loadMaterialTextures(inModel,
+                                                material,
+                                                aiTextureType_SHININESS, 
+                                                TEXTURE_TYPE::kGloss));
 
-
-      //To change for the creation of the textures in the resource Manager.
-      textures.push_back(loadMaterialTextures(inModel,
-                                              material,
-                                              aiTextureType_SHININESS, 
-                                              TEXTURE_TYPE::kGloss));
-
-    }
-    else {
-      //To change for the Setting the reference of the missingTexture only.
-      
-      textures.push_back(RM.m_missingTextureRef);
-      
+      }
+      else {
+        
+        textures.push_back(RM.m_missingTextureRef);
+        
+      }
     }
 
     SharedPtr<Mesh> tmpMesh = make_shared<Mesh>(vertices, indices, textures);

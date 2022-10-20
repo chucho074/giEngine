@@ -26,30 +26,18 @@ namespace giEngineSDK {
 
     //Load the Screen Aligned Quad
     FILE tmpFile("Resources/Models/ScreenAlignedQuad.3ds");
-    m_SAQ = resourceFromFile(tmpFile);
-    auto tmpModel = static_pointer_cast<Model>(getResource(m_SAQ.m_id).lock());
-    for (auto mesh : tmpModel->m_meshes) {
-      for (int32 i = 0; i < mesh->m_textures.size(); ++i) {
-        mesh->m_textures.pop_back();
-      }
-    }
+    m_SAQ = resourceFromFile(tmpFile, DECODER_FLAGS::kNoMaterial);
 
   }
 
   ResourceRef
-  ResourceManager::resourceFromFile(FILE& inFile) {
+  ResourceManager::resourceFromFile(FILE& inFile, DECODER_FLAGS::E inFlags) {
 
     //Send to read the file.
     Decoder::readFile(inFile);
 
     //Creates the References of the Resource.
-    ResourceRef tmpRef = Decoder::decodeData(inFile);
-
-    //Decide the type of file and send to the correct function.
-    //tmpRef.m_id = UUID();
-
-    //Adds the Resource to the loaded resources map.    
-    //m_loadedResources.insert({tmpRef.m_id, Decoder::decodeData(inFile)});
+    ResourceRef tmpRef = Decoder::decodeData(inFile, inFlags);
     
     //Return the reference.
     return tmpRef;
@@ -159,8 +147,6 @@ namespace giEngineSDK {
      if(RESOURCE_TYPE::kModel == inReference.m_type) {
        static_pointer_cast<Model>(tmpRes)->drawModel();
      }
-
-
   }
 
   void 

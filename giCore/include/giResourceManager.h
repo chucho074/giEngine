@@ -65,7 +65,8 @@ namespace giEngineSDK {
      * @return   Returns the reference of the resource created by reading the file.
      */
     ResourceRef
-    resourceFromFile(FILE& inFile);
+    resourceFromFile(FILE& inFile, 
+                     DECODER_FLAGS::E inFlags = DECODER_FLAGS::kNoFlags);
 
     /**
      * @brief    Function to read a file and make internal changes in the engine.

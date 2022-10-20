@@ -19,6 +19,14 @@ namespace giEngineSDK {
 
   struct ResourceRef;
 
+  namespace DECODER_FLAGS {
+    enum E {
+      kNoFlags,
+      kNoMaterial,
+      kBothSides
+    };
+  }
+
   class Decoder
   {
   public:
@@ -30,9 +38,11 @@ namespace giEngineSDK {
     /**
      * @brief    Decode data of the given file and create a resource.
      * @param    inFileData    The file data structure.
+     * @param    inFlags       Flags for read the file.
      */
     static ResourceRef
-    decodeData(FILE& inFileData);
+    decodeData(FILE& inFileData, 
+               DECODER_FLAGS::E inFlags = DECODER_FLAGS::kNoFlags);
 
     /**
      * @brief    Decode files than don't need to create a resource.
@@ -61,7 +71,7 @@ namespace giEngineSDK {
      * @param    inFileData    The file data structure.
      */
     static SharedPtr<Resource>
-    decodeImage(FILE &inFileData);
+    decodeImage(FILE &inFileData, DECODER_FLAGS::E inFlags);
     
     /**
      * @brief    Decode the information of any kind of model files.
@@ -69,7 +79,7 @@ namespace giEngineSDK {
      * @return   Returns the model as a Shared Pointer of Resource .
      */
     static SharedPtr<Resource>
-    decodeModel(FILE &inFileData);
+    decodeModel(FILE &inFileData, DECODER_FLAGS::E inFlags);
 
     /**
      * @brief    Decode the information of any kind of scene files.

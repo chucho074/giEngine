@@ -56,8 +56,9 @@ namespace giEngineSDK {
     float Scale;
     float Bias;
     Vector2 TextureSize;
-    Vector2 kk;
+    Vector2 empty;
   };
+
   /**
    * @struct   LightConstantBuffer.
    * @brief    The Camera constant buffer.   
