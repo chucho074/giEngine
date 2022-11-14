@@ -100,7 +100,7 @@ namespace giEngineSDK {
     float m_aspectRatio = 0;
     float m_near = 0;
     float m_far = 0;
-    Vector4 m_eye = { 0.0f,  0.0f, 0.0f, 1.0f };  // En posicion del mundo
+    Vector4 m_eye = { 200.0f,  0.0f, 0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
     //Vector4 m_eye = { -200.f,  -200.0f, -200.0f, 1.0f };  // En posicion del mundo

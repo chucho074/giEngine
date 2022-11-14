@@ -363,7 +363,23 @@ namespace giEngineSDK {
 
   void
   Renderer::update() {
-    
+    auto& gapi = g_graphicsAPI();
+
+
+    CameraConstantBuffer tmpConstantCamera;
+    tmpConstantCamera.mView = m_mainCamera->getViewMatrix().transpose();
+
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera->getProyectionMatrix().transpose();
+
+    //Create Constant Buffer for Camera
+    m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                        GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                        nullptr);
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferCamera, 
+                           &tmpConstantCamera, 
+                           sizeof(tmpConstantCamera));
   }
   
   void 

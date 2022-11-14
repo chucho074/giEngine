@@ -227,13 +227,112 @@ namespace giEngineSDK {
     m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button6, MOUSE_BUTTONS::kBUTTON6));
     m_mouseKeys.insert(make_pair(OIS::MouseButtonID::MB_Button7, MOUSE_BUTTONS::kBUTTON7));
 
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kW,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kESQ,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF1,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF2,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF3,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF4,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF5,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF6,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF7,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF8,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF9,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF10,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF11,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF12,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kPRTSC,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kSCRLK,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kPAUSE,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kGRAVEACCENT,     STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k1,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k2,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k3,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k4,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k5,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k6,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k7,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k8,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k9,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::k0,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kMINUS,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kEQUAL,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kBACKSPACE,       STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kINSERT,          STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kHOME,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kPGUP,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kTAB,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kQ,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kW,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kE,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kR,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kT,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kY,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kU,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kI,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kO,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kP,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kLBRACKET,        STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kRBRACKET,        STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kBACKSLASH,       STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kDELETE,          STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kEND,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kPGDOWN,          STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kCAPS,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kA,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kS,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kD,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kF,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kG,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kH,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kJ,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kK,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kL,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kSEMICOLON,       STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kAPOSTROPHE,      STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kENTER,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kLSHIFT,          STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kZ,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kX,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kC,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kV,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kB,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kN,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kM,               STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kCOMMA,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kDOT,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kSLASH,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kRSHIFT,          STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kLCTRL,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kLALT,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kSPACE,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kRALT,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kRCTRL,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kUP,              STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kLEFT,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kDOWN,            STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kRIGHT,           STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMLOCK,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kDIV,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kMUL,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kSUB,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kINC,             STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD0,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD1,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD2,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD3,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD4,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD5,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD6,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD7,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD8,         STATUS_BUTTONS::kIDLE));
+    m_keyState.insert(make_pair(KEYBOARD_KEYS::kNUMPAD9,         STATUS_BUTTONS::kIDLE));
+
   }
   
   bool 
   Input::keyPressed(const OIS::KeyEvent& arg) {
-    if(m_keyState[m_keys[arg.key]] == STATUS_BUTTONS::kPRESSED) {
-      return true;
-    }
+    m_keyState[m_keys[arg.key]] = STATUS_BUTTONS::kPRESSED;
     return false;
   }
   

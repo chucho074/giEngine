@@ -76,6 +76,12 @@ class Editor
   renderAboutWindow();
 
   /**
+   * @brief      Renders a window with the variable of the editor camera movement.
+   */
+  void
+  renderCameraMovementWindow();
+
+  /**
    * @brief      .
    * @return     Returns the reference of the .
    */
@@ -115,5 +121,7 @@ class Editor
    bool m_renderPerformance = true;
 
    bool m_renderAbout = false;
+
+   bool m_renderCamera = true;
 
 };

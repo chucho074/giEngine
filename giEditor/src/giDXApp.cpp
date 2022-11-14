@@ -112,7 +112,6 @@ DirectXApp::onDestroy() {
 
 void 
 DirectXApp::onUpdate(float inDeltaTime) {
-  GI_UNREFERENCED_PARAMETER(inDeltaTime);
 
   auto& cameraRef = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
 

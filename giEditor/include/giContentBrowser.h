@@ -19,41 +19,41 @@ using namespace ImGui;
 class ContentBrowser
 {
  public:
-	//Default constructor.
+  //Default constructor.
   ContentBrowser(Path inWorkingDir);
-	
-	//Default destructor.
-	~ContentBrowser() = default;
-	
-	/**
-	 * @brief      Initialize the content Browser.
-	 */
-	void
-	init();
+  
+  //Default destructor.
+  ~ContentBrowser() = default;
+  
+  /**
+   * @brief      Initialize the content Browser.
+   */
+  void
+  init();
 
-	/**
-	 * @brief      Update the information of the content browser.
-	 */
-	void
-	update(float inDeltaTime);
+  /**
+   * @brief      Update the information of the content browser.
+   */
+  void
+  update(float inDeltaTime);
 
-	/**
-	 * @brief      Render the information of the content browser.
-	 */
-	void 
-	render();
+  /**
+   * @brief      Render the information of the content browser.
+   */
+  void 
+  render();
 
-	/**
-	 * @brief      Destroy the information of the content browser.
-	 */
-	void
-	destroy();
+  /**
+   * @brief      Destroy the information of the content browser.
+   */
+  void
+  destroy();
 
  private:
   
-	Path m_workingDirectory;
+  Path m_workingDirectory;
 
-	Path m_currentDirectory;
+  Path m_currentDirectory;
   
   ImGuiWindowFlags m_windowFlags = 0;
 };

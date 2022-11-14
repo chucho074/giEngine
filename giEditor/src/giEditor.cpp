@@ -10,12 +10,15 @@
  * @include
  */
 #include "giEditor.h"
+#include <giSceneGraph.h>
 #include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
 #include <giTexture.h>
 #include <giTexture2D.h>
 #include <giResourceManager.h>
 #include <giPrerequisitesCore.h>
+#include <giCamera.h>
+#include <giStdHeaders.h>
 #include <memory>
 
 void 
@@ -100,6 +103,11 @@ Editor::render() {
   //Renders the about window if is active.
   if (m_renderAbout) {
     renderAboutWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderCamera) {
+    renderCameraMovementWindow();
   }
 
   //Render the hierarchy of the scene.
@@ -189,3 +197,33 @@ Editor::saveFileDilog() {
 
 }
 
+void 
+Editor::renderCameraMovementWindow() {
+  bool * tmpValue = &m_renderCamera;
+  auto& sgraph = g_sceneGraph().instance();
+
+  ImGui::Begin("Editor camera movement", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                                   | ImGuiWindowFlags_NoDocking
+                                                   | ImGuiWindowFlags_NoResize
+                                                   | ImGuiWindowFlags_NoCollapse);
+  
+  auto& tmpCamera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+  auto tmpMainCamera = static_pointer_cast<Camera>(tmpCamera);
+
+  String tmpX = toString(tmpMainCamera->m_viewMatrix.m_wColumn.x);
+  String tmpY = toString(tmpMainCamera->m_viewMatrix.m_wColumn.y);
+  String tmpZ = toString(tmpMainCamera->m_viewMatrix.m_wColumn.z);
+
+  ImGui::Text("Pos: ");
+  ImGui::SameLine();
+  ImGui::TextColored({0.91f, 0.07f, 0.14f, 1.f}, tmpX.substr(0, tmpX.find(".")+3).c_str());
+  ImGui::SameLine();
+  ImGui::TextColored({0.05f, 0.76f, 0.26f, 1.f}, tmpY.substr(0, tmpY.find(".")+3).c_str());
+  ImGui::SameLine();
+  ImGui::TextColored({0.f, 0.48f, 0.8f, 1.f},    tmpZ.substr(0, tmpZ.find(".")+3).c_str());
+  
+
+  ImGui::SliderFloat("Speed", &tmpMainCamera->m_speed, 0, 250);
+
+  ImGui::End();
+}

@@ -14,7 +14,7 @@
 namespace giEngineSDK {
 
   BaseInput&
-    g_inputManager() {
+  g_inputManager() {
     return BaseInput::instance();
   }
 
