@@ -42,7 +42,6 @@ namespace giEngineSDK {
     void
     unload() override;
 
-
     /**
      * @brief    Draw the model.
      */

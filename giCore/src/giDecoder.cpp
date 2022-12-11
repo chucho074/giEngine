@@ -100,7 +100,11 @@ namespace giEngineSDK {
 
   void
   Decoder::decodeGiProject(FILE& inFileData) {
+    auto& logger = g_logger();
     auto& configs = g_engineConfigs();
+    auto& sgraph = g_sceneGraph();
+    auto& RM = g_resourceManager();
+
 
     ifstream tmpStream(inFileData.m_path);
     std::stringstream tmpStr;
@@ -109,8 +113,15 @@ namespace giEngineSDK {
     YAML::Node tmpData = YAML::Load(tmpStr.str());
     //Validate if is the file with the firts data in it
     if (!tmpData["Project Name"]) {
+      logger.SetError(ERROR_TYPE::kDecodingFile, 
+                      "Can't open the file or the file is corrupted");
       return;
     }
+
+    //Show the Save as window in case there are any changes to save.
+    //Close the actual project instances
+    sgraph.clearGraph();
+    RM.clearLoadedResources();
 
     //Save the Project Name
     String tmpProjectName = tmpData["Project Name"].as<String>();
@@ -128,6 +139,25 @@ namespace giEngineSDK {
     //Save the Omniverse Stage
     String tmpStage = tmpData["Omniverse stage"].as<String>();
     configs.s_existingStage = tmpStage;
+
+
+    //Sets the shadow camera                                                                       TO CHANGE
+    SharedPtr<Camera> shadowCamera = make_shared<Camera>();
+    shadowCamera->init(Degrees(75.0f).getRadians(),
+                       1280.f / 720.f,
+                       0.01f,
+                       100000.0f);
+    
+    shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
+                              { 0.0f,   1.0f,    0.0f,   0.0f },
+                              { 0.0f,   1.0f,    0.0f,   0.0f });
+    
+    SharedPtr<Actor> lightActor = make_shared<Actor>();
+    lightActor->m_actorName = "Light";
+    lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kCamera);
+    sgraph.addActor(lightActor, sgraph.getRoot());
+
+
 
   }
 

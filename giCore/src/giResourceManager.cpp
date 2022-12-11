@@ -182,6 +182,21 @@ namespace giEngineSDK {
     m_fileIcon = Decoder::decodeData(tmpFileIcon);
   }
 
+  void 
+  ResourceManager::clearLoadedResources() {
+    for(auto resources : m_loadedResources) {
+      if(!resources.first == m_missingTextureRef.m_id 
+         || !resources.first == m_leftArrow.m_id
+         || !resources.first == m_rightArrow.m_id
+         || !resources.first == m_folderIcon.m_id
+         || !resources.first == m_fileIcon.m_id
+         || !resources.first == m_SAQ.m_id){
+        resources.second->unload();
+        m_loadedResources.erase(m_loadedResources.find(resources.first));
+      }
+    }
+  }
+
   ResourceManager&
   g_resourceManager() {
     return ResourceManager::instance();

@@ -141,3 +141,9 @@ void
 ContentBrowser::destroy() {
   
 }
+
+void 
+ContentBrowser::changeWorkingDir(Path inWorkingDir) {
+  m_workingDirectory = inWorkingDir;
+  m_currentDirectory = m_workingDirectory;
+}

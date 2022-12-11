@@ -54,6 +54,12 @@ namespace giEngineSDK {
     ~Mesh();
 
     /**
+     * @brief 
+     */
+    void
+    destroy();
+
+    /**
      * @brief    Load a mesh data.
      */
     void 

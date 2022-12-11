@@ -109,7 +109,12 @@ namespace giEngineSDK {
     getReferenceByNameInMaterial(ResourceRef& inMaterialRef, 
                                  StringView inTextureName);
 
-
+    /**
+     * @brief 
+     * @param inMeshes 
+     * @param inMaterials 
+     * @return 
+     */
     ResourceRef
     createModelFromMem(Vector<SharedPtr<Mesh>> inMeshes,
                        Vector<ResourceRef> inMaterials = Vector<ResourceRef>());
@@ -121,7 +126,10 @@ namespace giEngineSDK {
     void
     renderResource(ResourceRef inReference);
 
-
+    /**
+     * @brief    Saving files of the engine types.
+     * @param    inFile        .
+     */
     void
     saveFile(FILE& inFile);
 
@@ -163,6 +171,13 @@ namespace giEngineSDK {
     void
     createEditorIconsTextures();
 
+
+   protected:
+    /**
+     * @brief    Clear the map of resources loaded.
+     */
+    void 
+    clearLoadedResources();
 
     friend class Decoder;
     friend class Encoder;

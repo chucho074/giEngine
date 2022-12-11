@@ -82,7 +82,9 @@ namespace giEngineSDK {
 
 
     //Destructor
-    ~SkeletalMesh() = default;
+    ~SkeletalMesh() {
+      unload();
+    };
 
     bool
     loadFromFile(StringView inPath);
@@ -92,9 +94,6 @@ namespace giEngineSDK {
 
     void
     unload();
-
-    void
-    saveToFile(StringView inFile);
 
     /**
      * @brief

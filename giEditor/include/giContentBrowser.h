@@ -49,6 +49,13 @@ class ContentBrowser
   void
   destroy();
 
+  /**
+   * @brief      .
+   * @param      inWorkingDir 
+   */
+  void
+  changeWorkingDir(Path inWorkingDir);
+
  private:
   
   Path m_workingDirectory;

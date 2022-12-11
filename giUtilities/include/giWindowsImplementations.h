@@ -31,7 +31,7 @@ namespace giEngineSDK {
      * @return   Returns the path where the file is going to be saved.
      */
     static String 
-    saveFileDialog(void* inWindowHandle);
+    saveFileDialog(void* inWindowHandle, const char* inFilters = " ");
     
   };
 }

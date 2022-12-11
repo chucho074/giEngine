@@ -82,6 +82,12 @@ class Editor
   renderCameraMovementWindow();
 
   /**
+   * @brief      Renders a window for creation/selection of projects.
+   */
+  void
+  renderProjectCreationSelection();
+
+  /**
    * @brief      .
    * @return     Returns the reference of the .
    */
@@ -123,5 +129,13 @@ class Editor
    bool m_renderAbout = false;
 
    bool m_renderCamera = true;
+
+   //The window for creation/selection of projects.
+   bool m_renderProjectSelection = true;
+
+
+
+   //To change
+   Path m_savingPath;
 
 };

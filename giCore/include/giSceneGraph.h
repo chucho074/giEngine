@@ -12,7 +12,10 @@
 #pragma once
 #include "giActor.h"
 #include "giSceneNode.h"
+#include "giCamera.h"
 #include <giModule.h>
+#include <giDegrees.h>
+
 
 
 namespace giEngineSDK {
@@ -29,6 +32,12 @@ namespace giEngineSDK {
 
     //Destructor.
     ~SceneGraph() = default;
+
+    /**
+     * @brief 
+     */
+    void 
+    init();
 
     /**
      * @brief    Adds an actor to the list.
@@ -144,6 +153,11 @@ namespace giEngineSDK {
      * @brief    The number of the actors.
      */
     uint32 m_numActors;
+
+    /**
+     * @brief    The camera for the editor of the engine.
+     */
+    SharedPtr<Camera> m_editorCamera;
 
    protected:
 

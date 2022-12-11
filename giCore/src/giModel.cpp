@@ -19,7 +19,9 @@ namespace giEngineSDK {
 
   void 
   Model::unload() {
-
+    while (!m_meshes.empty()) {
+      m_meshes.at(0)->destroy();
+    }
   }
 
   void 

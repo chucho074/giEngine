@@ -28,8 +28,7 @@ namespace giEngineSDK {
     auto& sgraph = SceneGraph::instance();
     
     //Get the main camera
-    auto& camera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
-    m_mainCamera = static_pointer_cast<Camera>(camera);
+    m_mainCamera = sgraph.m_editorCamera;
 
     //Get the Shadow Camera
     auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);

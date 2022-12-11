@@ -19,7 +19,11 @@
 #include <giPrerequisitesCore.h>
 #include <giCamera.h>
 #include <giStdHeaders.h>
+#include <giFile.h>
+#include <giFileSystem.h>
 #include <memory>
+
+using giEngineSDK::FILE;
 
 void 
 Editor::init(void* inHandler, Vector2 inWindowSize) {
@@ -56,8 +60,11 @@ Editor::render() {
   
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
-      if (ImGui::MenuItem("New")) {
-        
+      if (ImGui::BeginMenu("New")) {
+        if (ImGui::MenuItem("Project")) {
+          m_renderProjectSelection = !m_renderProjectSelection;
+        }
+        ImGui::EndMenu();
       }
       if (ImGui::MenuItem("Open...", "Ctrl+O")) {
         openFileDilog();
@@ -79,13 +86,16 @@ Editor::render() {
     }
     if (ImGui::BeginMenu("Window")) {
       if (ImGui::MenuItem("Performance")) {
-        m_renderPerformance = true;
+        m_renderPerformance = !m_renderPerformance;
+      }
+      if (ImGui::MenuItem("Camera movement")) {
+        m_renderCamera = !m_renderCamera;
       }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Help")) {
       if (ImGui::MenuItem("About")) {
-        m_renderAbout = true;
+        m_renderAbout = !m_renderAbout;
       }
       ImGui::EndMenu();
     }
@@ -108,6 +118,11 @@ Editor::render() {
   //Renders the camera movement window if is active.
   if (m_renderCamera) {
     renderCameraMovementWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderProjectSelection) {
+    renderProjectCreationSelection();
   }
 
   //Render the hierarchy of the scene.
@@ -190,7 +205,7 @@ Editor::openFileDilog() {
 
 void 
 Editor::saveFileDilog() {
-  auto& RM = g_resourceManager().instance();
+  auto& RM = g_resourceManager();
   auto tmpPath = FileDialogs::saveFileDialog(m_windowsHandle);
   giEngineSDK::FILE tmpFileToOpen(tmpPath);
   RM.saveFile(tmpFileToOpen);
@@ -200,15 +215,13 @@ Editor::saveFileDilog() {
 void 
 Editor::renderCameraMovementWindow() {
   bool * tmpValue = &m_renderCamera;
-  auto& sgraph = g_sceneGraph().instance();
+  auto& sgraph = g_sceneGraph();
 
   ImGui::Begin("Editor camera movement", tmpValue, ImGuiWindowFlags_NoScrollbar 
                                                    | ImGuiWindowFlags_NoDocking
                                                    | ImGuiWindowFlags_NoResize
                                                    | ImGuiWindowFlags_NoCollapse);
-  
-  auto& tmpCamera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
-  auto tmpMainCamera = static_pointer_cast<Camera>(tmpCamera);
+  auto tmpMainCamera = sgraph.m_editorCamera;
 
   String tmpX = toString(tmpMainCamera->m_viewMatrix.m_wColumn.x);
   String tmpY = toString(tmpMainCamera->m_viewMatrix.m_wColumn.y);
@@ -225,5 +238,60 @@ Editor::renderCameraMovementWindow() {
 
   ImGui::SliderFloat("Speed", &tmpMainCamera->m_speed, 0, 250);
 
+  ImGui::End();
+}
+
+void 
+Editor::renderProjectCreationSelection() {
+
+  //Move to an own class
+
+  auto& configs = g_engineConfigs();
+  auto& RM = g_resourceManager();
+  
+  bool* tmpValue = &m_renderProjectSelection;
+  
+  ImGui::Begin("Project Creation/Selection", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                                       | ImGuiWindowFlags_NoDocking
+                                                       | ImGuiWindowFlags_NoCollapse);
+  
+  ImGui::Text("Actual Path for Save:");
+
+  ImGui::SameLine();
+
+  ImGui::Text(m_savingPath.string().c_str());
+  
+  ImGui::SameLine();
+
+  if(ImGui::Button("Search", {55, 25})) {
+    m_savingPath = FileDialogs::saveFileDialog(m_windowsHandle, 
+                                               "giEngine Projects\0*.giProject\0");
+    
+    if (!m_savingPath.empty()) {
+      configs.s_projectName = m_savingPath.stem().string().c_str();
+      configs.s_projectPath = m_savingPath;
+    }
+  }
+
+  //if(FileSystem::exist(m_savingPath)){
+    if(ImGui::Button("Create", {55, 25})) {
+      if (!m_savingPath.empty()) {
+        FILE tmpFile(m_savingPath);
+        RM.saveFile(tmpFile);
+        m_contentBrowser->changeWorkingDir(m_savingPath.parent_path());
+        m_renderProjectSelection = !m_renderProjectSelection;
+      }
+    }
+  //}
+
+  if(ImGui::Button("Open", {55, 25})) {
+    if (!m_savingPath.empty()) {
+      FILE tmpFile(m_savingPath);
+      RM.readFromFile(tmpFile);
+      m_contentBrowser->changeWorkingDir(m_savingPath.parent_path());
+      m_renderProjectSelection = !m_renderProjectSelection;
+
+    }
+  }
   ImGui::End();
 }

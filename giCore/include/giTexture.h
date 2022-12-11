@@ -38,10 +38,15 @@ namespace giEngineSDK {
    public:
     Texture() = default;
 
-  	~Texture() = default;
+  	~Texture(){ 
+      unload();
+    };
 
     void
-    unload() override {};
+    unload() override {
+      m_texture.reset();
+      m_samplerState.reset();
+    };
 
     //The name of the Texture.
     String m_name;

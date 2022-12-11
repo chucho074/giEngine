@@ -29,6 +29,8 @@ namespace giEngineSDK {
       kDepthStencilStateCreation,
       kSamplerCreation,
       kUAVCreation,
+      kDecodingFile,
+      kEncodingFile,
       kOmniConnection
     };
   }

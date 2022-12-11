@@ -26,7 +26,17 @@ namespace giEngineSDK {
   }
   
   Mesh::~Mesh() {
-    
+    destroy();
+  }
+
+  void 
+  Mesh::destroy() {
+    m_facesList.clear();
+    m_indexBuffer.reset();
+    m_textures.clear();
+    m_vertexBuffer.reset();
+    m_vertexVector.clear();
+    m_omniRefPath = "";
   }
 
   void 

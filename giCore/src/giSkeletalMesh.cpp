@@ -30,13 +30,9 @@ namespace giEngineSDK {
 
   void 
   SkeletalMesh::unload() {
-
+    m_boneMapping.clear();
   }
 
-  void 
-  SkeletalMesh::saveToFile(StringView inFile) {
-    GI_UNREFERENCED_PARAMETER(inFile);
-  }
 
 
 
