@@ -36,7 +36,7 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
 
   m_windowHandle = inHandler;
 
-  m_contentBrowser.reset(new ContentBrowser(configs.s_projectPath));
+  m_contentBrowser = make_shared<ContentBrowser>(configs.s_contentPath);
 
   m_hierarchy = make_shared<Hierarchy>();
 
@@ -73,6 +73,11 @@ Editor::render() {
       if (ImGui::MenuItem("Save As...")) {
         saveFileDilog();
       }
+      if (ImGui::MenuItem("Import")) {
+        renderImport();
+      }
+      if (ImGui::MenuItem("Export")) {}
+
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit")) {
@@ -273,7 +278,8 @@ Editor::renderProjectCreationSelection() {
     }
   }
 
-  //if(FileSystem::exist(m_savingPath)){
+  //Create a new file // when is a class, make this a function to create the file type.
+  //if(!FileSystem::exist(m_savingPath)){
     if(ImGui::Button("Create", {55, 25})) {
       if (!m_savingPath.empty()) {
         FILE tmpFile(m_savingPath);
@@ -284,6 +290,7 @@ Editor::renderProjectCreationSelection() {
     }
   //}
 
+  //Opens a file.
   if(ImGui::Button("Open", {55, 25})) {
     if (!m_savingPath.empty()) {
       FILE tmpFile(m_savingPath);
@@ -293,5 +300,26 @@ Editor::renderProjectCreationSelection() {
 
     }
   }
+
+  //Save & save as
+  //Verify if the project is created.
+  //If the project is created, search for the scene with a same name in the folder.
+  //If the project is not created & there is no saving path, create the project file and
+  //present the save dialog for the actual scene.
+
+
   ImGui::End();
+}
+
+
+void
+Editor::renderImport() {
+  //Open the dialog of open file and save the information of the loaded resource
+  //into the current path in the content browser or in the base path of the project content.
+  //Sends the data to the decoder to decode the file to import and save the data into the
+  //project path.
+  
+
+  
+  //Create a folder for models, materials, textures is a good idea?
 }

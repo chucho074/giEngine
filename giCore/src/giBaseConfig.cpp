@@ -18,7 +18,8 @@ bool EngineConfigs::s_fullscreen = false;
 bool EngineConfigs::s_maximized = true;
 String EngineConfigs::s_projectName = "giTestProject";
 GIENGINE_API::E EngineConfigs::s_activeGraphicApi = GIENGINE_API::kDX11;
-Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject");
+Path EngineConfigs::s_projectPath = ("E:/Dev/giTestProject");
+Path EngineConfigs::s_contentPath = ("E:/Dev/giTestProject/content");
 
 //Plugins
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;

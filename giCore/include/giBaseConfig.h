@@ -13,6 +13,7 @@
 #include "giModule.h"
 #include "giVector2i.h"
 #include "giStdHeaders.h"
+#include "giUUID.h"
 #include "giPrerequisitesCore.h"
 
 using namespace giEngineSDK;
@@ -48,7 +49,7 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
   static String s_projectName;
   static GIENGINE_API::E s_activeGraphicApi;
   static Path s_projectPath;
-
+  static Path s_contentPath;
 
   //Plugins
   static Map<GIPLUGINS::E, bool> s_activePlugins;
@@ -59,7 +60,9 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 
 
   //Editor Settings
-
+  //static UUID s_lastScene;
+  
+  
   //Renderer Settings
 
 };

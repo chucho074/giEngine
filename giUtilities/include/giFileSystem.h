@@ -48,7 +48,7 @@ namespace giEngineSDK {
      * @param    inPath        The path of the file to evaluate if exists.
      * @return   Returns a true if the file exists.
      */
-    static bool
+    bool
     exist(Path inPath);
 
 

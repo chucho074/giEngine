@@ -43,10 +43,10 @@ namespace giEngineSDK {
     void
     unload() override {};
 
-
+    //The references of the textures used.
     Vector<ResourceRef> m_textures;
 
-
+    //The flags of the material.
     MATERIAL_FLAGS::E m_flags;
 
   };

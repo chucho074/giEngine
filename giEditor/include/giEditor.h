@@ -88,6 +88,12 @@ class Editor
   renderProjectCreationSelection();
 
   /**
+   * @brief      Renders a window for import into the project.
+   */
+  void
+  renderImport();
+
+  /**
    * @brief      .
    * @return     Returns the reference of the .
    */
