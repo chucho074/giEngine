@@ -49,14 +49,15 @@ DirectXApp::onCreate() {
   m_editorUI->init(m_window.getSystemHandle(), tmpSize);
 
   //Sets Vela's model
-  /*ResourceRef tmpModel;
-  FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
-  tmpModel = RM.resourceFromFile(tmpFileModel);
-  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
-  SharedPtr<Actor> tmpActor = make_shared<Actor>();
-  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-  tmpActor->m_actorName = "Vela2";
-  m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());*/
+  //ResourceRef tmpModel;
+  ////FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
+  //tmpModel = RM.resourceFromFile(tmpFileModel);
+  //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+  //SharedPtr<Actor> tmpActor = make_shared<Actor>();
+  //tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+  //tmpActor->m_actorName = "Vela2";
+  //m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
