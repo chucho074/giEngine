@@ -200,6 +200,6 @@ namespace giEngineSDK {
   #define ConsoleLine std::endl;
 
 
-  #define toString(x) std::to_string(x);
+  #define toString(x) std::to_string(x)
 
 }

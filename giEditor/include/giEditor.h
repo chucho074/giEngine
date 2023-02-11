@@ -94,6 +94,18 @@ class Editor
   renderImport();
 
   /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMR();
+
+  /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMRprocess();
+
+  /**
    * @brief      .
    * @return     Returns the reference of the .
    */
@@ -137,7 +149,7 @@ class Editor
    bool m_renderCamera = true;
 
    //The window for creation/selection of projects.
-   bool m_renderProjectSelection = true;
+   bool m_renderProjectSelection = false;
 
 
 

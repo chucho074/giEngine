@@ -60,8 +60,8 @@ Hierarchy::render() {
       for (auto& nodes : sg.getRoot()->m_childs) {
         renderNode(nodes);
       }
+      ImGui::EndTable();
     }
-    ImGui::EndTable();
 
     ImGui::End();
   }

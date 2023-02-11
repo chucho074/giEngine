@@ -180,6 +180,28 @@ namespace giEngineSDK {
     //File icon.
     FILE tmpFileIcon("Resources/Icons/fileIcon.png");
     m_fileIcon = Decoder::decodeData(tmpFileIcon);
+
+    //Obj icon.
+    FILE tmpObjIcon("Resources/Icons/FileModelOBJ.png");
+    m_objIcon = Decoder::decodeData(tmpObjIcon);
+
+    //FBX icon.
+    FILE tmpFbxIcon("Resources/Icons/FileModelFBX.png");
+    m_fbxIcon = Decoder::decodeData(tmpFbxIcon);
+
+    //Mtl icon.
+    FILE tmpMtlIcon("Resources/Icons/FileMaterialMtl.png");
+    m_mtlIcon = Decoder::decodeData(tmpMtlIcon);
+
+    //PNG icon.
+    FILE tmpPNGIcon("Resources/Icons/FileTexturePNG.png");
+    m_pngIcon = Decoder::decodeData(tmpPNGIcon);
+
+    //JPG icon.
+    FILE tmpJPGIcon("Resources/Icons/FileTextureJPG.png");
+    m_jpgIcon = Decoder::decodeData(tmpJPGIcon);
+
+
   }
 
   void 

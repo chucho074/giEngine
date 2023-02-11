@@ -18,6 +18,7 @@ int32
 BaseApp::run() {
 
   //EngineConfigs::s_activePlugins.insert({GIPLUGINS::kOmniverse, true});
+  EngineConfigs::s_activePlugins.insert({GIPLUGINS::kgiAMR, true});
 
   //Create the main window.
   createWindow();
@@ -216,6 +217,19 @@ BaseApp::initSystems() {
       BaseOmni* ov = createOmniverse();
       g_omniverse().setObject(ov);
       m_omniverse = &g_omniverse();
+    }
+  }
+  
+  //Start giAMR
+  auto iterAmr = EngineConfigs::s_activePlugins.find(GIPLUGINS::kgiAMR);
+  if (iterAmr != EngineConfigs::s_activePlugins.end()) {
+    if (m_loaderAMR.loadPlugin("giAMR_d.dll")) {
+      auto createAMR = reinterpret_cast<funCreateAMR>(m_loaderAMR.getProcedureByName("createAMR"));
+
+      BaseAMR::startUp();
+      BaseAMR* amr = createAMR();
+      g_AMR().setObject(amr);
+      m_AMR = &g_AMR();
     }
   }
 

@@ -154,6 +154,21 @@ namespace giEngineSDK {
     //The reference to the file icon texture.
     ResourceRef m_fileIcon;
 
+    //The reference to the obj icon texture.
+    ResourceRef m_objIcon;
+
+    //The reference to the FBX icon texture.
+    ResourceRef m_fbxIcon;
+
+    //The reference to the mdl icon texture.
+    ResourceRef m_mtlIcon;
+
+    //The reference to the PNG icon texture.
+    ResourceRef m_pngIcon;
+
+    //The reference to the JPG icon texture.
+    ResourceRef m_jpgIcon;
+
     //SAQ
     ResourceRef m_SAQ;
 

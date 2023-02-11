@@ -21,6 +21,7 @@
 #include <giStdHeaders.h>
 #include <giFile.h>
 #include <giFileSystem.h>
+#include <giBaseAMR.h>
 #include <memory>
 
 using giEngineSDK::FILE;
@@ -58,6 +59,9 @@ Editor::update(float inDeltaTime) {
 void 
 Editor::render() {
   
+  auto& amr = g_AMR();
+
+
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
       if (ImGui::BeginMenu("New")) {
@@ -128,6 +132,16 @@ Editor::render() {
   //Renders the camera movement window if is active.
   if (m_renderProjectSelection) {
     renderProjectCreationSelection();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_renderWindow && !amr.m_processWindow) {
+    renderAMR();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_processWindow) {
+    renderAMRprocess();
   }
 
   //Render the hierarchy of the scene.
@@ -311,7 +325,6 @@ Editor::renderProjectCreationSelection() {
   ImGui::End();
 }
 
-
 void
 Editor::renderImport() {
   //Open the dialog of open file and save the information of the loaded resource
@@ -322,4 +335,127 @@ Editor::renderImport() {
 
   
   //Create a folder for models, materials, textures is a good idea?
+}
+
+void
+Editor::renderAMR() {
+  auto& amr = g_AMR();
+  auto& RM = g_resourceManager();
+  auto& configs = g_engineConfigs();
+
+  bool* tmpValue = &amr.m_renderWindow;
+
+   
+  ImGui::Begin("giAMR", tmpValue, ImGuiWindowFlags_NoScrollbar
+                                  | ImGuiWindowFlags_NoDocking
+                                  | ImGuiWindowFlags_NoCollapse);
+
+  //
+  ImGui::BeginTable("giAMRTable", 1, ImGuiTableFlags_ScrollY);
+  ImGui::TableNextColumn();
+  
+
+  //Ref mesh
+  ImGui::Text("Ref Mesh:\t");
+  ImGui::SameLine();
+  ImGui::Text(amr.m_savedData.m_refMesh.relative_path().string().c_str());
+
+  ImGui::Separator();
+
+  //Base mesh
+  ImGui::Text("Base Mesh:\t");
+  ImGui::SameLine();
+  ImGui::Text(amr.m_savedData.m_baseMesh.relative_path().string().c_str());
+
+  ImGui::Separator();
+
+  //Train resolution
+  ImGui::SliderInt("Train resolution", &amr.m_savedData.m_trainResolution, 64, 512);
+
+  ImGui::Separator();
+
+  //Learning rate
+  ImGui::SliderFloat("Learning Rate", &amr.m_savedData.m_learningRate, 0.003, 0.05);
+
+  ImGui::Separator();
+
+  //Iterations
+  ImGui::SliderInt("Iterations", &amr.m_savedData.m_iterations, 4000, 15000);
+  
+  ImGui::Separator();
+
+  //Generate Button
+  if (ImGui::Button("Generate")) {
+    amr.run();
+    amr.m_renderWindow = false;
+    amr.m_processWindow = true;
+  }
+
+
+  ImGui::EndTable();
+
+  ImGui::End();
+
+}
+
+void
+Editor::renderAMRprocess() { 
+
+  auto& amr = g_AMR();
+  auto& RM = g_resourceManager();
+  auto& configs = g_engineConfigs();
+
+  bool* tmpValue = &amr.m_processWindow;
+  ImGui::Begin("giAMRprocess", tmpValue, ImGuiWindowFlags_NoScrollbar
+                                         | ImGuiWindowFlags_NoDocking
+                                         | ImGuiWindowFlags_NoCollapse);
+  if(ImGui::BeginTable("giAMRProcessTable", 1, ImGuiTableFlags_ScrollY)) { //1
+    ImGui::TableNextColumn();
+
+    //Read every new image, if exist any new, load it and present it.
+    SharedPtr<Texture> tmpTexture;
+    String tmpImgName = ("/img" + toString(amr.m_processImg) + ".png");
+    Path tmpImgPath = configs.s_contentPath.string() + "/giAMR/"
+      + amr.m_savedData.m_refMesh.filename().string() + tmpImgName;
+    if (fsys::exists(tmpImgPath)) {
+      FILE tmpFile(tmpImgPath);
+      amr.m_AMRprocess = RM.resourceFromFile(tmpFile);
+      ++amr.m_processImg;
+    }
+
+    if (UUID::ZERO != amr.m_AMRprocess.m_id) {
+      tmpTexture = static_pointer_cast<Texture>(RM.getResource(amr.m_AMRprocess.m_id).lock());
+      if(nullptr != tmpTexture->m_texture) {
+        ImGui::Image(tmpTexture->m_texture->getApiTexture(), { ImGui::GetWindowContentRegionMax().x / 1,
+                                                               ImGui::GetWindowContentRegionMax().y / 2 });
+      }
+    }
+    ImGui::Text(String("Image: "+ toString(amr.m_processImg - 1)).c_str());
+    ImGui::Separator();
+
+    if(ImGui::BeginTable("ComparasionTable", 2, ImGuiTableFlags_ScrollY)) {//2
+      ImGui::TableNextColumn();
+      
+      ImGui::Text("Output Model: ");
+      ImGui::Text("Triangles: ");
+      ImGui::Text("Vertex: ");
+      ImGui::Text("Faces: ");
+      ImGui::Text("Index: ");
+
+      ImGui::TableNextColumn();
+
+      ImGui::Text("Reference Model: ");
+      ImGui::Text("Triangles: ");
+      ImGui::Text("Vertex: ");
+      ImGui::Text("Faces: ");
+      ImGui::Text("Index: ");
+
+      //implementar los archivos .gimodel para guardar una referencia de la informacion
+      // de los modelos importados dentro del proyecto y poder sacar la informacion de arriba
+      ImGui::EndTable();//2
+
+    }
+    ImGui::EndTable();//1
+  }
+  ImGui::End();
 }

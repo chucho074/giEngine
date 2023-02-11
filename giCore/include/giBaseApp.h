@@ -21,6 +21,7 @@
 #include "giSceneGraph.h"
 #include "giBaseInput.h"
 #include "giBaseOmniverse.h"
+#include "giBaseAMR.h"
 #include "giBaseConfig.h"
 
 using namespace giEngineSDK;
@@ -160,6 +161,8 @@ class GI_CORE_EXPORT BaseApp
 
   LibraryLoader m_loaderOmniverse;
 
+  LibraryLoader m_loaderAMR;
+
   GraphicsAPI* m_gapi = nullptr;
 
   BaseRenderer* m_renderer = nullptr;
@@ -175,6 +178,8 @@ class GI_CORE_EXPORT BaseApp
   BaseInput * m_inputManager = nullptr;
 
   BaseOmni * m_omniverse = nullptr;
+
+  BaseAMR * m_AMR = nullptr;
 
   sf::Clock m_appClock;
 

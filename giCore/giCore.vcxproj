@@ -171,6 +171,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\giActor.cpp" />
+    <ClCompile Include="src\giBaseAMR.cpp" />
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseConfig.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="src\giUUID.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseAMR.h" />
     <ClInclude Include="include\giBaseComputeShader.h" />
     <ClInclude Include="include\giBaseConfig.h" />
     <ClInclude Include="include\giBaseInput.h" />
