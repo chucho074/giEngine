@@ -13,8 +13,10 @@
 #include <giResourceManager.h>
 #include <giTexture.h>
 #include <giBaseAMR.h>
+#include <giFile.h>
 #include "giContentBrowser.h"
 
+using giEngineSDK::FILE;
 
 ContentBrowser::ContentBrowser(Path inWorkingDir) {
   m_workingDirectory = inWorkingDir;
@@ -29,7 +31,25 @@ ContentBrowser::init() {
 
 void 
 ContentBrowser::update(float inDeltaTime) {
+  auto& configs = g_engineConfigs().instance();
+  auto& RM = g_resourceManager().instance();
+
   GI_UNREFERENCED_PARAMETER(inDeltaTime);
+
+  //Quitar de aqui, ponerlo maybe en el viewport, idk, app?
+
+  /*for(auto& tmpIterator : fsys::directory_iterator(configs.s_contentPath)) {
+    const auto& tmpPath = tmpIterator.path();
+
+    if (!tmpIterator.is_directory() 
+        || tmpPath.extension() != ".giData") {
+        if(!fsys::exists(tmpPath.string()+".giData")) {
+          FILE tmpFile(tmpPath);
+          RM.saveFile(tmpFile);
+        }
+    }
+
+  }*/
 }
 
 void 
@@ -122,7 +142,7 @@ ContentBrowser::render() {
           String relativePathString = relativePath.filename().string();
           bool tmpIsDir = false;
           SharedPtr<Texture> tmpTexture;
-          String tmpExtension= tmpIterator.path().extension().string();
+          String tmpExtension= tmpPath.extension().string();
           //Show Folders
           if (tmpIterator.is_directory()) {
             tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
@@ -173,6 +193,10 @@ ContentBrowser::render() {
             //Pop up menus for files.
             if (tmpExtension == ".obj") {
               if (ImGui::BeginPopupContextItem("file popup")) {
+                if (ImGui::Button("Create data / JUST TESTING")) {
+                  FILE tmpFile(tmpPath);
+                  RM.saveFile(tmpFile);
+                }
                 if (ImGui::Button("Use giAMR in this model")) {
                   amr.setRefMesh(tmpPath);
                 }

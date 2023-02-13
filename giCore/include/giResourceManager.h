@@ -20,6 +20,7 @@
 namespace giEngineSDK {
 
   class Mesh;
+  struct ModelInfo;
 
   /**
    * @brief    Type for save a reference of a resource.
@@ -126,12 +127,21 @@ namespace giEngineSDK {
     void
     renderResource(ResourceRef inReference);
 
+
+
+    //THIS MAY BE IN ANOTHER CLASS
+    
     /**
      * @brief    Saving files of the engine types.
      * @param    inFile        .
      */
     void
     saveFile(FILE& inFile);
+    
+
+    ModelInfo
+    getFromFile(FILE& inFile);
+
 
 
    public:

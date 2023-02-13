@@ -32,6 +32,7 @@ namespace giEngineSDK {
         kgiScene,
         kgiProject,
         kgiFile,
+        kgiData,
         kUnknown,
         kTotalExtansions
     };

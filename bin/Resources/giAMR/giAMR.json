@@ -12,7 +12,7 @@
         0.0
     ],
     "iter": 5000,
-    "learning_rate": 0.009999999776482582,
+    "learning_rate": 0.029999999329447746,
     "out_dir": "G:/Dev/giTestProject/content/giAMR/spot.obj",
     "random_textures": false,
     "ref_mesh": "G:/Dev/giTestProject/content\\spot.obj",

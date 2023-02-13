@@ -13,8 +13,10 @@
 #include <yaml-cpp/yaml.h>
 #include "giBaseConfig.h"
 #include "giSceneGraph.h"
+#include "giSceneNode.h"
 #include "giStaticMesh.h"
 #include "giModel.h"
+#include "giMesh.h"
 #include "giCamera.h"
 
 namespace giEngineSDK {
@@ -23,7 +25,7 @@ namespace giEngineSDK {
   encodeNode(YAML::Emitter& inEmitter, SharedPtr<SceneNode> inNode);
 
   void 
-  Encoder::encodeData(FILE& inFileData) {
+  Encoder::encodeFile(FILE& inFileData) {
     switch (inFileData.m_extension) {
     case EXTENSION_TYPE::kgiProject: {
       encodeGiProject(inFileData);
@@ -31,6 +33,10 @@ namespace giEngineSDK {
     }
     case EXTENSION_TYPE::kgiScene: {
       encodeGiScene(inFileData);
+      break;
+    }
+    case EXTENSION_TYPE::kOBJ: {
+      encodeData(inFileData);
       break;
     }
 
@@ -51,6 +57,9 @@ namespace giEngineSDK {
 
     tmpOutput << YAML::Key << "Project Path";
     tmpOutput << YAML::Value << configs.s_projectPath.string();
+
+    tmpOutput << YAML::Key << "Content Path";
+    tmpOutput << YAML::Value << configs.s_contentPath.string();
 
     tmpOutput << YAML::Key << "Active Graphic API";
     tmpOutput << YAML::Value << configs.s_activeGraphicApi;
@@ -89,6 +98,64 @@ namespace giEngineSDK {
 
     ofstream fout(inFileData.m_path);
     fout << tmpOut.c_str();
+  }
+
+  void 
+  Encoder::encodeData(FILE& inFile) {
+    
+    YAML::Emitter tmpOut;
+
+
+    //Models
+    if (EXTENSION_TYPE::E::kFBX == inFile.m_extension
+      || EXTENSION_TYPE::E::k3DS == inFile.m_extension
+      || EXTENSION_TYPE::E::kOBJ == inFile.m_extension) {
+
+      tmpOut << YAML::BeginMap;
+      tmpOut << YAML::Key << "Model data" << YAML::Value << YAML::BeginSeq;
+      tmpOut << YAML::BeginMap;
+
+      //Search for data.
+      ModelInfo tmpData; 
+      Decoder::readBasicModel(inFile, tmpData);
+
+      //Triangles data
+      tmpOut << YAML::Key << "Triangles";
+      tmpOut << YAML::Value << tmpData.totalTriangles;
+
+      tmpOut << YAML::Key << "Vertices";
+      tmpOut << YAML::Value << tmpData.totalVertices;
+      
+      tmpOut << YAML::Key << "Index";
+      tmpOut << YAML::Value << tmpData.totalIndex;
+      
+      tmpOut << YAML::Key << "Faces";
+      tmpOut << YAML::Value << tmpData.totalFaces;
+      
+      tmpOut << YAML::Key << "Meshes";
+      tmpOut << YAML::Value << tmpData.totalMeshes;
+      
+      tmpOut << YAML::Key << "Materials";
+      tmpOut << YAML::Value << tmpData.totalMaterials;
+      
+      tmpOut << YAML::Key << "Animations";
+      tmpOut << YAML::Value << tmpData.totalAnimations;
+
+
+      tmpOut << YAML::EndMap;
+      tmpOut << YAML::EndSeq;
+      tmpOut << YAML::EndMap;
+    }
+
+    else {
+      tmpOut << YAML::BeginMap;
+      tmpOut << YAML::Key << "Default data";
+      tmpOut << YAML::EndMap;
+    }
+
+    ofstream fout(inFile.m_path.string()+ ".giData");
+    fout << tmpOut.c_str();
+
   }
 
   static void

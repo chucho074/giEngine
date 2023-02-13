@@ -21,6 +21,16 @@
 #include <giVector3.h>
 
 namespace giEngineSDK {
+  
+  struct ModelInfo {
+    uint32 totalTriangles = 0;
+    uint32 totalVertices = 0;
+    uint32 totalMeshes = 0;
+    uint32 totalMaterials = 0;
+    uint32 totalAnimations = 0;
+    uint32 totalFaces = 0;
+    uint32 totalIndex = 0;
+  };
 
   /**
    * @class   Model. 
@@ -65,7 +75,6 @@ namespace giEngineSDK {
 
     //The directory of the model.
     Path m_directory;
-
 
   };
 }

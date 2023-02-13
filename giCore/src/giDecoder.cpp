@@ -10,6 +10,7 @@
  * @include
  */
 #include "giDecoder.h"
+#include <giModel.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -39,7 +40,6 @@ namespace giEngineSDK {
               aiMesh* mesh, 
               const aiScene* scene, 
               bool saveMat);
-
 
   ResourceRef
   Decoder::decodeData(FILE& inFileData, 
@@ -88,12 +88,12 @@ namespace giEngineSDK {
 
   void 
   Decoder::decodeFile(FILE& inFileData) {
-    if (EXTENSION_TYPE::E::kgiScene == inFileData.m_extension) {
+    if (EXTENSION_TYPE::kgiScene == inFileData.m_extension) {
       Decoder::decodeGiScene(inFileData);
 
     }
 
-    if (EXTENSION_TYPE::E::kgiProject == inFileData.m_extension) {
+    if (EXTENSION_TYPE::kgiProject == inFileData.m_extension) {
       decodeGiProject(inFileData);
     }
   }
@@ -219,7 +219,6 @@ namespace giEngineSDK {
     
     Assimp::Importer importer;
 
-    //size_T tmpSize(inFileData.m_data.size());
     importer.ReadFile(inFileData.m_path.string(),
                       aiProcessPreset_TargetRealtime_MaxQuality |
                       aiProcess_TransformUVCoords|
@@ -240,7 +239,7 @@ namespace giEngineSDK {
     tmpModel->m_directory = inFileData.m_path;
 
     tmpModel->m_resourceType = RESOURCE_TYPE::kModel;
-
+    
     if(inFlags == DECODER_FLAGS::kNoMaterial) {
       processNode(tmpModel, tmpScene->mRootNode, tmpScene, false);
     }
@@ -309,6 +308,52 @@ namespace giEngineSDK {
   }
 
   void
+  processData(ModelInfo& inInfo, 
+              aiNode* node,
+              const aiScene* inScene) {
+    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
+      aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
+      inInfo.totalVertices += mesh->mNumVertices;
+      inInfo.totalFaces += mesh->mNumFaces;
+      for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
+        aiFace face = mesh->mFaces[i];
+        inInfo.totalIndex += face.mNumIndices;
+      }
+    }
+    // then do the same for each of its children
+    for (uint32 i = 0; i < node->mNumChildren; i++) {
+      processData(inInfo, node->mChildren[i], inScene);
+    }
+  }
+
+  void 
+  Decoder::readBasicModel(FILE& inFile, ModelInfo& inInfo) {
+     Assimp::Importer importer;
+
+    importer.ReadFile(inFile.m_path.string(),
+                      aiProcessPreset_TargetRealtime_MaxQuality |
+                      aiProcess_TransformUVCoords|
+                      aiProcess_ConvertToLeftHanded |
+                      aiProcess_Triangulate);
+
+    const aiScene* tmpScene = importer.GetOrphanedScene();
+
+    if (!tmpScene 
+        || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
+        || !tmpScene->mRootNode) {
+      g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
+    }
+
+    inInfo.totalMeshes = tmpScene->mRootNode->mNumMeshes;
+    inInfo.totalAnimations = tmpScene->mNumAnimations;
+    inInfo.totalMaterials = tmpScene->mNumMaterials;
+
+    processData(inInfo, tmpScene->mRootNode, tmpScene);
+
+    inInfo.totalTriangles = inInfo.totalIndex/3;
+  }
+
+  void
   Decoder::readFile(FILE& inFile) {
     
     ifstream tmpFile(inFile.m_path.c_str());
@@ -319,6 +364,43 @@ namespace giEngineSDK {
     }
 
     tmpFile.close();
+  }
+
+  ModelInfo 
+  Decoder::decodeGiData(FILE& inFile) {
+    ifstream tmpStream(inFile.m_path);
+    ModelInfo tmpInfo;
+    std::stringstream tmpStr;
+    tmpStr << tmpStream.rdbuf();
+
+    YAML::Node tmpData = YAML::Load(tmpStr.str());
+    if (tmpData["Model data"]) {
+      auto tmpModelData = tmpData["Model data"];
+      for (auto iterData : tmpModelData) {
+        if (iterData["Triangles"]) {
+          tmpInfo.totalTriangles = iterData["Triangles"].as<uint32>();
+        }
+        if (iterData["Vertices"]) {
+          tmpInfo.totalVertices = iterData["Vertices"].as<uint32>();
+        }
+        if (iterData["Index"]) {
+          tmpInfo.totalIndex = iterData["Index"].as<uint32>();
+        }
+        if (iterData["Faces"]) {
+          tmpInfo.totalFaces = iterData["Faces"].as<uint32>();
+        }
+        if (iterData["Meshes"]) {
+          tmpInfo.totalMeshes = iterData["Meshes"].as<uint32>();
+        }
+        if (iterData["Materials"]) {
+          tmpInfo.totalMaterials = iterData["Materials"].as<uint32>();
+        }
+        if (iterData["Animations"]) {
+          tmpInfo.totalAnimations = iterData["Animations"].as<uint32>();
+        }
+      }
+    }
+    return tmpInfo;
   }
 
   //
@@ -576,4 +658,5 @@ namespace giEngineSDK {
     return tmpMesh;
   }
 
+  
 }

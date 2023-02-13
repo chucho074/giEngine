@@ -12,12 +12,14 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 #include "giModule.h"
+#include "giModel.h"
 #include "giVector2i.h"
 #include "giBaseConfig.h"
 #include "giResourceManager.h"
 #include "giTexture.h"
 
 namespace giEngineSDK {
+
 
   struct DescAMR {
     int32 m_saveInterval = 512;
@@ -30,7 +32,7 @@ namespace giEngineSDK {
 
     int32 m_batch = 8;
 
-    float m_learningRate = 0.01;
+    float m_learningRate = 0.01f;
 
     Vector<String> m_skipTrain;
 
@@ -64,11 +66,18 @@ namespace giEngineSDK {
 
     int32 m_processImg = 0;
 
+    int32 m_showingImg = 1;
+
     DescAMR m_savedData;
+
+    ModelInfo m_refInfo;
+    
+    ModelInfo m_outInfo;
+
 
 
     //giAMR process image
-    ResourceRef m_AMRprocess;
+    Vector<ResourceRef> m_AMRprocess;
 
   };
 

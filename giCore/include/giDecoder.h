@@ -18,6 +18,7 @@
 namespace giEngineSDK {
 
   struct ResourceRef;
+  struct ModelInfo;
 
   namespace DECODER_FLAGS {
     enum E {
@@ -57,6 +58,10 @@ namespace giEngineSDK {
     static void
     readFile(FILE& inFile);
 
+    static ModelInfo
+    decodeGiData(FILE& inFile);
+    
+
   private:
 
     /**
@@ -91,7 +96,14 @@ namespace giEngineSDK {
 
     
    protected:
+    /**
+     * @brief    Reads the basic information of a model and returns it.
+     */
+    static void
+    readBasicModel(FILE& inFile, ModelInfo& inInfo);
+
     friend class FILE;
+    friend class Encoder;
   };
 
 }

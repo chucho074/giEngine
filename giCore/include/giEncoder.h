@@ -11,8 +11,8 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
+#include "giResourceManager.h"
 #include "giFile.h"
-#include "giSceneNode.h"
 
 
 namespace giEngineSDK {
@@ -26,12 +26,16 @@ namespace giEngineSDK {
   	~Encoder() = default;
 
     /**
-     * @brief    Encode the data.
+     * @brief    Encode the file given.
      * @param    inFileData    The file data structure.
      */
     static void
-    encodeData(FILE& inFileData);
+    encodeFile(FILE& inFileData);
 
+
+
+    static void
+    encodeData(FILE& inFile);
 
    private:
 
@@ -48,6 +52,7 @@ namespace giEngineSDK {
   	 */
   	static void
     encodeGiScene(FILE& inFileData);
+
 
 
    protected:

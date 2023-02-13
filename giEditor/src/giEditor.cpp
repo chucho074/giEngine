@@ -10,6 +10,7 @@
  * @include
  */
 #include "giEditor.h"
+#include <giModel.h>
 #include <giSceneGraph.h>
 #include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
@@ -22,7 +23,6 @@
 #include <giFile.h>
 #include <giFileSystem.h>
 #include <giBaseAMR.h>
-#include <memory>
 
 using giEngineSDK::FILE;
 
@@ -263,8 +263,6 @@ Editor::renderCameraMovementWindow() {
 void 
 Editor::renderProjectCreationSelection() {
 
-  //Move to an own class
-
   auto& configs = g_engineConfigs();
   auto& RM = g_resourceManager();
   
@@ -321,6 +319,7 @@ Editor::renderProjectCreationSelection() {
   //If the project is not created & there is no saving path, create the project file and
   //present the save dialog for the actual scene.
 
+  //Set as a modal in the engine.
 
   ImGui::End();
 }
@@ -405,6 +404,8 @@ Editor::renderAMRprocess() {
   auto& RM = g_resourceManager();
   auto& configs = g_engineConfigs();
 
+  amr.m_AMRprocess.reserve(25);
+
   bool* tmpValue = &amr.m_processWindow;
   ImGui::Begin("giAMRprocess", tmpValue, ImGuiWindowFlags_NoScrollbar
                                          | ImGuiWindowFlags_NoDocking
@@ -415,43 +416,60 @@ Editor::renderAMRprocess() {
     //Read every new image, if exist any new, load it and present it.
     SharedPtr<Texture> tmpTexture;
     String tmpImgName = ("/img" + toString(amr.m_processImg) + ".png");
+    String tmpNextImgName = ("/img" + toString(amr.m_processImg+1) + ".png");
     Path tmpImgPath = configs.s_contentPath.string() + "/giAMR/"
-      + amr.m_savedData.m_refMesh.filename().string() + tmpImgName;
-    if (fsys::exists(tmpImgPath)) {
+                       + amr.m_savedData.m_refMesh.filename().string() + tmpImgName;
+    Path tmpNextImgPath = configs.s_contentPath.string() + "/giAMR/"
+                       + amr.m_savedData.m_refMesh.filename().string() + tmpNextImgName;
+    
+    Path tmpPath = amr.m_savedData.m_outputDir.string() + "/mesh/mesh.obj";
+    if (fsys::exists(tmpNextImgPath)) {
       FILE tmpFile(tmpImgPath);
-      amr.m_AMRprocess = RM.resourceFromFile(tmpFile);
+      amr.m_AMRprocess.push_back(RM.resourceFromFile(tmpFile));
       ++amr.m_processImg;
+      amr.m_showingImg = amr.m_processImg;
     }
 
-    if (UUID::ZERO != amr.m_AMRprocess.m_id) {
-      tmpTexture = static_pointer_cast<Texture>(RM.getResource(amr.m_AMRprocess.m_id).lock());
-      if(nullptr != tmpTexture->m_texture) {
-        ImGui::Image(tmpTexture->m_texture->getApiTexture(), { ImGui::GetWindowContentRegionMax().x / 1,
-                                                               ImGui::GetWindowContentRegionMax().y / 2 });
+    if(!amr.m_AMRprocess.empty()) {
+      if (UUID::ZERO != amr.m_AMRprocess.at(amr.m_showingImg-1).m_id) {
+        tmpTexture = static_pointer_cast<Texture>(RM.getResource(amr.m_AMRprocess.at(amr.m_showingImg-1).m_id).lock());
+        if(nullptr != tmpTexture->m_texture) {
+          ImGui::Image(tmpTexture->m_texture->getApiTexture(), { ImGui::GetWindowContentRegionMax().x / 1,
+                                                                 ImGui::GetWindowContentRegionMax().y / 2 });
+        }
       }
     }
-    ImGui::Text(String("Image: "+ toString(amr.m_processImg - 1)).c_str());
+    ImGui::SliderInt("", &amr.m_showingImg, 1, amr.m_processImg);
+    ImGui::Text(String("Image: "+ toString(amr.m_showingImg)).c_str());
     ImGui::Separator();
 
     if(ImGui::BeginTable("ComparasionTable", 2, ImGuiTableFlags_ScrollY)) {//2
       ImGui::TableNextColumn();
       
+      if (0 == amr.m_outInfo.totalTriangles) {
+        if (fsys::exists(tmpPath.string()+ ".giData")) {
+          FILE tmpOutFile(tmpPath.string() + ".giData");
+          amr.m_outInfo = RM.getFromFile(tmpOutFile);
+        }
+      }
+
       ImGui::Text("Output Model: ");
-      ImGui::Text("Triangles: ");
-      ImGui::Text("Vertex: ");
-      ImGui::Text("Faces: ");
-      ImGui::Text("Index: ");
+      ImGui::Text(String("Triangles: " + toString(amr.m_outInfo.totalTriangles)).c_str());
+      ImGui::Text(String("Vertex: " + toString(amr.m_outInfo.totalVertices)).c_str());
+      ImGui::Text(String("Index: " + toString(amr.m_outInfo.totalIndex)).c_str());
 
       ImGui::TableNextColumn();
 
-      ImGui::Text("Reference Model: ");
-      ImGui::Text("Triangles: ");
-      ImGui::Text("Vertex: ");
-      ImGui::Text("Faces: ");
-      ImGui::Text("Index: ");
+      if (0 == amr.m_refInfo.totalTriangles) {
+        FILE tmpRefFile(amr.m_savedData.m_refMesh.string() + ".giData");
+        amr.m_refInfo = RM.getFromFile(tmpRefFile);
+      }
 
-      //implementar los archivos .gimodel para guardar una referencia de la informacion
-      // de los modelos importados dentro del proyecto y poder sacar la informacion de arriba
+      ImGui::Text("Reference Model: ");
+      ImGui::Text(String("Triangles: " + toString(amr.m_refInfo.totalTriangles)).c_str());
+      ImGui::Text(String("Vertex: " + toString(amr.m_refInfo.totalVertices)).c_str());
+      ImGui::Text(String("Index: " + toString(amr.m_refInfo.totalIndex)).c_str());
+
       ImGui::EndTable();//2
 
     }

@@ -10,6 +10,7 @@
  * @include
  */
 #include "giTransform.h"
+#include <giRadians.h>
 
 namespace giEngineSDK {
   void
@@ -31,14 +32,17 @@ namespace giEngineSDK {
   Transform::getMatrix() {
     Matrix4 tmpMatrix;
     tmpMatrix = Matrix4::IDENTITY;
+
     //Scale
     tmpMatrix.m_xColumn.x = m_scale.x;
     tmpMatrix.m_yColumn.y = m_scale.y;
     tmpMatrix.m_zColumn.z = m_scale.z;
+
     //Rotation
-    //Quaternion tempQuat = Quaternion::fromEuler(m_localRotation);
+    Quaternion tempQuat(m_rotation, 0.7854f);
     //tempQuat.normalize();
-    //m_localTransform *= Matrix4::fromQuat(tempQuat);
+    tmpMatrix *= tempQuat.getMatrix();
+    
     //Translation
     tmpMatrix.m_xColumn.w = m_translation.x;
     tmpMatrix.m_yColumn.w = m_translation.y;

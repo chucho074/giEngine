@@ -31,7 +31,8 @@ namespace giEngineSDK {
   }
 
   ResourceRef
-  ResourceManager::resourceFromFile(FILE& inFile, DECODER_FLAGS::E inFlags) {
+  ResourceManager::resourceFromFile(FILE& inFile, 
+                                    DECODER_FLAGS::E inFlags) {
 
     //Send to read the file.
     Decoder::readFile(inFile);
@@ -151,7 +152,12 @@ namespace giEngineSDK {
 
   void 
   ResourceManager::saveFile(FILE& inFile) {
-    Encoder::encodeData(inFile);
+    Encoder::encodeFile(inFile);
+  }
+
+  ModelInfo 
+  ResourceManager::getFromFile(FILE& inFile) {
+    return Decoder::decodeGiData(inFile);
   }
 
   void
