@@ -111,6 +111,13 @@ namespace giEngineSDK {
     init();
   }
 
+  void 
+  SceneGraph::resizeMainCamera(int32 inW, int32 inH) {
+
+    m_editorCamera->resize(inW, inH);
+    
+  }
+
   SceneGraph&
   g_sceneGraph() {
     return SceneGraph::instance();

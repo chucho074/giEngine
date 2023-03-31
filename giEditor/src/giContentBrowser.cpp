@@ -195,10 +195,11 @@ ContentBrowser::render() {
               if (ImGui::BeginPopupContextItem("file popup")) {
                 if (ImGui::Button("Create data / JUST TESTING")) {
                   FILE tmpFile(tmpPath);
-                  RM.saveFile(tmpFile);
+                  RM.createData(tmpFile);
                 }
                 if (ImGui::Button("Use giAMR in this model")) {
                   amr.setRefMesh(tmpPath);
+                  //RM.exportModel(tmpPath, ResourceRef());
                 }
                 ImGui::EndPopup();
               }

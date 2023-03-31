@@ -44,15 +44,15 @@ void
 DirectXApp::onCreate() {
   auto& RM = g_resourceManager();
 
-  Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
+  Vector2 tmpSize(m_width, m_height);
   
   m_editorUI->init(m_window.getSystemHandle(), tmpSize);
 
   //Sets Vela's model
   //ResourceRef tmpModel;
-  ////FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
   ////FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
-  //FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
+  ////FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
   //tmpModel = RM.resourceFromFile(tmpFileModel);
   //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   //SharedPtr<Actor> tmpActor = make_shared<Actor>();
@@ -171,4 +171,19 @@ DirectXApp::onEvent(MSG inMsg) {
   m_editorUI->callBack();
 
   
+}
+
+void 
+DirectXApp::resize(int32 inW, int32 inH) {
+  //Set the new size to the camera.
+  auto& SG = g_sceneGraph();
+  SG.resizeMainCamera(inW, inH);
+
+  //Set the new size to ImGui.
+  ImGuiIO& io = ImGui::GetIO();
+  io.DisplaySize = { static_cast<float>(inW), static_cast<float>(inH) };
+  
+  //Set the new size to the textures.
+  g_graphicsAPI().getViewportTex().reset();
+
 }

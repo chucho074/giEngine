@@ -19,6 +19,9 @@
 
 namespace giEngineSDK {
 
+#define MIN_SPHERE_SECTOR 3
+#define MIN_SPHERE_STACK 2
+
   void 
   ResourceManager::init() {
     createEditorIconsTextures();
@@ -151,6 +154,21 @@ namespace giEngineSDK {
   }
 
   void 
+  ResourceManager::createData(FILE& inFile) {
+    Encoder::encodeData(inFile);
+  }
+
+  void 
+  ResourceManager::exportModel(Path inPath, ResourceRef inModel) {
+    if (L".obj" == inPath.extension()) {
+      Encoder::exportModelFromMem(inPath, inModel);
+    }
+    else {
+      Encoder::exportFromFile(inPath, "obj");
+    }
+  }
+
+  void
   ResourceManager::saveFile(FILE& inFile) {
     Encoder::encodeFile(inFile);
   }
@@ -158,6 +176,101 @@ namespace giEngineSDK {
   ModelInfo 
   ResourceManager::getFromFile(FILE& inFile) {
     return Decoder::decodeGiData(inFile);
+  }
+
+  ResourceRef
+  ResourceManager::createSphere(int32 numTriangles) {
+    float radius = 200;
+    uint32 sectors = MIN_SPHERE_SECTOR;
+    for(int32 i = MIN_SPHERE_SECTOR; ((numTriangles%i) == 0); i+=3) {
+      sectors = i;
+    }
+    sectors = 9;
+    uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
+
+    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
+    uint32 spehereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
+    
+    float x, y, z, xy;
+    float nx, ny, nz, lengthInv = 1.0f / radius;
+    float s, t;
+
+    float sectorStep = 2 * Math::PI / sphereSectors;
+    float stackStep = Math::PI / spehereStacks;
+    float sectorAngle, stackAngle;
+
+    Vector<SimpleVertex> sphereVertices;
+    Vector<uint32> sphereIndices;
+    Vector<ResourceRef> sphereTextures;
+    SimpleVertex vertex;
+    vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
+    vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
+
+    //Vertices
+    for (uint32 i = 0; i <= spehereStacks; ++i) {
+      stackAngle = Math::PI / 2 - i * stackStep;
+      xy = radius * Math::cos(stackAngle);
+      z = radius * Math::sin(stackAngle);
+
+      for (uint32 j = 0; j <= sphereSectors; ++j) {
+        sectorAngle = j * sectorStep;
+
+        //Vertex
+        x = xy * Math::cos(sectorAngle);
+        y = xy * Math::sin(sectorAngle);
+        vertex.Pos = Vector3(x, y, z);
+        //Normal
+        nx = x * lengthInv;
+        ny = y * lengthInv;
+        nz = z * lengthInv;
+        vertex.Nor = Vector3(nx, ny, nz);
+        //Texcoords
+        s = (float)j / sphereSectors;
+        t = (float)i / spehereStacks;
+        vertex.Tex = Vector2(s, t);
+
+        vertex.Pos.normalize();
+        vertex.Nor.normalize();
+        vertex.Tex.normalize();
+        sphereVertices.push_back(vertex);
+      }
+    }
+    //Indices
+    uint32 k1, k2;
+    for (uint32 i = 0; i < spehereStacks; ++i) {
+      k1 = i * (sphereSectors + 1);
+      k2 = k1 + sphereSectors + 1;
+
+      for (uint32 j = 0; j < sphereSectors; ++j, ++k1, ++k2) {
+        if (i != 0) {
+          sphereIndices.push_back(k1);
+          sphereIndices.push_back(k2);
+          sphereIndices.push_back(k1 + 1);
+        }
+
+        if (i != (spehereStacks - 1)) {
+          sphereIndices.push_back(k1 + 1);
+          sphereIndices.push_back(k2);
+          sphereIndices.push_back(k2 + 1);
+        }
+      }
+
+    }
+
+    sphereTextures.push_back(m_missingTextureRef);
+    Vector<SharedPtr<Mesh>> tmpMeshes;
+    tmpMeshes.reserve(1);
+    auto tmpMesh = make_shared<Mesh>(sphereVertices, sphereIndices, sphereTextures);
+    tmpMeshes.emplace(tmpMeshes.end(), tmpMesh);
+    
+    Vector<ResourceRef> tmpMaterials;
+    tmpMaterials.reserve(1);
+    tmpMaterials.emplace(tmpMaterials.end(), m_missingTextureRef);
+
+    auto tmpRef = createModelFromMem(tmpMeshes, tmpMaterials);
+
+    return tmpRef;
+    
   }
 
   void

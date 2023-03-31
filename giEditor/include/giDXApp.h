@@ -85,6 +85,10 @@ class DirectXApp : public BaseApp {
   void 
   onEvent(MSG inMsg) override;
 
+  void
+  resize(int32 inW, int32 inH) override;
+
+
  private:
 
   //The SamplerState

@@ -163,4 +163,11 @@ namespace giEngineSDK {
     //Returns the matrix
     return m_projMatrix;
   }
+
+  void 
+  Camera::resize(int32 inW, int32 inH) {
+    int32 tmpAR = inW / inH;
+    m_projMatrix = perspectiveFovLH(m_angle, tmpAR, m_near, m_far);
+  }
+
 }

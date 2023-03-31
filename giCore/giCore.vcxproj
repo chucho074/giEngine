@@ -135,16 +135,16 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/yaml/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/yaml/include;$(DEVLIBS)/OpenMesh/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/;$(DEVLIBS)/yaml/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;yaml-cppd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/;$(DEVLIBS)/yaml/lib/$(PlatformTarget)/;$(DEVLIBS)/OpenMesh/lib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;yaml-cppd.lib;OpenMeshCored.lib;OpenMeshToolsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>

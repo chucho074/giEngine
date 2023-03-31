@@ -125,6 +125,12 @@ namespace giEngineSDK {
     void
     clearGraph();
 
+   /**
+    * @brief     Resize the information for the main camera.
+    */
+    void
+    resizeMainCamera(int32 inW, int32 inH);
+
    private:
 
     /**

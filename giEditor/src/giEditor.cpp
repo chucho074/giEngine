@@ -344,7 +344,25 @@ Editor::renderAMR() {
 
   bool* tmpValue = &amr.m_renderWindow;
 
-   
+  if(0 == amr.m_refInfo.totalTriangles){
+    FILE tmpRefFile(amr.m_savedData.m_refMesh.string() + ".giData");
+    amr.m_refInfo = RM.getFromFile(tmpRefFile);
+    //Get the minimun number of triangles possible.
+
+    if (amr.minimunTriang < amr.m_refInfo.totalTriangles) {
+      amr.minimunTriang = amr.m_refInfo.totalTriangles * 0.25f;
+
+      amr.halfTriang = amr.m_refInfo.totalTriangles * 0.50f;
+
+      amr.partialTriang = amr.m_refInfo.totalTriangles * 0.75f;
+    }
+    else {
+      //Error: there is no enought data to work.
+    }
+  }
+
+  bool useSphere = true;
+
   ImGui::Begin("giAMR", tmpValue, ImGuiWindowFlags_NoScrollbar
                                   | ImGuiWindowFlags_NoDocking
                                   | ImGuiWindowFlags_NoCollapse);
@@ -353,38 +371,83 @@ Editor::renderAMR() {
   ImGui::BeginTable("giAMRTable", 1, ImGuiTableFlags_ScrollY);
   ImGui::TableNextColumn();
   
+  ImGui::Text("Generate from a Sphere");
+
+  ImGui::SameLine();
+
+  if(ImGui::Button(toString(amr.minimunTriang).c_str())) {
+    amr.finalTriang = amr.minimunTriang;
+  }
+
+  ImGui::SameLine();
+
+  if(ImGui::Button(toString(amr.halfTriang).c_str())) {
+    amr.finalTriang = amr.halfTriang;
+  }
+
+  ImGui::SameLine();
+
+  if(ImGui::Button(toString(amr.partialTriang).c_str())) {
+    amr.finalTriang = amr.partialTriang;
+  }
+
+  ImGui::SliderInt(" ", 
+                   &amr.finalTriang, 
+                   amr.minimunTriang, 
+                   amr.m_refInfo.totalTriangles);
+
+  ImGui::Separator();
+  
+  ImGui::Text("Generate form a base model");
+  
+  ImGui::Separator();
 
   //Ref mesh
   ImGui::Text("Ref Mesh:\t");
   ImGui::SameLine();
-  ImGui::Text(amr.m_savedData.m_refMesh.relative_path().string().c_str());
+  ImGui::Text(amr.m_savedData.m_refMesh.filename().string().c_str());
+  ImGui::SameLine();
 
-  ImGui::Separator();
+  //ImGui::Separator();
+  ImGui::Text(" | ");
+  ImGui::SameLine();
 
   //Base mesh
   ImGui::Text("Base Mesh:\t");
   ImGui::SameLine();
-  ImGui::Text(amr.m_savedData.m_baseMesh.relative_path().string().c_str());
+  ImGui::Text(amr.m_savedData.m_baseMesh.filename().string().c_str());
 
   ImGui::Separator();
 
+  ImGui::Text("AMR configuration");
+  ImGui::Separator();
+
   //Train resolution
-  ImGui::SliderInt("Train resolution", &amr.m_savedData.m_trainResolution, 64, 512);
+  ImGui::SliderInt("Train resolution", &amr.m_savedData.m_trainResolution, 64, 2048);
 
   ImGui::Separator();
 
   //Learning rate
-  ImGui::SliderFloat("Learning Rate", &amr.m_savedData.m_learningRate, 0.003, 0.05);
+  ImGui::SliderFloat("Learning Rate", &amr.m_savedData.m_learningRate, 0.003, 0.10);
 
   ImGui::Separator();
 
   //Iterations
-  ImGui::SliderInt("Iterations", &amr.m_savedData.m_iterations, 4000, 15000);
+  ImGui::SliderInt("Iterations", &amr.m_savedData.m_iterations, 4000, 25000);
+  
+  ImGui::Separator();
+
+  //Batch
+  ImGui::SliderInt("Batch", &amr.m_savedData.m_batch, 2, 10);
   
   ImGui::Separator();
 
   //Generate Button
   if (ImGui::Button("Generate")) {
+    //if (useSphere) {
+    //  RM.exportModel({configs.s_generatedPath.string() + "sphere.obj"}, 
+    //                 RM.createSphere(amr.finalTriang));
+    //}
     amr.run();
     amr.m_renderWindow = false;
     amr.m_processWindow = true;
@@ -459,11 +522,6 @@ Editor::renderAMRprocess() {
       ImGui::Text(String("Index: " + toString(amr.m_outInfo.totalIndex)).c_str());
 
       ImGui::TableNextColumn();
-
-      if (0 == amr.m_refInfo.totalTriangles) {
-        FILE tmpRefFile(amr.m_savedData.m_refMesh.string() + ".giData");
-        amr.m_refInfo = RM.getFromFile(tmpRefFile);
-      }
 
       ImGui::Text("Reference Model: ");
       ImGui::Text(String("Triangles: " + toString(amr.m_refInfo.totalTriangles)).c_str());

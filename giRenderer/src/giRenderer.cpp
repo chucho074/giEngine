@@ -642,4 +642,57 @@ namespace giEngineSDK {
                                       0);
   }
 
+  void
+  Renderer::resize(int32 inW, int32 inH) {
+    auto& gapi = g_graphicsAPI();
+    for (int32 i = 0; i < 5; ++i) {
+      gapi.psSetShaderResource(i, nullptr);
+    }
+
+    //Release light pass
+    m_ShadowTexture.clear();
+    //Release Blur-H
+    m_BlurTexture.clear();
+    //Release SSAO
+    m_SSAOTexture.clear();
+    //Release GBuffer
+    m_renderTargets.clear();
+
+
+    for(int32 i = 0; i < 5; ++i) {
+      m_renderTargets.push_back(gapi.createTex2D(inW, 
+                                                 inH, 
+                                                 1,
+                                                 GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                 GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                                 | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+    }
+
+    m_SSAOTexture.push_back(gapi.createTex2D(inW,
+                                             inH, 
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
+
+    m_BlurTexture.push_back(gapi.createTex2D(inW,
+                                             inH,
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
+  
+    m_ShadowTexture.push_back(gapi.createTex2D(1024, 
+                                               1024, 
+                                               1, 
+                                               GI_FORMAT::kFORMAT_R16_FLOAT, 
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+
+
+  }
+
 }

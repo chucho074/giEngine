@@ -42,7 +42,7 @@ namespace giEngineSDK {
 
     Path m_refMesh;
 
-    Path m_baseMesh = "G:/Dev/giEngine/bin/Resources/giAMR/sphere.obj";
+    Path m_baseMesh = "G:/Dev/giEngine/bin/Resources/giAMR/sphere2.obj";
   };
 
   class BaseAMR : public Module<BaseAMR>
@@ -74,7 +74,11 @@ namespace giEngineSDK {
     
     ModelInfo m_outInfo;
 
+    uint32 minimunTriang = 512;
+    uint32 halfTriang = 512;
+    uint32 partialTriang = 512;
 
+    int32 finalTriang = 0;
 
     //giAMR process image
     Vector<ResourceRef> m_AMRprocess;

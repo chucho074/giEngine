@@ -121,13 +121,17 @@ namespace giEngineSDK {
                        Vector<ResourceRef> inMaterials = Vector<ResourceRef>());
 
     /**
-     * @brief    .
-     * @param    inReference   .
+     * @brief    Renders a Resource by the reference.
+     * @param    inReference   The reference of the resource to Render.
      */
     void
     renderResource(ResourceRef inReference);
 
+    void 
+    createData(FILE& inFile);
 
+    void
+    exportModel(Path inPath, ResourceRef inModel);
 
     //THIS MAY BE IN ANOTHER CLASS
     
@@ -143,6 +147,11 @@ namespace giEngineSDK {
     getFromFile(FILE& inFile);
 
 
+    /*ResourceRef
+    createSphere(float radius, uint32 sectors, uint32 stacks);*/
+
+    ResourceRef
+    createSphere(int32 numTriangles);
 
    public:
 

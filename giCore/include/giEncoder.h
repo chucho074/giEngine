@@ -17,6 +17,8 @@
 
 namespace giEngineSDK {
 
+  struct ResourceRef;
+
   class Encoder
   {
    public:
@@ -32,10 +34,18 @@ namespace giEngineSDK {
     static void
     encodeFile(FILE& inFileData);
 
-
+    static void
+    encodeOBJ(Path inPath, ResourceRef inModel);
 
     static void
     encodeData(FILE& inFile);
+
+    static void 
+    exportFromFile(Path inPath, String inFileType);
+
+    static void 
+    exportModelFromMem(Path inPath, ResourceRef inResource);
+
 
    private:
 

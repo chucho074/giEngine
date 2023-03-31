@@ -68,7 +68,7 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual method in charge to updating the logical information.
-   * @param    inDeltaTime     For update the game time.`
+   * @param    inDeltaTime     For update the game time.
    */
   virtual void 
   onUpdate(float inDeltaTime = 0) { 
@@ -88,6 +88,15 @@ class GI_CORE_EXPORT BaseApp
   virtual void 
   onEvent(MSG inMsg) {
     GI_UNREFERENCED_PARAMETER(inMsg);
+  };
+  
+  /**
+   * @brief 
+   */
+  virtual void
+  resize(int32 inW, int32 inH) {
+    GI_UNREFERENCED_PARAMETER(inW);
+    GI_UNREFERENCED_PARAMETER(inH);
   };
 
  private:
@@ -139,7 +148,7 @@ class GI_CORE_EXPORT BaseApp
    */
   void 
   destroySystems();
-
+  
 
  public:
   

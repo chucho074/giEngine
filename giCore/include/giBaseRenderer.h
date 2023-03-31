@@ -52,6 +52,12 @@ namespace giEngineSDK {
     virtual void 
     setTransform(Matrix4 inMatrix) {};
 
+    virtual void 
+    resize(int32 inW, int32 inH) {
+      GI_UNREFERENCED_PARAMETER(inW);
+      GI_UNREFERENCED_PARAMETER(inH);
+    };
+
     /**
      * @brief    Set the object of the Graphics API.
      * @param    inAPI   The api to set.

@@ -30,15 +30,15 @@ BaseApp::run() {
   create();
 
   //App Loop.
+  MSG msg;
+  Event eventsWnd;
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
     
     //m_deltaTime = m_appClock.getElapsedTime().asSeconds();
     m_deltaTime = m_appClock.restart().asSeconds();
 
-    MSG msg;
-    Event eventsWnd;
-    while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
+    if (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
       
@@ -52,25 +52,34 @@ BaseApp::run() {
                                         (int32)m_window.getSize().y };
         m_width = EngineConfigs::s_resolution.x;
         m_height = EngineConfigs::s_resolution.y;
-        //Unbind everything
-        //Resize backbuffer
-        //Resize other Textures {Albedo, pos, norm, SSAO, Bluhrs, Light}
-        //Set the information to the ui
+        //Resize the app.
+        resize(m_width, m_height);
+
+        //Resize the renderer.
+        g_renderer().resize(m_width, m_height);
+
+        //Resize the back buffer.
+        g_graphicsAPI().resizeBackTexture(m_width, m_height);
+
+        //Resize the InputManager.
+        g_inputManager().updateSize(m_width, m_height);
       }
 
       //Own events.
       processEvent(msg);
     }
+    else {
 
-    //Update Time.
-    m_time->update();
-    //float deltaTime = g_time().getTime();
+      //Update Time.
+      m_time->update();
+      //float deltaTime = g_time().getTime();
 
-    //Update Game Logic.
-    update(m_deltaTime);
+      //Update Game Logic.
+      update(m_deltaTime);
 
-    //Render Frame
-    render();
+      //Render Frame
+      render();
+    }
   }
 
 
@@ -241,7 +250,10 @@ BaseApp::destroySystems() {
   BaseRenderer::shutDown();
   GraphicsAPI::shutDown();
   SceneGraph::shutDown();
-  BaseOmni::shutDown();
   Time::shutDown();
   Logger::shutDown();
+  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != EngineConfigs::s_activePlugins.end()) {
+    BaseOmni::shutDown();
+  }
 }

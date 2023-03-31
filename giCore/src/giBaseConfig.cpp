@@ -20,6 +20,7 @@ String EngineConfigs::s_projectName = "giTestProject";
 GIENGINE_API::E EngineConfigs::s_activeGraphicApi = GIENGINE_API::kDX11;
 Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject");
 Path EngineConfigs::s_contentPath = ("G:/Dev/giTestProject/content");
+Path EngineConfigs::s_generatedPath = ("G:/Dev/giEngine/bin/Resources/Models/Generated/");
 
 //Plugins
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;

@@ -365,6 +365,17 @@ namespace giEngineSDK {
                   const void *, 
                   uint32, 
                   uint32) {};
+
+    /**
+     * @brief    Resizing the back buffer texture.
+     * @param    inW           The width of the viewport.
+     * @param    inH           The height of the viewport.
+     */
+    virtual void
+    resizeBackTexture(int32 inW, int32 inH){
+      GI_UNREFERENCED_PARAMETER(inW);
+      GI_UNREFERENCED_PARAMETER(inH);
+    };
     
     /**
      * @brief    Clear the Back Buffer.
@@ -387,6 +398,30 @@ namespace giEngineSDK {
      */
     virtual void 
     clearDSV(SharedPtr<Texture2D>) {};
+    
+    /**
+     * @brief 
+     * @param inTopLeftX 
+     * @param inTopLeftY 
+     * @param inWidth 
+     * @param inHeight 
+     * @param inMinDepth 
+     * @param inMaxDepth 
+     */
+    virtual void
+    setViewport(int32 inTopLeftX,
+                int32 inTopLeftY,
+                int32 inWidth,
+                int32 inHeight,
+                float inMinDepth,
+                float inMaxDepth) {
+      GI_UNREFERENCED_PARAMETER(inTopLeftX);
+      GI_UNREFERENCED_PARAMETER(inTopLeftY);
+      GI_UNREFERENCED_PARAMETER(inWidth);
+      GI_UNREFERENCED_PARAMETER(inHeight);
+      GI_UNREFERENCED_PARAMETER(inMinDepth);
+      GI_UNREFERENCED_PARAMETER(inMaxDepth);
+    };
     
     /**
      * @brief    Vertex Shader Set Shader.

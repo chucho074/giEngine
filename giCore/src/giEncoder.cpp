@@ -10,7 +10,19 @@
  * @include
  */
 #include "giEncoder.h"
+
 #include <yaml-cpp/yaml.h>
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/Exporter.hpp>      // C++ exporter interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
+#include <OpenMesh/Core/IO/Options.hh>
+#include <OpenMesh/Core/IO/OMFormat.hh>
+#include <OpenMesh/Core/IO/writer/OMWriter.hh>
+#include <OpenMesh/Core/IO/MeshIO.hh>
+#include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
+
 #include "giBaseConfig.h"
 #include "giSceneGraph.h"
 #include "giSceneNode.h"
@@ -19,7 +31,10 @@
 #include "giMesh.h"
 #include "giCamera.h"
 
+typedef OpenMesh::TriMesh_ArrayKernelT<>  MyMesh;
+
 namespace giEngineSDK {
+
 
   static void
   encodeNode(YAML::Emitter& inEmitter, SharedPtr<SceneNode> inNode);
@@ -36,7 +51,7 @@ namespace giEngineSDK {
       break;
     }
     case EXTENSION_TYPE::kOBJ: {
-      encodeData(inFileData);
+      
       break;
     }
 
@@ -48,6 +63,11 @@ namespace giEngineSDK {
   }
   
   void 
+  Encoder::encodeOBJ(Path inPath, ResourceRef inModel) {
+    
+  }
+
+  void
   Encoder::encodeGiProject(FILE& inFileData) {
     auto& configs = g_engineConfigs();
     YAML::Emitter tmpOutput;
@@ -155,6 +175,93 @@ namespace giEngineSDK {
 
     ofstream fout(inFile.m_path.string()+ ".giData");
     fout << tmpOut.c_str();
+
+  }
+
+  void 
+  Encoder::exportFromFile(Path inPath, String inFileType) {
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(inPath.string(), 
+                                             aiProcess_Triangulate   
+                                             | aiProcess_FlipUVs);
+
+    // Exportar el modelo
+    Assimp::Exporter exporter;
+    inPath.replace_extension(inFileType);
+    exporter.Export(scene, inFileType, inPath.string());
+  }
+
+  void 
+  Encoder::exportModelFromMem(Path inPath, ResourceRef inModel) {
+    auto& RM = g_resourceManager();
+
+    MyMesh outMesh;
+
+    //Get the geometry.
+
+    auto tmpResource = RM.getResource(inModel.m_id);
+
+    auto tmpModel = static_pointer_cast<Model>(tmpResource.lock());
+
+    auto& tmpVertex = tmpModel->m_meshes.at(0)->m_vertexVector;
+
+    auto& tmpIndex = tmpModel->m_meshes.at(0)->m_facesList;
+    
+    outMesh.request_vertex_texcoords2D();
+    outMesh.request_vertex_normals();
+    outMesh.request_face_colors();
+
+    //OpenMesh::HPropHandleT<String> MyMaterial;
+    //outMesh.add_property(MyMaterial, "MyMaterial");
+
+    //Set the vertex data.
+    const int32 a = tmpVertex.size();
+    Vector<MyMesh::VertexHandle> vhadle;
+    vhadle.reserve(a);
+
+    for (int32 i = 0; i < a; ++i) {
+      vhadle.push_back(outMesh.add_vertex(MyMesh::Point(tmpVertex[i].Pos.x, 
+                                                        tmpVertex[i].Pos.y, 
+                                                        tmpVertex[i].Pos.z)));
+    }
+
+    for (int32 i = 0; i < a; ++i) {
+      //Add the normals 
+      outMesh.set_normal(vhadle.at(i), MyMesh::Normal(tmpVertex[i].Nor.x, tmpVertex[i].Nor.y, tmpVertex[i].Nor.z));
+    }
+
+    for (int32 i = 0; i < a; ++i) {
+      //Add the Texcoords 
+      outMesh.set_texcoord2D(vhadle.at(i), MyMesh::TexCoord2D(tmpVertex[i].Tex.x, tmpVertex[i].Tex.y));
+    }
+
+    //Set the indices data
+    Vector<MyMesh::VertexHandle> faceVhandles;
+    for(int32 i = 0; i+3 < tmpIndex.size(); i+=3) {
+      faceVhandles.clear();
+      faceVhandles.push_back(vhadle.at(tmpIndex.at(i)));
+      faceVhandles.push_back(vhadle.at(tmpIndex.at(i+1)));
+      faceVhandles.push_back(vhadle.at(tmpIndex.at(i+2)));
+      outMesh.add_face(faceVhandles);
+    }
+
+    //outMesh.update_normals();
+    
+    //Add the mtl file
+    MyMesh::FaceIter f_it, f_end = outMesh.faces_end();
+    for (f_it = outMesh.faces_begin(); f_it != f_end; ++f_it) {
+      outMesh.set_color(*f_it, MyMesh::Color(255, 255, 255));
+    }
+
+
+    OpenMesh::IO::Options opt;
+    opt += OpenMesh::IO::Options::VertexNormal;
+    opt += OpenMesh::IO::Options::VertexTexCoord;
+    opt += OpenMesh::IO::Options::FaceColor;
+
+
+    OpenMesh::IO::write_mesh(outMesh, inPath.string(), opt);
+
 
   }
 

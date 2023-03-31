@@ -112,7 +112,6 @@ namespace giEngineSDK {
       
     }
     m_backBuffer.reset(new Texture2DDX);
-    //m_backBuffer = new Texture2DDX();
 
     //Get a texture from Swap Chain
     m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer->m_texture);
@@ -128,8 +127,8 @@ namespace giEngineSDK {
     //Texture for the viewport.
     m_viewportTexture.reset(new Texture2DDX);
 
-    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(1280,
-                                                                     720,
+    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(inWidth,
+                                                                     inHeight,
                                                                      1,
                                                                      GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                                                      GI_BIND_FLAG::kBIND_RENDER_TARGET
@@ -704,6 +703,60 @@ namespace giEngineSDK {
   }
 
   void 
+  CGraphicsDX::resizeBackTexture(int32 inW, int32 inH) {
+    m_devContext->OMSetRenderTargets(0, 0, 0);
+    m_backBuffer.reset();
+    m_defaultDSV.reset();
+
+    if(FAILED(m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error resizing the viewport Texture");
+      return;
+    }
+
+    SharedPtr<Texture2DDX> backBuffer(new Texture2DDX);
+    if(FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), 
+              (void**)&backBuffer->m_texture))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error obtaining back buffer from swapchain");
+      return;
+    }
+
+    if(FAILED(m_device->CreateRenderTargetView(backBuffer->m_texture,
+                                               nullptr,
+                                               &backBuffer->m_renderTargetView))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error creating the render target view for the back buffer");
+      return;
+    }
+
+    m_devContext->OMSetRenderTargets(1, &backBuffer->m_renderTargetView, NULL);
+
+    //Texture for the viewport.
+    m_viewportTexture.reset(new Texture2DDX);
+
+    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(inW,
+                                                                     inH,
+                                                                     1,
+                                                                     GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                                     GI_BIND_FLAG::kBIND_RENDER_TARGET
+                                                                     | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+    SharedPtr<Texture2D> depthTex = createTex2D(inW, 
+                                                inH, 
+                                                1, 
+                                                GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT, 
+                                                GI_BIND_FLAG::kBIND_DEPTH_STENCIL);
+
+    m_backBuffer.reset();
+    m_defaultDSV.reset();
+    m_backBuffer = backBuffer;
+    m_defaultDSV = static_pointer_cast<Texture2DDX>(depthTex);
+
+    setViewport(0, 0, inW, inH, 0.f, 1.f);
+  }
+
+  void
   CGraphicsDX::clearBackTexture(float inColor[4]) {
     clearRTV(static_pointer_cast<Texture2D>(getViewportTex()),
              inColor);
@@ -729,6 +782,23 @@ namespace giEngineSDK {
 
 
   void 
+  CGraphicsDX::setViewport(int32 inTopLeftX, 
+                           int32 inTopLeftY, 
+                           int32 inWidth, 
+                           int32 inHeight, 
+                           float inMinDepth, 
+                           float inMaxDepth) {
+    D3D11_VIEWPORT vp;
+    vp.Width = static_cast<FLOAT>(inWidth);
+    vp.Height = static_cast<FLOAT>(inHeight);
+    vp.MinDepth = inMinDepth;
+    vp.MaxDepth = inMaxDepth;
+    vp.TopLeftX = static_cast<FLOAT>(inTopLeftX);
+    vp.TopLeftY = static_cast<FLOAT>(inTopLeftY);
+    m_devContext->RSSetViewports(1, &vp);
+  }
+
+  void
   CGraphicsDX::vsSetShader(SharedPtr<BaseVertexShader> inVShader) {
     
     auto tmpShader = static_pointer_cast<VertexShaderDX>(inVShader);

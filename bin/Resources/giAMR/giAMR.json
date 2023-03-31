@@ -1,6 +1,6 @@
 {
     "barch": 8,
-    "base_mesh": "G:/Dev/giEngine/bin/Resources/giAMR/sphere.obj",
+    "base_mesh": "G:/Dev/giEngine/bin/Resources/giAMR/sphere2.obj",
     "camera_eye": [
         2.5,
         0.0,
@@ -12,7 +12,7 @@
         0.0
     ],
     "iter": 5000,
-    "learning_rate": 0.029999999329447746,
+    "learning_rate": 0.009999999776482582,
     "out_dir": "G:/Dev/giTestProject/content/giAMR/spot.obj",
     "random_textures": false,
     "ref_mesh": "G:/Dev/giTestProject/content\\spot.obj",

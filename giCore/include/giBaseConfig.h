@@ -54,6 +54,9 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
   //Plugins
   static Map<GIPLUGINS::E, bool> s_activePlugins;
 
+  //giAMR
+  static Path s_generatedPath;
+
   //Omniverse Settings
   static String s_existingStage;
   static String s_destinationPath;

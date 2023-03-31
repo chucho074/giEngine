@@ -280,6 +280,15 @@ namespace giEngineSDK {
                   const void * inData, 
                   uint32 inPitch, 
                   uint32 inDepthPitch) override;
+
+
+    /**
+     * @brief    Resizing the back buffer texture.
+     * @param    inW           The width of the viewport.
+     * @param    inH           The height of the viewport.
+     */
+    void
+    resizeBackTexture(int32 inW, int32 inH) override;
     
     /**
      * @brief    Clear the Back Buffer.
@@ -302,6 +311,23 @@ namespace giEngineSDK {
      */
     void 
     clearDSV(SharedPtr<Texture2D> inDSV) override;
+
+    /**
+     * @brief    .
+     * @param    inTopLeftX    .
+     * @param    inTopLeftY    .
+     * @param    inWidth       .
+     * @param    inHeight      .
+     * @param    inMinDepth    .
+     * @param    inMaxDepth    .
+     */
+    void
+    setViewport(int32 inTopLeftX,
+                int32 inTopLeftY,
+                int32 inWidth,
+                int32 inHeight,
+                float inMinDepth,
+                float inMaxDepth) override;
     
     /**
      * @brief    Vertex Shader Set Shader.
@@ -621,7 +647,7 @@ namespace giEngineSDK {
     ///Reference to the Swap Chain
     IDXGISwapChain * m_swapChain;
   
-    ///Reference to the defautl Render Target
+    ///Reference to the default Render Target
     SharedPtr<Texture2DDX> m_backBuffer = nullptr;
 
     ///Reference to the default Depth Stencil

@@ -81,7 +81,7 @@ namespace giEngineSDK {
     //The index buffer for the mesh
     SharedPtr<Buffer> m_indexBuffer = nullptr;
 
-    //The list of Faces
+    //The list of Faces / Index data
     Vector<uint32> m_facesList;
 
     //The number of index in the mesh

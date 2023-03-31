@@ -95,6 +95,12 @@ namespace giEngineSDK {
     Matrix4 
     getProyectionMatrix();
 
+    /**
+     * @brief    Resize the camera information. 
+     */
+    void
+    resize(int32 inW, int32 inH);
+
    //private:
     float m_angle = 0;
     float m_aspectRatio = 0;

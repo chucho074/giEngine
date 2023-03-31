@@ -31,6 +31,7 @@ namespace giEngineSDK {
       kUAVCreation,
       kDecodingFile,
       kEncodingFile,
+      kResizeTextures,
       kOmniConnection
     };
   }

@@ -147,6 +147,9 @@ namespace giEngineSDK {
     void 
     setTransform(Matrix4 inTransformation) override;
 
+    void
+    resize(int32 inW, int32 inH) override;
+
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
 
@@ -192,8 +195,6 @@ namespace giEngineSDK {
     SharedPtr<Buffer> m_cBufferSSAO;
     
     Vector<SharedPtr<Texture2D>> m_SSAOTexture;
-
-    
 
                 //Blur
     //The Vertex Shader
