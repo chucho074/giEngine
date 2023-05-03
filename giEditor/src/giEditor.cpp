@@ -445,8 +445,8 @@ Editor::renderAMR() {
   //Generate Button
   if (ImGui::Button("Generate")) {
     //if (useSphere) {
-    //  RM.exportModel({configs.s_generatedPath.string() + "sphere.obj"}, 
-    //                 RM.createSphere(amr.finalTriang));
+      RM.exportModel({configs.s_generatedPath.string() + "sphere.obj"}, 
+                    RM.createSphere(amr.finalTriang));
     //}
     amr.run();
     amr.m_renderWindow = false;

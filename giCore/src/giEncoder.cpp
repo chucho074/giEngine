@@ -237,7 +237,7 @@ namespace giEngineSDK {
 
     //Set the indices data
     Vector<MyMesh::VertexHandle> faceVhandles;
-    for(int32 i = 0; i+3 < tmpIndex.size(); i+=3) {
+    for(int32 i = 0; i+3 <= tmpIndex.size(); i += 3) {
       faceVhandles.clear();
       faceVhandles.push_back(vhadle.at(tmpIndex.at(i)));
       faceVhandles.push_back(vhadle.at(tmpIndex.at(i+1)));
