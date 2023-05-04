@@ -42,7 +42,7 @@ namespace giEngineSDK {
 
     Path m_refMesh;
 
-    Path m_baseMesh = "G:/Dev/giEngine/bin/Resources/giAMR/sphere2.obj";
+    Path m_baseMesh = "G:/Dev/giEngine/bin/Resources/Models/Generated/sphere.obj";
   };
 
   class BaseAMR : public Module<BaseAMR>
