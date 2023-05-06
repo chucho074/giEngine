@@ -15,6 +15,7 @@
 #include "giTexture.h"
 #include "giMaterial.h"
 #include "giModel.h"
+#include "giExporter.h"
 
 
 namespace giEngineSDK {
@@ -161,7 +162,9 @@ namespace giEngineSDK {
   void 
   ResourceManager::exportModel(Path inPath, ResourceRef inModel) {
     if (L".obj" == inPath.extension()) {
-      Encoder::exportModelFromMem(inPath, inModel);
+      auto tmpModel = getResource(inModel.m_id).lock();
+      Exporter::ExportObj(inPath, static_pointer_cast<Model>(tmpModel));
+      //Encoder::exportModelFromMem(inPath, inModel);
     }
     else {
       Encoder::exportFromFile(inPath, "obj");

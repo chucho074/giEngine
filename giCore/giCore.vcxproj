@@ -181,6 +181,7 @@
     <ClCompile Include="src\giCamera.cpp" />
     <ClCompile Include="src\giDecoder.cpp" />
     <ClCompile Include="src\giEncoder.cpp" />
+    <ClCompile Include="src\giExporter.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
     <ClCompile Include="src\giResourceManager.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="include\giDepthState.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
     <ClInclude Include="include\giEncoder.h" />
+    <ClInclude Include="include\giExporter.h" />
     <ClInclude Include="include\giInputLayout.h" />
     <ClInclude Include="include\giMaterial.h" />
     <ClInclude Include="include\giMesh.h" />

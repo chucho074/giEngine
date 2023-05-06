@@ -90,6 +90,8 @@ namespace giEngineSDK {
     //Textures in the mesh
     Vector<ResourceRef> m_textures;
 
+    String m_name;
+
     //The reference for the path in Omniverse.
     String m_omniRefPath = "";
   };

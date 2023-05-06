@@ -211,9 +211,6 @@ namespace giEngineSDK {
     outMesh.request_vertex_normals();
     outMesh.request_face_colors();
 
-    //OpenMesh::HPropHandleT<String> MyMaterial;
-    //outMesh.add_property(MyMaterial, "MyMaterial");
-
     //Set the vertex data.
     const int32 a = tmpVertex.size();
     Vector<MyMesh::VertexHandle> vhadle;
@@ -245,24 +242,18 @@ namespace giEngineSDK {
       outMesh.add_face(faceVhandles);
     }
 
-    //outMesh.update_normals();
-    
     //Add the mtl file
     MyMesh::FaceIter f_it, f_end = outMesh.faces_end();
     for (f_it = outMesh.faces_begin(); f_it != f_end; ++f_it) {
       outMesh.set_color(*f_it, MyMesh::Color(255, 255, 255));
     }
 
-
     OpenMesh::IO::Options opt;
     opt += OpenMesh::IO::Options::VertexNormal;
     opt += OpenMesh::IO::Options::VertexTexCoord;
     opt += OpenMesh::IO::Options::FaceColor;
-
-
+    
     OpenMesh::IO::write_mesh(outMesh, inPath.string(), opt);
-
-
   }
 
   static void

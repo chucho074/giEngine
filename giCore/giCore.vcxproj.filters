@@ -81,6 +81,9 @@
     <ClCompile Include="src\giBaseAMR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\giExporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\giTexture2D.h">
@@ -198,6 +201,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giBaseAMR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giExporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

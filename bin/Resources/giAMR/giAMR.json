@@ -1,6 +1,6 @@
 {
     "barch": 8,
-    "base_mesh": "G:/Dev/giEngine/bin/Resources/giAMR/sphere2.obj",
+    "base_mesh": "G:/Dev/giEngine/bin/Resources/Models/Generated/sphere.obj",
     "camera_eye": [
         2.5,
         0.0,
