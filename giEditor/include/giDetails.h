@@ -51,7 +51,9 @@ class Details
   destroy();
 
  private:
- 
+  
   ImGuiWindowFlags m_windowFlags = 0;
   
+  bool m_scaleBlock = true;
+
 };

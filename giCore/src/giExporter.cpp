@@ -13,10 +13,6 @@
 #include <string>
 
 namespace giEngineSDK {
-  
-  Exporter::Exporter() {
-    
-  }
 
   void
   Exporter::ExportObj(Path inPath, SharedPtr<Model> inModel) {

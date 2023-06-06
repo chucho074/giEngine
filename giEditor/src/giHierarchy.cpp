@@ -44,7 +44,7 @@ Hierarchy::update(float inDeltaTime) {
 
 void
 Hierarchy::render() {
-  auto& sg = SceneGraph::instance();
+  auto& sg = g_sceneGraph();
   auto root = sg.getRoot();
   auto tmpNodes = sg.getNodesByParent(root);
 
@@ -57,9 +57,9 @@ Hierarchy::render() {
       ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoHide);
       ImGui::TableSetupColumn("Active", ImGuiTableColumnFlags_NoHide);
       ImGui::TableHeadersRow();
-      for (auto& nodes : sg.getRoot()->m_childs) {
-        renderNode(nodes);
-      }
+      
+      renderNode(root);
+      
       ImGui::EndTable();
     }
 
@@ -75,7 +75,7 @@ Hierarchy::destroy() {
 void 
 Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
 
-  auto& sg = SceneGraph::instance();
+  auto& sg = g_sceneGraph();
 
   ImGui::TableNextRow();
   ImGui::TableNextColumn();
@@ -97,7 +97,7 @@ Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
   ImGui::TextDisabled("Actor");
 
   if (0 < inNode->m_childs.size() && tmpOpenNode) {
-    for (auto& nodes : sg.getRoot()->m_childs) {
+    for (auto& nodes : inNode->m_childs) {
       renderNode(nodes);
     }
     ImGui::TreePop();

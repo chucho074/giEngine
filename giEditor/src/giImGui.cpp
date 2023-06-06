@@ -682,7 +682,7 @@ UI::init(void* inWindow, Vector2 inWindowSize) {
   ImGuiIO& io = ImGui::GetIO(); (void)io;
   io.DisplaySize = ImVec2(inWindowSize.x, inWindowSize.y);
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 
   ImGuiStyle& style = ImGui::GetStyle();

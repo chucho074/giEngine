@@ -17,7 +17,7 @@ namespace giEngineSDK {
   class Exporter
   {
    public:
-  	Exporter();
+  	Exporter() = default;
   	~Exporter() = default;
     
     static void

@@ -151,8 +151,6 @@ class Editor
    //The window for creation/selection of projects.
    bool m_renderProjectSelection = false;
 
-
-
    //To change
    Path m_savingPath;
 

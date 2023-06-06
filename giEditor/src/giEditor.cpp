@@ -11,6 +11,7 @@
  */
 #include "giEditor.h"
 #include <giModel.h>
+#include <giStaticMesh.h>
 #include <giSceneGraph.h>
 #include <giBaseGraphicsAPI.h>
 #include <giBaseConfig.h>
@@ -60,7 +61,8 @@ void
 Editor::render() {
   
   auto& amr = g_AMR();
-
+  auto& sg = g_sceneGraph();
+  auto& rm = g_resourceManager();
 
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
@@ -151,11 +153,59 @@ Editor::render() {
   m_details->render();
 
   //Render the viewport window.
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav 
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_None
                                   | ImGuiWindowFlags_NoCollapse 
-                                  | ImGuiWindowFlags_NoScrollbar); {
+                                  | ImGuiWindowFlags_NoScrollbar
+                                  | ImGuiWindowFlags_MenuBar); {
+
+    if (ImGui::BeginMenuBar()){
+      if (ImGui::BeginMenu("Save")) {
+        //ImGui::MenuItem("blablabla");
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Add")) {
+        if(ImGui::MenuItem("Blank Actor")) {
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Blank Actor";
+          sg.addActor(tmpActor, sg.getRoot());
+        }
+
+        ImGui::Separator();
+        ImGui::MenuItem("Shapes", NULL, false, false);
+        ImGui::Separator();
+
+        if(ImGui::MenuItem("Sphere")) {
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Spehere";
+
+        }
+
+        ImGui::Separator();
+        ImGui::MenuItem("SkyBoxes", NULL, false, false);
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Sphere Sky")) {
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createSphere(5000));
+          tmpActor->m_actorName = "Spehere skybox";
+          tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+          sg.addActor(tmpActor, sg.getRoot());
+        }
+
+        if (ImGui::MenuItem("Cube Sky")) {
+          /*SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Spehere";*/
+
+        }
+        ImGui::EndMenu();
+      }
+      ImGui::EndMenuBar();
+    }
+
+
     void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
     ImGui::Image(tmpTexture, ImGui::GetWindowSize());
+
     ImGui::End();
   }
 

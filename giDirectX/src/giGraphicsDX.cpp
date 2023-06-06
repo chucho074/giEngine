@@ -104,7 +104,7 @@ namespace giEngineSDK {
                                          &m_devContext);
       
       if (S_OK == hr) {
-        break;;
+        break;
       }
       else {
         return false;
