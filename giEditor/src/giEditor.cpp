@@ -64,6 +64,13 @@ Editor::render() {
   auto& sg = g_sceneGraph();
   auto& rm = g_resourceManager();
 
+  //Imgui docking space for windows
+  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+  //The docking space ID.
+  static ImGuiID dockspaceID = 0;
+
+  //The main bar of the app
   ImGui::BeginMainMenuBar(); {
     if (ImGui::BeginMenu("File")) {
       if (ImGui::BeginMenu("New")) {
@@ -113,50 +120,11 @@ Editor::render() {
     ImGui::EndMainMenuBar();
   }
 
-  //Imgui docking space for windows
-  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
-  //Renders the performance window if is active.
-  if (m_renderPerformance) {
-    renderPerformanceWindow();
-  }
-
-  //Renders the about window if is active.
-  if (m_renderAbout) {
-    renderAboutWindow();
-  }
-
-  //Renders the camera movement window if is active.
-  if (m_renderCamera) {
-    renderCameraMovementWindow();
-  }
-
-  //Renders the camera movement window if is active.
-  if (m_renderProjectSelection) {
-    renderProjectCreationSelection();
-  }
-
-  //Renders the giAMR window if is active.
-  if (amr.m_renderWindow && !amr.m_processWindow) {
-    renderAMR();
-  }
-
-  //Renders the giAMR window if is active.
-  if (amr.m_processWindow) {
-    renderAMRprocess();
-  }
-
-  //Render the hierarchy of the scene.
-  m_hierarchy->render();
-
-  //Render the Details of the actor.
-  m_details->render();
-
   //Render the viewport window.
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_None
-                                  | ImGuiWindowFlags_NoCollapse 
-                                  | ImGuiWindowFlags_NoScrollbar
-                                  | ImGuiWindowFlags_MenuBar); {
+  ImGui::Begin("Level", nullptr, ImGuiWindowFlags_None
+                                 | ImGuiWindowFlags_NoCollapse 
+                                 | ImGuiWindowFlags_NoScrollbar
+                                 | ImGuiWindowFlags_MenuBar); {
 
     if (ImGui::BeginMenuBar()){
       if (ImGui::BeginMenu("Save")) {
@@ -202,9 +170,34 @@ Editor::render() {
       ImGui::EndMenuBar();
     }
 
+    
+    
+    //Make a dockable space.
+    dockspaceID = ImGui::GetID("HUB_DockSpace");
+    ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None
+                                                      | ImGuiDockNodeFlags_PassthruCentralNode);
 
+    
+
+    ImGui::End();
+  }
+
+  ImGui::SetNextWindowDockID(dockspaceID, ImGuiCond_FirstUseEver);
+
+  //Render the viewport window.
+  ImGui::Begin("view", nullptr, ImGuiWindowFlags_None
+                                 | ImGuiWindowFlags_NoCollapse 
+                                 | ImGuiWindowFlags_NoScrollbar); {
+    //The viewport of the engine.
     void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
     ImGui::Image(tmpTexture, ImGui::GetWindowSize());
+
+    ImGui::End();
+  }
+
+  ImGui::Begin("Material", nullptr, ImGuiWindowFlags_NoTitleBar
+               | ImGuiWindowFlags_NoCollapse
+               | ImGuiWindowFlags_NoScrollbar); {
 
     ImGui::End();
   }
@@ -212,9 +205,46 @@ Editor::render() {
   //Render the content Browser.
   m_contentBrowser->render();
 
-  //After the own editor ui objects, call the render of ImGui.
+  //Render the hierarchy of the scene.
+  m_hierarchy->render();
+
+  //Render the Details of the actor.
+  m_details->render();
+
+  //Renders the performance window if is active.
+  if (m_renderPerformance) {
+    renderPerformanceWindow();
+  }
+
+  //Renders the about window if is active.
+  if (m_renderAbout) {
+    renderAboutWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderCamera) {
+    renderCameraMovementWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderProjectSelection) {
+    renderProjectCreationSelection();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_renderWindow && !amr.m_processWindow) {
+    renderAMR();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_processWindow) {
+    renderAMRprocess();
+  }
+
+
+
+  //After the own editor ui objects, call the render of ImGui. (Last)
   m_ui->render();
-  
 }
 
 void 

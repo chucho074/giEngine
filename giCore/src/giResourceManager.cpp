@@ -183,24 +183,30 @@ namespace giEngineSDK {
 
   ResourceRef
   ResourceManager::createSphere(int32 numTriangles) {
-    float radius = 200;
+    float radius = 1.f;
     uint32 sectors = MIN_SPHERE_SECTOR;
+
     for(int32 i = MIN_SPHERE_SECTOR; ((numTriangles%i) == 0); i+=3) {
       sectors = i;
     }
-    sectors = 9;
+
+    //sectors = 9;
     uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
 
     uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
-    uint32 spehereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
+    uint32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
     
     float x, y, z, xy;
-    float nx, ny, nz, lengthInv = 1.0f / radius;
+    float nx, ny, nz;
+    float lengthInv = 1.0f / radius;
     float s, t;
 
-    float sectorStep = 2 * Math::PI / sphereSectors;
-    float stackStep = Math::PI / spehereStacks;
-    float sectorAngle, stackAngle;
+    //float sectorStep = 2 * Math::PI / sphereSectors;
+    //float stackStep = Math::PI / sphereStacks;
+    //float sectorAngle, stackAngle;
+
+    sphereStacks = 9;
+    sphereSectors = 9;
 
     Vector<SimpleVertex> sphereVertices;
     Vector<uint32> sphereIndices;
@@ -208,19 +214,29 @@ namespace giEngineSDK {
     SimpleVertex vertex;
     vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
     vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
-
+    
     //Vertices
-    for (uint32 i = 0; i <= spehereStacks; ++i) {
-      stackAngle = Math::PI / 2 - i * stackStep;
-      xy = radius * Math::cos(stackAngle);
-      z = radius * Math::sin(stackAngle);
+    for (uint32 i = 1; i < sphereStacks-2; ++i) {
+      //stackAngle = Math::PI / 2 - i * stackStep;
+      //xy = radius * Math::cos(stackAngle);
+      //z = radius * Math::sin(stackAngle);
 
-      for (uint32 j = 0; j <= sphereSectors; ++j) {
-        sectorAngle = j * sectorStep;
+      float phi = static_cast<float>(i) / sphereSectors * Math::PI;
+      float y = radius * Math::cos(phi);
 
-        //Vertex
-        x = xy * Math::cos(sectorAngle);
-        y = xy * Math::sin(sectorAngle);
+      for (uint32 j = 1; j <= sphereSectors; ++j) {
+        float theta = static_cast<float>(j) / sphereSectors * 2.f * Math::PI;
+
+        x = radius * Math::sin(phi) * Math::cos(theta);
+
+        z = radius * Math::sin(phi) * Math::sin(theta);
+
+        //sectorAngle = j * sectorStep;
+        
+        ////Vertex
+        
+        //x = xy * Math::cos(sectorAngle);
+        //y = xy * Math::sin(sectorAngle);
         vertex.Pos = Vector3(x, y, z);
         //Normal
         nx = x * lengthInv;
@@ -229,18 +245,35 @@ namespace giEngineSDK {
         vertex.Nor = Vector3(nx, ny, nz);
         //Texcoords
         s = (float)j / sphereSectors;
-        t = (float)i / spehereStacks;
+        t = (float)i / sphereStacks;
         vertex.Tex = Vector2(s, t);
 
-        vertex.Pos.normalize();
-        vertex.Nor.normalize();
+        //vertex.Pos.normalize();
+        //vertex.Nor.normalize();
         vertex.Tex.normalize();
         sphereVertices.push_back(vertex);
       }
     }
+    
     //Indices
-    uint32 k1, k2;
-    for (uint32 i = 0; i < spehereStacks; ++i) {
+    for(int32 i = 0; i < sphereStacks; ++i) {
+      for(int32 j = 0; j < sphereSectors; ++j) {
+        int32 p1 = i * (sphereSectors + 1) + j;
+        int32 p2 = p1 * sphereSectors + 1;
+
+        sphereIndices.push_back(p1);
+        sphereIndices.push_back(p2);
+        sphereIndices.push_back(p1 + 1);
+
+        sphereIndices.push_back(p1 + 1);
+        sphereIndices.push_back(p2);
+        sphereIndices.push_back(p2 + 1);
+      }
+    }
+
+
+    /*uint32 k1, k2;
+    for (uint32 i = 0; i < sphereStacks; ++i) {
       k1 = i * (sphereSectors + 1);
       k2 = k1 + sphereSectors + 1;
 
@@ -251,14 +284,13 @@ namespace giEngineSDK {
           sphereIndices.push_back(k1 + 1);
         }
 
-        if (i != (spehereStacks - 1)) {
+        if (i != (sphereStacks - 1)) {
           sphereIndices.push_back(k1 + 1);
           sphereIndices.push_back(k2);
           sphereIndices.push_back(k2 + 1);
         }
       }
-
-    }
+    }*/
 
     sphereTextures.push_back(m_missingTextureRef);
     Vector<SharedPtr<Mesh>> tmpMeshes;
