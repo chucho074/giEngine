@@ -54,7 +54,7 @@ namespace giEngineSDK {
 
       //Faces data
       String faces;
-      for (int32 i = 0; i < mesh->m_facesList.size(); i += 9) {
+      for (int32 i = 0; i+9 <= mesh->m_facesList.size(); i += 9) {
         /*int32 v1 = mesh->m_facesList[i] + 1;
         int32 v2 = mesh->m_facesList[i + 1] + 1;
         int32 v3 = mesh->m_facesList[i + 2] + 1;
