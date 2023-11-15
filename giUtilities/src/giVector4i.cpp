@@ -1,5 +1,5 @@
 /**
- * @file    giVector4i.h
+ * @file    giVector4i.cpp
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021

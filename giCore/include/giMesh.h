@@ -25,11 +25,11 @@ namespace giEngineSDK {
    * @brief     Basic struc for my vertex.
    */
   struct SimpleVertex {
-    Vector3 Pos;
-    Vector2 Tex;  //UV
-    Vector3 Nor;
-    Vector3 Tang;
-    Vector3 BiNor;
+    Vector3 Pos = Vector3::ZERO;
+    Vector2 Tex = Vector2::ZERO;  //UV
+    Vector3 Nor = Vector3::ZERO;
+    Vector3 Tang = Vector3::ZERO;
+    Vector3 BiNor = Vector3::ZERO;
   };
 
   /**

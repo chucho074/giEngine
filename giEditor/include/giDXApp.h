@@ -88,7 +88,6 @@ class DirectXApp : public BaseApp {
   void
   resize(int32 inW, int32 inH) override;
 
-
  private:
 
   //The SamplerState

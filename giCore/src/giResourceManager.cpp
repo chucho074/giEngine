@@ -27,6 +27,24 @@ namespace giEngineSDK {
     int v1, v2, v3;
   };
 
+  class giIter {
+   public:
+    giIter() =default;
+    ~giIter() =default;
+
+    uint32 iter = 0;
+
+    void
+    incrementIter() {
+      this->iter++;
+    }
+
+    uint32
+    getIter(){
+      return this->iter;
+    }
+  };
+
   void 
   ResourceManager::init() {
     createEditorIconsTextures();
@@ -251,23 +269,67 @@ namespace giEngineSDK {
 
   ResourceRef
   ResourceManager::createSphere(int32 numTriangles) {
+    
+    /*Vector<Vector3> subdivision_0_positions{
+        Vector3 {  0.0000000e+00,  0.0000000e+00,  1.0000000e+00 },
+        Vector3 {  8.9442718e-01,  0.0000000e+00,  4.4721359e-01 },
+        Vector3 {  2.7639320e-01,  8.5065079e-01,  4.4721359e-01 },
+        Vector3 { -7.2360682e-01,  5.2573109e-01,  4.4721359e-01 },
+        Vector3 { -7.2360682e-01, -5.2573109e-01,  4.4721359e-01 },
+        Vector3 {  2.7639320e-01, -8.5065079e-01,  4.4721359e-01 },
+        Vector3 {  7.2360682e-01,  5.2573109e-01, -4.4721359e-01 },
+        Vector3 { -2.7639320e-01,  8.5065079e-01, -4.4721359e-01 },
+        Vector3 { -8.9442718e-01,  1.0953574e-16, -4.4721359e-01 },
+        Vector3 { -2.7639320e-01, -8.5065079e-01, -4.4721359e-01 },
+        Vector3 {  7.2360682e-01, -5.2573109e-01, -4.4721359e-01 },
+        Vector3 {  0.0000000e+00,  0.0000000e+00, -1.0000000e+00 }
+    };
+
+    Vector<Vector3> subdivision_0_indices {
+        Vector3 {  0,  1,  2 },
+        Vector3 {  0,  2,  3 },
+        Vector3 {  0,  3,  4 },
+        Vector3 {  0,  4,  5 },
+        Vector3 {  0,  5,  1 },
+        Vector3 {  1,  6,  2 },
+        Vector3 {  2,  7,  3 },
+        Vector3 {  3,  8,  4 },
+        Vector3 {  4,  9,  5 },
+        Vector3 {  5, 10,  1 },
+        Vector3 {  2,  6,  7 },
+        Vector3 {  3,  7,  8 },
+        Vector3 {  4,  8,  9 },
+        Vector3 {  5,  9, 10 },
+        Vector3 {  1, 10,  6 },
+        Vector3 {  6, 11,  7 },
+        Vector3 {  7, 11,  8 },
+        Vector3 {  8, 11,  9 },
+        Vector3 {  9, 11, 10 },
+        Vector3 { 10, 11,  6 }
+    };*/
+
+
+    //Sectors = slices of the sphere.
+    //Stacks  = divisions of the slices.
+
     float radius = 1;
     uint32 sectors = MIN_SPHERE_SECTOR;
-    for (int32 i = MIN_SPHERE_SECTOR; ((numTriangles % i) == 0); i += 3) {
+    for (int32 i = MIN_SPHERE_SECTOR; (((numTriangles) % i) == 0); i += 3) {
       sectors = i;
     }
-    sectors = 9;
-    uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
+    
+    //uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
+    uint32 stacks = ((numTriangles) / sectors);
 
-    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
-    uint32 spehereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
+    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors * 2;
+    uint32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks * 0.25f;
 
     float x, y, z, xy;
     float nx, ny, nz, lengthInv = 1.0f / radius;
     float s, t;
 
     float sectorStep = 2 * Math::PI / sphereSectors;
-    float stackStep = Math::PI / spehereStacks;
+    float stackStep = Math::PI / sphereStacks;
     float sectorAngle, stackAngle;
 
     Vector<SimpleVertex> sphereVertices;
@@ -277,14 +339,26 @@ namespace giEngineSDK {
     vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
     vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
 
+    //sphereVertices.resize((numTriangles*3) +1);
+    sphereVertices.resize((sphereSectors * (sphereStacks-2))+2);
+    SharedPtr<giIter> tmpIter = make_shared<giIter>();
+    tmpIter->incrementIter();
+
+    SimpleVertex tmpVertex;
+    tmpVertex.Pos = {0, 0, radius};
+    tmpVertex.Nor = {0, 0, 1};
+    tmpVertex.Tex = {0.5f, 0.5f};
+    sphereVertices[0] = tmpVertex;
+
     //Vertices
-    for (uint32 i = 1; i < spehereStacks-2; ++i) {
+    for (uint32 i = 1; i <= sphereStacks -2; ++i) {
       stackAngle = Math::PI / 2 - i * stackStep;
       xy = radius * Math::cos(stackAngle);
       z = radius * Math::sin(stackAngle);
 
       for (uint32 j = 1; j <= sphereSectors; ++j) {
         sectorAngle = j * sectorStep;
+
         //Vertex
         x = xy * Math::cos(sectorAngle);
         y = xy * Math::sin(sectorAngle);
@@ -296,201 +370,106 @@ namespace giEngineSDK {
         vertex.Nor = Vector3(nx, ny, nz);
         //Texcoords
         s = (float)j / sphereSectors;
-        t = (float)i / spehereStacks;
+        t = (float)i / sphereStacks;
         vertex.Tex = Vector2(s, t);
 
-        //vertex.Pos.normalize();
-        //vertex.Nor.normalize();
         vertex.Tex.normalize();
-        sphereVertices.push_back(vertex);
+        if(tmpIter->getIter() >= ((sphereSectors * (sphereStacks - 2)) + 2)){
+          __debugbreak();
+          tmpIter->iter = tmpIter->iter - 1;
+          break;
+        }
+        else {
+          sphereVertices[tmpIter->getIter()] = vertex;
+          tmpIter->incrementIter();
+        }
       }
     }
-
+    tmpVertex.Pos = { 0, 0, -radius };
+    tmpVertex.Nor = { 0, 0, -1 };
+    tmpVertex.Tex = { 0.5f, 0.5f };
+    sphereVertices[tmpIter->getIter()] = tmpVertex;
+     
     //Indices
-    uint32 k1, k2;
-    for (uint32 i = 1; i < spehereStacks-2; ++i) {
-      k1 = i * (sphereSectors + 1);
-      k2 = k1 + sphereSectors + 1;
+    
+    sphereIndices.resize(numTriangles*3);
 
-      for (uint32 j = 1; j < sphereSectors; ++j, ++k1, ++k2) {
+    for(auto index : sphereIndices) {
+      index = 0;
+    }
+    SharedPtr<giIter> tmpIndexIter = make_shared<giIter>();
+
+
+    //ORIGINAL
+    /*uint32 k1, k2;
+    for (uint32 i = 0; i <= sphereStacks; ++i) {
+      k1 = i * (sphereSectors);
+      k2 = k1 + sphereSectors;
+      for (uint32 j = 0; j <= sphereSectors; ++j, ++k1, ++k2) {
         if (i != 0) {
           sphereIndices.push_back(k1);
           sphereIndices.push_back(k2);
           sphereIndices.push_back(k1 + 1);
         }
-
-        if (i != (spehereStacks - 1)) {
+        if (i != (sphereStacks)) {
           sphereIndices.push_back(k1 + 1);
           sphereIndices.push_back(k2);
           sphereIndices.push_back(k2 + 1);
         }
       }
+    }*/
 
+    //FALTAN LOS ULTIMOS Y PRIMEROS TRIANGULOS
+    uint32 k1, k2;
+    for (uint32 i = 0; i <= sphereStacks-1; ++i) {
+      for (uint32 j = 0; j <= sphereSectors-1; ++j, ++k1, ++k2) {
+        //if(j != 0) {
+          //if (i != 0) {
+          //  sphereIndices.push_back(k1);
+          //  sphereIndices.push_back(k2);
+          //  sphereIndices.push_back(k1 + 1);
+          //}
+          //if (i != (sphereStacks)) {
+          //  sphereIndices.push_back(k1 + 1);
+          //  sphereIndices.push_back(k2);
+          //  sphereIndices.push_back(k2 + 1);
+          //}
+          
+        //}
+
+        //Revisar la manera en la que correjir esto, ya que no esta generando
+        // los primeros triangulos y los ultimos de la manera correcta
+        k1 = (i * (sphereSectors))-j;
+        k2 = k1 + sphereSectors;
+
+
+        sphereIndices[tmpIndexIter->getIter()] = k1;
+        tmpIndexIter->incrementIter();
+        sphereIndices[tmpIndexIter->getIter()] = k2;
+        tmpIndexIter->incrementIter();
+        sphereIndices[tmpIndexIter->getIter()] = k1 + 1;
+        tmpIndexIter->incrementIter();
+        sphereIndices[tmpIndexIter->getIter()] = k1 + 1;
+        tmpIndexIter->incrementIter();
+        sphereIndices[tmpIndexIter->getIter()] = k2;
+        tmpIndexIter->incrementIter();
+        sphereIndices[tmpIndexIter->getIter()] = k2 + 1;
+        tmpIndexIter->incrementIter();
+      }
     }
 
-    /*const float X = 0.525731112119133606;
-    const float Z = 0.850650808352039932;
+    //
+    /*uint32 k1, k2;
+    for (uint32 i = 0; i <= numTriangles*3; i+=3) {
 
-    Vector<SimpleVertex> sphereVertices;
-    Vector<Triangle> sphereTriangles;
-    Vector<ResourceRef> sphereTextures;
-    SimpleVertex vertex;
-    vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
-    vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);*/
+      sphereIndices.push_back(i);
+      sphereIndices.push_back((i)+1);
+      sphereIndices.push_back((i)+2);
 
-    //1
-    //vertex.Pos = { -X, 0.0f, Z  };
-    //sphereVertices.push_back(vertex);
-    ////2
-    //vertex.Pos = { X, 0.0f, Z   };
-    //vertex.Nor = { 1.0f, 0.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////3
-    //vertex.Pos = { -X, 0.0f, -Z };
-    //vertex.Nor = { 0.0f, 1.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////4
-    //vertex.Pos = { X, 0.0f, -Z  };
-    //vertex.Nor = { 1.0f, 1.0f, 0.0f};
-    //sphereVertices.push_back(vertex);
-    ////5
-    //vertex.Pos = { 0.0f, Z, X   };
-    //sphereVertices.push_back(vertex);
-    ////6
-    //vertex.Pos = { 0.0f, Z, -X  };
-    //vertex.Nor = { 1.0f, 0.0f, 0.0f};
-    //sphereVertices.push_back(vertex);
-    ////7
-    //vertex.Pos = { 0.0f, -Z, X  };
-    //vertex.Nor = { 0.0f, 1.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////8
-    //vertex.Pos = { 0.0f, -Z, -X };
-    //vertex.Nor = { 1.0f, 1.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////9
-    //vertex.Pos = { Z, X, 0.0f   };
-    //sphereVertices.push_back(vertex);
-    ////10
-    //vertex.Pos = { -Z, X, 0.0f  };
-    //vertex.Nor = { 1.0f, 0.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////11
-    //vertex.Pos = { Z, -X, 0.0f  };
-    //vertex.Nor = { 0.0f, 1.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-    ////12
-    //vertex.Pos = { -Z, -X, 0.0f };
-    //vertex.Nor = { 1.0f, 1.0f, 0.0f };
-    //sphereVertices.push_back(vertex);
-
-    /*sphereTriangles.push_back({0, 1, 4});
-    sphereTriangles.push_back({1, 9, 4});
-    sphereTriangles.push_back({4, 9, 5});
-    sphereTriangles.push_back({5, 9, 3});
-    sphereTriangles.push_back({2, 3, 7});
-    sphereTriangles.push_back({3, 2, 5});
-    sphereTriangles.push_back({7, 10,2 });
-    sphereTriangles.push_back({0, 8, 10});
-    sphereTriangles.push_back({0, 4, 8 });
-    sphereTriangles.push_back({8, 2, 10});
-    sphereTriangles.push_back({8, 4, 5 });
-    sphereTriangles.push_back({8, 5, 2 });
-    sphereTriangles.push_back({1, 0, 6 });
-    sphereTriangles.push_back({11, 1, 6});
-    sphereTriangles.push_back({3, 9, 11});
-    sphereTriangles.push_back({6, 10, 7});
-    sphereTriangles.push_back({3, 11, 7});
-    sphereTriangles.push_back({11, 6, 7});
-    sphereTriangles.push_back({6, 0, 10});
-    sphereTriangles.push_back({9, 1, 11}); */
-     
-    /*sphereTriangles.push_back({0, 4, 1});
-    sphereTriangles.push_back({ 0,9,4 });
-    sphereTriangles.push_back({ 9,5,4 });
-    sphereTriangles.push_back({ 4,5,8 });
-    sphereTriangles.push_back({ 4,8,1 });
-    sphereTriangles.push_back({ 8,10,1});
-    sphereTriangles.push_back({ 8,3,10});
-    sphereTriangles.push_back({ 5,3,8 });
-    sphereTriangles.push_back({ 5,2,3 });
-    sphereTriangles.push_back({ 2,7,3 });
-    sphereTriangles.push_back({ 7,10,3});
-    sphereTriangles.push_back({ 7,6,10});
-    sphereTriangles.push_back({ 7,11,6});
-    sphereTriangles.push_back({ 11,0,6});
-    sphereTriangles.push_back({ 0,1,6 });
-    sphereTriangles.push_back({ 6,1,10});
-    sphereTriangles.push_back({ 9,0,11});
-    sphereTriangles.push_back({ 9,11,2});
-    sphereTriangles.push_back({ 9,2,5 });
-    sphereTriangles.push_back({ 7,2,11});
-
-    int currentTriangleCount = sphereTriangles.size();*/
-
-    // Realiza subdivisiones hasta alcanzar el número deseado de triángulos
-    //while (currentTriangleCount < numTriangles) {
-    //    Subdivide(sphereVertices, sphereTriangles);
-    //    currentTriangleCount = sphereTriangles.size();
-    //}
-
-    // Calcular las normales
-    /*for (const auto & triangle : sphereTriangles) {
-      SimpleVertex & v1 = sphereVertices[triangle.v1];
-      SimpleVertex & v2 = sphereVertices[triangle.v2];
-      SimpleVertex & v3 = sphereVertices[triangle.v3];
-
-      float ux = v2.Pos.x - v1.Pos.x;
-      float uy = v2.Pos.y - v1.Pos.y;
-      float uz = v2.Pos.z - v1.Pos.z;
-
-      float vx = v3.Pos.x - v1.Pos.x;
-      float vy = v3.Pos.y - v1.Pos.y;
-      float vz = v3.Pos.z - v1.Pos.z;
-
-      float nx = uy * vz - uz * vy;
-      float ny = uz * vx - ux * vz;
-      float nz = ux * vy - uy * vx;
-
-      v1.Pos.normalize();
-      v2.Pos.normalize();
-      v3.Pos.normalize();
-
-      v1.Nor.x += nx;
-      v1.Nor.y += ny;
-      v1.Nor.z += nz;
-
-      v2.Nor.x += nx;
-      v2.Nor.y += ny;
-      v2.Nor.z += nz;
-
-      v3.Nor.x += nx;
-      v3.Nor.y += ny;
-      v3.Nor.z += nz;
-    }*/
-
-    // Normalizar las normales
-    /*for (auto & vertex : sphereVertices) {
-      vertex.Nor.normalize();
-    }*/
-
-    // Calcular las coordenadas de textura
-    /*for (auto & vertex : sphereVertices) {
-      float theta = std::atan2(vertex.Pos.x, vertex.Pos.z);
-      float phi = std::acos(vertex.Pos.y);
-
-      vertex.Tex.x = theta / (2 * M_PI) + 0.5f;
-      vertex.Tex.y = phi / M_PI;
     }*/
 
 
-    /*Vector<uint32> sphereIndices;
 
-    for (auto tmpIter : sphereTriangles) {
-      sphereIndices.push_back(tmpIter.v1);
-      sphereIndices.push_back(tmpIter.v2);
-      sphereIndices.push_back(tmpIter.v3);
-    }*/
 
     sphereTextures.push_back(m_missingTextureRef);
     Vector<SharedPtr<Mesh>> tmpMeshes;

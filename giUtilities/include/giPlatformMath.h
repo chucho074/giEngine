@@ -214,5 +214,9 @@ namespace giEngineSDK {
       return std::logf(inValue);
     }
     
+    template<typename T>
+    static T abs(T value) {
+      return (value <= 0) ? -value : value;
+    }
   };
 }

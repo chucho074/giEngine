@@ -50,22 +50,23 @@ namespace giEngineSDK {
       //Usemtl
       tmpOut += "usemtl mat"+ toString(matID) + "\n";
       matID++;
-
+      
 
       //Faces data
       String faces;
-      for (int32 i = 0; i+9 <= mesh->m_facesList.size(); i += 9) {
-        /*int32 v1 = mesh->m_facesList[i] + 1;
-        int32 v2 = mesh->m_facesList[i + 1] + 1;
-        int32 v3 = mesh->m_facesList[i + 2] + 1;
-        faces += "f " + toString(v1) + '/' + toString(v1) + '/' + toString(v1) + ' ' 
-                      + toString(v2) + '/' + toString(v2) + '/' + toString(v2) + ' ' 
-                      + toString(v3) + '/' + toString(v3) + '/' + toString(v3) + '\n';*/
+      for (int32 i = 0; i < mesh->m_facesList.size(); i += 3) {
+      //for (int32 i = 0; i+9 <= mesh->m_facesList.size(); i += 9) {
+        int32 v1 = mesh->m_facesList[i];
+        int32 v2 = mesh->m_facesList[i + 1];
+        int32 v3 = mesh->m_facesList[i + 2];
+        faces += "f " + toString(v1) + '/' + toString(v1) + '/' + toString(v1) + ' '
+                      + toString(v2) + '/' + toString(v2) + '/' + toString(v2) + ' '
+                      + toString(v3) + '/' + toString(v3) + '/' + toString(v3) + '\n';
 
-        int32 actual = mesh->m_facesList[i];
-        faces += "f " + toString(mesh->m_facesList[i] + 1) + '/' + toString(mesh->m_facesList[i + 1] + 1) + '/' + toString(mesh->m_facesList[i + 2] + 1) + ' '
-                      + toString(mesh->m_facesList[i + 3] + 1) + '/' + toString(mesh->m_facesList[i + 4] + 1) + '/' + toString(mesh->m_facesList[i + 5] + 1) + ' '
-                      + toString(mesh->m_facesList[i + 6] + 1) + '/' + toString(mesh->m_facesList[i + 7] + 1) + '/' + toString(mesh->m_facesList[i + 8] + 1) + '\n';
+        /*int32 actual = mesh->m_facesList[i];
+        faces += "f " + toString(mesh->m_facesList[i]) + '/' + toString(mesh->m_facesList[i + 1]) + '/' + toString(mesh->m_facesList[i + 2]) + ' '
+                      + toString(mesh->m_facesList[i + 3]) + '/' + toString(mesh->m_facesList[i + 4]) + '/' + toString(mesh->m_facesList[i + 5]) + ' '
+                      + toString(mesh->m_facesList[i + 6]) + '/' + toString(mesh->m_facesList[i + 7]) + '/' + toString(mesh->m_facesList[i + 8]) + '\n';*/
       }
       tmpOut += faces;
     }
