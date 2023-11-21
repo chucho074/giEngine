@@ -340,7 +340,7 @@ namespace giEngineSDK {
     vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
 
     //sphereVertices.resize((numTriangles*3) +1);
-    sphereVertices.resize((sphereSectors * (sphereStacks-2))+2);
+    sphereVertices.resize((sphereSectors * (sphereStacks-1))+2);
     SharedPtr<giIter> tmpIter = make_shared<giIter>();
     tmpIter->incrementIter();
 
@@ -351,7 +351,7 @@ namespace giEngineSDK {
     sphereVertices[0] = tmpVertex;
 
     //Vertices
-    for (uint32 i = 1; i <= sphereStacks -2; ++i) {
+    for (uint32 i = 1; i <= sphereStacks -1; ++i) {
       stackAngle = Math::PI / 2 - i * stackStep;
       xy = radius * Math::cos(stackAngle);
       z = radius * Math::sin(stackAngle);
@@ -374,7 +374,7 @@ namespace giEngineSDK {
         vertex.Tex = Vector2(s, t);
 
         vertex.Tex.normalize();
-        if(tmpIter->getIter() >= ((sphereSectors * (sphereStacks - 2)) + 2)){
+        if(tmpIter->getIter() >= ((sphereSectors * (sphereStacks - 1)) + 2)){
           __debugbreak();
           tmpIter->iter = tmpIter->iter - 1;
           break;
@@ -391,83 +391,120 @@ namespace giEngineSDK {
     sphereVertices[tmpIter->getIter()] = tmpVertex;
      
     //Indices
-    
-    sphereIndices.resize(numTriangles*3);
 
-    for(auto index : sphereIndices) {
-      index = 0;
+    for(int32 i = 1; i <= sphereSectors; ++i) {
+      if (i < sphereSectors) {
+        sphereIndices.push_back(1);
+        sphereIndices.push_back(1 + i);
+        sphereIndices.push_back(2 + i);
+      }
+      else {
+        sphereIndices.push_back(1);
+        sphereIndices.push_back(1 + sphereSectors);
+        sphereIndices.push_back(2);
+      }
     }
-    SharedPtr<giIter> tmpIndexIter = make_shared<giIter>();
+
+    sphereIndices.push_back(sphereSectors + 2);
+    sphereIndices.push_back(sphereSectors + 1);
+    sphereIndices.push_back(2);
+
+    int32 tmpSize = sphereVertices.size();
+    uint32 tmpIndex = tmpSize - sphereSectors;
+
+    for(int32 i = 0; i < tmpIndex; ++i) {
+      
+      sphereIndices.push_back(i + 3);
+      sphereIndices.push_back(i + 2);
+      sphereIndices.push_back(i + sphereSectors + 2);
+
+      sphereIndices.push_back(i + 3);
+      sphereIndices.push_back(i + sphereSectors + 2);
+      sphereIndices.push_back(i + sphereSectors + 3);
 
 
-    //ORIGINAL
-    /*uint32 k1, k2;
-    for (uint32 i = 0; i <= sphereStacks; ++i) {
-      k1 = i * (sphereSectors);
+                  // IDK WTF IS IT
+      //sphereIndices.push_back(i + 1);
+      //sphereIndices.push_back(sphereSectors + 2 + 1);
+      //sphereIndices.push_back(sphereSectors + i);
+      //sphereIndices.push_back(sphereSectors + 1 + i);
+      //sphereIndices.push_back(sphereSectors + 2 + i);
+      //sphereIndices.push_back((sphereSectors *2) + 1 + i);
+    }
+
+    //uint32 k1,k2;
+    //for(int32 i = 0; i < sphereStacks - 1; ++i) {
+    //  k1 = (i * sphereSectors);
+    //  k2 = k1 + sphereSectors;
+    //  for(int32 j = 0; j < sphereSectors; ++j, ++k1, ++k2) { 
+    //    //if (i != 0) {
+    //      sphereIndices.push_back(k1);
+    //      sphereIndices.push_back(k2);
+    //      sphereIndices.push_back(k1 + 1);
+    //    //}
+    //    //if (i != (sphereStacks)) {
+    //      sphereIndices.push_back(k1 + 1);
+    //      sphereIndices.push_back(k2);
+    //      sphereIndices.push_back(k2 + 1);
+    //    //}
+    //  }
+    //}
+
+    /*
+    uint32 k1,k2;
+    for(int32 i = 0; i < sphereStacks - 1; ++i) {
+      k1 = (i * sphereSectors) + 1;
       k2 = k1 + sphereSectors;
-      for (uint32 j = 0; j <= sphereSectors; ++j, ++k1, ++k2) {
+      for(int32 j = 0; j < sphereSectors; ++j, ++k1, ++k2) { 
         if (i != 0) {
           sphereIndices.push_back(k1);
           sphereIndices.push_back(k2);
           sphereIndices.push_back(k1 + 1);
         }
+
         if (i != (sphereStacks)) {
           sphereIndices.push_back(k1 + 1);
           sphereIndices.push_back(k2);
           sphereIndices.push_back(k2 + 1);
         }
       }
-    }*/
+    }
+    */
+    /*uint32 k1, k2;
+    for (uint32 i = 1; i < sphereStacks-1; ++i) {
+      k1 = i * (sphereSectors + 1);
+      k2 = k1 + sphereSectors + 1;
 
-    //FALTAN LOS ULTIMOS Y PRIMEROS TRIANGULOS
-    uint32 k1, k2;
-    for (uint32 i = 0; i <= sphereStacks-1; ++i) {
-      for (uint32 j = 0; j <= sphereSectors-1; ++j, ++k1, ++k2) {
-        //if(j != 0) {
-          //if (i != 0) {
-          //  sphereIndices.push_back(k1);
-          //  sphereIndices.push_back(k2);
-          //  sphereIndices.push_back(k1 + 1);
-          //}
-          //if (i != (sphereStacks)) {
-          //  sphereIndices.push_back(k1 + 1);
-          //  sphereIndices.push_back(k2);
-          //  sphereIndices.push_back(k2 + 1);
-          //}
-          
-        //}
+      for (uint32 j = 1; j < sphereSectors-1; ++j, ++k1, ++k2) {
+        if (i != 0) {
+          sphereIndices.push_back(k1);
+          sphereIndices.push_back(k2);
+          sphereIndices.push_back(k1 + 1);
+        }
 
-        //Revisar la manera en la que correjir esto, ya que no esta generando
-        // los primeros triangulos y los ultimos de la manera correcta
-        k1 = (i * (sphereSectors))-j;
-        k2 = k1 + sphereSectors;
+        if (i != (sphereStacks - 1)) {
+          sphereIndices.push_back(k1 + 1);
+          sphereIndices.push_back(k2);
+          sphereIndices.push_back(k2 + 1);
+        }
+      }*/
 
 
-        sphereIndices[tmpIndexIter->getIter()] = k1;
-        tmpIndexIter->incrementIter();
-        sphereIndices[tmpIndexIter->getIter()] = k2;
-        tmpIndexIter->incrementIter();
-        sphereIndices[tmpIndexIter->getIter()] = k1 + 1;
-        tmpIndexIter->incrementIter();
-        sphereIndices[tmpIndexIter->getIter()] = k1 + 1;
-        tmpIndexIter->incrementIter();
-        sphereIndices[tmpIndexIter->getIter()] = k2;
-        tmpIndexIter->incrementIter();
-        sphereIndices[tmpIndexIter->getIter()] = k2 + 1;
-        tmpIndexIter->incrementIter();
+    
+    //int32 tmpSize = sphereVertices.size();
+
+    for(int32 i = 1; i <= sphereSectors; ++i) {
+      if (i < sphereSectors) {
+        sphereIndices.push_back(tmpSize);
+        sphereIndices.push_back(tmpSize - i);
+        sphereIndices.push_back(tmpSize - i - 1);
+      }
+      else {
+        sphereIndices.push_back(tmpSize);
+        sphereIndices.push_back(tmpSize - sphereSectors);
+        sphereIndices.push_back(tmpSize - 1);
       }
     }
-
-    //
-    /*uint32 k1, k2;
-    for (uint32 i = 0; i <= numTriangles*3; i+=3) {
-
-      sphereIndices.push_back(i);
-      sphereIndices.push_back((i)+1);
-      sphereIndices.push_back((i)+2);
-
-    }*/
-
 
 
 
