@@ -319,17 +319,17 @@ namespace giEngineSDK {
     }
     
     //uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
-    uint32 stacks = ((numTriangles) / sectors);
+    uint32 stacks = ((numTriangles) / sectors) / 2;
 
-    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors * 2;
-    uint32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks * 0.25f;
+    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
+    uint32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
 
     float x, y, z, xy;
     float nx, ny, nz, lengthInv = 1.0f / radius;
     float s, t;
 
     float sectorStep = 2 * Math::PI / sphereSectors;
-    float stackStep = Math::PI / sphereStacks;
+    //float stackStep = Math::PI / sphereStacks;
     float sectorAngle, stackAngle;
 
     Vector<SimpleVertex> sphereVertices;
@@ -344,24 +344,32 @@ namespace giEngineSDK {
     SharedPtr<giIter> tmpIter = make_shared<giIter>();
     tmpIter->incrementIter();
 
+    //First Vertex data.
     SimpleVertex tmpVertex;
-    tmpVertex.Pos = {0, 0, radius};
-    tmpVertex.Nor = {0, 0, 1};
-    tmpVertex.Tex = {0.5f, 0.5f};
+    tmpVertex.Pos = {0, 1, 0};
+    tmpVertex.Nor = {0, 1, 0};
+    tmpVertex.Tex = {0.f, 1.f};
     sphereVertices[0] = tmpVertex;
 
     //Vertices
-    for (uint32 i = 1; i <= sphereStacks -1; ++i) {
-      stackAngle = Math::PI / 2 - i * stackStep;
+    for (uint32 i = 0; i < sphereStacks - 1; ++i) {
+      auto phi = Math::PI * double(i + 1) / double(sphereStacks);
+      
+      /*stackAngle = Math::PI / 2 - i * stackStep;
       xy = radius * Math::cos(stackAngle);
-      z = radius * Math::sin(stackAngle);
+      z = radius * Math::sin(stackAngle);*/
 
-      for (uint32 j = 1; j <= sphereSectors; ++j) {
-        sectorAngle = j * sectorStep;
+      for (uint32 j = 0; j < sphereSectors; ++j) {
+        //sectorAngle = j * sectorStep;
+
+        sectorAngle = 2.0 * Math::PI * double(j) / double(sphereSectors);
+        x = sin(phi) * cos(sectorAngle);
+        y = cos(phi);
+        z = sin(phi) * sin(sectorAngle);
 
         //Vertex
-        x = xy * Math::cos(sectorAngle);
-        y = xy * Math::sin(sectorAngle);
+        //x = xy * Math::cos(sectorAngle);
+        //y = xy * Math::sin(sectorAngle);
         vertex.Pos = Vector3(x, y, z);
         //Normal
         nx = x * lengthInv;
@@ -385,14 +393,28 @@ namespace giEngineSDK {
         }
       }
     }
-    tmpVertex.Pos = { 0, 0, -radius };
-    tmpVertex.Nor = { 0, 0, -1 };
+    //Last vertex data.
+    tmpVertex.Pos = { 0, -1, 0};
+    tmpVertex.Nor = { 0, -1, 0};
     tmpVertex.Tex = { 0.5f, 0.5f };
     sphereVertices[tmpIter->getIter()] = tmpVertex;
      
     //Indices
 
-    for(int32 i = 1; i <= sphereSectors; ++i) {
+    //Triangles with the first Vertex.
+    for(int32 i = 0; i < sphereSectors; ++i) {
+      auto i0 = i + 1;
+      auto i1 = (i + 1) % sphereSectors + 1;
+      sphereIndices.push_back(0);
+      sphereIndices.push_back(i0);
+      sphereIndices.push_back(i1);
+      i0 = i + sphereSectors * (sphereStacks - 2) + 1;
+      i1 = (i + 1) % sphereSectors + sphereSectors * (sphereStacks-2) + 1;
+      sphereIndices.push_back(tmpIter->getIter());
+      sphereIndices.push_back(i0);
+      sphereIndices.push_back(i1);
+    }
+    /*for(int32 i = 1; i <= sphereSectors; ++i) {
       if (i < sphereSectors) {
         sphereIndices.push_back(1);
         sphereIndices.push_back(1 + i);
@@ -407,30 +429,53 @@ namespace giEngineSDK {
 
     sphereIndices.push_back(sphereSectors + 2);
     sphereIndices.push_back(sphereSectors + 1);
-    sphereIndices.push_back(2);
+    sphereIndices.push_back(2);*/
 
+
+    //Middle triangles
     int32 tmpSize = sphereVertices.size();
-    uint32 tmpIndex = tmpSize - sphereSectors;
-
-    for(int32 i = 0; i < tmpIndex; ++i) {
-      
-      sphereIndices.push_back(i + 3);
-      sphereIndices.push_back(i + 2);
-      sphereIndices.push_back(i + sphereSectors + 2);
-
-      sphereIndices.push_back(i + 3);
-      sphereIndices.push_back(i + sphereSectors + 2);
-      sphereIndices.push_back(i + sphereSectors + 3);
 
 
-                  // IDK WTF IS IT
-      //sphereIndices.push_back(i + 1);
-      //sphereIndices.push_back(sphereSectors + 2 + 1);
-      //sphereIndices.push_back(sphereSectors + i);
-      //sphereIndices.push_back(sphereSectors + 1 + i);
-      //sphereIndices.push_back(sphereSectors + 2 + i);
-      //sphereIndices.push_back((sphereSectors *2) + 1 + i);
+    for(int32 i = 0; i < sphereStacks - 2; ++i) {
+      auto i0 = i * sphereSectors + 1;
+      auto i1 = (i + 1) * sphereSectors + 1;
+      for(int32 j = 0; j < sphereSectors; ++j){
+        auto j0 = i0 + j;
+        auto j1 = i0 + (j + 1) % sphereSectors;
+        auto j2 = i1 + (j + 1) % sphereSectors;
+        auto j3 = i1 + j;
+        sphereIndices.push_back(j0);
+        sphereIndices.push_back(j1);
+        sphereIndices.push_back(j2);
+        
+        sphereIndices.push_back(j0);
+        sphereIndices.push_back(j2);
+        sphereIndices.push_back(j3);
+
+      }
     }
+
+    //uint32 tmpIndex = tmpSize - sphereSectors;
+
+    //for(int32 i = 0; i < tmpIndex; ++i) {
+    //  
+    //  sphereIndices.push_back(i + 3);
+    //  sphereIndices.push_back(i + 2);
+    //  sphereIndices.push_back(i + sphereSectors + 2);
+
+    //  sphereIndices.push_back(i + 3);
+    //  sphereIndices.push_back(i + sphereSectors + 2);
+    //  sphereIndices.push_back(i + sphereSectors + 3);
+
+
+    //              // IDK WTF IS IT
+    //  //sphereIndices.push_back(i + 1);
+    //  //sphereIndices.push_back(sphereSectors + 2 + 1);
+    //  //sphereIndices.push_back(sphereSectors + i);
+    //  //sphereIndices.push_back(sphereSectors + 1 + i);
+    //  //sphereIndices.push_back(sphereSectors + 2 + i);
+    //  //sphereIndices.push_back((sphereSectors *2) + 1 + i);
+    //}
 
     //uint32 k1,k2;
     //for(int32 i = 0; i < sphereStacks - 1; ++i) {
@@ -493,7 +538,8 @@ namespace giEngineSDK {
     
     //int32 tmpSize = sphereVertices.size();
 
-    for(int32 i = 1; i <= sphereSectors; ++i) {
+    //Last triangles with the last vertex.
+    /*for(int32 i = 1; i <= sphereSectors; ++i) {
       if (i < sphereSectors) {
         sphereIndices.push_back(tmpSize);
         sphereIndices.push_back(tmpSize - i);
@@ -504,7 +550,7 @@ namespace giEngineSDK {
         sphereIndices.push_back(tmpSize - sphereSectors);
         sphereIndices.push_back(tmpSize - 1);
       }
-    }
+    }*/
 
 
 

@@ -56,9 +56,9 @@ namespace giEngineSDK {
       String faces;
       for (int32 i = 0; i < mesh->m_facesList.size(); i += 3) {
       //for (int32 i = 0; i+9 <= mesh->m_facesList.size(); i += 9) {
-        int32 v1 = mesh->m_facesList[i];
-        int32 v2 = mesh->m_facesList[i + 1];
-        int32 v3 = mesh->m_facesList[i + 2];
+        int32 v1 = mesh->m_facesList[i] + 1;
+        int32 v2 = mesh->m_facesList[i + 1] + 1;
+        int32 v3 = mesh->m_facesList[i + 2] + 1;
         faces += "f " + toString(v1) + '/' + toString(v1) + '/' + toString(v1) + ' '
                       + toString(v2) + '/' + toString(v2) + '/' + toString(v2) + ' '
                       + toString(v3) + '/' + toString(v3) + '/' + toString(v3) + '\n';
