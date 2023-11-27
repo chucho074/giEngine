@@ -470,12 +470,23 @@ Editor::renderAMR() {
   if(ImGui::Button(toString(amr.partialTriang).c_str())) {
     amr.finalTriang = amr.partialTriang;
   }
-
+  ImGui::Text("By Triangles (uses uv Sphere)");
   ImGui::SliderInt(" ", 
                    &amr.finalTriang, 
                    amr.minimunTriang, 
                    amr.m_refInfo.totalTriangles);
 
+  ImGui::Text("By Subdivisions (uses Quad Sphere)");
+  ImGui::SliderInt(" ",
+                   &m_Subdiv,
+                   1, 
+                   6);
+
+  ImGui::Text("Total Triangles: ");
+  
+  ImGui::SameLine();
+
+  ImGui::Text(toString(pow(4, m_Subdiv+1) * 6 / 2).c_str());
   ImGui::Separator();
   
   ImGui::Text("Generate form a base model");
@@ -523,11 +534,25 @@ Editor::renderAMR() {
   ImGui::Separator();
 
   //Generate Button
-  if (ImGui::Button("Generate")) {
+  if (ImGui::Button("Generate (uv sphere)")) {
     //if (useSphere) {
       RM.exportModel({configs.s_generatedPath.string() + "sphere.obj"}, 
                     RM.createSphere(amr.finalTriang));
+                    
+      //RM.createQuadSphere(m_Subdiv);
     //}
+    amr.run();
+    amr.m_renderWindow = false;
+    amr.m_processWindow = true;
+  }
+
+  if (ImGui::Button("Generate (quad sphere)")) {
+    //if (useSphere) {
+    //RM.exportModel({ configs.s_generatedPath.string() + "sphere.obj" },
+      //RM.createSphere(amr.finalTriang));
+
+    RM.createQuadSphere(m_Subdiv);
+  //}
     amr.run();
     amr.m_renderWindow = false;
     amr.m_processWindow = true;

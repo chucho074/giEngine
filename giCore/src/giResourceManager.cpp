@@ -16,7 +16,12 @@
 #include "giMaterial.h"
 #include "giModel.h"
 #include "giExporter.h"
+#include "giBaseConfig.h"
 
+
+#include <pmp/surface_mesh.h>
+#include <pmp/algorithms/subdivision.h>
+#include <pmp/io/write_giAMR.h>
 
 namespace giEngineSDK {
 
@@ -24,7 +29,7 @@ namespace giEngineSDK {
 #define MIN_SPHERE_STACK 2
 
   struct Triangle {
-    int v1, v2, v3;
+    int32 v1, v2, v3;
   };
 
   class giIter {
@@ -210,13 +215,13 @@ namespace giEngineSDK {
     Vector<SimpleVertex> newVertices;
 
     for (const auto & triangle : inTriangles) {
-      int v1 = triangle.v1;
-      int v2 = triangle.v2;
-      int v3 = triangle.v3;
+      int32 v1 = triangle.v1;
+      int32 v2 = triangle.v2;
+      int32 v3 = triangle.v3;
 
-      int v4 = newVertices.size();
-      int v5 = v4 + 1;
-      int v6 = v4 + 2;
+      int32 v4 = newVertices.size();
+      int32 v5 = v4 + 1;
+      int32 v6 = v4 + 2;
 
       // Calcula los puntos medios de los lados
       SimpleVertex midPoint1, midPoint2, midPoint3;
@@ -270,55 +275,12 @@ namespace giEngineSDK {
   ResourceRef
   ResourceManager::createSphere(int32 numTriangles) {
     
-    /*Vector<Vector3> subdivision_0_positions{
-        Vector3 {  0.0000000e+00,  0.0000000e+00,  1.0000000e+00 },
-        Vector3 {  8.9442718e-01,  0.0000000e+00,  4.4721359e-01 },
-        Vector3 {  2.7639320e-01,  8.5065079e-01,  4.4721359e-01 },
-        Vector3 { -7.2360682e-01,  5.2573109e-01,  4.4721359e-01 },
-        Vector3 { -7.2360682e-01, -5.2573109e-01,  4.4721359e-01 },
-        Vector3 {  2.7639320e-01, -8.5065079e-01,  4.4721359e-01 },
-        Vector3 {  7.2360682e-01,  5.2573109e-01, -4.4721359e-01 },
-        Vector3 { -2.7639320e-01,  8.5065079e-01, -4.4721359e-01 },
-        Vector3 { -8.9442718e-01,  1.0953574e-16, -4.4721359e-01 },
-        Vector3 { -2.7639320e-01, -8.5065079e-01, -4.4721359e-01 },
-        Vector3 {  7.2360682e-01, -5.2573109e-01, -4.4721359e-01 },
-        Vector3 {  0.0000000e+00,  0.0000000e+00, -1.0000000e+00 }
-    };
-
-    Vector<Vector3> subdivision_0_indices {
-        Vector3 {  0,  1,  2 },
-        Vector3 {  0,  2,  3 },
-        Vector3 {  0,  3,  4 },
-        Vector3 {  0,  4,  5 },
-        Vector3 {  0,  5,  1 },
-        Vector3 {  1,  6,  2 },
-        Vector3 {  2,  7,  3 },
-        Vector3 {  3,  8,  4 },
-        Vector3 {  4,  9,  5 },
-        Vector3 {  5, 10,  1 },
-        Vector3 {  2,  6,  7 },
-        Vector3 {  3,  7,  8 },
-        Vector3 {  4,  8,  9 },
-        Vector3 {  5,  9, 10 },
-        Vector3 {  1, 10,  6 },
-        Vector3 {  6, 11,  7 },
-        Vector3 {  7, 11,  8 },
-        Vector3 {  8, 11,  9 },
-        Vector3 {  9, 11, 10 },
-        Vector3 { 10, 11,  6 }
-    };*/
-
-
-    //Sectors = slices of the sphere.
-    //Stacks  = divisions of the slices.
-
     float radius = 1;
     uint32 sectors = MIN_SPHERE_SECTOR;
     for (int32 i = MIN_SPHERE_SECTOR; (((numTriangles) % i) == 0); i += 3) {
       sectors = i;
     }
     
-    //uint32 stacks = (((numTriangles / sectors) - 2) / 2) + 2;
     uint32 stacks = ((numTriangles) / sectors) / 2;
 
     uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
@@ -329,7 +291,6 @@ namespace giEngineSDK {
     float s, t;
 
     float sectorStep = 2 * Math::PI / sphereSectors;
-    //float stackStep = Math::PI / sphereStacks;
     float sectorAngle, stackAngle;
 
     Vector<SimpleVertex> sphereVertices;
@@ -339,7 +300,6 @@ namespace giEngineSDK {
     vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
     vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
 
-    //sphereVertices.resize((numTriangles*3) +1);
     sphereVertices.resize((sphereSectors * (sphereStacks-1))+2);
     SharedPtr<giIter> tmpIter = make_shared<giIter>();
     tmpIter->incrementIter();
@@ -354,22 +314,13 @@ namespace giEngineSDK {
     //Vertices
     for (uint32 i = 0; i < sphereStacks - 1; ++i) {
       auto phi = Math::PI * double(i + 1) / double(sphereStacks);
-      
-      /*stackAngle = Math::PI / 2 - i * stackStep;
-      xy = radius * Math::cos(stackAngle);
-      z = radius * Math::sin(stackAngle);*/
-
       for (uint32 j = 0; j < sphereSectors; ++j) {
-        //sectorAngle = j * sectorStep;
-
         sectorAngle = 2.0 * Math::PI * double(j) / double(sphereSectors);
+
+        //Vertex
         x = sin(phi) * cos(sectorAngle);
         y = cos(phi);
         z = sin(phi) * sin(sectorAngle);
-
-        //Vertex
-        //x = xy * Math::cos(sectorAngle);
-        //y = xy * Math::sin(sectorAngle);
         vertex.Pos = Vector3(x, y, z);
         //Normal
         nx = x * lengthInv;
@@ -413,29 +364,9 @@ namespace giEngineSDK {
       sphereIndices.push_back(tmpIter->getIter());
       sphereIndices.push_back(i0);
       sphereIndices.push_back(i1);
-    }
-    /*for(int32 i = 1; i <= sphereSectors; ++i) {
-      if (i < sphereSectors) {
-        sphereIndices.push_back(1);
-        sphereIndices.push_back(1 + i);
-        sphereIndices.push_back(2 + i);
-      }
-      else {
-        sphereIndices.push_back(1);
-        sphereIndices.push_back(1 + sphereSectors);
-        sphereIndices.push_back(2);
-      }
-    }
-
-    sphereIndices.push_back(sphereSectors + 2);
-    sphereIndices.push_back(sphereSectors + 1);
-    sphereIndices.push_back(2);*/
-
+    } 
 
     //Middle triangles
-    int32 tmpSize = sphereVertices.size();
-
-
     for(int32 i = 0; i < sphereStacks - 2; ++i) {
       auto i0 = i * sphereSectors + 1;
       auto i1 = (i + 1) * sphereSectors + 1;
@@ -455,105 +386,6 @@ namespace giEngineSDK {
       }
     }
 
-    //uint32 tmpIndex = tmpSize - sphereSectors;
-
-    //for(int32 i = 0; i < tmpIndex; ++i) {
-    //  
-    //  sphereIndices.push_back(i + 3);
-    //  sphereIndices.push_back(i + 2);
-    //  sphereIndices.push_back(i + sphereSectors + 2);
-
-    //  sphereIndices.push_back(i + 3);
-    //  sphereIndices.push_back(i + sphereSectors + 2);
-    //  sphereIndices.push_back(i + sphereSectors + 3);
-
-
-    //              // IDK WTF IS IT
-    //  //sphereIndices.push_back(i + 1);
-    //  //sphereIndices.push_back(sphereSectors + 2 + 1);
-    //  //sphereIndices.push_back(sphereSectors + i);
-    //  //sphereIndices.push_back(sphereSectors + 1 + i);
-    //  //sphereIndices.push_back(sphereSectors + 2 + i);
-    //  //sphereIndices.push_back((sphereSectors *2) + 1 + i);
-    //}
-
-    //uint32 k1,k2;
-    //for(int32 i = 0; i < sphereStacks - 1; ++i) {
-    //  k1 = (i * sphereSectors);
-    //  k2 = k1 + sphereSectors;
-    //  for(int32 j = 0; j < sphereSectors; ++j, ++k1, ++k2) { 
-    //    //if (i != 0) {
-    //      sphereIndices.push_back(k1);
-    //      sphereIndices.push_back(k2);
-    //      sphereIndices.push_back(k1 + 1);
-    //    //}
-    //    //if (i != (sphereStacks)) {
-    //      sphereIndices.push_back(k1 + 1);
-    //      sphereIndices.push_back(k2);
-    //      sphereIndices.push_back(k2 + 1);
-    //    //}
-    //  }
-    //}
-
-    /*
-    uint32 k1,k2;
-    for(int32 i = 0; i < sphereStacks - 1; ++i) {
-      k1 = (i * sphereSectors) + 1;
-      k2 = k1 + sphereSectors;
-      for(int32 j = 0; j < sphereSectors; ++j, ++k1, ++k2) { 
-        if (i != 0) {
-          sphereIndices.push_back(k1);
-          sphereIndices.push_back(k2);
-          sphereIndices.push_back(k1 + 1);
-        }
-
-        if (i != (sphereStacks)) {
-          sphereIndices.push_back(k1 + 1);
-          sphereIndices.push_back(k2);
-          sphereIndices.push_back(k2 + 1);
-        }
-      }
-    }
-    */
-    /*uint32 k1, k2;
-    for (uint32 i = 1; i < sphereStacks-1; ++i) {
-      k1 = i * (sphereSectors + 1);
-      k2 = k1 + sphereSectors + 1;
-
-      for (uint32 j = 1; j < sphereSectors-1; ++j, ++k1, ++k2) {
-        if (i != 0) {
-          sphereIndices.push_back(k1);
-          sphereIndices.push_back(k2);
-          sphereIndices.push_back(k1 + 1);
-        }
-
-        if (i != (sphereStacks - 1)) {
-          sphereIndices.push_back(k1 + 1);
-          sphereIndices.push_back(k2);
-          sphereIndices.push_back(k2 + 1);
-        }
-      }*/
-
-
-    
-    //int32 tmpSize = sphereVertices.size();
-
-    //Last triangles with the last vertex.
-    /*for(int32 i = 1; i <= sphereSectors; ++i) {
-      if (i < sphereSectors) {
-        sphereIndices.push_back(tmpSize);
-        sphereIndices.push_back(tmpSize - i);
-        sphereIndices.push_back(tmpSize - i - 1);
-      }
-      else {
-        sphereIndices.push_back(tmpSize);
-        sphereIndices.push_back(tmpSize - sphereSectors);
-        sphereIndices.push_back(tmpSize - 1);
-      }
-    }*/
-
-
-
     sphereTextures.push_back(m_missingTextureRef);
     Vector<SharedPtr<Mesh>> tmpMeshes;
     tmpMeshes.reserve(1);
@@ -567,6 +399,51 @@ namespace giEngineSDK {
     auto tmpRef = createModelFromMem(tmpMeshes, tmpMaterials);
 
     return tmpRef;
+
+  }
+
+  void 
+  ResourceManager::createQuadSphere(int32 inNumSubdivisions) {
+    auto& configs = g_engineConfigs();
+    // choose coordinates on the unit sphere
+    float a = 1.0f / sqrt(3.0f);
+
+    pmp::SurfaceMesh tmpPMPMesh;
+    
+    // add the 8 vertices
+    auto v0 = tmpPMPMesh.add_vertex(pmp::Point(-a, -a, -a));
+    tmpPMPMesh.add_vertex_property("v:normal", pmp::Normal(1.f, 1.f, 1.f));
+    tmpPMPMesh.add_halfedge_property("h:tex", pmp::TexCoord(1.f, 1.f));
+
+    auto v1 = tmpPMPMesh.add_vertex(pmp::Point(a, -a, -a));
+    auto v2 = tmpPMPMesh.add_vertex(pmp::Point(a, a, -a));
+    auto v3 = tmpPMPMesh.add_vertex(pmp::Point(-a, a, -a));
+    auto v4 = tmpPMPMesh.add_vertex(pmp::Point(-a, -a, a));
+    auto v5 = tmpPMPMesh.add_vertex(pmp::Point(a, -a, a));
+    auto v6 = tmpPMPMesh.add_vertex(pmp::Point(a, a, a));
+    auto v7 = tmpPMPMesh.add_vertex(pmp::Point(-a, a, a));
+
+    tmpPMPMesh.add_quad(v3, v2, v1, v0);
+    tmpPMPMesh.add_quad(v2, v6, v5, v1);
+    tmpPMPMesh.add_quad(v5, v6, v7, v4);
+    tmpPMPMesh.add_quad(v0, v4, v7, v3);
+    tmpPMPMesh.add_quad(v3, v7, v6, v2);
+    tmpPMPMesh.add_quad(v1, v5, v4, v0);
+
+
+    for(int32 i = 1; i <= inNumSubdivisions; i++){
+      catmull_clark_subdivision(tmpPMPMesh);
+    }
+
+    pmp::IOFlags tmpFlags;
+    tmpFlags.use_vertex_texcoords = true;
+    tmpFlags.use_vertex_normals = true;
+    tmpFlags.use_halfedge_texcoords = true;
+
+    Path tmpPath = configs.s_generatedPath.string() + "sphere.obj";
+    
+    pmp::write_giAMR(tmpPMPMesh, tmpPath, tmpFlags);
+    Exporter::ExportMtl(tmpPath);
 
   }
 

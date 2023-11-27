@@ -16,13 +16,6 @@
 #include <assimp/Exporter.hpp>      // C++ exporter interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
-
-#include <OpenMesh/Core/IO/Options.hh>
-#include <OpenMesh/Core/IO/OMFormat.hh>
-#include <OpenMesh/Core/IO/writer/OMWriter.hh>
-#include <OpenMesh/Core/IO/MeshIO.hh>
-#include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
-
 #include "giBaseConfig.h"
 #include "giSceneGraph.h"
 #include "giSceneNode.h"
@@ -30,9 +23,6 @@
 #include "giModel.h"
 #include "giMesh.h"
 #include "giCamera.h"
-
-typedef OpenMesh::TriMesh_ArrayKernelT<>  MyMesh;
-
 namespace giEngineSDK {
 
 
@@ -195,65 +185,65 @@ namespace giEngineSDK {
   Encoder::exportModelFromMem(Path inPath, ResourceRef inModel) {
     auto& RM = g_resourceManager();
 
-    MyMesh outMesh;
+    //MyMesh outMesh;
 
-    //Get the geometry.
+    ////Get the geometry.
 
-    auto tmpResource = RM.getResource(inModel.m_id);
+    //auto tmpResource = RM.getResource(inModel.m_id);
 
-    auto tmpModel = static_pointer_cast<Model>(tmpResource.lock());
+    //auto tmpModel = static_pointer_cast<Model>(tmpResource.lock());
 
-    auto& tmpVertex = tmpModel->m_meshes.at(0)->m_vertexVector;
+    //auto& tmpVertex = tmpModel->m_meshes.at(0)->m_vertexVector;
 
-    auto& tmpIndex = tmpModel->m_meshes.at(0)->m_facesList;
-    
-    outMesh.request_vertex_texcoords2D();
-    outMesh.request_vertex_normals();
-    outMesh.request_face_colors();
+    //auto& tmpIndex = tmpModel->m_meshes.at(0)->m_facesList;
+    //
+    //outMesh.request_vertex_texcoords2D();
+    //outMesh.request_vertex_normals();
+    //outMesh.request_face_colors();
 
-    //Set the vertex data.
-    const int32 a = tmpVertex.size();
-    Vector<MyMesh::VertexHandle> vhadle;
-    vhadle.reserve(a);
+    ////Set the vertex data.
+    //const int32 a = tmpVertex.size();
+    //Vector<MyMesh::VertexHandle> vhadle;
+    //vhadle.reserve(a);
 
-    for (int32 i = 0; i < a; ++i) {
-      vhadle.push_back(outMesh.add_vertex(MyMesh::Point(tmpVertex[i].Pos.x, 
-                                                        tmpVertex[i].Pos.y, 
-                                                        tmpVertex[i].Pos.z)));
-    }
+    //for (int32 i = 0; i < a; ++i) {
+    //  vhadle.push_back(outMesh.add_vertex(MyMesh::Point(tmpVertex[i].Pos.x, 
+    //                                                    tmpVertex[i].Pos.y, 
+    //                                                    tmpVertex[i].Pos.z)));
+    //}
 
-    for (int32 i = 0; i < a; ++i) {
-      //Add the normals 
-      outMesh.set_normal(vhadle.at(i), MyMesh::Normal(tmpVertex[i].Nor.x, tmpVertex[i].Nor.y, tmpVertex[i].Nor.z));
-    }
+    //for (int32 i = 0; i < a; ++i) {
+    //  //Add the normals 
+    //  outMesh.set_normal(vhadle.at(i), MyMesh::Normal(tmpVertex[i].Nor.x, tmpVertex[i].Nor.y, tmpVertex[i].Nor.z));
+    //}
 
-    for (int32 i = 0; i < a; ++i) {
-      //Add the Texcoords 
-      outMesh.set_texcoord2D(vhadle.at(i), MyMesh::TexCoord2D(tmpVertex[i].Tex.x, tmpVertex[i].Tex.y));
-    }
+    //for (int32 i = 0; i < a; ++i) {
+    //  //Add the Texcoords 
+    //  outMesh.set_texcoord2D(vhadle.at(i), MyMesh::TexCoord2D(tmpVertex[i].Tex.x, tmpVertex[i].Tex.y));
+    //}
 
-    //Set the indices data
-    Vector<MyMesh::VertexHandle> faceVhandles;
-    for(int32 i = 0; i+3 <= tmpIndex.size(); i += 3) {
-      faceVhandles.clear();
-      faceVhandles.push_back(vhadle.at(tmpIndex.at(i)));
-      faceVhandles.push_back(vhadle.at(tmpIndex.at(i+1)));
-      faceVhandles.push_back(vhadle.at(tmpIndex.at(i+2)));
-      outMesh.add_face(faceVhandles);
-    }
+    ////Set the indices data
+    //Vector<MyMesh::VertexHandle> faceVhandles;
+    //for(int32 i = 0; i+3 <= tmpIndex.size(); i += 3) {
+    //  faceVhandles.clear();
+    //  faceVhandles.push_back(vhadle.at(tmpIndex.at(i)));
+    //  faceVhandles.push_back(vhadle.at(tmpIndex.at(i+1)));
+    //  faceVhandles.push_back(vhadle.at(tmpIndex.at(i+2)));
+    //  outMesh.add_face(faceVhandles);
+    //}
 
-    //Add the mtl file
-    MyMesh::FaceIter f_it, f_end = outMesh.faces_end();
-    for (f_it = outMesh.faces_begin(); f_it != f_end; ++f_it) {
-      outMesh.set_color(*f_it, MyMesh::Color(255, 255, 255));
-    }
+    ////Add the mtl file
+    //MyMesh::FaceIter f_it, f_end = outMesh.faces_end();
+    //for (f_it = outMesh.faces_begin(); f_it != f_end; ++f_it) {
+    //  outMesh.set_color(*f_it, MyMesh::Color(255, 255, 255));
+    //}
 
-    OpenMesh::IO::Options opt;
-    opt += OpenMesh::IO::Options::VertexNormal;
-    opt += OpenMesh::IO::Options::VertexTexCoord;
-    opt += OpenMesh::IO::Options::FaceColor;
-    
-    OpenMesh::IO::write_mesh(outMesh, inPath.string(), opt);
+    //OpenMesh::IO::Options opt;
+    //opt += OpenMesh::IO::Options::VertexNormal;
+    //opt += OpenMesh::IO::Options::VertexTexCoord;
+    //opt += OpenMesh::IO::Options::FaceColor;
+    //
+    //OpenMesh::IO::write_mesh(outMesh, inPath.string(), opt);
   }
 
   static void

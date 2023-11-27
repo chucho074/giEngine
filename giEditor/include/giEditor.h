@@ -154,4 +154,5 @@ class Editor
    //To change
    Path m_savingPath;
 
+   int32 m_Subdiv = 0;
 };

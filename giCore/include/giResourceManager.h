@@ -127,9 +127,18 @@ namespace giEngineSDK {
     void
     renderResource(ResourceRef inReference);
 
+    /**
+     * @brief    .
+     * @param    inFile        .
+     */
     void 
     createData(FILE& inFile);
 
+    /**
+     * @brief    .
+     * @param    inPath        .
+     * @param    inModel       .
+     */
     void
     exportModel(Path inPath, ResourceRef inModel);
 
@@ -142,16 +151,28 @@ namespace giEngineSDK {
     void
     saveFile(FILE& inFile);
     
-
+    /**
+     * @brief 
+     * @param    inFile 
+     * @return   Returns .
+     */
     ModelInfo
     getFromFile(FILE& inFile);
 
-
-    /*ResourceRef
-    createSphere(float radius, uint32 sectors, uint32 stacks);*/
-
+    /**
+     * @brief 
+     * @param    numTriangles 
+     * @return   Returns .
+     */
     ResourceRef
     createSphere(int32 numTriangles);
+
+    /**
+     * @brief    .
+     * @return   Returns .
+     */
+    void
+    createQuadSphere(int32 inNumSubdivisions);
 
    public:
 

@@ -26,13 +26,13 @@
     <Filter Include="Source Files\FileSystem">
       <UniqueIdentifier>{31f40f7a-7d9b-469e-9471-d881671dabbf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Platform Scpecifics">
+    <Filter Include="Source Files\Platform Specifics">
       <UniqueIdentifier>{3d016293-9c21-4fe7-9f9b-e0b0b1cd1bda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Platform Scpecifics\Windows">
+    <Filter Include="Source Files\Platform Specifics\Windows">
       <UniqueIdentifier>{59bbf226-27fa-44f2-b77c-5f414b8db52b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Platform Scpecifics\Base">
+    <Filter Include="Source Files\Platform Specifics\Base">
       <UniqueIdentifier>{8b60036b-983e-4496-89dc-684dfdc1373b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -89,7 +89,7 @@
       <Filter>Source Files\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\giWindowsImplementations.cpp">
-      <Filter>Source Files\Platform Scpecifics\Windows</Filter>
+      <Filter>Source Files\Platform Specifics\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,13 +169,13 @@
       <Filter>Source Files\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="include\giBaseImplementations.h">
-      <Filter>Source Files\Platform Scpecifics\Base</Filter>
+      <Filter>Source Files\Platform Specifics\Base</Filter>
     </ClInclude>
     <ClInclude Include="include\giWindowsImplementations.h">
-      <Filter>Source Files\Platform Scpecifics\Windows</Filter>
+      <Filter>Source Files\Platform Specifics\Windows</Filter>
     </ClInclude>
     <ClInclude Include="include\giSpecificImplementations.h">
-      <Filter>Source Files\Platform Scpecifics\Base</Filter>
+      <Filter>Source Files\Platform Specifics\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

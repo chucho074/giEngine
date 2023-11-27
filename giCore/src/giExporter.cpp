@@ -70,24 +70,30 @@ namespace giEngineSDK {
       }
       tmpOut += faces;
     }
+    ofstream fout(inPath.string());
+    fout << tmpOut;
 
-    //To change
+    ExportMtl(inPath);
+  }
 
+
+  void 
+  Exporter::ExportMtl(Path inPath) {
+
+    String tmpOutMtl;
+    
     //Material data
     tmpOutMtl += "newmtl mat0\n";
     tmpOutMtl += "illum 4\n";
 
-    tmpOutMtl += ("Kd "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Ks "+ toString(0.90)+ " "+ toString(0.90)+ " "+ toString(0.90)+"\n");
-    tmpOutMtl += ("Ka "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Tf "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Ni "+ toString(1.00)+"\n");
-    
+    tmpOutMtl += ("Kd " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Ks " + toString(0.90) + " " + toString(0.90) + " " + toString(0.90) + "\n");
+    tmpOutMtl += ("Ka " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Tf " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Ni " + toString(1.00) + "\n");
+
 
     //Write files
-    ofstream fout(inPath.string());
-    fout << tmpOut;
-    
     Path tmpMtlPath = inPath;
     tmpMtlPath.replace_extension(".mtl");
 
