@@ -115,7 +115,6 @@ namespace giEngineSDK {
     
     YAML::Emitter tmpOut;
 
-
     //Models
     if (EXTENSION_TYPE::E::kFBX == inFile.m_extension
       || EXTENSION_TYPE::E::k3DS == inFile.m_extension
