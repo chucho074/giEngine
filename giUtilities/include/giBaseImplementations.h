@@ -41,5 +41,6 @@ namespace giEngineSDK {
     };
 
     static inline const char* m_fileFilters = "All\0*.*\0Text\0*.txt\0giEngine Scenes\0*.giScene\0";
+    static inline const char* m_fileFiltersProject = "giEngine Projects\0*.giProject\0";
   };
 }

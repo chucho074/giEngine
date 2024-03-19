@@ -86,20 +86,22 @@ ContentBrowser::render() {
       tmpTreeCount++;
       //if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
         if(root_open) {
-          for(auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
-            auto& tmpPath = tmpIterator.path();
-            String tmpName = tmpPath.stem().string();
-            if (tmpIterator.is_directory()) {
-              bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount, 
-                                                 base_flags, 
-                                                 tmpName.c_str());
-  
-              GI_UNREFERENCED_PARAMETER(node_open);
-  
-              //ImGui::TreePop();
-  
+          if (!m_workingDirectory.empty()) {
+            for (auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
+              auto& tmpPath = tmpIterator.path();
+              String tmpName = tmpPath.stem().string();
+              if (tmpIterator.is_directory()) {
+                bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount,
+                  base_flags,
+                  tmpName.c_str());
+
+                GI_UNREFERENCED_PARAMETER(node_open);
+
+                //ImGui::TreePop();
+
+              }
+              tmpTreeCount++;
             }
-            tmpTreeCount++;
           }
         }
       //}
@@ -135,82 +137,84 @@ ContentBrowser::render() {
         ImGui::TableNextColumn();
     
         //Iterate in directory
-        for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
-    
-          const auto& tmpPath = tmpIterator.path();
-          auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
-          String relativePathString = relativePath.filename().string();
-          bool tmpIsDir = false;
-          SharedPtr<Texture> tmpTexture;
-          String tmpExtension= tmpPath.extension().string();
-          //Show Folders
-          if (tmpIterator.is_directory()) {
-            tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
-            tmpIsDir = true;
-          }
-    
-          //Show files
-          else {
-            if (tmpExtension == ".obj") {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_objIcon.m_id).lock());
-            }
-    
-            else if (tmpExtension == ".fbx") {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fbxIcon.m_id).lock());
-            }
-    
-            else if (tmpExtension == ".mtl") {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_mtlIcon.m_id).lock());
+        if (!m_currentDirectory.empty()) {
+          for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
+
+            const auto& tmpPath = tmpIterator.path();
+            auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
+            String relativePathString = relativePath.filename().string();
+            bool tmpIsDir = false;
+            SharedPtr<Texture> tmpTexture;
+            String tmpExtension = tmpPath.extension().string();
+            //Show Folders
+            if (tmpIterator.is_directory()) {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
+              tmpIsDir = true;
             }
 
-            else if (tmpExtension == ".png") {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_pngIcon.m_id).lock());
-            }
-
-            else if (tmpExtension == ".jpg") {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_jpgIcon.m_id).lock());
-            }
-    
+            //Show files
             else {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fileIcon.m_id).lock());
-            }
-          }
-          
-          //Shows the data if its sets any image
-          if (tmpTexture) {
-            if (ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
-                                   {tmpThumbnailSize, tmpThumbnailSize })) {
-              //Enter to the folder
-              if (tmpIsDir) {  
-                m_currentDirectory /= tmpPath.filename();
+              if (tmpExtension == ".obj") {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_objIcon.m_id).lock());
               }
-              //If is a file
-              else if (tmpExtension == ".obj") {
-                ImGui::OpenPopupOnItemClick("file popup", ImGuiPopupFlags_MouseButtonRight);
+
+              else if (tmpExtension == ".fbx") {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fbxIcon.m_id).lock());
+              }
+
+              else if (tmpExtension == ".mtl") {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_mtlIcon.m_id).lock());
+              }
+
+              else if (tmpExtension == ".png") {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_pngIcon.m_id).lock());
+              }
+
+              else if (tmpExtension == ".jpg") {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_jpgIcon.m_id).lock());
+              }
+
+              else {
+                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fileIcon.m_id).lock());
               }
             }
 
-            //Pop up menus for files.
-            if (tmpExtension == ".obj") {
-              if (ImGui::BeginPopupContextItem("file popup")) {
-                if (ImGui::Button("Create data / JUST TESTING")) {
-                  FILE tmpFile(tmpPath);
-                  RM.createData(tmpFile);
+            //Shows the data if its sets any image
+            if (tmpTexture) {
+              if (ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
+                { tmpThumbnailSize, tmpThumbnailSize })) {
+                //Enter to the folder
+                if (tmpIsDir) {
+                  m_currentDirectory /= tmpPath.filename();
                 }
-                if (ImGui::Button("Use giAMR in this model")) {
-                  amr.setRefMesh(tmpPath);
-                  //RM.exportModel(tmpPath, ResourceRef());
+                //If is a file
+                else if (tmpExtension == ".obj") {
+                  ImGui::OpenPopupOnItemClick("file popup", ImGuiPopupFlags_MouseButtonRight);
                 }
-                ImGui::EndPopup();
               }
-            }
 
-            ImGui::Text(relativePathString.c_str());
+              //Pop up menus for files.
+              if (tmpExtension == ".obj") {
+                if (ImGui::BeginPopupContextItem("file popup")) {
+                  if (ImGui::Button("Create data / JUST TESTING")) {
+                    FILE tmpFile(tmpPath);
+                    RM.createData(tmpFile);
+                  }
+                  if (ImGui::Button("Use giAMR in this model")) {
+                    amr.setRefMesh(tmpPath);
+                    //RM.exportModel(tmpPath, ResourceRef());
+                  }
+                  ImGui::EndPopup();
+                }
+              }
+
+              ImGui::Text(relativePathString.c_str());
+            }
+            ImGui::TableNextColumn();
+
           }
-          ImGui::TableNextColumn();
-    
+
         }
-    
         ImGui::Columns(1);
         ImGui::EndTable();
       }

@@ -19,7 +19,7 @@ namespace giEngineSDK {
 
     /**
      * @brief    For opens the open file dialog.
-     * @param    inWindowHandle The handle of the appp window.
+     * @param    inWindowHandle The handle of the app window.
      * @return   Returns the path of the file selected in the dialog.
      */
     static String 
@@ -32,6 +32,13 @@ namespace giEngineSDK {
      */
     static String 
     saveFileDialog(void* inWindowHandle, const char* inFilters = " ");
+
+    /**
+     * @brief    For selecting a folder to use in a dialog.
+     * @return   The selected path.
+     */
+    static Path
+    selectFolderDialog();
     
   };
 }

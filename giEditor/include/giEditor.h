@@ -149,7 +149,7 @@ class Editor
    bool m_renderCamera = true;
 
    //The window for creation/selection of projects.
-   bool m_renderProjectSelection = false;
+   bool m_renderProjectSelection = true;
 
    //To change
    Path m_savingPath;

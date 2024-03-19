@@ -16,11 +16,11 @@
 Vector2i EngineConfigs::s_resolution = Vector2i(1280, 720);
 bool EngineConfigs::s_fullscreen = false;
 bool EngineConfigs::s_maximized = true;
-String EngineConfigs::s_projectName = "giTestProject";
+String EngineConfigs::s_projectName = "";
 GIENGINE_API::E EngineConfigs::s_activeGraphicApi = GIENGINE_API::kDX11;
-Path EngineConfigs::s_projectPath = ("G:/Dev/giTestProject");
-Path EngineConfigs::s_contentPath = ("G:/Dev/giTestProject/content");
-Path EngineConfigs::s_generatedPath = ("G:/Dev/giEngine/bin/Resources/Models/Generated/");
+Path EngineConfigs::s_projectPath = ("");
+Path EngineConfigs::s_contentPath = ("");
+Path EngineConfigs::s_generatedPath = ("Resources/Models/Generated/");
 
 //Plugins
 Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;

@@ -195,12 +195,12 @@ Editor::render() {
     ImGui::End();
   }
 
-  ImGui::Begin("Material", nullptr, ImGuiWindowFlags_NoTitleBar
+  /*ImGui::Begin("Material", nullptr, ImGuiWindowFlags_NoTitleBar
                | ImGuiWindowFlags_NoCollapse
                | ImGuiWindowFlags_NoScrollbar); {
 
     ImGui::End();
-  }
+  }*/
 
   //Render the content Browser.
   m_contentBrowser->render();
@@ -228,6 +228,7 @@ Editor::render() {
 
   //Renders the camera movement window if is active.
   if (m_renderProjectSelection) {
+    ImGui::OpenPopup("Project Creation/Selection");
     renderProjectCreationSelection();
   }
 
@@ -347,61 +348,68 @@ Editor::renderProjectCreationSelection() {
   auto& RM = g_resourceManager();
   
   bool* tmpValue = &m_renderProjectSelection;
+  ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+  ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+  ImGui::SetNextWindowSize({configs.s_resolution.x/3.f, configs.s_resolution.y/3.f});
+  if(ImGui::BeginPopupModal("Project Creation/Selection", tmpValue, ImGuiWindowFlags_AlwaysAutoResize
+                                                                    | ImGuiWindowFlags_NoMove)) {
   
-  ImGui::Begin("Project Creation/Selection", tmpValue, ImGuiWindowFlags_NoScrollbar 
-                                                       | ImGuiWindowFlags_NoDocking
-                                                       | ImGuiWindowFlags_NoCollapse);
-  
-  ImGui::Text("Actual Path for Save:");
+    ImGui::Text("New project:");
 
-  ImGui::SameLine();
+    ImGui::SameLine();
 
-  ImGui::Text(m_savingPath.string().c_str());
-  
-  ImGui::SameLine();
-
-  if(ImGui::Button("Search", {55, 25})) {
-    m_savingPath = FileDialogs::saveFileDialog(m_windowsHandle, 
-                                               "giEngine Projects\0*.giProject\0");
-    
-    if (!m_savingPath.empty()) {
-      configs.s_projectName = m_savingPath.stem().string().c_str();
-      configs.s_projectPath = m_savingPath;
-    }
-  }
-
-  //Create a new file // when is a class, make this a function to create the file type.
-  //if(!FileSystem::exist(m_savingPath)){
-    if(ImGui::Button("Create", {55, 25})) {
+    if (ImGui::Button("Create", { 55, 25 })) {
+      m_savingPath = FileDialogs::saveFileDialog(m_windowsHandle,
+                                                 "giEngine Projects\0*.giProject\0");
+      m_savingPath = m_savingPath.string() + ".giProject";
       if (!m_savingPath.empty()) {
+        //Change the paths
+        m_contentBrowser->changeWorkingDir(m_savingPath.parent_path());
+        configs.s_projectName = m_savingPath.stem().string().c_str();
+        configs.s_projectPath = m_savingPath;
+        configs.s_contentPath = configs.s_projectPath.string() + "/content";
+        //Send it to the file.
         FILE tmpFile(m_savingPath);
         RM.saveFile(tmpFile);
-        m_contentBrowser->changeWorkingDir(m_savingPath.parent_path());
         m_renderProjectSelection = !m_renderProjectSelection;
       }
     }
-  //}
 
-  //Opens a file.
-  if(ImGui::Button("Open", {55, 25})) {
-    if (!m_savingPath.empty()) {
-      FILE tmpFile(m_savingPath);
-      RM.readFromFile(tmpFile);
-      m_contentBrowser->changeWorkingDir(m_savingPath.parent_path());
-      m_renderProjectSelection = !m_renderProjectSelection;
+    ImGui::Text("Actual Path for Save:");
 
+    ImGui::SameLine();
+
+    ImGui::Text(m_savingPath.string().c_str());
+
+    ImGui::Separator();
+    //Create a new file // when is a class, make this a function to create the file type.
+    ImGui::Text("Open a project:");
+
+    ImGui::SameLine();
+
+    //Opens a file.
+    if (ImGui::Button("Open", { 55, 25 })) {
+      m_savingPath = FileDialogs::openFileDialog(m_windowsHandle);
+      if (!m_savingPath.empty()) {
+        FILE tmpFile(m_savingPath);
+        RM.readFromFile(tmpFile);
+        m_contentBrowser->changeWorkingDir(configs.s_projectPath.parent_path());
+        m_renderProjectSelection = !m_renderProjectSelection;
+
+      }
     }
-  }
 
-  //Save & save as
+    
+
+    //Save & save as
   //Verify if the project is created.
   //If the project is created, search for the scene with a same name in the folder.
   //If the project is not created & there is no saving path, create the project file and
   //present the save dialog for the actual scene.
 
-  //Set as a modal in the engine.
-
-  ImGui::End();
+    //Set as a modal in the engine.
+    ImGui::EndPopup();
+  }
 }
 
 void

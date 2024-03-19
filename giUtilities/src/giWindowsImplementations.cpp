@@ -14,6 +14,8 @@
 #include <windows.h>
 #endif
 
+#include <shlobj_core.h>
+
 namespace giEngineSDK {
   
   String 
@@ -25,7 +27,7 @@ namespace giEngineSDK {
     ofn.hwndOwner = (HWND)inWindowHandle;
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = sizeof(szFile);
-    ofn.lpstrFilter = m_fileFilters;
+    ofn.lpstrFilter = m_fileFiltersProject;
     ofn.nFilterIndex = 1;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
@@ -58,6 +60,28 @@ namespace giEngineSDK {
       return ofn.lpstrFile;
     }
     return String();
+  }
+
+  Path 
+  WindowsFileDialogs::selectFolderDialog() {
+    BROWSEINFO bi = { 0 };
+    bi.lpszTitle = "Browse folder";
+    LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
+
+    if (pidl != NULL)
+    {
+      TCHAR tszPath[MAX_PATH] = "\0";
+
+      if (SHGetPathFromIDList(pidl, tszPath) == TRUE) {
+        //AfxMessageBox(tszPath);
+        Path tmpPath = tszPath;
+        return tmpPath;
+      }
+
+      CoTaskMemFree(pidl);
+    }
+
+    return Path();
   }
 
 }
