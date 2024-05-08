@@ -4,21 +4,17 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    01/02/2021
  * @brief   A basic Radians.
- * @bug     No known Bugs.
  */
 
 /**
-  * @include
-  */
+ * @include
+ */
 #pragma once
 
 #include "giPrerequisitesUtilities.h"
 
-
-
 /**
- * @class    Radians.
- * @bug      No known Bugs.
+ * @class    Radians. 
  */
 namespace giEngineSDK {
 

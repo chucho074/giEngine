@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/03/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -17,8 +16,7 @@
 namespace giEngineSDK {
   /**
    * @class    FileSystem.
-   * @brief    File Writer and reader.
-   * @bug      No known Bugs.
+   * @brief    File Writer and reader.   
    */
   class FileSystem
   {

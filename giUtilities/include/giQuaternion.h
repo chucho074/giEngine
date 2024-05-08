@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    04/06/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -21,8 +20,7 @@ namespace giEngineSDK {
 
   /**
    * @class    Quaternion.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT Quaternion
   {

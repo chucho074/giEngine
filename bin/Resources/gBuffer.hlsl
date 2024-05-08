@@ -44,27 +44,21 @@ struct PS_OUTPUT
 PS_INPUT VS_GBUFFER(VS_INPUT inVS) 
 {
   PS_INPUT output;
-  matrix WorldView = mul(World, View);
+  matrix WorldViewProj = mul(mul(World, View), Projection);
   
-  //Position View
-  float4 posView = mul(float4(inVS.Position.xyz, 1.0f), WorldView);
-  output.PosView = posView;
+  // Position
+  output.Position = mul(float4(inVS.Position, 1.0f), WorldViewProj);
   
-  //Position
-  output.Position = mul(posView, Projection);
+  // PosView
+  output.PosView = mul(float4(inVS.Position, 1.0f), mul(World, View)).xyz;
   
-  //Normal
-  float3 normal = normalize(mul(float4(inVS.Normal.xyz, 0.0f), WorldView).xyz);
+  // Normal, Tangent, BiNormal
+  output.TBN = float3x3(normalize(mul(inVS.Tangent, World).xyz),
+                         normalize(mul(inVS.BiNormal, World).xyz),
+                         normalize(mul(inVS.Normal, World).xyz));
   
-  //BiNormal
-  float3 binormal = normalize(mul(float4(inVS.BiNormal.xyz, 0.0f), WorldView).xyz);
-  
-  //Tangent
-  float3 tangent = normalize(mul(float4(inVS.Tangent.xyz, 0.0f), WorldView).xyz);
-
-  //TexCoord
+  // TexCoord
   output.TexCoord = inVS.TexCoord;
-  output.TBN = float3x3(tangent.xyz, binormal.xyz, normal.xyz);
   
   return output;
 }

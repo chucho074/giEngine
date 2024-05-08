@@ -4,32 +4,38 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    17/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #include "giStaticMesh.h"
+#include "giResourceManager.h"
 
 namespace giEngineSDK {
   
-  void 
+  StaticMesh::~StaticMesh() {
+    destroy();
+  }
+
+  void
   StaticMesh::update(float inDeltaTime) {
-    
+    GI_UNREFERENCED_PARAMETER(inDeltaTime);
   }
 
   void 
   StaticMesh::render() {
-    m_model->drawModel();
+    auto& RM = g_resourceManager();
+
+    RM.renderResource(m_model);
   }
   
   void 
-  StaticMesh::setModel(SharedPtr<Model> inModel) {
-    m_model = inModel;
+  StaticMesh::destroy() {
+    
   }
-  
-  SharedPtr<Model> 
+
+  ResourceRef
   StaticMesh::getModel() {
       return m_model;
   }

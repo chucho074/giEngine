@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/11/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -18,8 +17,7 @@
 namespace giEngineSDK {
   /**
    * @class    ViewportDX.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class ViewportDX final : public BaseViewport
   {

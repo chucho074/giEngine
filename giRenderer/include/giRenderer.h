@@ -1,10 +1,9 @@
 /**
  * @file    giRenderer.h
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -12,8 +11,10 @@
  */
 #pragma once
 #include <giBaseRenderer.h>
+#include <giResourceManager.h>
 #include <giCamera.h>
 #include <giVector2i.h>
+#include <giVector3i.h>
 #include "giPrerequisitesRenderer.h"
 
 namespace giEngineSDK {
@@ -28,8 +29,7 @@ namespace giEngineSDK {
 namespace giEngineSDK {
   /**
    * @struct   CameraConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct CameraConstantBuffer {
     Matrix4 mView;
@@ -38,19 +38,17 @@ namespace giEngineSDK {
 
   /**
    * @struct   CBChangesEveryFrame.
-   * @brief    The Changes Every Frames Constant Buffer.
-   * @bug      No known Bugs.
+   * @brief    The Changes Every Frames Constant Buffer.   
    */
   struct CBChangesEveryFrame {
     Matrix4 mWorld;
-    //Vector4 vMeshColor;
+    Vector4 vMeshColor;
   };
 
 
   /**
    * @struct   SSAOConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct SSAOConstantBuffer {
     float SampleRadius;
@@ -58,12 +56,12 @@ namespace giEngineSDK {
     float Scale;
     float Bias;
     Vector2 TextureSize;
-    Vector2 kk;
+    Vector2 empty;
   };
+
   /**
    * @struct   LightConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct LightConstantBuffer {
     Vector3 LightPos;
@@ -74,8 +72,7 @@ namespace giEngineSDK {
 
   /**
    * @struct   BlurConstantBuffer.
-   * @brief    The Camera constant buffer.
-   * @bug      No known Bugs.
+   * @brief    The Camera constant buffer.   
    */
   struct BlurConstantBuffer {
     Vector2 Viewport;   
@@ -113,7 +110,7 @@ namespace giEngineSDK {
     render() override;
 
     /**
-     * brief
+     * brief     .
      */
     void
     renderData(Vector<SharedPtr<Texture2D>> inRendertarget,
@@ -128,7 +125,7 @@ namespace giEngineSDK {
                bool inClear = true);
 
     /**
-     * @brief
+     * @brief    .
      */
     void 
     dispatchData(Vector<SharedPtr<Buffer>> inConstantBuffers,
@@ -136,7 +133,7 @@ namespace giEngineSDK {
                  Vector<SharedPtr<Texture2D>> inShaderResources,
                  Vector<SharedPtr<Texture2D>> inUAVS,
                  SharedPtr<SamplerState> inSampler,
-                 Vector3 inDispatch);
+                 Vector3i inDispatch);
     /**
      * @brief    .
      */
@@ -149,6 +146,9 @@ namespace giEngineSDK {
 
     void 
     setTransform(Matrix4 inTransformation) override;
+
+    void
+    resize(int32 inW, int32 inH) override;
 
     //The main camera 
     SharedPtr<Camera> m_mainCamera;
@@ -195,9 +195,6 @@ namespace giEngineSDK {
     SharedPtr<Buffer> m_cBufferSSAO;
     
     Vector<SharedPtr<Texture2D>> m_SSAOTexture;
-
-    //SAQ
-    SharedPtr<Model> m_SAQ;
 
                 //Blur
     //The Vertex Shader

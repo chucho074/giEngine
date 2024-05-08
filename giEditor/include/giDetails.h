@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/06/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -52,7 +51,9 @@ class Details
   destroy();
 
  private:
- 
+  
   ImGuiWindowFlags m_windowFlags = 0;
   
+  bool m_scaleBlock = true;
+
 };

@@ -4,25 +4,23 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #pragma once
-
 #include <giBaseApp.h>
 #include "giEditor.h"
 
 using giEngineSDK::Buffer;
 using giEngineSDK::Vector4;
 using giEngineSDK::Matrix4;
+using giEngineSDK::FILE;
 
 /**
  * @struct   CameraConstantBuffer.
- * @brief    The Camera constant buffer.
- * @bug      No known Bugs.
+ * @brief    The Camera constant buffer. 
  */
 struct CameraConstantBuffer {
   Matrix4 mView;
@@ -31,8 +29,7 @@ struct CameraConstantBuffer {
 
 /**
  * @struct   CBChangesEveryFrame.
- * @brief    The Changes Every Frames Constant Buffer.
- * @bug      No known Bugs.
+ * @brief    The Changes Every Frames Constant Buffer. 
  */
 struct CBChangesEveryFrame {
   Matrix4 mWorld;
@@ -41,8 +38,7 @@ struct CBChangesEveryFrame {
 
 /**
  * @class    DirectXApp.
- * @brief    App for DirectX API
- * @bug      No known Bugs.
+ * @brief    App for DirectX API 
  */
 class DirectXApp : public BaseApp {
  public:
@@ -88,6 +84,9 @@ class DirectXApp : public BaseApp {
    */
   void 
   onEvent(MSG inMsg) override;
+
+  void
+  resize(int32 inW, int32 inH) override;
 
  private:
 

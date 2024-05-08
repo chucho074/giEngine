@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -12,27 +11,24 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
+#include "giResourceManager.h"
 #include "giResource.h"
 #include "giTexture2D.h"
+#include "giTexture.h"  
 #include "giSampler.h"  
 
 namespace giEngineSDK {
-
-  /**
-   * @struct   Texture.
-   */
-  struct Texture {
-    uint32 id;              //The id in the proyect.
-    String type;            //The type of the texture.
-    String path;            //The path of the file.
-    Texture2D * texture;    //The texture.
-    SamplerState * samplerState; //The sampler for the texture.
-  };
   
+  namespace MATERIAL_FLAGS {
+    enum E {
+      kTWO_SIDES
+    };
+  }
+
   /**
    * @class   Material.
    */
-  class Material : Resource
+  class Material final : public Resource
   {
    public:
     //Default Constructor
@@ -41,9 +37,17 @@ namespace giEngineSDK {
     //Destructor
     ~Material() = default;
 
-   protected:
+    /**
+     * @brief    Unload the material.     
+     */
+    void
+    unload() override {};
 
-    Vector<Texture> m_textures;
+    //The references of the textures used.
+    Vector<ResourceRef> m_textures;
+
+    //The flags of the material.
+    MATERIAL_FLAGS::E m_flags;
 
   };
 }

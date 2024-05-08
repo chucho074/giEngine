@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    21/09/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -176,7 +175,9 @@ namespace giEngineSDK {
      * @brief   Initialize the input manager.
      */
     virtual void 
-    init(WindowHandle wHndl) {}
+    init(WindowHandle wHndl) {
+      GI_UNREFERENCED_PARAMETER(wHndl);
+    }
 
     /**
      * @brief   Update the information of the input manager.
@@ -188,7 +189,10 @@ namespace giEngineSDK {
      * @brief   Update the display size of the display.
      */
     virtual void
-    updateSize(int inWidth, int inHeight) {}
+    updateSize(int32 inWidth, int32 inHeight) {
+      GI_UNREFERENCED_PARAMETER(inWidth);
+      GI_UNREFERENCED_PARAMETER(inHeight);
+    }
 
     /**
      * @brief   Verify if a key of the keyboard was pressed.

@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    20/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -52,6 +51,12 @@ namespace giEngineSDK {
 
     virtual void 
     setTransform(Matrix4 inMatrix) {};
+
+    virtual void 
+    resize(int32 inW, int32 inH) {
+      GI_UNREFERENCED_PARAMETER(inW);
+      GI_UNREFERENCED_PARAMETER(inH);
+    };
 
     /**
      * @brief    Set the object of the Graphics API.

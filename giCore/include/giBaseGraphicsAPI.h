@@ -3,8 +3,7 @@
  * @author   Jesus Alberto Del Moral Cupil.
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
- * @brief    Management of the graphics APIs.
- * @bug      No known Bugs.
+ * @brief    Management of the graphics APIs. 
  */
 
 /**
@@ -44,8 +43,7 @@ namespace giEngineSDK {
 
 /**
  * @class    GraphicsAPI.
- * @brief    Manage the graphics APIs.
- * @bug      No known Bugs.
+ * @brief    Manage the graphics APIs. 
  */
 namespace giEngineSDK {
   class GraphicsAPI : public Module<GraphicsAPI>
@@ -59,15 +57,13 @@ namespace giEngineSDK {
     ~GraphicsAPI() = default;
     
     /**
-     * @brief    Prepare the Module.
-     * @bug      No known Bugs.
+     * @brief    Prepare the Module.     
      */
     void 
     onStartUp() override {};
     
     /**
-     * @brief    Clear the Module.
-     * @bug      No known Bugs.
+     * @brief    Clear the Module.     
      */
     void 
     onShutDown() override {};
@@ -76,8 +72,7 @@ namespace giEngineSDK {
      * @brief    In charge of the creation of the device & SwapChain
      * @param    inWindow      The window object.
      * @param    inWidth       The width of the screen.
-     * @param    inHeight      The height of the screen.
-     * @bug      No known Bugs.
+     * @param    inHeight      The height of the screen.     
      */
     virtual void 
     init(void *) {};
@@ -86,8 +81,7 @@ namespace giEngineSDK {
      * @brief    In Charge to create the device and the swap chain.
      * @param    inWindow      The window object.
      * @param    inWidth       The width of the screen.
-     * @param    inHeight      The height of the screen.
-     * @bug      No known Bugs.
+     * @param    inHeight      The height of the screen.     
      */
     virtual bool 
     createDeviceAndSwpaChain(void *) { 
@@ -100,8 +94,7 @@ namespace giEngineSDK {
      * @param    inHeigh       The heigh of the texture.
      * @param    inMipLevels   The mip levels.
      * @param    inFormat      The format of the texture.
-     * @param    inBindFlags   The bind flags of the texture.
-     * @bug      No known Bugs.
+     * @param    inBindFlags   The bind flags of the texture.     
      */
     virtual SharedPtr<Texture2D>
     createTex2D(int32,
@@ -118,8 +111,7 @@ namespace giEngineSDK {
      * @param    inHeight      The height of the viewport.
      * @param    inTopX        The position to set the left corner of the window in x.
      * @param    inTopY        The position to set the left corner of the window in y.
-     * @return   Returns .
-     * @bug      No known Bugs.
+     * @return   Returns .     
      */
     virtual void 
     createViewport(uint32,
@@ -132,8 +124,7 @@ namespace giEngineSDK {
      * @brief    Create the Vertex Shader from a file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
-     * @param    inShaderModel The model in the shader.
-     * @bug      No known Bugs.
+     * @param    inShaderModel The model in the shader.     
      */
     virtual SharedPtr<BaseVertexShader>
     createVShaderFromFile(wString,
@@ -147,8 +138,7 @@ namespace giEngineSDK {
      * @brief    Create the Pixel Shader from file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
-     * @param    inShaderModel The model in the shader.
-     * @bug      No known Bugs.
+     * @param    inShaderModel The model in the shader.     
      */
     virtual SharedPtr<BasePixelShader>
     createPShaderFromFile(wString,
@@ -161,8 +151,7 @@ namespace giEngineSDK {
      * @brief    Create the Pixel Shader from file.
      * @param    inFileName    The name of the file.
      * @param    inEntryPoint  The entry point in the shader.
-     * @param    inShaderModel The model in the shader.
-     * @bug      No known Bugs.
+     * @param    inShaderModel The model in the shader.     
      */
     virtual SharedPtr<BaseComputeShader>
     createCShaderFromFile(wString,
@@ -174,8 +163,7 @@ namespace giEngineSDK {
     /**
      * @brief    The Shader to compile.
      * @param    inShaderRaw   The shader data in Raw.
-     * @param    inEntryPoint  The entry point of the shader.
-     * @bug      No known Bugs.
+     * @param    inEntryPoint  The entry point of the shader.     
      */
     virtual SharedPtr<BaseVertexShader>
     createVShaderFromMem(const char*, String) {
@@ -185,8 +173,7 @@ namespace giEngineSDK {
     /**
      * @brief    Create the Pixel Shader from Memory.
      * @param    inShaderRaw   The shader data in Raw.
-     * @param    inEntryPoint  The entry point of the shader.
-     * @bug      No known Bugs.
+     * @param    inEntryPoint  The entry point of the shader.     
      */
     virtual SharedPtr<BasePixelShader>
     createPShaderFromMem(const char*, String) {
@@ -197,8 +184,7 @@ namespace giEngineSDK {
      * @brief    Creates the Input Layout.
      * @param    inDesc        A vector with the inputLayout information.
      * @param    inShader      The vertex shader.
-     * @return   Returns       The Input layout.
-     * @bug      No known Bugs.
+     * @return   Returns       The Input layout.     
      */
     virtual SharedPtr<InputLayout>
     createInputLayout(Vector<InputLayoutDesc> &, 
@@ -211,8 +197,7 @@ namespace giEngineSDK {
      * @param    inByteWidth   The byte Width for the buffer.
      * @param    inBindFlags   The bind flags for the buffer.
      * @param    inBufferData  The information to save into the buffer.
-     * @return   Returns the buffer.
-     * @bug      No known Bugs.
+     * @return   Returns the buffer.     
      */
     virtual SharedPtr<Buffer>
     createBuffer(size_T, 
@@ -226,8 +211,7 @@ namespace giEngineSDK {
     
     /**
      * @brief    Creates a SamplerState.
-     * @param    inDesc        The descriptor of the sampler.
-     * @bug      No known Bugs.
+     * @param    inDesc        The descriptor of the sampler.     
      */
     virtual SharedPtr<SamplerState>
     createSampler(SamplerDesc) { 
@@ -246,6 +230,10 @@ namespace giEngineSDK {
                      CULLMODE::E inCullMode,
                      bool inClockwise,
                      bool inScissoringEnable) {
+      GI_UNREFERENCED_PARAMETER(inFillMode);
+      GI_UNREFERENCED_PARAMETER(inCullMode);
+      GI_UNREFERENCED_PARAMETER(inClockwise);
+      GI_UNREFERENCED_PARAMETER(inScissoringEnable);
       return nullptr;
     }
     
@@ -258,6 +246,8 @@ namespace giEngineSDK {
     createDepthState(bool inStencilEnable,
                      bool inDepthEnable,
                      GI_COMPARATION_FUNC::E) {
+      GI_UNREFERENCED_PARAMETER(inStencilEnable);
+      GI_UNREFERENCED_PARAMETER(inDepthEnable);
       return nullptr;
     }
         
@@ -282,12 +272,19 @@ namespace giEngineSDK {
                      BLEND_TYPE::E inAlphaDest,
                      BLEND_OP::E inalphaOperation,
                      Vector4 inBlendFactor) { 
+      GI_UNREFERENCED_PARAMETER(inEnable);
+      GI_UNREFERENCED_PARAMETER(inSource);
+      GI_UNREFERENCED_PARAMETER(inDest);
+      GI_UNREFERENCED_PARAMETER(inOperation);
+      GI_UNREFERENCED_PARAMETER(inAlphaSource);
+      GI_UNREFERENCED_PARAMETER(inAlphaDest);
+      GI_UNREFERENCED_PARAMETER(inalphaOperation);
+      GI_UNREFERENCED_PARAMETER(inBlendFactor);
       return nullptr;                 
     }
 
     /**
-     * @brief    Present.
-     * @bug      No known Bugs.
+     * @brief    Present.     
      */
     virtual void 
     show() {};
@@ -295,8 +292,7 @@ namespace giEngineSDK {
     /**
      * @brief    Set VertexBuffer.
      * @param    inBuffer      The buffer to set as vertex in the context.
-     * @param    inStride      The stride for the buffer.
-     * @bug      No known Bugs.
+     * @param    inStride      The stride for the buffer.     
      */
     virtual void 
     setVertexBuffer(SharedPtr<Buffer>,
@@ -305,8 +301,7 @@ namespace giEngineSDK {
     /**
      * @brief    Set IndexBuffer.
      * @param    inBuffer      The buffer to set as index in the context.
-     * @param    inFormat      The format of the data.
-     * @bug      No known Bugs.
+     * @param    inFormat      The format of the data.     
      */
     virtual void 
     setIndexBuffer(SharedPtr<Buffer>,
@@ -314,42 +309,44 @@ namespace giEngineSDK {
     
     /**
      * @brief    Set PrimitiveTopology.
-     * @param    inTopology    The type of topology to set.
-     * @bug      No known Bugs.
+     * @param    inTopology    The type of topology to set.     
      */
     virtual void 
     setTopology(GI_PRIMITIVE_TOPOLOGY::E) {};
 
     /**
      * @brief    Set the rasterizer State.
-     * @param    inRaster      The rasterizer to set.
-     * @bug      No known Bugs.
+     * @param    inRaster      The rasterizer to set.     
      */
     virtual void 
-    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {};
+    setRasterizerState(SharedPtr<BaseRasterizerState> inRaster) {
+      GI_UNREFERENCED_PARAMETER(inRaster);
+    };
 
     /**
      * @brief 
      * @param inDepthState 
      */
     virtual void 
-    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {};
+    setDepthState(SharedPtr<BaseDepthStencilState> inDepthState) {
+      GI_UNREFERENCED_PARAMETER(inDepthState);
+    };
     
     /**
      * @brief   Set the Unordered Access Views.
      * @param   inUAV         The unordered Accesss View to set.
-     * @bug     No known Bugs.
      */
     virtual void
-    setUAV(int32, Texture2D* inUAV) {};
+    setUAV(int32, Texture2D* inUAV) {
+      GI_UNREFERENCED_PARAMETER(inUAV);
+    };
 
 
     /**
      * @brief    Update Subresource.
      * @param    inBuffer      The buffer with the information.
      * @param    inData        The data to update.
-     * @param    inPitch       Pitch of the data.
-     * @bug      No known Bugs.
+     * @param    inPitch       Pitch of the data.     
      */
     virtual void 
     updateSubresource(SharedPtr<Buffer>,
@@ -361,19 +358,28 @@ namespace giEngineSDK {
      * @param    inTexture     The texture to update.
      * @param    inData        The data to udapte.
      * @param    inPitch       The pitch.
-     * @param    inDepthPitch  The depth pitch.
-     * @bug      No known Bugs.
+     * @param    inDepthPitch  The depth pitch.     
      */
     virtual void 
     updateTexture(SharedPtr<Texture2D>,
                   const void *, 
                   uint32, 
                   uint32) {};
+
+    /**
+     * @brief    Resizing the back buffer texture.
+     * @param    inW           The width of the viewport.
+     * @param    inH           The height of the viewport.
+     */
+    virtual void
+    resizeBackTexture(int32 inW, int32 inH){
+      GI_UNREFERENCED_PARAMETER(inW);
+      GI_UNREFERENCED_PARAMETER(inH);
+    };
     
     /**
      * @brief    Clear the Back Buffer.
-     * @param    inColor       The color to set.
-     * @bug      No known Bugs.
+     * @param    inColor       The color to set.     
      */
     virtual void 
     clearBackTexture(float[4]) {};
@@ -381,24 +387,45 @@ namespace giEngineSDK {
     /**
      * @brief    Clear Render Target View.
      * @param    inRTV         The render target view to clear.
-     * @param    inColor       The color to set.
-     * @bug      No known Bugs.
+     * @param    inColor       The color to set.     
      */
     virtual void 
     clearRTV(SharedPtr<Texture2D>, float [4]) {};
     
     /**
      * @brief    Clear Depth Stencil View.
-     * @param    inDSV         The Depth stencil view to clear.
-     * @bug      No known Bugs.
+     * @param    inDSV         The Depth stencil view to clear.  
      */
     virtual void 
     clearDSV(SharedPtr<Texture2D>) {};
     
     /**
+     * @brief 
+     * @param inTopLeftX 
+     * @param inTopLeftY 
+     * @param inWidth 
+     * @param inHeight 
+     * @param inMinDepth 
+     * @param inMaxDepth 
+     */
+    virtual void
+    setViewport(int32 inTopLeftX,
+                int32 inTopLeftY,
+                int32 inWidth,
+                int32 inHeight,
+                float inMinDepth,
+                float inMaxDepth) {
+      GI_UNREFERENCED_PARAMETER(inTopLeftX);
+      GI_UNREFERENCED_PARAMETER(inTopLeftY);
+      GI_UNREFERENCED_PARAMETER(inWidth);
+      GI_UNREFERENCED_PARAMETER(inHeight);
+      GI_UNREFERENCED_PARAMETER(inMinDepth);
+      GI_UNREFERENCED_PARAMETER(inMaxDepth);
+    };
+    
+    /**
      * @brief    Vertex Shader Set Shader.
-     * @param    inVShader     The Vertex Shader to set.
-     * @bug      No known Bugs.
+     * @param    inVShader     The Vertex Shader to set.     
      */
     virtual void 
     vsSetShader(SharedPtr<BaseVertexShader> = nullptr) {};
@@ -406,8 +433,7 @@ namespace giEngineSDK {
     /**
      * @brief    Vertex Shader Set Constant Buffer.
      * @param    inSlot        Index to begin setting constant buffers.
-     * @param    inBuffer      The constant buffer to set.
-     * @bug      No known Bugs.
+     * @param    inBuffer      The constant buffer to set.     
      */
     virtual void 
     vsSetConstantBuffer(uint32, 
@@ -415,16 +441,14 @@ namespace giEngineSDK {
     
     /**
      * @brief    Pixel Shader Set Shader.
-     * @param    inPShader     The pixel Shader to set.
-     * @bug      No known Bugs.
+     * @param    inPShader     The pixel Shader to set.    
      */
     virtual void 
     psSetShader(SharedPtr<BasePixelShader> = nullptr) {};
 
     /**
      * @brief    Pixel Shader Set Shader.
-     * @param    inPShader    The pixel Shader to set.
-     * @bug      No known Bugs.
+     * @param    inPShader    The pixel Shader to set.     
      */
     virtual void 
     csSetShader(SharedPtr<BaseShader> = nullptr) {};
@@ -432,8 +456,7 @@ namespace giEngineSDK {
     /**
      * @brief    Pixel Shader Set Constant Buffer.
      * @param    inSlot        The index to begin setting constant buffer.
-     * @param    inBuffer      The constant buffer to set.
-     * @bug      No known Bugs.
+     * @param    inBuffer      The constant buffer to set.     
      */
     virtual void 
     psSetConstantBuffer(uint32, 
@@ -442,18 +465,18 @@ namespace giEngineSDK {
     /**
      * @brief    Compute Shader Set Constant Buffer.
      * @param    inSlot      The index to begin setting constant buffer.
-     * @param    inBuffer    The constant buffer to set.
-     * @bug      No known Bugs.
+     * @param    inBuffer    The constant buffer to set.     
      */
     virtual void 
     csSetConstantBuffer(uint32, 
-                        SharedPtr<Buffer> inBuffer) {};
+                        SharedPtr<Buffer> inBuffer) {
+      GI_UNREFERENCED_PARAMETER(inBuffer);
+    };
     
     /**
      * @brief    Pixel Shadder Set Shader Resource.
      * @param    inSlot        The index to begin setting constant buffer.
-     * @param    inTexture     The texture to set.
-     * @bug      No known Bugs.
+     * @param    inTexture     The texture to set.     
      */
     virtual void 
     psSetShaderResource(uint32, 
@@ -461,8 +484,7 @@ namespace giEngineSDK {
     /**
      * @brief    Compute Shadder Set Shader Resource.
      * @param    inSlot      The index to begin setting constant buffer.
-     * @param    inTexture   The texture to set.
-     * @bug      No known Bugs.
+     * @param    inTexture   The texture to set.   
      */
     virtual void 
     csSetShaderResource(uint32, 
@@ -472,8 +494,7 @@ namespace giEngineSDK {
      * @brief    Pixel Shader Set Samplers.
      * @param    inSlot        The index to begin setting the sampler.
      * @param    inNumSamplers The number of samplers.
-     * @param    inSampler     The sampler.
-     * @bug      No known Bugs.
+     * @param    inSampler     The sampler.     
      */
     virtual void 
     psSetSamplerState(uint32,
@@ -484,8 +505,7 @@ namespace giEngineSDK {
      * @brief    Compute Shader Set Samplers.
      * @param    inSlot          The index to begin setting the sampler.
      * @param    inNumSamplers   The number of samplers.
-     * @param    inSampler       The sampler.
-     * @bug      No known Bugs.
+     * @param    inSampler       The sampler.     
      */
     virtual void 
     csSetSampler(uint32, 
@@ -494,8 +514,7 @@ namespace giEngineSDK {
     
     /** 
      * @brief    IA Set Input Layout.
-     * @param    inInputLayout The input layout to set.
-     * @bug      No known Bugs.
+     * @param    inInputLayout The input layout to set.     
      */
     virtual void 
     aiSetInputLayout(SharedPtr<InputLayout>) {};
@@ -503,8 +522,7 @@ namespace giEngineSDK {
     /** 
      * @brief    Set Render Targets.
      * @param    inRT          The Render Target texture.
-     * @param    inDS          The Depth Stencil texture.
-     * @bug      No known Bugs.
+     * @param    inDS          The Depth Stencil texture.     
      */
     virtual void     
     omSetRenderTarget(Vector<SharedPtr<Texture2D>>,
@@ -517,16 +535,14 @@ namespace giEngineSDK {
 
     /** 
      * @brief    Set Blend State.
-     * @param    inBlendState  Pointer to a blend-state interface. NULL for a default.
-     * @bug      No known Bugs.
+     * @param    inBlendState  Pointer to a blend-state interface. NULL for a default.     
      */
     virtual void 
     omSetBlendState(SharedPtr<BaseBlendState>) {};
                     
     /** 
      * @brief    Set Blend State.
-     * @param    inDepthState  Pointer to a depth-state interface.
-     * @bug      No known Bugs.
+     * @param    inDepthState  Pointer to a depth-state interface.     
      */
     virtual void 
     omSetDepthStencilState(SharedPtr<BaseDepthStencilState>) {};
@@ -550,11 +566,12 @@ namespace giEngineSDK {
     /**
      * @brief 
      * @param  
-     * @param  
+     * @return
      */
-    virtual void
-    rsGetViewports(uint32, 
-                   void*) {};
+    virtual void *
+    rsGetViewports(uint32) {
+      return nullptr;
+    };
 
     /**
      * @brief 
@@ -690,8 +707,7 @@ namespace giEngineSDK {
     /** 
      * @brief    Draw Indeux.
      * @param    inNumIndexes       The number of indexes to draw.
-     * @param    inStartLocation    the start location to draw.
-     * @bug      No known Bugs.
+     * @param    inStartLocation    the start location to draw.     
      */
     virtual void 
     drawIndexed(size_T, 
@@ -725,37 +741,6 @@ namespace giEngineSDK {
     getDefaultDephtStencil() { 
       return nullptr; 
     };
-
-    /**
-     * @brief    Reads a texture form a file.
-     * @param    inString      The name of the file to read.
-     * @param    inDirectory   The directory of the texture to read.
-     * @return   Returns the texture readed from a file.
-     */
-    virtual SharedPtr<Texture2D>
-    TextureFromFile(String inString, 
-                    String inDirectory) { 
-      return nullptr;
-    };
-
-    /**
-     * @brief    Load a texture from memory.
-     * @param    inData        The Data of the loaded texture.
-     * @param    inWidth       The Width of the texture to create.
-     * @param    inHeight      The height of the texture to create.
-     * @param    inFormat      The format of the texture.
-     * @param    inBindFlags   The bind flags for the texture.
-     * @return   Returns a texture 2D.
-     */
-    virtual SharedPtr<Texture2D>
-    TextureFromMem(uint8* inData,
-                   int32 inWidth,
-                   int32 inHeight,
-                   GI_FORMAT::E inFormat,
-                   GI_BIND_FLAG::E inBindFlags) {
-      return nullptr;
-    };
-
 
 
     virtual void*

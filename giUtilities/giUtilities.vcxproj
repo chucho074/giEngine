@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug_DLL|Win32">
@@ -142,7 +142,6 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <AdditionalIncludeDirectories>./include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -192,8 +191,10 @@
     <ClCompile Include="src\giVector3i.cpp" />
     <ClCompile Include="src\giVector4.cpp" />
     <ClCompile Include="src\giVector4i.cpp" />
+    <ClCompile Include="src\giWindowsImplementations.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseImplementations.h" />
     <ClInclude Include="include\giFile.h" />
     <ClInclude Include="include\giFileSystem.h" />
     <ClInclude Include="include\giLogger.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="include\giPlatformTypes.h" />
     <ClInclude Include="include\giPrerequisitesUtilities.h" />
     <ClInclude Include="include\giRadians.h" />
+    <ClInclude Include="include\giSpecificImplementations.h" />
     <ClInclude Include="include\giStdHeaders.h" />
     <ClInclude Include="include\giTime.h" />
     <ClInclude Include="include\giTransform.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="include\giVector3i.h" />
     <ClInclude Include="include\giVector4.h" />
     <ClInclude Include="include\giVector4i.h" />
+    <ClInclude Include="include\giWindowsImplementations.h" />
     <ClInclude Include="include\giWindowsMath.h" />
     <ClInclude Include="include\giTimer.h" />
   </ItemGroup>

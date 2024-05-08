@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Everything about buffers for DX.
- * @bug     No known Bugs.
  */
 
 /**
@@ -16,8 +15,7 @@
 
 /**
  * @class    BufferDX.
- * @brief    A buffer interface for own buffers for DX.
- * @bug      No known Bugs.
+ * @brief    A buffer interface for own buffers for DX. 
  */
 namespace giEngineSDK {
   class BufferDX final : public Buffer

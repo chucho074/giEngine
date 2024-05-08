@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/07/2021
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   An implementation of a Scene Graph.
  */
  
 /**
@@ -12,27 +11,39 @@
  */
 #include "giSceneGraph.h"
 
-
 namespace giEngineSDK {
 
-
   SceneGraph::SceneGraph() {
+    init();
+  }
+
+  void 
+  SceneGraph::init() {
+    m_sceneID = UUID();
     m_numActors = 0;
     SharedPtr<Actor> sceneActor;
     m_root = make_shared<SceneNode>();
     sceneActor = make_shared<Actor>();
     m_root->m_actor = sceneActor;
     m_root->m_actor->m_actorName = "Root";
+
+    //Editor camera
+    m_editorCamera = make_shared<Camera>();
+    m_editorCamera->init(Degrees(75.0f).getRadians(),
+                         1280.f / 720.f,
+                         0.01f,
+                         1000.0f);
   }
 
-  void 
-  SceneGraph::addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent) {
+  void
+  SceneGraph::addActor(const SharedPtr<Actor>& inActor, 
+                       SharedPtr<SceneNode> inParent) {
     m_numActors++;
     inActor->m_actorId = m_numActors;
     SharedPtr<SceneNode> tmpNode = make_shared<SceneNode>();
     tmpNode->m_actor = inActor;
     tmpNode->m_parent = inParent;
-    m_root->getNodesByParent(inParent).push_back(tmpNode);
+    m_root->m_childs.push_back(tmpNode);
   }
 
   SharedPtr<Actor>
@@ -55,7 +66,7 @@ namespace giEngineSDK {
     return tmpVector;
   }
 
-  List<SharedPtr<SceneNode>>&
+  List<SharedPtr<SceneNode>>
   SceneGraph::getNodesByParent(WeakPtr<SceneNode> inParent) {
     if (SharedPtr<SceneNode>(nullptr) == inParent.lock()) {
       List<SharedPtr<SceneNode>> tmpList;
@@ -79,6 +90,7 @@ namespace giEngineSDK {
   void
   SceneGraph::update(float inDelta) {
     m_root->udpate(inDelta);
+    m_editorCamera->update(inDelta);
   }
 
   void 
@@ -86,7 +98,26 @@ namespace giEngineSDK {
     m_root->render();
   }
 
-  
+  void 
+  SceneGraph::clearGraph() {
+    m_sceneName = "Untitled scene";
+    m_sceneID = 0;
+    //m_selectedActor;
+    m_numActors = 0;
+    
+    m_root->destroy();
+    m_editorCamera->destroy();
+
+    init();
+  }
+
+  void 
+  SceneGraph::resizeMainCamera(int32 inW, int32 inH) {
+
+    m_editorCamera->resize(inW, inH);
+    
+  }
+
   SceneGraph&
   g_sceneGraph() {
     return SceneGraph::instance();

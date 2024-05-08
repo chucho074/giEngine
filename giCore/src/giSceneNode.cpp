@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/07/2021
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   A implementation of a Node of a Scene.
  */
  
 /**
@@ -18,16 +17,10 @@ namespace giEngineSDK {
 
   }
 
-  SceneNode::~SceneNode() {
-
-  }
-
   SharedPtr<Actor>
-  SceneNode::getActorByID(const uint32& inID) {
-    // TODO: Read this node, in case is == inID return this
-    //       otherwise read the childs list and serch it.
-
-    if (inID == m_actor->m_actorId) {
+  SceneNode::getActorByID(const int32& inID) {
+    
+    if (m_actor->m_actorId == inID) {
       return m_actor;
     }
     else {
@@ -43,7 +36,7 @@ namespace giEngineSDK {
   }
 
   SharedPtr<Actor>
-  SceneNode::getActorByName(const String& inName) {
+  SceneNode::getActorByName(StringView inName) {
     // TODO: Read this node, in case is == inName return this
     //       otherwise read the childs list and serch it.
     if (inName == m_actor->m_actorName) {
@@ -63,7 +56,7 @@ namespace giEngineSDK {
     return nullptr;
   }
 
-  List<SharedPtr<SceneNode>>&
+  List<SharedPtr<SceneNode>>
   SceneNode::getNodesByParent(WeakPtr<SceneNode> inParent) {
     // TODO: Read this node, in case it parent == inParent 
     //       return the parent childs, otherwise read the 
@@ -121,4 +114,15 @@ namespace giEngineSDK {
     }
 
   }
+
+  void 
+  SceneNode::destroy() {
+    m_actor->destroy();
+    m_parent.reset();
+    for(auto iterChilds : m_childs) {
+      iterChilds->destroy();
+    }
+    m_childs.clear();
+  }
+
 }

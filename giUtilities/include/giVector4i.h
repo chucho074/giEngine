@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Vectors 4 for ints management.
- * @bug     No known Bugs.
  */
 
 /**
@@ -19,8 +18,7 @@ using giEngineSDK::int32;
 
 /**
  * @class    Vector4i.
- * @brief    Vectors 4 for ints management.
- * @bug      No known Bugs.
+ * @brief    Vectors 4 for ints management. 
  */
 namespace giEngineSDK {
   class Vector4;

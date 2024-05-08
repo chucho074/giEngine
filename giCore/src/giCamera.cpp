@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
  * @brief   A basic camera.
- * @bug     No known Bugs.
  */
  
 /**
@@ -82,21 +81,21 @@ namespace giEngineSDK {
     Vector3 tmpVect;
 
     if(m_front || m_back) {
-      tmpVect.x = m_viewMatrix.m_zColumn.x;
-      tmpVect.y = m_viewMatrix.m_zColumn.y;
-      tmpVect.z = m_viewMatrix.m_zColumn.z;
+      tmpVect.x = m_viewMatrix.m_xColumn.x;
+      tmpVect.y = m_viewMatrix.m_yColumn.x;
+      tmpVect.z = m_viewMatrix.m_zColumn.x;
     }
     
     if(m_right || m_left) {
-      tmpVect.x = m_viewMatrix.m_xColumn.x;
-      tmpVect.y = m_viewMatrix.m_xColumn.y;
-      tmpVect.z = m_viewMatrix.m_xColumn.z;
+      tmpVect.x = m_viewMatrix.m_xColumn.z;
+      tmpVect.y = m_viewMatrix.m_yColumn.z;
+      tmpVect.z = m_viewMatrix.m_zColumn.z;
     }
 
     if(m_up || m_down) {
-      tmpVect.x = m_viewMatrix.m_yColumn.x;
+      tmpVect.x = m_viewMatrix.m_xColumn.y;
       tmpVect.y = m_viewMatrix.m_yColumn.y;
-      tmpVect.z = m_viewMatrix.m_yColumn.z;
+      tmpVect.z = m_viewMatrix.m_zColumn.y;
     }
 
 
@@ -113,6 +112,33 @@ namespace giEngineSDK {
     m_viewMatrix.m_wColumn.x = pos.x;
     m_viewMatrix.m_wColumn.y = pos.y;
     m_viewMatrix.m_wColumn.z = pos.z;
+
+    //TESTING
+
+    /*float tmpSpeed = m_speed * inDT;
+
+    if (m_front) {
+      m_eye += (m_at * tmpSpeed);
+    }
+
+    if (m_back) {
+      m_eye -= (m_at * tmpSpeed);
+    }
+
+    if (m_right) {
+      auto tmpVector = m_at.cross(m_upVect);
+      tmpVector.normalize();
+      m_eye -= tmpVector* tmpSpeed;
+    }
+    
+    if (m_left) {
+      auto tmpVector = m_at.cross(m_upVect);
+      tmpVector.normalize();
+      m_eye += tmpVector * tmpSpeed;
+    }
+
+    m_viewMatrix = lookToLH(m_eye, m_at, m_upVect);*/
+
   }
 
   void 
@@ -137,4 +163,11 @@ namespace giEngineSDK {
     //Returns the matrix
     return m_projMatrix;
   }
+
+  void 
+  Camera::resize(int32 inW, int32 inH) {
+    int32 tmpAR = inW / inH;
+    m_projMatrix = perspectiveFovLH(m_angle, tmpAR, m_near, m_far);
+  }
+
 }

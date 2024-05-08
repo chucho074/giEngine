@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/06/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -51,14 +50,11 @@ class Hierarchy
   void
   destroy();
 
-  void
-  renderNodeWithChilds(SharedPtr<SceneNode> inNode);
-
+  /**
+   * @brief      Renders the information of the node into the table of hierarchy.
+   */
   void
   renderNode(SharedPtr<SceneNode> inNode);
-
-  void
-  evaluateNode(SharedPtr<SceneNode> inNode);
 
  private:
  

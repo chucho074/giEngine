@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic Vertex Shader.
- * @bug     No known Bugs.
  */
 
  /**

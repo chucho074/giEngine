@@ -3,8 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/06/2021
- * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
+ * @brief   An implementation of a Scene Graph.
  */
  
 /**
@@ -13,15 +12,15 @@
 #pragma once
 #include "giActor.h"
 #include "giSceneNode.h"
+#include "giCamera.h"
 #include <giModule.h>
-
+#include <giDegrees.h>
 
 namespace giEngineSDK {
 
   /**
    * @class    SceneGraph.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    An implementation of a Scene Graph.   
    */
   class GI_CORE_EXPORT SceneGraph : public Module<SceneGraph>
   {
@@ -33,22 +32,30 @@ namespace giEngineSDK {
     ~SceneGraph() = default;
 
     /**
-     * @brief    .
-     * @param    inActor 
+     * @brief 
      */
-    void
-    addActor(const SharedPtr<Actor>& inActor, SharedPtr<SceneNode> inParent);
+    void 
+    init();
 
     /**
-     * @brief    .
-     * @param    inID 
+     * @brief    Adds an actor to the list.
+     * @param    inActor       The actor reference to add.
+     * @param    inParent      The parent to atatch the actor.
+     */
+    void
+    addActor(const SharedPtr<Actor>& inActor, 
+             SharedPtr<SceneNode> inParent);
+
+    /**
+     * @brief    Gets any actor by its ID.
+     * @param    inID          The ID of the actor.
      */
     SharedPtr<Actor>
     getActorByID(const uint32& inID);
 
     /**
-     * @brief    .
-     * @param    inName 
+     * @brief    Gets the actor by its name.
+     * @param    inName        The name of the actor.
      */
     SharedPtr<Actor>
     getActorByName(const String& inName);
@@ -61,14 +68,14 @@ namespace giEngineSDK {
     getActorsFromRoot();
 
     /**
-     * @brief    .
-     * @param    inParent
+     * @brief    Gets a list of actors by the parent.
+     * @param    inParent      The reference of the parent to search.
      */
-    List<SharedPtr<SceneNode>>&
+    List<SharedPtr<SceneNode>>
     getNodesByParent(WeakPtr<SceneNode> inParent);
 
     /**
-     * @brief    .
+     * @brief    Gets the root of the scene.
      * @return   Returns the root of the scene.
      */
     SharedPtr<SceneNode>
@@ -82,7 +89,7 @@ namespace giEngineSDK {
 
     /**
      * @brief    Update every actor.
-     * @param    inDelta 
+     * @param    inDelta       The delta time.
      */
     void
     update(float inDelta);
@@ -94,7 +101,7 @@ namespace giEngineSDK {
     draw();
 
     /**
-     * @brief    .
+     * @brief    Gets the selected actor.
      * @return   Get a selected Actor.
      */
     SharedPtr<Actor>
@@ -110,6 +117,18 @@ namespace giEngineSDK {
       m_selectedActor = inActor;
     }
 
+    /**
+     * @brief    Clears the list of actors of the Graph.
+     */
+    void
+    clearGraph();
+
+    /**
+     * @brief     Resize the information for the main camera.
+     */
+    void
+    resizeMainCamera(int32 inW, int32 inH);
+
    private:
 
     /**
@@ -117,19 +136,40 @@ namespace giEngineSDK {
      */
     SharedPtr<SceneNode> m_root;
 
+    /**
+     * @brief    The actor selected in the scene.
+     */
     SharedPtr<Actor> m_selectedActor;
 
-   protected:
+   public:
+    
+    /**
+     * @brief    The name of the active Scene Graph.
+     */
+    String m_sceneName = "Untitled scene";
+
+    /**
+     * @brief    The ID of the scene.
+     */
+    UUID m_sceneID;
+
     /**
      * @brief    The number of the actors.
      */
     uint32 m_numActors;
 
+    /**
+     * @brief    The camera for the editor of the engine.
+     */
+    SharedPtr<Camera> m_editorCamera;
+
+   protected:
+
     friend class Omni;
     
   };
 
-  SceneGraph& 
+  GI_CORE_EXPORT SceneGraph&
   g_sceneGraph();
 
 }

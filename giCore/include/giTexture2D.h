@@ -3,8 +3,7 @@
  * @author   Jesus Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
- * @brief    Management of the Textures.
- * @bug      No known Bugs.
+ * @brief    Management of the Textures. 
  */
 
 /**
@@ -17,7 +16,7 @@ namespace giEngineSDK {
   /**
    * @struct  TextureDesc.
    * @brief   Data to the Textures.
-   * @bug     No known Bugs.
+ 
    */
   struct TextureDesc {
     uint32 W;
@@ -34,25 +33,26 @@ namespace giEngineSDK {
   };  
 
   /**
-   * @class   CTexutre2D.
+   * @class   Texutre2D.
    * @brief   Management for textures2D.
-   * @bug     No known Bugs.
    */
   class Texture2D {
    public:
      /**
-      * @brief  Constructor.
-      * @bug    No Bugs known.
+      * @brief   Constructor.
       */
      Texture2D() = default;
      
      /**
       * @brief    Destructor.
-      * @bug      No Bugs known.
       */
      virtual
      ~Texture2D() = default;
 
+     /**
+      * @brief    Getter for the texture as void*.
+      * @return   The texture of the specific API.
+      */
      virtual void *
      getApiTexture() {
        return nullptr;

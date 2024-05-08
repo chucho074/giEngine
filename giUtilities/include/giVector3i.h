@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    26/03/2021
  * @brief   A basic Vector 3 for int.
- * @bug     No known Bugs.
  */
  
 /**

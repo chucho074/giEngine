@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
  * @brief   A basic use of the time.
- * @bug     No known Bugs.
  */
  
 /**
@@ -19,8 +18,7 @@ namespace giEngineSDK {
   
   /**
    * @class    Time.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT Time : public Module<Time>
   {

@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    16/03/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -23,15 +22,17 @@ namespace giEngineSDK {
         kPNG,
         kTGA,
         kFBX,
+        k3DS,
         kOBJ,
         kTXT,
         kHLSL,
         kgiTEX2D,
         kgiModel,
         kgiShader,
+        kgiScene,
         kgiProject,
         kgiFile,
-        kgiSettings,
+        kgiData,
         kUnknown,
         kTotalExtansions
     };
@@ -39,8 +40,7 @@ namespace giEngineSDK {
 
   /**
    * @class    FILE.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_UTILITY_EXPORT FILE
   {
@@ -58,7 +58,7 @@ namespace giEngineSDK {
     //Default destructor.
     ~FILE() = default;
 
-   private:
+   //private:
     /**
      * @brief    Evaluates the extension and sets the value in m_extension.
      * @param    inExtension   The string of the extension to evaluate.
@@ -66,7 +66,7 @@ namespace giEngineSDK {
     void
     evaluateExtension(wString inExtension);
 
-   protected:
+   //protected:
 
     Path m_path;
 
@@ -78,6 +78,8 @@ namespace giEngineSDK {
 
 
     friend class FileSystem;
+    friend class ResourceManager;
     friend class Encoder;
+    friend class Decoder;
   };
 }

@@ -4,13 +4,14 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    01/06/2022
  * @brief   A basic implementation of the editor of the engine.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #pragma once
+#include <giResourceManager.h>
+#include <giFile.h>
 #include "giImGui.h"
 #include "giContentBrowser.h"
 #include "giHierarchy.h"
@@ -27,8 +28,8 @@ class Editor
  public:
 
   //Default constructor.
-	Editor() = default;
-	
+  Editor() = default;
+  
   //Default destructor.
   ~Editor() = default;
 
@@ -62,6 +63,62 @@ class Editor
   void
   callBack();
 
+  /**
+   * @brief      Renders a Window with the performance information.
+   */
+  void
+  renderPerformanceWindow();
+
+  /**
+   * @brief      Renders a window with the information about the engine dev.
+   */
+  void
+  renderAboutWindow();
+
+  /**
+   * @brief      Renders a window with the variable of the editor camera movement.
+   */
+  void
+  renderCameraMovementWindow();
+
+  /**
+   * @brief      Renders a window for creation/selection of projects.
+   */
+  void
+  renderProjectCreationSelection();
+
+  /**
+   * @brief      Renders a window for import into the project.
+   */
+  void
+  renderImport();
+
+  /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMR();
+
+  /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMRprocess();
+
+  /**
+   * @brief      .
+   * @return     Returns the reference of the .
+   */
+  ResourceRef 
+  openFileDilog();
+
+  /**
+   * @brief      .
+   */
+  void 
+  saveFileDilog();
+
+
  private:
    
    SharedPtr<UI> m_ui;
@@ -82,4 +139,20 @@ class Editor
 
    bool m_isRunningOmniverse = false;
 
+
+   //Bools for rendering the diferent windows.
+
+   bool m_renderPerformance = true;
+
+   bool m_renderAbout = false;
+
+   bool m_renderCamera = true;
+
+   //The window for creation/selection of projects.
+   bool m_renderProjectSelection = false;
+
+   //To change
+   Path m_savingPath;
+
+   int32 m_Subdiv = 0;
 };

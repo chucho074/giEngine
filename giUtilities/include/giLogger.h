@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/07/2021
  * @brief   A log creator for the engine.
- * @bug     No known Bugs.
  */
  
 /**
@@ -30,6 +29,9 @@ namespace giEngineSDK {
       kDepthStencilStateCreation,
       kSamplerCreation,
       kUAVCreation,
+      kDecodingFile,
+      kEncodingFile,
+      kResizeTextures,
       kOmniConnection
     };
   }

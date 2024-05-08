@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -20,8 +19,7 @@ namespace giEngineSDK {
 
   /**
    * @class    InputLayoutDX.
-   * @brief    Manage the Input Layout information.
-   * @bug      No known Bugs.
+   * @brief    Manage the Input Layout information.   
    */
   class InputLayoutDX : public InputLayout
   {
@@ -34,8 +32,7 @@ namespace giEngineSDK {
 
     /**
      * @brief    Initializer.
-     * @param    inLayout   The layout information in a vector.
-     * @bug      No known Bugs.
+     * @param    inLayout   The layout information in a vector.     
      */
     void 
     init(const Vector<InputLayoutDesc>& inLayout);

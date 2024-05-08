@@ -3,8 +3,7 @@
  * @author   Jesus Alberto Del Moral Cupil
  * @e        idv18c.jmoral@uartesdigitales.edu.mx
  * @date     10/03/2021
- * @brief    Manage the Input Layout information.
- * @bug      No known Bugs.
+ * @brief    Manage the Input Layout information. 
  */
 
 /**
@@ -16,8 +15,7 @@
 namespace giEngineSDK {
   /**
    * @struct  InputLayoutDesc.
-   * @brief   Data to the Input Layout.
-   * @bug     No known Bugs.
+   * @brief   Data to the Input Layout. 
    */
   struct InputLayoutDesc {
     String semanticName;
@@ -31,8 +29,7 @@ namespace giEngineSDK {
   
   /**
    * @class    InputLayout.
-   * @brief    Manage the Input Layout information.
-   * @bug      No known Bugs.
+   * @brief    Manage the Input Layout information.   
    */
   class InputLayout {
    public:
@@ -45,8 +42,7 @@ namespace giEngineSDK {
   
      /**
       * @brief    Initializer.
-      * @param    inLayout   The layout information in a vector.
-      * @bug      No known Bugs.
+      * @param    inLayout   The layout information in a vector.      
       */
      virtual void 
      init(const Vector<InputLayoutDesc>& inLayout) = 0;

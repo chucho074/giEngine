@@ -4,16 +4,17 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    09/05/2022
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
 #pragma once
-#include <giModule.h>
-#include <giVector2i.h>
-#include <giStdHeaders.h>
+#include "giModule.h"
+#include "giVector2i.h"
+#include "giStdHeaders.h"
+#include "giUUID.h"
+#include "giPrerequisitesCore.h"
 
 using namespace giEngineSDK;
 
@@ -35,7 +36,7 @@ namespace GIPLUGINS {
   };
 }
 
-class EngineConfigs : public Module<EngineConfigs>
+class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 {
  public:
    EngineConfigs() = default;
@@ -48,19 +49,26 @@ class EngineConfigs : public Module<EngineConfigs>
   static String s_projectName;
   static GIENGINE_API::E s_activeGraphicApi;
   static Path s_projectPath;
-
+  static Path s_contentPath;
 
   //Plugins
   static Map<GIPLUGINS::E, bool> s_activePlugins;
 
-  //Omniverse settings
+  //giAMR
+  static Path s_generatedPath;
+
+  //Omniverse Settings
   static String s_existingStage;
   static String s_destinationPath;
 
-  //Editor settings
 
+  //Editor Settings
+  //static UUID s_lastScene;
+  
+  
+  //Renderer Settings
 
 };
 
-EngineConfigs&
+GI_CORE_EXPORT EngineConfigs&
 g_engineConfigs();

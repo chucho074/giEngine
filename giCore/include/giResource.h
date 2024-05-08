@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    30/07/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -14,38 +13,45 @@
 #include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
-/**
- * @class    Resource.
- * @brief    .
- * @bug      No known Bugs.
- */
-class Resource
-{
- public:
-  //Default Constructor.
-  Resource() = default;
 
-  //Destructor.
-  virtual 
-  ~Resource() = default;
+  /**
+   * @brief    The type of the resource.
+   */
+  namespace RESOURCE_TYPE {
+    enum E {
+      kUnknown = 0,
+      kModel,
+      kMaterial,
+      kTexture,
+      kAudio,
+      kFont,
+      kSuportedResourceTypes
+    };
+  }
 
-  virtual bool 
-  loadFromFile(const Path& inPath) = 0;
-
-  virtual bool
-  loadFromMemory(const char* inData, size_T inSizeOfData) = 0;
-
-  virtual void 
-  unload() = 0;
-
-  virtual void 
-  saveToFile(const String& inFile) =  0;
-
- protected:
+  /**
+   * @class    Resource.
+   * @brief    .
+   */
+  class GI_CORE_EXPORT Resource
+  {
+   public:
+    //Default Constructor.
+    Resource() = default;
   
- 
- private:
- 
-};
+    //Destructor.
+    virtual 
+    ~Resource() = default;
+
+    /**
+     * @brief 
+     */
+    virtual void 
+    unload() = 0;
+    
+    //A reference of the type of resource;
+    RESOURCE_TYPE::E m_resourceType;
+   
+  };
 
 }

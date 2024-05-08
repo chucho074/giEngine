@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/08/2020
  * @brief   A class for the basics functions of the apps.
- * @bug     No known Bugs.
  */
 
 /**
@@ -15,10 +14,11 @@
 #include "giBaseRenderer.h"
 #include "giBaseInput.h"
 
-
-
 int32 
 BaseApp::run() {
+
+  //EngineConfigs::s_activePlugins.insert({GIPLUGINS::kOmniverse, true});
+  EngineConfigs::s_activePlugins.insert({GIPLUGINS::kgiAMR, true});
 
   //Create the main window.
   createWindow();
@@ -26,28 +26,19 @@ BaseApp::run() {
   //Initialize every system.
   initSystems();
 
-  auto& renderer = BaseRenderer::instance();
-
-  //Send message to device.
-  onCreate();
-
-  //Create the renderer.
-  renderer.create();
-
-  //Create the Omniverse conection.
-  m_omniverse->init(EngineConfigs::s_existingStage, 
-                    EngineConfigs::s_destinationPath);
-  m_omniverse->startConection();
-
+  //Create the information of the application and other systems.
+  create();
 
   //App Loop.
+  MSG msg;
+  Event eventsWnd;
   HWND hWnd = m_window.getSystemHandle();
   while (m_window.isOpen()) {
+    
     //m_deltaTime = m_appClock.getElapsedTime().asSeconds();
     m_deltaTime = m_appClock.restart().asSeconds();
-    MSG msg;
-    Event eventsWnd;
-    while (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
+
+    if (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
       
@@ -61,36 +52,39 @@ BaseApp::run() {
                                         (int32)m_window.getSize().y };
         m_width = EngineConfigs::s_resolution.x;
         m_height = EngineConfigs::s_resolution.y;
-        //Unbind everything
-        //Resize backbuffer
-        //Resize other Textures {Albedo, pos, norm, SSAO, Bluhrs, Light}
-        //Set the information to the ui
+        //Resize the app.
+        resize(m_width, m_height);
+
+        //Resize the renderer.
+        g_renderer().resize(m_width, m_height);
+
+        //Resize the back buffer.
+        g_graphicsAPI().resizeBackTexture(m_width, m_height);
+
+        //Resize the InputManager.
+        g_inputManager().updateSize(m_width, m_height);
       }
 
-      //Eventos propios.
-      event(msg);
+      //Own events.
+      processEvent(msg);
     }
+    else {
 
-    //Update Time.
-    m_time->update();
-    //float deltaTime = g_time().getTime();
+      //Update Time.
+      m_time->update();
+      //float deltaTime = g_time().getTime();
 
-    //Update Game Logic.
-    update(m_deltaTime);
-    
-    m_inputManager->update();
+      //Update Game Logic.
+      update(m_deltaTime);
 
-
-    //Render Frame
-    renderer.render();
-    render();
+      //Render Frame
+      render();
+    }
   }
 
-  //Write the logs
-  m_logger->SendToFile();
 
   //Destroy the resources
-  onDestroy();
+  destroy();
 
   return 0;
 }
@@ -114,20 +108,50 @@ BaseApp::createWindow() {
 }
 
 void 
+BaseApp::create() {
+  onCreate();
+
+  //Create the renderer.
+  m_renderer->create();
+
+  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != EngineConfigs::s_activePlugins.end()) {
+
+    //Create the Omniverse conection.
+    m_omniverse->init(EngineConfigs::s_existingStage,
+                      EngineConfigs::s_destinationPath);
+    m_omniverse->startConection();
+
+  }
+}
+
+void 
 BaseApp::update(float inDeltaTime) {
+  m_inputManager->update();
+  m_renderer->update();
+
   onUpdate(inDeltaTime);
-  m_omniverse->update();
+
+  if(m_omniverse != nullptr) {
+    m_omniverse->update();
+  }
 }
 
 void 
 BaseApp::render() {
-  onRender();
+  m_renderer->render();
   m_gapi->show();
-
+  onRender();
 }
 
 void 
-BaseApp::event(MSG inMsg) {
+BaseApp::destroy() {
+  onDestroy();
+  destroySystems();
+}
+
+void 
+BaseApp::processEvent(MSG inMsg) {
   onEvent(inMsg);
 }
 
@@ -171,6 +195,11 @@ BaseApp::initSystems() {
     m_gapi->init(reinterpret_cast<void*>(handle));
   }
 
+  //Start the Resource Manager
+  ResourceManager::startUp();
+  m_resoureceManager = &g_resourceManager();
+  m_resoureceManager->init();
+
   //Start the Renderer
   if (m_loaderRenderer.loadPlugin("giRenderer_d.dll")) {
     auto createRenderer = reinterpret_cast<funCreateRenderer>(m_loaderRenderer.getProcedureByName("createRenderer"));
@@ -187,13 +216,29 @@ BaseApp::initSystems() {
   m_sceneGraph = &g_sceneGraph();
 
   //Start the Omniverse
-  if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
-    auto createOmniverse = reinterpret_cast<funCreateOmniverse>(m_loaderOmniverse.getProcedureByName("createOmniverse"));
+  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != EngineConfigs::s_activePlugins.end()) {
+    if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
+      auto createOmniverse = reinterpret_cast<funCreateOmniverse>(m_loaderOmniverse.getProcedureByName("createOmniverse"));
 
-    BaseOmni::startUp();
-    BaseOmni* ov = createOmniverse();
-    g_omniverse().setObject(ov);
-    m_omniverse = &g_omniverse();
+      BaseOmni::startUp();
+      BaseOmni* ov = createOmniverse();
+      g_omniverse().setObject(ov);
+      m_omniverse = &g_omniverse();
+    }
+  }
+  
+  //Start giAMR
+  auto iterAmr = EngineConfigs::s_activePlugins.find(GIPLUGINS::kgiAMR);
+  if (iterAmr != EngineConfigs::s_activePlugins.end()) {
+    if (m_loaderAMR.loadPlugin("giAMR_d.dll")) {
+      auto createAMR = reinterpret_cast<funCreateAMR>(m_loaderAMR.getProcedureByName("createAMR"));
+
+      BaseAMR::startUp();
+      BaseAMR* amr = createAMR();
+      g_AMR().setObject(amr);
+      m_AMR = &g_AMR();
+    }
   }
 
 }
@@ -204,7 +249,10 @@ BaseApp::destroySystems() {
   BaseRenderer::shutDown();
   GraphicsAPI::shutDown();
   SceneGraph::shutDown();
-  BaseOmni::shutDown();
   Time::shutDown();
   Logger::shutDown();
+  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != EngineConfigs::s_activePlugins.end()) {
+    BaseOmni::shutDown();
+  }
 }

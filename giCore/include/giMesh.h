@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    28/11/2020
  * @brief   This class have the funtionality for load models.
- * @bug     No known Bugs.
  */
 
 /**
@@ -14,6 +13,7 @@
 #include "giPrerequisitesCore.h"
 #include "giBaseGraphicsAPI.h"
 #include "giBuffer.h"
+#include "giMaterial.h"
 #include <giVector2.h>
 #include <giVector3.h>
 #include <giTransform.h>
@@ -25,57 +25,52 @@ namespace giEngineSDK {
    * @brief     Basic struc for my vertex.
    */
   struct SimpleVertex {
-    Vector3 Pos;
-    Vector2 Tex;  //UV
-    Vector3 Nor;
-    Vector3 Tang;
-    Vector3 BiNor;
-  };
-
-  /**
-   * @brief 
-   */
-  struct Texture {
-    uint32 id;
-    String type;
-    String path;
-    SharedPtr<Texture2D> texture;
-    SharedPtr<SamplerState> samplerState;
+    Vector3 Pos = Vector3::ZERO;
+    Vector2 Tex = Vector2::ZERO;  //UV
+    Vector3 Nor = Vector3::ZERO;
+    Vector3 Tang = Vector3::ZERO;
+    Vector3 BiNor = Vector3::ZERO;
   };
 
   /**
    * @class    Mesh.
    * @brief    This class have the funtionality for load models.
-   * @bug      No known Bugs.
    */
   class GI_CORE_EXPORT Mesh {
    public:
     //Mesh() = default;
 
-    ///Default constructor
+    /**
+     * @brief    .
+     * @param    inVertex      .
+     * @param    inIndex       .
+     * @param    inTextures    .
+     */
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
-         Vector<Texture> inTextures);
+         Vector<ResourceRef> inTextures);
 
     ///Destructor
     ~Mesh();
 
     /**
+     * @brief 
+     */
+    void
+    destroy();
+
+    /**
      * @brief    Load a mesh data.
-     * @bug      No known Bugs.
      */
     void 
     loadMesh();
            
     /**
      * @brief    Draw the mesh data.
-     * @bug      No known Bugs.
      */
     void 
     drawMesh();
 
-
-   //protected:
 
     //The vertex buffer for the mesh
     SharedPtr<Buffer> m_vertexBuffer = nullptr;
@@ -86,16 +81,18 @@ namespace giEngineSDK {
     //The index buffer for the mesh
     SharedPtr<Buffer> m_indexBuffer = nullptr;
 
-    //The list of Faces
+    //The list of Faces / Index data
     Vector<uint32> m_facesList;
 
     //The number of index in the mesh
     //int32 m_indexNum = 0;
 
     //Textures in the mesh
-    Vector<Texture> m_textures;
+    Vector<ResourceRef> m_textures;
 
+    String m_name;
 
+    //The reference for the path in Omniverse.
     String m_omniRefPath = "";
   };
 }

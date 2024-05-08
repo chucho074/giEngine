@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    12/04/2021
  * @brief   A basic camera.
- * @bug     No known Bugs.
  */
  
 /**
@@ -17,6 +16,16 @@
 #include "giComponent.h"
 
 namespace giEngineSDK {
+
+  namespace CAMERA_TYPE {
+    enum E {
+      kDefaultCamera = 0,
+      kEditorCamera,
+      kPlayerCamera,
+      kShadowCamera
+    };
+  }
+
   /**
    * @class   Camera. 
    * @brief   A basic uses for the camera.
@@ -86,17 +95,23 @@ namespace giEngineSDK {
     Matrix4 
     getProyectionMatrix();
 
+    /**
+     * @brief    Resize the camera information. 
+     */
+    void
+    resize(int32 inW, int32 inH);
+
    //private:
     float m_angle = 0;
     float m_aspectRatio = 0;
     float m_near = 0;
     float m_far = 0;
-    //Vector4 m_eye = { 100.0f,  -50.0f, -180.0f, 1.0f };  // En posicion del mundo
-    //Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
-    //Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
-    Vector4 m_eye = { -200.f,  -200.0f, -200.0f, 1.0f };  // En posicion del mundo
+    Vector4 m_eye = { -200.0f, -200.0f, -200.0f, 1.0f };  // En posicion del mundo
     Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
     Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
+    //Vector4 m_eye = { -200.f,  -200.0f, -200.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
     Matrix4 m_viewMatrix;
     Matrix4 m_projMatrix;
     Vector4 m_rightVector;
@@ -107,5 +122,7 @@ namespace giEngineSDK {
 
     bool m_front, m_back, m_left, m_right = false;
     bool m_up, m_down = false;
+
+    CAMERA_TYPE::E m_cameraType;
   };
 }

@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    21/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -17,8 +16,7 @@
 namespace giEngineSDK {
   /**
    * @class    Texture2DOGL.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class Texture2DOGL : public Texture2D
   {

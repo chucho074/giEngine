@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/06/2021
  * @brief   .
- * @bug     No known Bugs.
  */
  
 /**
@@ -18,14 +17,17 @@ namespace giEngineSDK {
   namespace COMPONENT_TYPE {
     enum E {
       kStaticMesh = 0,
-      kCamera, 
+      kCamera,
+      /*
+      Lights
+      Sound
+      */
     };
   }
 
   /**
    * @class    Component.
-   * @brief    .
-   * @bug      No known Bugs.
+   * @brief    .   
    */
   class GI_CORE_EXPORT Component// : public Object
   {
@@ -37,11 +39,16 @@ namespace giEngineSDK {
     ~Component() = default;
 
     virtual void 
-    update(float inDeltaTime) { };
+    update(float inDeltaTime) {
+      GI_UNREFERENCED_PARAMETER(inDeltaTime);
+    };
 
 
     virtual void 
     render() { };
+
+    virtual void 
+    destroy() { };
     
    protected:
     

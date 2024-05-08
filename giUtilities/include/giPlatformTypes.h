@@ -5,11 +5,9 @@
  * @date    22/01/2021
  * @brief   Define the basic platform type variables. For porting, this might 
  *          be place to start.
- * @bug     No known Bugs.
  */
 
 #pragma once
-
 
 #include <cstdint>
 #include "giPlatformDefines.h"

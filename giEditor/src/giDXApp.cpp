@@ -4,15 +4,12 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/04/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
  * @include
  */
-#include <giDegrees.h>
-//#include <giGraphicsDX.h>
-#include <giCamera.h>
+#include "giDXApp.h"
 #include <giMatrix4.h>
 #include <giVector4.h>
 #include <giVector3.h>
@@ -27,72 +24,57 @@
 #include <giSampler.h>
 #include <giMesh.h>
 #include <giModel.h>
+#include <giFile.h>
 #include <giStaticMesh.h>
 #include <giSceneGraph.h>
 #include <SFML/Window.hpp>
 #include <SFML/Window/WindowBase.hpp>
-#include "giDXApp.h"
 
 DirectXApp::DirectXApp() {
   //Set the window size
-  //m_width = EngineConfigs::s_resolution.x;
   m_width = 1280;
-  //m_height = EngineConfigs::s_resolution.y;
+  //m_width = EngineConfigs::s_resolution.x;
   m_height = 720;
+  //m_height = EngineConfigs::s_resolution.y;
   m_world = Matrix4::IDENTITY;
-  m_editorUI.reset(new Editor);
+  m_editorUI = make_shared<Editor>();
 }
-
 
 void 
 DirectXApp::onCreate() {
+  auto& RM = g_resourceManager();
 
-  Vector2 tmpSize(m_window.getSize().x, m_window.getSize().y);
+  Vector2 tmpSize(m_width, m_height);
   
   m_editorUI->init(m_window.getSystemHandle(), tmpSize);
 
-  //Sets the main camera
-  SharedPtr<Camera> mainCamera = make_shared<Camera>();
-  mainCamera->init(Degrees(75.0f).getRadians(),
-                   1280.f / 720.f,
-                   0.01f,
-                   1000.0f);
-  SharedPtr<Actor> cameraActor = make_shared<Actor>();
-  cameraActor->m_actorName = "MainCamera";
-  cameraActor->addComponent(mainCamera, COMPONENT_TYPE::kCamera);
-  m_sceneGraph->addActor(cameraActor, m_sceneGraph->getRoot());
-
   //Sets Vela's model
-  SharedPtr<Model> tmpModel = make_shared<Model>();
-  tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
-  //tmpModel->loadFromFile("Resources/Models/cube.fbx");
-  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
-  modelComponent->setModel(tmpModel);
+  ResourceRef tmpModel;
+  //FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
+  //FILE tmpFileModel("Resources/Models/sphere.obj");
+  //FILE tmpFileModel("Resources/Models/Vela_v1.fbx");
+  FILE tmpFileModel("Resources/Models/Pistol.obj");
+  //FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
+
+  tmpModel = RM.resourceFromFile(tmpFileModel);
+  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-  tmpActor->m_actorName = "Vela";
+  tmpActor->m_actorName = "Vela2";
   m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
-
-  //Sets plane model
-  //SharedPtr<Model> tmpModelPlane = make_shared<Model>();
-  //tmpModelPlane->loadFromFile("Resources/Models/plano.fbx");
-  //SharedPtr<StaticMesh> modelComponentPlane = make_shared<StaticMesh>();
-  //modelComponentPlane->setModel(tmpModelPlane);
-  //SharedPtr<Actor> tmpActorPlane = make_shared<Actor>();
-  //tmpActorPlane->addComponent(modelComponentPlane, COMPONENT_TYPE::kStaticMesh);
-  //tmpActorPlane->m_actorName = "Plane";
-  //m_sceneGraph->addActor(tmpActorPlane, m_sceneGraph->getRoot());
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
   shadowCamera->init(Degrees(75.0f).getRadians(),
                      1280.f / 720.f,
                      0.01f,
-                     1000.0f);
+                     100000.0f);
 
   shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f });
+
   SharedPtr<Actor> lightActor = make_shared<Actor>();
   lightActor->m_actorName = "Light";
   lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kCamera);
@@ -115,21 +97,15 @@ DirectXApp::onCreate() {
   m_world = Matrix4::IDENTITY;
 }
 
-
 void 
 DirectXApp::onDestroy() {
   m_editorUI->destroy();
 }
 
-
 void 
 DirectXApp::onUpdate(float inDeltaTime) {
-  GI_UNREFERENCED_PARAMETER(inDeltaTime);
-  //World rotation
-  //m_world = XMMatrixRotationY(inDeltaTime);
 
-
-  auto& cameraRef = m_sceneGraph->getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+  auto& cameraRef = m_sceneGraph->m_editorCamera;
 
   if(cameraRef) {
     SharedPtr<Camera> tmpCamera = static_pointer_cast<Camera>(cameraRef);
@@ -183,7 +159,6 @@ DirectXApp::onUpdate(float inDeltaTime) {
   
 }
 
-
 void 
 DirectXApp::onRender() {
   
@@ -191,52 +166,28 @@ DirectXApp::onRender() {
 
 }
 
-
 void 
 DirectXApp::onEvent(MSG inMsg) {
   
-  //g_inputManager().sendEvent(inMsg);
+  GI_UNREFERENCED_PARAMETER(inMsg);
+
 
   m_editorUI->callBack();
 
-  //Vector4 tmpVect;
-  //if (inEvent.type == Event::KeyPressed) {
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-  //    tmpVect = { 0.f, 0.f, 0.1f, 0.0f };
-  //  }
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-  //    tmpVect = { 0.f, 0.f, -0.1f, 0.0f };
-  //  }
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
-  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-  //    tmpVect = { -0.1f, 0.f, 0.f, 0.0f };
-  //  }
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
-  //      sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-  //    tmpVect = { 0.1f, 0.f, 0.f, 0.0f };
-  //  }
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-  //    tmpVect = { 0.f, 0.1f, 0.f, 0.0f };
-  //  }
-  //  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-  //    tmpVect = { 0.f, -0.1f, 0.f, 0.0f };
-  //  }
-  //  m_mainCamera.move(tmpVect);
-  //  //Sets the view matrix
-  //  CameraConstantBuffer tmpConstantCamera;
-  //  tmpConstantCamera.mView = m_mainCamera.getViewMatrix();
-  //  m_gapi->updateSubresource(m_cBufferCamera, 
-  //                            &tmpConstantCamera, 
-  //                            sizeof(tmpConstantCamera));
-  //}
-  //if (inEvent.type == Event::Resized) {    
-  //  CameraConstantBuffer tmpConstantCamera;
-  //  //Sets the projection matrix
-  //  tmpConstantCamera.mProjection = m_mainCamera.getProyectionMatrix();
-  //  m_gapi->updateSubresource(m_cBufferCamera, 
-  //                            &tmpConstantCamera, 
-  //                            sizeof(tmpConstantCamera));
-  //}
+  
+}
+
+void 
+DirectXApp::resize(int32 inW, int32 inH) {
+  //Set the new size to the camera.
+  auto& SG = g_sceneGraph();
+  SG.resizeMainCamera(inW, inH);
+
+  //Set the new size to ImGui.
+  ImGuiIO& io = ImGui::GetIO();
+  io.DisplaySize = { static_cast<float>(inW), static_cast<float>(inH) };
+  
+  //Set the new size to the textures.
+  g_graphicsAPI().getViewportTex().reset();
+
 }

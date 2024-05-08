@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/03/2021
  * @brief   Everything about buffers.
- * @bug     No known Bugs.
  */
 
 /**
@@ -16,8 +15,7 @@
 namespace giEngineSDK {
   /**
    * @struct   BufferDesc.
-   * @brief    For the buffer information.
-   * @bug      No known Bugs.
+   * @brief    For the buffer information.   
    */
   struct BufferDesc {
     uint32 byteWidth = 0;
@@ -36,8 +34,7 @@ namespace giEngineSDK {
   
   /**
    * @class    Buffer.
-   * @brief    A buffer interface for own buffers.
-   * @bug      No known Bugs.
+   * @brief    A buffer interface for own buffers.   
    */
   class Buffer {
   public:

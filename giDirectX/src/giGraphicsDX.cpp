@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   The Graphics API in charge to use DX11.
- * @bug     No known Bugs.
  */
  
 /**
@@ -105,7 +104,7 @@ namespace giEngineSDK {
                                          &m_devContext);
       
       if (S_OK == hr) {
-        break;;
+        break;
       }
       else {
         return false;
@@ -113,7 +112,6 @@ namespace giEngineSDK {
       
     }
     m_backBuffer.reset(new Texture2DDX);
-    //m_backBuffer = new Texture2DDX();
 
     //Get a texture from Swap Chain
     m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer->m_texture);
@@ -129,8 +127,8 @@ namespace giEngineSDK {
     //Texture for the viewport.
     m_viewportTexture.reset(new Texture2DDX);
 
-    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(1280,
-                                                                     720,
+    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(inWidth,
+                                                                     inHeight,
                                                                      1,
                                                                      GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
                                                                      GI_BIND_FLAG::kBIND_RENDER_TARGET
@@ -269,10 +267,10 @@ namespace giEngineSDK {
 
   void
   CGraphicsDX::createViewport(uint32 inNumVP, 
-                        int32 inWidth, 
-                        int32 inHeight, 
-                        int32 inTopX, 
-                        int32 inTopY) {
+                              int32 inWidth, 
+                              int32 inHeight, 
+                              int32 inTopX, 
+                              int32 inTopY) {
 
     CD3D11_VIEWPORT VP(static_cast<float>(inTopX), 
                        static_cast<float>(inTopY), 
@@ -439,10 +437,10 @@ namespace giEngineSDK {
     SharedPtr<BufferDX> tmpBuffer;
     tmpBuffer.reset(new BufferDX);
 
-    CD3D11_BUFFER_DESC tmpDesc(inByteWidth, inBindFlags);
+    CD3D11_BUFFER_DESC tmpDesc((uint32)inByteWidth, inBindFlags);
     D3D11_SUBRESOURCE_DATA tmpData;
     tmpData.pSysMem = inBufferData;
-    tmpData.SysMemPitch = inByteWidth;
+    tmpData.SysMemPitch = (uint32)inByteWidth;
     tmpData.SysMemSlicePitch = 0;
     tmpDesc.StructureByteStride = 0;
 
@@ -514,13 +512,13 @@ namespace giEngineSDK {
     memset(&tmpDesc, 0, sizeof(tmpDesc));
     switch (inFillMode) {
     case FILLMODE::kSolid:
-      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      tmpDesc.FillMode = D3D11_FILL_SOLID;
       break;
     case FILLMODE::kWireFrame:
-      tmpDesc.FillMode == D3D11_FILL_WIREFRAME;
+      tmpDesc.FillMode = D3D11_FILL_WIREFRAME;
       break;
     default:
-      tmpDesc.FillMode == D3D11_FILL_SOLID;
+      tmpDesc.FillMode = D3D11_FILL_SOLID;
       break;
     }  
 
@@ -705,6 +703,60 @@ namespace giEngineSDK {
   }
 
   void 
+  CGraphicsDX::resizeBackTexture(int32 inW, int32 inH) {
+    m_devContext->OMSetRenderTargets(0, 0, 0);
+    m_backBuffer.reset();
+    m_defaultDSV.reset();
+
+    if(FAILED(m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error resizing the viewport Texture");
+      return;
+    }
+
+    SharedPtr<Texture2DDX> backBuffer(new Texture2DDX);
+    if(FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), 
+              (void**)&backBuffer->m_texture))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error obtaining back buffer from swapchain");
+      return;
+    }
+
+    if(FAILED(m_device->CreateRenderTargetView(backBuffer->m_texture,
+                                               nullptr,
+                                               &backBuffer->m_renderTargetView))) {
+      Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
+                                  "Error creating the render target view for the back buffer");
+      return;
+    }
+
+    m_devContext->OMSetRenderTargets(1, &backBuffer->m_renderTargetView, NULL);
+
+    //Texture for the viewport.
+    m_viewportTexture.reset(new Texture2DDX);
+
+    m_viewportTexture = static_pointer_cast<Texture2DDX>(createTex2D(inW,
+                                                                     inH,
+                                                                     1,
+                                                                     GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                                     GI_BIND_FLAG::kBIND_RENDER_TARGET
+                                                                     | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+    SharedPtr<Texture2D> depthTex = createTex2D(inW, 
+                                                inH, 
+                                                1, 
+                                                GI_FORMAT::kFORMAT_D24_UNORM_S8_UINT, 
+                                                GI_BIND_FLAG::kBIND_DEPTH_STENCIL);
+
+    m_backBuffer.reset();
+    m_defaultDSV.reset();
+    m_backBuffer = backBuffer;
+    m_defaultDSV = static_pointer_cast<Texture2DDX>(depthTex);
+
+    setViewport(0, 0, inW, inH, 0.f, 1.f);
+  }
+
+  void
   CGraphicsDX::clearBackTexture(float inColor[4]) {
     clearRTV(static_pointer_cast<Texture2D>(getViewportTex()),
              inColor);
@@ -730,6 +782,23 @@ namespace giEngineSDK {
 
 
   void 
+  CGraphicsDX::setViewport(int32 inTopLeftX, 
+                           int32 inTopLeftY, 
+                           int32 inWidth, 
+                           int32 inHeight, 
+                           float inMinDepth, 
+                           float inMaxDepth) {
+    D3D11_VIEWPORT vp;
+    vp.Width = static_cast<FLOAT>(inWidth);
+    vp.Height = static_cast<FLOAT>(inHeight);
+    vp.MinDepth = inMinDepth;
+    vp.MaxDepth = inMaxDepth;
+    vp.TopLeftX = static_cast<FLOAT>(inTopLeftX);
+    vp.TopLeftY = static_cast<FLOAT>(inTopLeftY);
+    m_devContext->RSSetViewports(1, &vp);
+  }
+
+  void
   CGraphicsDX::vsSetShader(SharedPtr<BaseVertexShader> inVShader) {
     
     auto tmpShader = static_pointer_cast<VertexShaderDX>(inVShader);
@@ -875,6 +944,7 @@ namespace giEngineSDK {
         tmpRTV[i] = static_pointer_cast<Texture2DDX>(inRTs[i])->m_renderTargetView;
       }
       else {
+        __debugbreak();
         break;
       }
     }
@@ -925,20 +995,22 @@ namespace giEngineSDK {
   Vector4 * 
   CGraphicsDX::rsGetScissorRects(uint32 inNumRects) {
     Vector4 * tmpScissor;
-    for (int i = 0; i < inNumRects; ++i) {
-       D3D11_RECT r = { tmpScissor[i].x,
-                        tmpScissor[i].y,
-                        tmpScissor[i].z,
-                        tmpScissor[i].w };
+    for (uint32 i = 0; i < inNumRects; ++i) {
+       D3D11_RECT r = { (LONG)tmpScissor[i].x,
+                        (LONG)tmpScissor[i].y,
+                        (LONG)tmpScissor[i].z,
+                        (LONG)tmpScissor[i].w };
 
       m_devContext->RSGetScissorRects(&inNumRects, &r);
     }
     return tmpScissor;
   }
   
-  void 
-  CGraphicsDX::rsGetViewports(uint32 inNumViewports, void* inViewport) {
-    m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)inViewport);
+  void *
+  CGraphicsDX::rsGetViewports(uint32 inNumViewports) {
+    void* tmpViewport;
+    m_devContext->RSGetViewports(&inNumViewports, (D3D11_VIEWPORT*)tmpViewport);
+    return tmpViewport;
   }
 
   SharedPtr<BaseRasterizerState>
@@ -1055,19 +1127,19 @@ namespace giEngineSDK {
 
   void 
   CGraphicsDX::rsSetScissorRects(uint32 inNumRects, Vector4* inRects) {
-    const D3D11_RECT tmpRect;
+    D3D11_RECT tmpRect;
     m_devContext->RSSetScissorRects(inNumRects, &tmpRect);
-    inRects->x = tmpRect.top;
-    inRects->y = tmpRect.left;
-    inRects->z = tmpRect.right;
-    inRects->w = tmpRect.bottom;
+    inRects->x = (float)tmpRect.top;
+    inRects->y = (float)tmpRect.left;
+    inRects->z = (float)tmpRect.right;
+    inRects->w = (float)tmpRect.bottom;
   }
   
 
   void
   CGraphicsDX::drawIndexed(size_T inNumIndexes,
                            uint32 inStartLocation) {
-    m_devContext->DrawIndexed(inNumIndexes, inStartLocation, 0);
+    m_devContext->DrawIndexed((uint32)inNumIndexes, inStartLocation, 0);
   }
 
   void 
@@ -1077,219 +1149,5 @@ namespace giEngineSDK {
     m_devContext->Dispatch(inThreadGroupX, inThreadGroupY, inThreadGroupZ);
   }
 
-  SharedPtr<Texture2D>
-  CGraphicsDX::TextureFromFile(String inString, String inDirectory) {
-    int32 width, height, nrChannels;
-    inString = inString.substr(inString.find_last_of('/') + 1, inString.length());
 
-    size_T formatPos = inString.find(".");
-    String tmpFormat = inString.substr(formatPos);
-
-    if (".dds" == tmpFormat || ".png" == tmpFormat || ".jpg" == tmpFormat || ".tga" == tmpFormat) {
-      uint8* data = stbi_load((inDirectory + inString).c_str(),
-                              &width,
-                              &height,
-                              &nrChannels, 4);
-      if (data) {
-        SharedPtr<Texture2DDX> temp;
-        temp.reset(new Texture2DDX());
-        CD3D11_TEXTURE2D_DESC tempDesc;
-        memset(&tempDesc, 0, sizeof(tempDesc));
-        tempDesc.Width = width;
-        tempDesc.Height = height;
-        tempDesc.MipLevels = 1;
-        tempDesc.ArraySize = 1;
-        tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8G8B8A8_UNORM;
-        tempDesc.SampleDesc.Count = 1;
-        tempDesc.SampleDesc.Quality = 0;
-        tempDesc.Usage = D3D11_USAGE_DEFAULT;
-        tempDesc.BindFlags = (D3D11_BIND_FLAG)GI_BIND_FLAG::kBIND_SHADER_RESOURCE;
-        tempDesc.CPUAccessFlags = 0;
-        tempDesc.MiscFlags = 0;
-
-        D3D11_SUBRESOURCE_DATA srdata;
-        memset(&srdata, 0, sizeof(srdata));
-        srdata.pSysMem = data;
-        srdata.SysMemPitch = width * 4;
-        srdata.SysMemSlicePitch = 0;
-
-        if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &temp->m_texture))) {
-          //Send error message
-          //Pone un breakpoint cuando llegue aqui
-          __debugbreak();
-          return nullptr;
-        }
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        memset(&srvDesc, 0, sizeof(srvDesc));
-        srvDesc.Format = tempDesc.Format;
-        srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-        srvDesc.Texture2D.MipLevels = 0;
-        srvDesc.Texture2D.MostDetailedMip = 0;
-
-        if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
-          __debugbreak();
-          return nullptr;
-        }
-
-
-        stbi_image_free(data);
-        return temp;
-      }
-    }
-
-    // Texture with Ambient Oclussion, Metal & Rougness in RGB Channels
-    //else if ("giTexAOMROG" == tmpFormat) {
-    //  uint8* data = stbi_load((inDirectory + inString).c_str(),
-    //                          &width,
-    //                          &height,
-    //                          &nrChannels, 4);
-    //  if (data) {
-    //    Texture2DDX* tempR = new Texture2DDX();
-    //    Texture2DDX* tempG = new Texture2DDX();
-    //    Texture2DDX* tempB = new Texture2DDX();
-    //    CD3D11_TEXTURE2D_DESC tempDesc;
-    //    memset(&tempDesc, 0, sizeof(tempDesc));
-    //    tempDesc.Width = width;
-    //    tempDesc.Height = height;
-    //    tempDesc.MipLevels = 1;
-    //    tempDesc.ArraySize = 1;
-    //    tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8_UNORM;
-    //    tempDesc.SampleDesc.Count = 1;
-    //    tempDesc.SampleDesc.Quality = 0;
-    //    tempDesc.Usage = D3D11_USAGE_DEFAULT;
-    //    tempDesc.BindFlags = (D3D11_BIND_FLAG)GI_BIND_FLAG::kBIND_SHADER_RESOURCE;
-    //    tempDesc.CPUAccessFlags = 0;
-    //    tempDesc.MiscFlags = 0;
-
-    //    D3D11_SUBRESOURCE_DATA srdata;
-    //    memset(&srdata, 0, sizeof(srdata));
-    //    srdata.pSysMem = data;
-    //    srdata.SysMemPitch = width;
-    //    srdata.SysMemSlicePitch = 0;
-
-    //    // R Channel
-
-    //    if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &tempR->m_texture))) {
-    //      //Send error message
-    //      //Pone un breakpoint cuando llegue aqui
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    //    memset(&srvDesc, 0, sizeof(srvDesc));
-    //    srvDesc.Format = tempDesc.Format;
-    //    srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-    //    srvDesc.Texture2D.MipLevels = 0;
-    //    srvDesc.Texture2D.MostDetailedMip = 0;
-
-    //    if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    //G Channel
-    //    tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8_UNORM;
-    //    if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &tempG->m_texture))) {
-    //      //Send error message
-    //      //Pone un breakpoint cuando llegue aqui
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    //    memset(&srvDesc, 0, sizeof(srvDesc));
-    //    srvDesc.Format = tempDesc.Format;
-    //    srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-    //    srvDesc.Texture2D.MipLevels = 0;
-    //    srvDesc.Texture2D.MostDetailedMip = 0;
-
-    //    if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    //B Channel
-    //    tempDesc.Format = (DXGI_FORMAT)GI_FORMAT::kFORMAT_R8_UNORM;
-    //    if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &tempB->m_texture))) {
-    //      //Send error message
-    //      //Pone un breakpoint cuando llegue aqui
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    //    memset(&srvDesc, 0, sizeof(srvDesc));
-    //    srvDesc.Format = tempDesc.Format;
-    //    srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-    //    srvDesc.Texture2D.MipLevels = 0;
-    //    srvDesc.Texture2D.MostDetailedMip = 0;
-
-    //    if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
-    //      __debugbreak();
-    //      return nullptr;
-    //    }
-
-    //    stbi_image_free(data);
-    //    return temp;
-    //  }
-    //  
-    //}
-
-    return nullptr;
-  }
-
-  SharedPtr<Texture2D>
-  CGraphicsDX::TextureFromMem(uint8 * inData, 
-                              int32 inWidth, 
-                              int32 inHeight, 
-                              GI_FORMAT::E inFormat, 
-                              GI_BIND_FLAG::E inBindFlags) { 
-    if (inData) {
-      SharedPtr<Texture2DDX> temp;
-      temp.reset(new Texture2DDX);
-      CD3D11_TEXTURE2D_DESC tempDesc;
-      memset(&tempDesc, 0, sizeof(tempDesc));
-      tempDesc.Width = inWidth;
-      tempDesc.Height = inHeight;
-      tempDesc.MipLevels = 1;
-      tempDesc.ArraySize = 1;
-      tempDesc.Format = (DXGI_FORMAT)inFormat;
-      tempDesc.SampleDesc.Count = 1;
-      tempDesc.SampleDesc.Quality = 0;
-      tempDesc.Usage = D3D11_USAGE_DEFAULT;
-      tempDesc.BindFlags = (D3D11_BIND_FLAG)inBindFlags;
-      tempDesc.CPUAccessFlags = 0;
-      tempDesc.MiscFlags = 0;
-
-      D3D11_SUBRESOURCE_DATA srdata;
-      memset(&srdata, 0, sizeof(srdata));
-      srdata.pSysMem = inData;
-      srdata.SysMemPitch = inWidth * 4;
-      srdata.SysMemSlicePitch = 0;
-
-      if (FAILED(m_device->CreateTexture2D(&tempDesc, &srdata, &temp->m_texture))) {
-        //Send error message
-        //Pone un breakpoint cuando llegue aqui
-        __debugbreak();
-        return nullptr;
-      }
-
-      D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-      memset(&srvDesc, 0, sizeof(srvDesc));
-      srvDesc.Format = tempDesc.Format;
-      srvDesc.ViewDimension = static_cast<D3D11_SRV_DIMENSION>(GI_SRV_DIMENSION::kSRV_DIMENSION_TEXTURE2D);
-      srvDesc.Texture2D.MipLevels = 0;
-      srvDesc.Texture2D.MostDetailedMip = 0;
-
-      if (FAILED(m_device->CreateShaderResourceView(temp->m_texture, nullptr, &temp->m_subResourceData))) {
-        __debugbreak();
-        return nullptr;
-      }
-
-      return temp;
-    }
-    return nullptr;
-  }
 }

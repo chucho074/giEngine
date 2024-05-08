@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    27/08/2020
  * @brief   A class for the basics functions of the apps.
- * @bug     No known Bugs.
  */
 
 /**
@@ -22,6 +21,7 @@
 #include "giSceneGraph.h"
 #include "giBaseInput.h"
 #include "giBaseOmniverse.h"
+#include "giBaseAMR.h"
 #include "giBaseConfig.h"
 
 using namespace giEngineSDK;
@@ -34,8 +34,7 @@ using sf::Event;
 
 /**
  * @class    BaseApp.
- * @brief    A class for the basics functions of the apps.
- * @bug      No known Bugs.
+ * @brief    A class for the basics functions of the apps. 
  */
 class GI_CORE_EXPORT BaseApp
 {
@@ -50,7 +49,6 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Runs the app.
-   * @bug      No known Bugs.
    * @return   Returns a 0 if it's ok.
    */
   int32 
@@ -58,14 +56,12 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual Method in charge of creating a virtual method.
-   * @bug      No known Bugs.
    */
   virtual void 
   onCreate() {};
 
   /**
    * @brief    Virtual Method in charge of destroying the settings and members.
-   * @bug      No known Bugs.
    */
   virtual void 
   onDestroy() {};
@@ -73,7 +69,6 @@ class GI_CORE_EXPORT BaseApp
   /**
    * @brief    Virtual method in charge to updating the logical information.
    * @param    inDeltaTime     For update the game time.
-   * @bug      No known Bugs.
    */
   virtual void 
   onUpdate(float inDeltaTime = 0) { 
@@ -82,7 +77,6 @@ class GI_CORE_EXPORT BaseApp
 
   /**
    * @brief    Virtual method in charge of drawing on screen all the visual info.
-   * @bug      No known Bugs.
    */
   virtual void 
   onRender() {};
@@ -90,55 +84,71 @@ class GI_CORE_EXPORT BaseApp
   /**
    * @brief    Method in charge of get the events of the window
    * @param    inMsg           The message to process.
-   * @bug      No known Bugs.
    */
   virtual void 
-  onEvent(MSG inMsg) {};
+  onEvent(MSG inMsg) {
+    GI_UNREFERENCED_PARAMETER(inMsg);
+  };
+  
+  /**
+   * @brief 
+   */
+  virtual void
+  resize(int32 inW, int32 inH) {
+    GI_UNREFERENCED_PARAMETER(inW);
+    GI_UNREFERENCED_PARAMETER(inH);
+  };
 
  private:
   /**
    * @brief    Method in charge of drawing on the screen all the visual info.
-   * @bug      No known Bugs.
    */
   void 
   createWindow();
 
   /**
+   * @brief    Method in charge of the creation of the information.
+   */
+  void
+  create();
+
+  /**
    * @brief    Method in charge of updates the logic info.
    * @param    inDeltaTime     The delta time.
-   * @bug      No known Bugs.
    */
   void 
   update(float inDeltaTime);
 
   /**
    * @brief    Method that draw the information Not Modified Func.
-   * @bug      No known Bugs.
    */
   void 
   render();
+
+  /**
+   * @brief    Method in charge of destroy the information used.
+   */
+  void
+  destroy();
   
   /**
    * @brief    Method that draw the information Not Modified Func.
-   * @bug      No known Bugs.
    */
   void 
-  event(MSG inMsg);
+  processEvent(MSG inMsg);
 
   /**
    * @brief    Method that initialize the modules and plug-ins for the engine.
-   * @bug      No known Bugs.
    */
   void 
   initSystems();
   
   /**
    * @brief    Method that destroys the systems of the engine.
-   * @bug      No known Bugs.
    */
   void 
   destroySystems();
-
+  
 
  public:
   
@@ -160,11 +170,15 @@ class GI_CORE_EXPORT BaseApp
 
   LibraryLoader m_loaderOmniverse;
 
+  LibraryLoader m_loaderAMR;
+
   GraphicsAPI* m_gapi = nullptr;
 
   BaseRenderer* m_renderer = nullptr;
 
   SceneGraph * m_sceneGraph = nullptr;
+  
+  ResourceManager * m_resoureceManager = nullptr;
 
   Time * m_time = nullptr;
 
@@ -174,7 +188,9 @@ class GI_CORE_EXPORT BaseApp
 
   BaseOmni * m_omniverse = nullptr;
 
+  BaseAMR * m_AMR = nullptr;
+
   sf::Clock m_appClock;
 
-  float m_deltaTime;
+  float m_deltaTime = 0.f;
 };

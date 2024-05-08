@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    05/03/2021
  * @brief   Management of the Textures for DX.
- * @bug     No known Bugs.
  */
 
 /**
@@ -18,28 +17,24 @@ struct TextureDesc;
 
 /**
  * @class    Texture2DDX.
- * @brief    Manage the textures of DirectX.
- * @bug      No known Bugs.
+ * @brief    Manage the textures of DirectX. 
  */
 namespace giEngineSDK {
   class Texture2DDX : public Texture2D 
   {
    public:
     /**
-     * @brief  : Constructor.
-     * @bug    : No Bugs known.
+     * @brief    Constructor.
      */
     Texture2DDX() = default;
   
     /**
-     * @brief  : Destructor.
-     * @bug    : No Bugs known.
+     * @brief    Destructor.
      */
     ~Texture2DDX() = default;
   
     /**
-     * @brief  : Object for direct management of the texture.
-     * @bug    : No Bugs known.
+     * @brief    Object for direct management of the texture.
      */
     ID3D11ShaderResourceView* 
     getSRV() { 
@@ -47,7 +42,7 @@ namespace giEngineSDK {
     }
 
     /**
-     * @brief    .
+     * @brief    Getter for the texture as void*.
      * @return   The texture of the specific API.
      */
     void *

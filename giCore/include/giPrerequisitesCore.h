@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/04/2021
  * @brief   The prerequisites for the core.
- * @bug     No known Bugs.
  */
  
 /**
@@ -15,6 +14,8 @@
 #include <giPrerequisitesUtilities.h>
 
 #include <giMath.h>
+
+#include <giSpecificImplementations.h>
 
 
 /*****************************************************************************/

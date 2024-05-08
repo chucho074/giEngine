@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    19/01/2022
  * @brief   A basic conection to NVIDIA Omniverse Service.
- * @bug     No known Bugs.
  */
  
 /**
@@ -12,17 +11,15 @@
  */
 #pragma once
 #include <giBaseOmniverse.h>
-#include <giSceneGraph.h>
-#include "giPrerequisitesOmniverse.h"`
-
+#include "giPrerequisitesOmniverse.h"
+#include "giMesh.h"
 namespace giEngineSDK {
 
   class Model;
 
   /**
    * @class    Omni.
-   * @brief    A conection to Nvidia Omniverse.
-   * @bug      No known Bugs.
+   * @brief    A conection to Nvidia Omniverse.   
    */
   class Omni : public BaseOmni
   {
@@ -63,7 +60,7 @@ namespace giEngineSDK {
      * @param    inProjectName The name of the current project.
      */
     void
-    createEmptyUSD(String inProjectName) override;
+    createEmptyUSD(StringView inProjectName) override;
 
     /**
      * @brief    Creates / Sets data in the Scene Graph from an existent 
@@ -78,8 +75,8 @@ namespace giEngineSDK {
      * @param    inMesh        USD data obtained.
      * @param    inPath        The reference path for the mesh.
      */
-    Mesh
-    createMeshFromGeoMesh(UsdGeomMesh inMesh, String inPath);
+    SharedPtr<Mesh>
+    createMeshFromGeoMesh(UsdGeomMesh inMesh, StringView inPath);
 
     /**
      * @brief    Function to send the information to Omni.
@@ -92,7 +89,7 @@ namespace giEngineSDK {
     setTransformOp(Vector3 inData,
                    GI_OMNI_OP::E inOp,
                    GI_OMNI_PRECISION::E inPrecision,
-                   String omniPath) override;
+                   StringView omniPath) override;
 
     /**
      * @brief    Get the information from the SG.

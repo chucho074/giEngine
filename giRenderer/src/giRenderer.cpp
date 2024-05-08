@@ -1,10 +1,9 @@
 /**
  * @file    giRenderer.cpp
- * @author  Jes�s Alberto Del Moral Cupil
+ * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    18/08/2021
  * @brief   A basic description of the what do the doc.
- * @bug     No known Bugs.
  */
  
 /**
@@ -29,10 +28,9 @@ namespace giEngineSDK {
     auto& sgraph = SceneGraph::instance();
     
     //Get the main camera
-    auto& camera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
-    m_mainCamera = static_pointer_cast<Camera>(camera);
+    m_mainCamera = sgraph.m_editorCamera;
+
     //Get the Shadow Camera
-    
     auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
     m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
@@ -44,6 +42,7 @@ namespace giEngineSDK {
     sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.comparisonFunc = 1;
     sampDesc.minLOD = 0;
+    //sampDesc.maxLOD = Math::PI;
     sampDesc.maxLOD = 3.402823466e+38f;
     m_sampler = gapi.createSampler(sampDesc);
 
@@ -84,7 +83,7 @@ namespace giEngineSDK {
     // Update variables that change once per frame
     CBChangesEveryFrame tmpConstantEveryFrame;
     tmpConstantEveryFrame.mWorld = Matrix4::IDENTITY;
-    //tmpConstantEveryFrame.vMeshColor = m_meshColor;
+    tmpConstantEveryFrame.vMeshColor = m_meshColor;
 
 
     //Create Constant Buffer for Change Every Frame
@@ -313,10 +312,14 @@ namespace giEngineSDK {
     /*                               LIGHT                                  */
     /************************************************************************/
     //Create Vertex Shader 
-    m_vertexShaderLight = gapi.createVShaderFromFile(L"Resources/Light.hlsl", "vs_main", "vs_4_0");
+    m_vertexShaderLight = gapi.createVShaderFromFile(L"Resources/Light.hlsl", 
+                                                     "vs_main", 
+                                                     "vs_4_0");
 
     //Create Pixel Shader
-    m_pixelShaderLight = gapi.createPShaderFromFile(L"Resources/Light.hlsl", "ps_main", "ps_4_0");
+    m_pixelShaderLight = gapi.createPShaderFromFile(L"Resources/Light.hlsl", 
+                                                    "ps_main", 
+                                                    "ps_4_0");
 
     //Create Input Layout
     Vector<InputLayoutDesc> layoutDescLight;
@@ -355,25 +358,34 @@ namespace giEngineSDK {
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
                                       &Lightcb);
-    
-    
-    m_SAQ = make_shared<Model>();
-
-    m_SAQ->loadFromFile("Resources/Models/ScreenAlignedQuad.3ds");
-
 
   }
 
   void
   Renderer::update() {
-    
+    //auto& gapi = g_graphicsAPI();
+
+
+    //CameraConstantBuffer tmpConstantCamera;
+    //tmpConstantCamera.mView = m_mainCamera->getViewMatrix().transpose();
+
+    ////Sets the projection matrix
+    //tmpConstantCamera.mProjection = m_mainCamera->getProyectionMatrix().transpose();
+
+    ////Create Constant Buffer for Camera
+    //m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
+    //                                    GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+    //                                    nullptr);
+    ////Update the Camera Constant Buffer 
+    //gapi.updateSubresource(m_cBufferCamera, 
+    //                       &tmpConstantCamera, 
+    //                       sizeof(tmpConstantCamera));
   }
   
   void 
   Renderer::render() {
 
     auto& gapi = g_graphicsAPI();
-    auto& sgraph = SceneGraph::instance();
 
     /************************************************************************/
     /*                           GBUFFER                                    */
@@ -507,10 +519,9 @@ namespace giEngineSDK {
                        bool inClear) {
 
     auto& gapi = g_graphicsAPI();
+    auto& RM = g_resourceManager();
 
     auto& sgraph = SceneGraph::instance();
-
-    gapi.omSetRenderTarget(inRenderTarget, inDS);
 
     if(inClear) {
       for (auto tmpRTV : inRenderTarget) {
@@ -521,6 +532,8 @@ namespace giEngineSDK {
     if(nullptr != inDS && inClear) {
       gapi.clearDSV(inDS);
     }
+
+    gapi.omSetRenderTarget(inRenderTarget, inDS);
 
     if (nullptr != inInputLayout) {
       gapi.aiSetInputLayout(inInputLayout);
@@ -534,13 +547,15 @@ namespace giEngineSDK {
       gapi.psSetShader(inPixelShader);
     }
 
-    if(nullptr != inSampler) {
-      gapi.psSetSamplerState(0, 1, inSampler);
+    for (int i = 0; i < inConstantBuffers.size(); ++i) {
+      if(inConstantBuffers[i] != nullptr) {
+        gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
+        gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
+      }
     }
 
-    for (int i = 0; i < inConstantBuffers.size(); ++i) {
-      gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
-      gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
+    if (nullptr != inSampler) {
+      gapi.psSetSamplerState(0, 1, inSampler);
     }
 
     int j = 0;
@@ -550,7 +565,7 @@ namespace giEngineSDK {
 
     //Draw
     if(inDrawSAQ) {
-      m_SAQ->drawModel();
+      RM.renderResource(RM.m_SAQ);
     } 
     else {
       sgraph.draw();
@@ -570,7 +585,7 @@ namespace giEngineSDK {
                          Vector<SharedPtr<Texture2D>> inShaderResources,
                          Vector<SharedPtr<Texture2D>> inUAVS,
                          SharedPtr<SamplerState> inSampler,
-                         Vector3 inDispatch) {
+                         Vector3i inDispatch) {
     //Get the Gapi
     auto& gapi = g_graphicsAPI();
     //Set Compute
@@ -626,6 +641,59 @@ namespace giEngineSDK {
     g_graphicsAPI().updateSubresource(m_cBufferChangeEveryFrame,
                                       &inTransformation, 
                                       0);
+  }
+
+  void
+  Renderer::resize(int32 inW, int32 inH) {
+    auto& gapi = g_graphicsAPI();
+    for (int32 i = 0; i < 5; ++i) {
+      gapi.psSetShaderResource(i, nullptr);
+    }
+
+    //Release light pass
+    m_ShadowTexture.clear();
+    //Release Blur-H
+    m_BlurTexture.clear();
+    //Release SSAO
+    m_SSAOTexture.clear();
+    //Release GBuffer
+    m_renderTargets.clear();
+
+
+    for(int32 i = 0; i < 5; ++i) {
+      m_renderTargets.push_back(gapi.createTex2D(inW, 
+                                                 inH, 
+                                                 1,
+                                                 GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                 GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                                 | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+    }
+
+    m_SSAOTexture.push_back(gapi.createTex2D(inW,
+                                             inH, 
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
+
+    m_BlurTexture.push_back(gapi.createTex2D(inW,
+                                             inH,
+                                             1,
+                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                             | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
+                                             | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
+  
+    m_ShadowTexture.push_back(gapi.createTex2D(1024, 
+                                               1024, 
+                                               1, 
+                                               GI_FORMAT::kFORMAT_R16_FLOAT, 
+                                               GI_BIND_FLAG::kBIND_RENDER_TARGET 
+                                               | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
+
+
+
   }
 
 }

@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    15/04/2021
  * @brief   A Depth Stencil View object.
- * @bug     No known Bugs.
  */
  
 /**

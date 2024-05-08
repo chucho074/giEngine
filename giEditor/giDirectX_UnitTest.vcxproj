@@ -168,7 +168,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/ImGui/;$(DEVLIBS)/GaInput/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;$(DEVLIBS)/ImguiSamples;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/ImGui/;$(DEVLIBS)/GaInput/include;$(SolutionDir)giAMR/include;$(SolutionDir)giDirectX/include;$(SolutionDir)giCore/include;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(SolutionDir)giInput/include;$(DEVLIBS)/Omniverse/target-deps/omni_client_library/include;$(DEVLIBS)/Omniverse/target-deps/nv_usd/debug/include;$(DEVLIBS)/ImguiSamples;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

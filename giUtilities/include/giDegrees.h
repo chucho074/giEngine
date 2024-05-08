@@ -4,7 +4,6 @@
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    02/02/2021
  * @brief   A basic Degrees.
- * @bug     No known Bugs.
  */
 
 /**
@@ -16,8 +15,7 @@
 
 
 /**
- * @class    Degrees.
- * @bug      No known Bugs.
+ * @class    Degrees. 
  */
 namespace giEngineSDK {
   
