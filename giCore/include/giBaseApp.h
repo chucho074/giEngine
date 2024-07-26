@@ -104,6 +104,12 @@ class GI_CORE_EXPORT BaseApp
   createWindow();
 
   /**
+   * @brief    Create the resources needed for the app.
+   */
+  void
+  create();
+
+  /**
    * @brief    Method in charge of updates the logic info.
    * @param    inDeltaTime     The delta time.
    * @bug      No known Bugs.
