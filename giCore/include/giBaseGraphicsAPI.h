@@ -18,6 +18,7 @@
 #include "giBasePixelShader.h"
 #include "giBaseRasterizer.h"
 #include "giVector4.h"
+#include "giTexture.h"
 
 ///Forward declarations
 namespace giEngineSDK {
@@ -732,7 +733,7 @@ namespace giEngineSDK {
      * @param    inDirectory   The directory of the texture to read.
      * @return   Returns the texture readed from a file.
      */
-    virtual SharedPtr<Texture2D>
+    virtual SharedPtr<Texture>
     TextureFromFile(String inString, 
                     String inDirectory) { 
       return nullptr;

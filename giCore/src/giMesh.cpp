@@ -9,14 +9,11 @@
 
 #include "giMesh.h"
 #include "giBaseGraphicsAPI.h"
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
 
 namespace giEngineSDK {
   Mesh::Mesh(Vector<SimpleVertex> inVertex, 
              Vector<uint32> inIndex, 
-             Vector<Texture> inTextures) {
+             Vector<SharedPtr<Texture>> inTextures) {
     m_vertexVector = inVertex;
     m_facesList = inIndex;
     m_textures = inTextures;
@@ -52,8 +49,8 @@ namespace giEngineSDK {
     auto& GAPI = g_graphicsAPI();
 
     for(uint32 i = 0; i < m_textures.size(); i++) {
-      GAPI.psSetShaderResource(i, m_textures[i].texture);
-      GAPI.psSetSamplerState(i, 1, m_textures[i].samplerState);
+      GAPI.psSetShaderResource(i, m_textures[i]->m_texture);
+      GAPI.psSetSamplerState(i, 1, m_textures[i]->m_samplerState);
     }
 
 

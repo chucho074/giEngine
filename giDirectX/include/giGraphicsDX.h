@@ -644,7 +644,7 @@ namespace giEngineSDK {
      * @param    inDirectory 
      * @return 
      */
-    SharedPtr<Texture2D>
+    SharedPtr<Texture>
     TextureFromFile(String inString, 
                     String inDirectory) override;
 

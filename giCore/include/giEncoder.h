@@ -13,10 +13,11 @@
 #pragma once
 #include "giPrerequisitesCore.h"
 #include "giFile.h"
+#include "giModel.h"
 
 namespace giEngineSDK {
 
-  class Encoder
+  class GI_CORE_EXPORT Encoder
   {
    public:
 
@@ -28,9 +29,19 @@ namespace giEngineSDK {
      * @brief    .
      * @param    inFileData    .
      */
-    void
-    encodeData(FILE inFileData);
+    static void
+    encodeFile(FILE inFileData);
 
+    static void 
+    exportObj(Path inPath, SharedPtr<Model> inModel);
+
+
+    static void 
+    exportMtl(Path inPath);
+
+
+    static void
+    encodeData(FILE& inFile);
 
    private:
 
@@ -38,10 +49,9 @@ namespace giEngineSDK {
   	 * @brief    Encode the information for the giProject Files.
   	 * @param    inFileData    The file data structure.
   	 */
-  	void
+  	static void
     encodeGiProject(FILE inFileData);
 
-   protected:
   };
 
 }

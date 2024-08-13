@@ -17,6 +17,7 @@
 #include <giVector2.h>
 #include <giVector3.h>
 #include <giTransform.h>
+#include <giTexture.h>
 
 namespace giEngineSDK {
 
@@ -32,16 +33,6 @@ namespace giEngineSDK {
     Vector3 BiNor;
   };
 
-  /**
-   * @brief 
-   */
-  struct Texture {
-    uint32 id;
-    String type;
-    String path;
-    SharedPtr<Texture2D> texture;
-    SharedPtr<SamplerState> samplerState;
-  };
 
   /**
    * @class    Mesh.
@@ -55,7 +46,7 @@ namespace giEngineSDK {
     ///Default constructor
     Mesh(Vector<SimpleVertex> inVertex, 
          Vector<uint32> inIndex, 
-         Vector<Texture> inTextures);
+         Vector<SharedPtr<Texture>> inTextures);
 
     ///Destructor
     ~Mesh();
@@ -93,7 +84,7 @@ namespace giEngineSDK {
     //int32 m_indexNum = 0;
 
     //Textures in the mesh
-    Vector<Texture> m_textures;
+    Vector<SharedPtr<Texture>> m_textures;
 
 
     String m_omniRefPath = "";

@@ -135,16 +135,16 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;$(SolutionDir)giRenderer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)giUtilities/include;$(SolutionDir)giRenderer/include;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/SFML/include;$(DEVLIBS)/yaml/include;$(DEVLIBS)/pmp/include;$(DEVLIBS)/eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib/$(PlatformTarget)/;$(DEVLIBS)/SFML/lib/$(PlatformTarget)/;$(DEVLIBS)/Assimp/lib/$(PlatformTarget)/;$(DEVLIBS)/GaInput/lib/$(PlatformTarget)/;$(DEVLIBS)/yaml/lib/$(PlatformTarget)/;$(DEVLIBS)/pmp/$(PlatformTarget)/$(ConfigurationName)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>giUtilities_d.lib;sfml-window-d.lib;sfml-system-d.lib;assimp-vc142-mtd.lib;yaml-cppd.lib;pmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -156,7 +156,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GI_CORE_EXPORTS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(SolutionDir)giAMR/include;$(SolutionDir)giUtilities/include;./include;$(DEVLIBS)/SFML/include;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -170,8 +170,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\giEncoder.cpp" />
     <ClCompile Include="src\giActor.cpp" />
+    <ClCompile Include="src\giBaseAMR.cpp" />
     <ClCompile Include="src\giBaseApp.cpp" />
     <ClCompile Include="src\giBaseConfig.cpp" />
     <ClCompile Include="src\giBaseGraphicsAPI.cpp" />
@@ -179,6 +179,7 @@
     <ClCompile Include="src\giBaseOmniverse.cpp" />
     <ClCompile Include="src\giBaseRenderer.cpp" />
     <ClCompile Include="src\giCamera.cpp" />
+    <ClCompile Include="src\giDecoder.cpp" />
     <ClCompile Include="src\giEncoder.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
@@ -187,8 +188,10 @@
     <ClCompile Include="src\giSceneNode.cpp" />
     <ClCompile Include="src\giSkeletalMesh.cpp" />
     <ClCompile Include="src\giStaticMesh.cpp" />
+    <ClCompile Include="src\giUUID.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\giBaseAMR.h" />
     <ClInclude Include="include\giBaseComputeShader.h" />
     <ClInclude Include="include\giBaseConfig.h" />
     <ClInclude Include="include\giBaseInput.h" />
@@ -205,6 +208,7 @@
     <ClInclude Include="include\giBaseVertexShader.h" />
     <ClInclude Include="include\giBuffer.h" />
     <ClInclude Include="include\giCamera.h" />
+    <ClInclude Include="include\giDecoder.h" />
     <ClInclude Include="include\giDepthState.h" />
     <ClInclude Include="include\giDepthStencilView.h" />
     <ClInclude Include="include\giEncoder.h" />
@@ -222,8 +226,10 @@
     <ClInclude Include="include\giSceneNode.h" />
     <ClInclude Include="include\giSkeletalMesh.h" />
     <ClInclude Include="include\giStaticMesh.h" />
+    <ClInclude Include="include\giTexture.h" />
     <ClInclude Include="include\giTexture2D.h" />
     <ClInclude Include="include\giTextureManager.h" />
+    <ClInclude Include="include\giUUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -74,7 +74,14 @@
 
 namespace giEngineSDK {
   using String = std::string;
+
+  using StringView = std::string_view;
+  
   using wString = std::wstring;
+
+  using ifstream = std::ifstream;
+
+  using ofstream = std::ofstream;
 
   /**
    * @brief      Vector.
@@ -193,4 +200,5 @@ namespace giEngineSDK {
   //Console line
   #define ConsoleLine std::endl;
 
+  #define toString(x) std::to_string(x)
 }

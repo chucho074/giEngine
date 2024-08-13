@@ -66,14 +66,20 @@
     <ClCompile Include="src\giResourceManager.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="include\giEncoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\giEncoder.cpp">
       <Filter>ResourceManager</Filter>
     </ClCompile>
     <ClCompile Include="src\giBaseConfig.cpp">
       <Filter>BaseApp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giBaseAMR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giDecoder.cpp">
+      <Filter>ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\giUUID.cpp">
+      <Filter>ResourceManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +186,18 @@
       <Filter>BaseApp</Filter>
     </ClInclude>
     <ClInclude Include="include\giBaseViewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giBaseAMR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giDecoder.h">
+      <Filter>ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giUUID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

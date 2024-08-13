@@ -12,6 +12,7 @@
  */
 #pragma once
 #include <giStdHeaders.h>
+#include <giTexture.h>
 #include "giImGui.h"
 
 using namespace giEngineSDK;
@@ -51,10 +52,12 @@ class ContentBrowser
 	void
 	destroy();
 
-
-	
- 
- protected:
+  /**
+   * @brief      Sets a new directory to see in the content browser.
+   * @param      inWorkingDir  The new working directory to set.
+   */
+  void
+  changeWorkingDir(Path inWorkingDir);
 	
 
  private:
@@ -64,4 +67,14 @@ class ContentBrowser
 	 Path m_currentDirectory;
 
    ImGuiWindowFlags m_windowFlags = 0;
+
+   //Textures
+   SharedPtr<Texture> objIcon;
+   SharedPtr<Texture> fbxIcon;
+   SharedPtr<Texture> mtlIcon;
+   SharedPtr<Texture> pngIcon;
+   SharedPtr<Texture> jpgIcon;
+   SharedPtr<Texture> fileIcon;
+   SharedPtr<Texture> folderIcon;
+   SharedPtr<Texture> sceneIcon;
 };

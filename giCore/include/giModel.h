@@ -12,15 +12,21 @@
  */
 #pragma once
 #include "giPrerequisitesCore.h"
-#include "giBaseGraphicsAPI.h"
 #include "giMesh.h"
 #include "giResource.h"
 #include <giTransform.h>
-#include <giStdHeaders.h>
-#include <giVector2.h>
-#include <giVector3.h>
 
 namespace giEngineSDK {
+
+  struct ModelInfo {
+    uint32 totalTriangles = 0;
+    uint32 totalVertices = 0;
+    uint32 totalMeshes = 0;
+    uint32 totalMaterials = 0;
+    uint32 totalAnimations = 0;
+    uint32 totalFaces = 0;
+    uint32 totalIndex = 0;
+  };
 
   /**
    * @class   Model. 
@@ -32,6 +38,8 @@ namespace giEngineSDK {
 
     ///Default constructor
     Model() = default;
+
+    Model(Vector<SharedPtr<Mesh>> inMeshes, Vector<SharedPtr<Texture>> inMaterials);
 
     ///Destructor
     ~Model();
@@ -103,15 +111,25 @@ namespace giEngineSDK {
                          aiTextureType type, 
                          String typeName);*/
 
+
+
+
+    static SharedPtr<Model>    
+    createSphere(int32 inNumTriangles);
+
+
+    static void
+    createQuadSphere(int32 inNumSubdivisions);
+
     //Get the name of the textures linked to the model
     Vector<String> m_texturesNames;
 
     //Meshes
-    Vector<Mesh> m_meshes;
+    Vector<SharedPtr<Mesh>> m_meshes;
 
     String m_directory;
 
-    Vector<Texture> m_texturesLoaded;
+    Vector<SharedPtr<Texture>> m_texturesLoaded;
 
     //Transform m_transform;
 

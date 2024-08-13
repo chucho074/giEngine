@@ -11,9 +11,10 @@
  * @include
  */
 #pragma once
-#include <giModule.h>
-#include <giVector2i.h>
-#include <giStdHeaders.h>
+#include "giModule.h"
+#include "giVector2i.h"
+#include "giStdHeaders.h"
+#include "giPrerequisitesCore.h"
 
 using namespace giEngineSDK;
 
@@ -35,7 +36,7 @@ namespace GIPLUGINS {
   };
 }
 
-class EngineConfigs : public Module<EngineConfigs>
+class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 {
  public:
    EngineConfigs() = default;
@@ -48,6 +49,8 @@ class EngineConfigs : public Module<EngineConfigs>
   static String s_projectName;
   static GIENGINE_API::E s_activeGraphicApi;
   static Path s_projectPath;
+  static Path s_contentPath;
+  static Path s_generatedPath;
 
 
   //Plugins
@@ -62,5 +65,5 @@ class EngineConfigs : public Module<EngineConfigs>
 
 };
 
-EngineConfigs&
+GI_CORE_EXPORT EngineConfigs&
 g_engineConfigs();

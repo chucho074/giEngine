@@ -62,6 +62,20 @@ class Editor
   void
   callBack();
 
+  
+  /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMR();
+
+  /**
+   * @brief      Renders a window for giAMR tool.
+   */
+  void
+  renderAMRprocess();
+
+
  private:
    
    SharedPtr<UI> m_ui;
@@ -82,4 +96,10 @@ class Editor
 
    bool m_isRunningOmniverse = false;
 
+
+
+   //To change
+   Path m_savingPath;
+
+   int32 m_Subdiv = 0;
 };
