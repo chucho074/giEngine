@@ -60,8 +60,10 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
   static String s_existingStage;
   static String s_destinationPath;
 
-  //Editor settings
+  //AMR settings
+  static Path s_anacondaPath;
 
+  //Editor settings
 
 };
 

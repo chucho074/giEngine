@@ -129,7 +129,7 @@ namespace giEngineSDK {
     
   };
 
-  SceneGraph& 
+  GI_CORE_EXPORT SceneGraph &
   g_sceneGraph();
 
 }

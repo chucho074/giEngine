@@ -1080,7 +1080,7 @@ namespace giEngineSDK {
   SharedPtr<Texture>
   CGraphicsDX::TextureFromFile(String inFileName, String inDirectory) {
     int32 width, height, nrChannels;
-    inFileName = inFileName.substr(inFileName.find_last_of('/') + 1, inFileName.length());
+    //inFileName = inFileName.substr(inFileName.find_last_of('/') + 1, inFileName.length());
 
     size_T formatPos = inFileName.find(".");
     String tmpFormat = inFileName.substr(formatPos);

@@ -375,6 +375,33 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     auto& sgraph = SceneGraph::instance();
 
+
+    //Main Camera
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantCamera;
+    tmpConstantCamera.mView = m_mainCamera->getViewMatrix().transpose();
+
+    //Sets the projection matrix
+    tmpConstantCamera.mProjection = m_mainCamera->getProyectionMatrix().transpose();
+
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferCamera, 
+                           &tmpConstantCamera, 
+                           sizeof(tmpConstantCamera));
+    //Shadow Camera
+    
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantShadowCamera;
+    tmpConstantShadowCamera.mView = m_ShadowCamera->getViewMatrix().transpose();
+
+    //Sets the projection matrix
+    tmpConstantShadowCamera.mProjection = m_ShadowCamera->getProyectionMatrix().transpose();
+
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferShadow,
+                           &tmpConstantShadowCamera,
+                           sizeof(tmpConstantShadowCamera));
+
     /************************************************************************/
     /*                           GBUFFER                                    */
     /************************************************************************/

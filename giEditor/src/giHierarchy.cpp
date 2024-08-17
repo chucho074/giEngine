@@ -12,6 +12,7 @@
  */
 #include "giHierarchy.h"
 #include <giSceneGraph.h>
+#include <giSceneNode.h>
 
 
 Hierarchy::Hierarchy() {
@@ -33,12 +34,13 @@ Hierarchy::init() {
 
 
   m_leafFlags = m_treeSelectableFlags |= ImGuiTreeNodeFlags_Leaf
+                                      | ImGuiTreeNodeFlags_Bullet
                                       | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 }
 
 void 
 Hierarchy::update(float inDeltaTime) {
-  
+  GI_UNREFERENCED_PARAMETER(inDeltaTime);
 }
 
 void
@@ -46,16 +48,21 @@ Hierarchy::render() {
   auto& sg = SceneGraph::instance();
   auto root = sg.getRoot();
   auto tmpNodes = sg.getNodesByParent(root);
+
   ImGui::Begin("Hierarchy", nullptr, m_windowFlags); {
     
-    ImGui::SetNextItemOpen(true);
-    
-    if (ImGui::TreeNode("Root")) {
-      for (auto node : tmpNodes) {
-        evaluateNode(node);
-      }
+    if(ImGui::BeginTable("Hierarchy List", 3, ImGuiTableFlags_Resizable | 
+                                              ImGuiTableFlags_NoBordersInBody |
+                                              ImGuiTableFlags_BordersV)) {
+      ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableSetupColumn("Active", ImGuiTableColumnFlags_NoHide);
+      ImGui::TableHeadersRow();
+      
+      renderNode(root);
+      
+      ImGui::EndTable();
     }
-    ImGui::TreePop();
 
     ImGui::End();
   }
@@ -87,16 +94,32 @@ Hierarchy::renderNodeWithChilds(SharedPtr<SceneNode> inNode) {
 
 void 
 Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
-  auto& sg = SceneGraph::instance();
-  //Create a leaf
-  if(ImGui::TreeNodeEx((void*)(intptr_t)inNode->m_actor->m_actorId, 
-                        m_leafFlags, 
-                        inNode->m_actor->m_actorName.c_str())){
-    
+  auto& sg = g_sceneGraph();
 
-    if (ImGui::IsItemClicked()) {
-      sg.setSelectedActor(inNode->m_actor);
+  ImGui::TableNextRow();
+  ImGui::TableNextColumn();
+
+  bool tmpOpenNode = false;
+
+  if (0 < inNode->m_childs.size()) {  //It has a child
+    tmpOpenNode = ImGui::TreeNodeEx(inNode->m_actor->m_actorName.c_str(), m_rootFlags);
+  }
+  else {  //It hasn't childs
+    ImGui::TreeNodeEx(inNode->m_actor->m_actorName.c_str(), m_leafFlags);
+  }
+
+  if (ImGui::IsItemClicked()) {
+    sg.setSelectedActor(inNode->m_actor);
+  }
+
+  ImGui::TableNextColumn();
+  ImGui::TextDisabled("Actor");
+
+  if (0 < inNode->m_childs.size() && tmpOpenNode) {
+    for (auto& nodes : inNode->m_childs) {
+      renderNode(nodes);
     }
+    ImGui::TreePop();
   }
  
 }

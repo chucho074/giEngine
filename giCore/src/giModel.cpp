@@ -537,7 +537,7 @@ namespace giEngineSDK {
     }
 
     SharedPtr<Texture> tmpTexture;
-    tmpTexture = g_graphicsAPI().TextureFromFile("Resources/", "missingTexture.png");
+    tmpTexture = g_graphicsAPI().TextureFromFile("/missingTexture.png", "Resources/");
 
     sphereTextures.push_back(tmpTexture);
     Vector<SharedPtr<Mesh>> tmpMeshes;

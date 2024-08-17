@@ -12,6 +12,7 @@
  */
 #include "giEditor.h"
 #include <giBaseGraphicsAPI.h>
+#include <giSceneGraph.h>
 #include <giBaseConfig.h>
 #include <giTexture2D.h>
 #include <giFile.h>
@@ -19,8 +20,8 @@
 #include <giDecoder.h>
 #include <giEncoder.h>
 #include <giModel.h>
+#include <giCamera.h>
 #include <giUUID.h>
-#include <giSceneGraph.h>
 
 void 
 Editor::init(void* inHandler, Vector2 inWindowSize) {
@@ -49,7 +50,7 @@ Editor::update(float inDeltaTime) {
 void 
 Editor::render() {
   auto& amr = g_AMR();
-  //auto& sg = g_sceneGraph();
+  auto& sg = g_sceneGraph();
 
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
@@ -68,7 +69,7 @@ Editor::render() {
     }
     if (ImGui::BeginMenu("Edit")) {
       if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-      if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}
+      if (ImGui::MenuItem("Redo", "CTRL+Y")) {}
       ImGui::Separator();
       if (ImGui::MenuItem("Cut", "CTRL+X")) {}
       if (ImGui::MenuItem("Copy", "CTRL+C")) {}
@@ -76,27 +77,89 @@ Editor::render() {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Window")) {
-      if (ImGui::MenuItem("Browser")) {}
-      if (ImGui::MenuItem("Details")) {}
+      if (ImGui::MenuItem("Performance")) {
+        m_renderPerformance = !m_renderPerformance;
+      }
+      if (ImGui::MenuItem("Camera movement")) {
+        m_renderCamera = !m_renderCamera;
+      }
       if (ImGui::MenuItem("Viewport")) {}
-      if (ImGui::MenuItem("Scene")) {}
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Help")) {
-      if (ImGui::MenuItem("About")) {}
+      if (ImGui::MenuItem("About")) {
+        m_renderAbout = !m_renderAbout;
+      }
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
   }
 
-  //Render the hierarchy of the scene.
-  m_hierarchy->render();
+  ImGui::Begin("Level", nullptr, ImGuiWindowFlags_None
+                                 | ImGuiWindowFlags_NoCollapse 
+                                 | ImGuiWindowFlags_NoScrollbar
+                                 | ImGuiWindowFlags_MenuBar); {
+    if (ImGui::BeginMenuBar()){
+      if (ImGui::BeginMenu("Save")) {
+        //ImGui::MenuItem("blablabla");
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("Add")) {
+        if(ImGui::MenuItem("Blank Actor")) {
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Blank Actor";
+          sg.addActor(tmpActor, sg.getRoot());
+        }
 
-  //Render the Details of the actor.
-  m_details->render();
+        ImGui::Separator();
+        ImGui::MenuItem("Shapes", NULL, false, false);
+        ImGui::Separator();
+
+        if(ImGui::MenuItem("Sphere")) {
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Spehere";
+
+        }
+
+        ImGui::Separator();
+        ImGui::MenuItem("SkyBoxes", NULL, false, false);
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Sphere Sky")) {
+          /*SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createSphere(5000));
+          tmpActor->m_actorName = "Spehere skybox";
+          tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+          sg.addActor(tmpActor, sg.getRoot());*/
+        }
+
+        if (ImGui::MenuItem("Cube Sky")) {
+          /*SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "Spehere";*/
+
+        }
+        ImGui::EndMenu();
+      }
+      ImGui::EndMenuBar();
+    }
+
+    
+    
+    //Make a dockable space.
+    dockspaceID = ImGui::GetID("HUB_DockSpace");
+    ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None
+                                                      | ImGuiDockNodeFlags_PassthruCentralNode);
+
+    
+
+    ImGui::End();
+  }
+
+  ImGui::SetNextWindowDockID(dockspaceID, ImGuiCond_FirstUseEver);
+
 
   //Render the viewport window.
-  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNav 
+  ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_None
                                   | ImGuiWindowFlags_NoCollapse 
                                   | ImGuiWindowFlags_NoScrollbar); {
     void * tmpTexture = g_graphicsAPI().getViewportTex()->getApiTexture();
@@ -104,8 +167,49 @@ Editor::render() {
     ImGui::End();
   }
 
+
+
   //Render the content Browser.
   m_contentBrowser->render();
+
+  //Render the hierarchy of the scene.
+  m_hierarchy->render();
+
+  //Render the Details of the actor.
+  m_details->render();
+
+  //Render the small windows.
+
+  //Renders the performance window if is active.
+  if (m_renderPerformance) {
+    renderPerformanceWindow();
+  }
+
+  //Renders the about window if is active.
+  if (m_renderAbout) {
+    renderAboutWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderCamera) {
+    renderCameraMovementWindow();
+  }
+
+  //Renders the camera movement window if is active.
+  if (m_renderProjectSelection) {
+    //renderProjectCreationSelection();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_renderWindow && !amr.m_processWindow) {
+    renderAMR();
+  }
+
+  //Renders the giAMR window if is active.
+  if (amr.m_processWindow) {
+    renderAMRprocess();
+  }
+
 
   //After the own editor ui objects, call the render of ImGui.
   m_ui->render();
@@ -125,7 +229,67 @@ Editor::callBack() {
 }
 
 
+void 
+Editor::renderPerformanceWindow() {
 
+  bool * tmpValue = &m_renderPerformance;
+
+  ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                        | ImGuiWindowFlags_NoCollapse);
+
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
+              / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+  ImGui::End();
+}
+
+void 
+Editor::renderAboutWindow() {
+  bool* tmpValue = &m_renderAbout;
+  ImGui::Begin("About giEngine", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                           | ImGuiWindowFlags_NoDocking
+                                           | ImGuiWindowFlags_NoCollapse);
+
+  ImGui::Text("Gioco Engine developed by: Jesus Alberto Del Moral Cupil");
+  ImGui::Separator();
+  ImGui::Text("Contact: idv18c.jmoral@uartesdigitales.edu.mx");
+  ImGui::Separator();
+
+  ImGui::End();
+}
+
+
+void 
+Editor::renderCameraMovementWindow() {
+  bool * tmpValue = &m_renderCamera;
+  auto& sgraph = g_sceneGraph();
+
+  ImGui::Begin("Editor camera movement", tmpValue, ImGuiWindowFlags_NoScrollbar 
+                                                   | ImGuiWindowFlags_NoDocking
+                                                   | ImGuiWindowFlags_NoResize
+                                                   | ImGuiWindowFlags_NoCollapse);
+  
+  //auto tmpMainCamera = sgraph.m_editorCamera;
+  auto& camera = sgraph.getActorByName("MainCamera")->getComponent(COMPONENT_TYPE::kCamera);
+  auto tmpMainCamera = static_pointer_cast<Camera>(camera);
+
+  String tmpX = toString(tmpMainCamera->m_viewMatrix.m_wColumn.x);
+  String tmpY = toString(tmpMainCamera->m_viewMatrix.m_wColumn.y);
+  String tmpZ = toString(tmpMainCamera->m_viewMatrix.m_wColumn.z);
+
+  ImGui::Text("Pos: ");
+  ImGui::SameLine();
+  ImGui::TextColored({0.91f, 0.07f, 0.14f, 1.f}, tmpX.substr(0, tmpX.find(".")+3).c_str());
+  ImGui::SameLine();
+  ImGui::TextColored({0.05f, 0.76f, 0.26f, 1.f}, tmpY.substr(0, tmpY.find(".")+3).c_str());
+  ImGui::SameLine();
+  ImGui::TextColored({0.f, 0.48f, 0.8f, 1.f},    tmpZ.substr(0, tmpZ.find(".")+3).c_str());
+  
+
+  ImGui::SliderFloat("Speed", &tmpMainCamera->m_speed, 0, 250);
+
+  ImGui::End();
+}
 void
 Editor::renderAMR() {
   auto& amr = g_AMR();
@@ -286,7 +450,7 @@ Editor::renderAMRprocess() {
     ImGui::TableNextColumn();
 
     //Read every new image, if exist any new, load it and present it.
-    SharedPtr<Texture> tmpTexture;
+    SharedPtr<Texture> tmpTexture = make_shared<Texture>();
     String tmpImgName = ("/img" + toString(amr.m_processImg) + ".png");
     String tmpNextImgName = ("/img" + toString(amr.m_processImg+1) + ".png");
     Path tmpImgPath = configs.s_contentPath.string() + "/giAMR/"
@@ -299,7 +463,7 @@ Editor::renderAMRprocess() {
       giEngineSDK::FILE tmpFile(tmpImgPath);
       //Creates the next texture
       SharedPtr<Texture> tmpImage = make_shared<Texture>();
-      tmpImage = g_graphicsAPI().TextureFromFile(tmpNextImgName, tmpImgPath.parent_path().string());
+      tmpImage = g_graphicsAPI().TextureFromFile(tmpImgName, tmpImgPath.parent_path().string());
 
       amr.m_AMRprocess.push_back(tmpImage);
       ++amr.m_processImg;

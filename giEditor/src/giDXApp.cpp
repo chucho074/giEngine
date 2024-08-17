@@ -55,8 +55,8 @@ DirectXApp::onCreate() {
   SharedPtr<Camera> mainCamera = make_shared<Camera>();
   mainCamera->init(Degrees(75.0f).getRadians(),
                    1280.f / 720.f,
-                   0.01f,
-                   1000.0f);
+                   0.0001f,
+                   100000.0f);
   SharedPtr<Actor> cameraActor = make_shared<Actor>();
   cameraActor->m_actorName = "MainCamera";
   cameraActor->addComponent(mainCamera, COMPONENT_TYPE::kCamera);
@@ -65,6 +65,7 @@ DirectXApp::onCreate() {
   //Sets Vela's model
   SharedPtr<Model> tmpModel = make_shared<Model>();
   tmpModel->loadFromFile("Resources/Models/Vela2/Vela2.fbx");
+  //tmpModel->loadFromFile("Resources/Models/Sponza/Sponza.fbx");
   //tmpModel->loadFromFile("Resources/Models/cube.fbx");
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>();
   modelComponent->setModel(tmpModel);

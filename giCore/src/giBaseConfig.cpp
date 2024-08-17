@@ -30,6 +30,9 @@ Map<GIPLUGINS::E, bool> EngineConfigs::s_activePlugins;
 String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
 
+//AMR Settings
+Path EngineConfigs::s_anacondaPath = "";
+
 //Editor Settings
 
 

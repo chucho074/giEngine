@@ -22,6 +22,7 @@
 #include "giSceneGraph.h"
 #include "giBaseInput.h"
 #include "giBaseOmniverse.h"
+#include "giBaseAMR.h"
 #include "giBaseConfig.h"
 
 using namespace giEngineSDK;
@@ -145,6 +146,11 @@ class GI_CORE_EXPORT BaseApp
   void 
   destroySystems();
 
+  /**
+   * @brief    Reads the configs file and save the information needed.
+   */
+  void
+  readConfigs();
 
  public:
   
@@ -166,6 +172,11 @@ class GI_CORE_EXPORT BaseApp
 
   LibraryLoader m_loaderOmniverse;
 
+  LibraryLoader m_loaderAMR;
+
+  //
+  EngineConfigs* m_configs = nullptr;
+  
   GraphicsAPI* m_gapi = nullptr;
 
   BaseRenderer* m_renderer = nullptr;
@@ -180,6 +191,9 @@ class GI_CORE_EXPORT BaseApp
 
   BaseOmni * m_omniverse = nullptr;
 
+  BaseAMR* m_AMR = nullptr;
+
+  //
   sf::Clock m_appClock;
 
   float m_deltaTime;

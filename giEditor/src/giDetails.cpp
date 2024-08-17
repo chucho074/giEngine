@@ -14,6 +14,7 @@
 #include <giSceneGraph.h>
 #include <giTransform.h>
 #include <giBaseOmniverse.h>
+#include <giBaseConfig.h>
 
 Details::Details() {
   
@@ -26,44 +27,93 @@ Details::init() {
 
 void 
 Details::update(float inDeltaTime) {
-  
+  GI_UNREFERENCED_PARAMETER(inDeltaTime);
 }
 
 void 
 Details::render() {
   auto& sg = SceneGraph::instance();
   ImGui::Begin("Details", nullptr, m_windowFlags);
-  if (sg.getSelectedActor() != nullptr) {
+
+  if (sg.getSelectedActor() != nullptr) { 
     auto tmpActor = sg.getSelectedActor();
+
+    ImGui::Text(String("Selected Actor: " + tmpActor->m_actorName).c_str());
+
     if (ImGui::CollapsingHeader("Transform", ImGuiWindowFlags_NoNav)) {
     
       ImGui::DragFloat3("Position", &sg.getSelectedActor()->m_transform.m_translation.x);
       if(ImGui::IsItemEdited()) {
-        if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
-          g_omniverse().setTransformOp(tmpActor->m_transform.m_translation, 
-                                       GI_OMNI_OP::kTRANSLATE,
-                                       GI_OMNI_PRECISION::kDOUBLE,
-                                       tmpActor->m_omniRefPath);
+        auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+        if (iter != EngineConfigs::s_activePlugins.end()) {
+
+          if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
+            g_omniverse().setTransformOp(tmpActor->m_transform.m_translation, 
+                                         GI_OMNI_OP::kTRANSLATE,
+                                         GI_OMNI_PRECISION::kDOUBLE,
+                                         tmpActor->m_omniRefPath);
+          }
         }
       }
+
       ImGui::DragFloat3("Rotation", &sg.getSelectedActor()->m_transform.m_rotation.x);
-      if(ImGui::IsItemEdited() && !tmpActor->m_omniRefPath.empty()) {
-        if (g_omniverse().m_liveEditActivation) {
-          g_omniverse().setTransformOp(tmpActor->m_transform.m_rotation, 
-                                       GI_OMNI_OP::kROTATE,
-                                       GI_OMNI_PRECISION::kFLOAT,
-                                       tmpActor->m_omniRefPath);
-        }
-      }
-      ImGui::DragFloat3("Scale",    &sg.getSelectedActor()->m_transform.m_scale.x);
       if(ImGui::IsItemEdited()) {
-        if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
-          g_omniverse().setTransformOp(tmpActor->m_transform.m_scale, 
-                                       GI_OMNI_OP::kSCALE,
-                                       GI_OMNI_PRECISION::kFLOAT,
-                                       tmpActor->m_omniRefPath);
+        auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+        if (iter != EngineConfigs::s_activePlugins.end()) {
+          if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
+            g_omniverse().setTransformOp(tmpActor->m_transform.m_rotation, 
+                                         GI_OMNI_OP::kROTATE,
+                                         GI_OMNI_PRECISION::kFLOAT,
+                                         tmpActor->m_omniRefPath);
+          }
         }
       }
+
+      if(!m_scaleBlock) {
+        ImGui::DragFloat3("Scale",    &sg.getSelectedActor()->m_transform.m_scale.x);
+        if(ImGui::IsItemEdited()) {
+          auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+          if (iter != EngineConfigs::s_activePlugins.end()) {
+            if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
+              g_omniverse().setTransformOp(tmpActor->m_transform.m_scale, 
+                                           GI_OMNI_OP::kSCALE,
+                                           GI_OMNI_PRECISION::kFLOAT,
+                                           tmpActor->m_omniRefPath);
+            }
+          }
+        }
+      }
+
+      else if (m_scaleBlock) {
+        ImGui::DragFloat("Scale", &sg.getSelectedActor()->m_transform.m_scale.x);
+        sg.getSelectedActor()->m_transform.m_scale.y = sg.getSelectedActor()->m_transform.m_scale.x;
+        sg.getSelectedActor()->m_transform.m_scale.z = sg.getSelectedActor()->m_transform.m_scale.x;
+        if(ImGui::IsItemEdited()) {
+          auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
+          if (iter != EngineConfigs::s_activePlugins.end()) {
+            if (g_omniverse().m_liveEditActivation && !tmpActor->m_omniRefPath.empty()) {
+              g_omniverse().setTransformOp(tmpActor->m_transform.m_scale, 
+                                           GI_OMNI_OP::kSCALE,
+                                           GI_OMNI_PRECISION::kFLOAT,
+                                           tmpActor->m_omniRefPath);
+            }
+          }
+        }
+      }
+
+      ImGui::SameLine();
+      ImGui::Checkbox(" ", &m_scaleBlock);
+    }
+
+    //Verify if the actor has this information, if not, don't present this header.
+    //if(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh)) {
+      if(ImGui::CollapsingHeader("Materials", ImGuiWindowFlags_NoNav)) {
+        
+      }
+    //}
+
+    if(ImGui::CollapsingHeader("Actor Info", ImGuiWindowFlags_NoNav)) {
+      //Actor UUID
     }
   }
   ImGui::End();

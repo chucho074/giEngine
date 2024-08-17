@@ -21,7 +21,7 @@ int32
 BaseApp::run() {
 
   //EngineConfigs::s_activePlugins.insert({GIPLUGINS::kOmniverse, true});
-  EngineConfigs::s_activePlugins.insert({ GIPLUGINS::kgiAMR, true });
+  m_configs->s_activePlugins.insert({ GIPLUGINS::kgiAMR, true });
 
   //Create the main window.
   createWindow();
@@ -51,10 +51,10 @@ BaseApp::run() {
         break;
       }
       if (eventsWnd.type == Event::Resized) {
-        EngineConfigs::s_resolution = { (int32)m_window.getSize().x, 
+        m_configs->s_resolution = { (int32)m_window.getSize().x, 
                                         (int32)m_window.getSize().y };
-        m_width = EngineConfigs::s_resolution.x;
-        m_height = EngineConfigs::s_resolution.y;
+        m_width = m_configs->s_resolution.x;
+        m_height = m_configs->s_resolution.y;
         //Unbind everything
         //Resize backbuffer
         //Resize other Textures {Albedo, pos, norm, SSAO, Bluhrs, Light}
@@ -114,12 +114,12 @@ BaseApp::create() {
   m_renderer->create();
 
   //Evaluate if Omniverse is active.
-  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
-  if (iter != EngineConfigs::s_activePlugins.end()) {
+  auto iter = m_configs->s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != m_configs->s_activePlugins.end()) {
 
     //Create the Omniverse conection.
-    m_omniverse->init(EngineConfigs::s_existingStage,
-                      EngineConfigs::s_destinationPath);
+    m_omniverse->init(m_configs->s_existingStage,
+                      m_configs->s_destinationPath);
     m_omniverse->startConection();
 
   }
@@ -156,6 +156,10 @@ BaseApp::initSystems() {
   //Start the time
   Time::startUp();
   m_time = &g_time();
+
+  //Start the configs
+  EngineConfigs::startUp();
+  m_configs = &g_engineConfigs();
 
   //Start the Logger
   Logger::startUp();
@@ -206,8 +210,8 @@ BaseApp::initSystems() {
   m_sceneGraph = &g_sceneGraph();
 
   //Start the Omniverse
-  auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
-  if (iter != EngineConfigs::s_activePlugins.end()) {
+  auto iter = m_configs->s_activePlugins.find(GIPLUGINS::kOmniverse);
+  if (iter != m_configs->s_activePlugins.end()) {
     if (m_loaderOmniverse.loadPlugin("giOmniverse_d.dll")) {
       auto createOmniverse = reinterpret_cast<funCreateOmniverse>(m_loaderOmniverse.getProcedureByName("createOmniverse"));
 
@@ -217,16 +221,34 @@ BaseApp::initSystems() {
       m_omniverse = &g_omniverse();
     }
   }
+  
+  //Start giAMR
+  auto iterAmr = m_configs->s_activePlugins.find(GIPLUGINS::kgiAMR);
+  if (iterAmr != m_configs->s_activePlugins.end()) {
+    if (m_loaderAMR.loadPlugin("giAMR_d.dll")) {
+      auto createAMR = reinterpret_cast<funCreateAMR>(m_loaderAMR.getProcedureByName("createAMR"));
 
+      BaseAMR::startUp();
+      BaseAMR* amr = createAMR();
+      g_AMR().setObject(amr);
+      m_AMR = &g_AMR();
+    }
+  }
 }
 
 void 
 BaseApp::destroySystems() {
   m_window.close();
-  BaseRenderer::shutDown();
-  GraphicsAPI::shutDown();
-  SceneGraph::shutDown();
-  BaseOmni::shutDown();
-  Time::shutDown();
-  Logger::shutDown();
+  m_renderer->shutDown();
+  m_gapi->shutDown();
+  m_sceneGraph->shutDown();
+  m_omniverse->shutDown();
+  m_time->shutDown();
+  m_logger->shutDown();
+  m_configs->shutDown();
+}
+
+void 
+BaseApp::readConfigs() {
+  
 }

@@ -181,12 +181,10 @@ ContentBrowser::render() {
             if (tmpExtension == ".obj") {
               if (ImGui::BeginPopupContextItem("file popup")) {
                 if (ImGui::Button("Create data / JUST TESTING")) {
-                  __debugbreak();
                   FILE tmpFile(tmpPath);
                   Encoder::encodeData(tmpFile);
                 }
                 if (ImGui::Button("Use giAMR in this model")) {
-                  __debugbreak();
                   amr.setRefMesh(tmpPath);
                   //RM.exportModel(tmpPath, ResourceRef());
                 }

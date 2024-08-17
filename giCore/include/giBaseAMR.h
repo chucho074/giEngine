@@ -78,6 +78,8 @@ namespace giEngineSDK {
 
     int32 finalTriang = 0;
 
+    Path m_defaultAnacondaPath = "%USERPROFILE%/anaconda3/Scripts/";
+
     //giAMR process image
     Vector<SharedPtr<Texture>> m_AMRprocess;
 

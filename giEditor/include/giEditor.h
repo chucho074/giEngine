@@ -61,7 +61,24 @@ class Editor
    */
   void
   callBack();
+  
+  /**
+   * @brief      Renders a Window with the performance information.
+   */
+  void
+  renderPerformanceWindow();
 
+  /**
+   * @brief      Renders a window with the information about the engine dev.
+   */
+  void
+  renderAboutWindow();
+
+  /**
+   * @brief      Renders a window with the variable of the editor camera movement.
+   */
+  void
+  renderCameraMovementWindow();
   
   /**
    * @brief      Renders a window for giAMR tool.
@@ -96,7 +113,16 @@ class Editor
 
    bool m_isRunningOmniverse = false;
 
+   //Bools for rendering the diferent windows.
+   bool m_renderPerformance = true;
 
+   bool m_renderAbout = false;
+
+   bool m_renderCamera = true;
+
+
+   //The window for creation/selection of projects.
+   bool m_renderProjectSelection = false;
 
    //To change
    Path m_savingPath;

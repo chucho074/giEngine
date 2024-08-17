@@ -125,14 +125,14 @@ namespace giEngineSDK {
   
   Matrix4 
   Camera::getViewMatrix() {
-    updateData();
+    //updateData();
     return m_viewMatrix;
   }
   
   Matrix4 
   Camera::getProyectionMatrix() {
     //Update the matrix
-    updateData();
+    //updateData();
 
     //Returns the matrix
     return m_projMatrix;
