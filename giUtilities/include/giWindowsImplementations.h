@@ -39,6 +39,5 @@ namespace giEngineSDK {
      */
     static Path
     selectFolderDialog();
-    
   };
 }

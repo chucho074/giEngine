@@ -234,6 +234,8 @@ namespace giEngineSDK {
       return SharedPtr<Resource>();
     }
 
+
+
     SharedPtr<Model> tmpModel = make_shared<Model>();
 
     tmpModel->m_directory = inFileData.m_path;
@@ -440,10 +442,18 @@ namespace giEngineSDK {
     ResourceRef tmpTextureRef;
     bool noTexture = true;
     //Get the number of textures in assimp in the material.
+    //Evaluate if is searching for normals and try heights if there is no normals available.
+    int32 tmp = mat->GetTextureCount(type);
+
+    if (type == aiTextureType_NORMALS && 0 == mat->GetTextureCount(type)) {
+      type = aiTextureType_HEIGHT;
+    }
+
     for (uint32 i = 0; i < mat->GetTextureCount(type); i++) {
       noTexture = false;
       aiString str;
       mat->GetTexture(type, i, &str);
+      
       String tmpTextureName = str.C_Str();
       //Get just the name of the texture.
       tmpTextureName = getPathCorrectly(tmpTextureName);
@@ -623,13 +633,26 @@ namespace giEngineSDK {
                                                 aiTextureType_DIFFUSE, 
                                                 TEXTURE_TYPE::kAlbedo));
 
+        //For assimp, evaluates if the information is on normals or heights variables.
+        /*if (mesh->HasNormals()) {
+          aiString normalMapPath;
+          if (material->GetTexture(aiTextureType_HEIGHT, 1, &normalMapPath) == aiReturn_SUCCESS) {*/
+            //To change for the creation of the textures in the resource Manager.
+            textures.push_back(loadMaterialTextures(inModel,
+                                                    material,
+                                                    aiTextureType_NORMALS,
+                                                    //aiTextureType_HEIGHT, 
+                                                    TEXTURE_TYPE::kNormal));
+          /*}
+          else if(material->GetTexture(aiTextureType_NORMALS, 1, &normalMapPath) == aiReturn_SUCCESS) {*/
+            //To change for the creation of the textures in the resource Manager.
+            /*textures.push_back(loadMaterialTextures(inModel,
+                                                    material,
+                                                    aiTextureType_NORMALS,
+                                                    TEXTURE_TYPE::kNormal));*/
+         /* }
+        }*/
         
-
-        //To change for the creation of the textures in the resource Manager.
-        textures.push_back(loadMaterialTextures(inModel,
-                                                material,
-                                                aiTextureType_NORMALS, 
-                                                TEXTURE_TYPE::kNormal));
 
 
         //To change for the creation of the textures in the resource Manager.

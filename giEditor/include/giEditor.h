@@ -155,4 +155,6 @@ class Editor
    Path m_savingPath;
 
    int32 m_Subdiv = 0;
+
+   bool m_askAnaconda = true;
 };

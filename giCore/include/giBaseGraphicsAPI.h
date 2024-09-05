@@ -118,7 +118,9 @@ namespace giEngineSDK {
                    int32,
                    int32,
                    int32,
-                   int32) {};
+                   int32,
+                   float,
+                   float) {};
     
     /**
      * @brief    Create the Vertex Shader from a file.

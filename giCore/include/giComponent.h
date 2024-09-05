@@ -10,7 +10,7 @@
  * @include
  */
 #pragma once
-#include "giObject.h"
+#include "giPrerequisitesCore.h"
 
 namespace giEngineSDK {
 
@@ -29,7 +29,7 @@ namespace giEngineSDK {
    * @class    Component.
    * @brief    .   
    */
-  class GI_CORE_EXPORT Component// : public Object
+  class GI_CORE_EXPORT Component
   {
    public:
     //Default Constructor.
@@ -43,17 +43,11 @@ namespace giEngineSDK {
       GI_UNREFERENCED_PARAMETER(inDeltaTime);
     };
 
-
     virtual void 
     render() { };
 
     virtual void 
     destroy() { };
-    
-   protected:
-    
-   
-   private:
    
   };
 

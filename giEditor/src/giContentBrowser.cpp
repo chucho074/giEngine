@@ -14,6 +14,10 @@
 #include <giTexture.h>
 #include <giBaseAMR.h>
 #include <giFile.h>
+#include <giExporter.h>
+#include <giStaticMesh.h>
+#include <giActor.h>
+#include <giSceneGraph.h>
 #include "giContentBrowser.h"
 
 using giEngineSDK::FILE;
@@ -177,8 +181,8 @@ ContentBrowser::render() {
               else {
                 tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fileIcon.m_id).lock());
               }
-            }
 
+            }
             //Shows the data if its sets any image
             if (tmpTexture) {
               if (ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
@@ -187,34 +191,50 @@ ContentBrowser::render() {
                 if (tmpIsDir) {
                   m_currentDirectory /= tmpPath.filename();
                 }
-                //If is a file
-                else if (tmpExtension == ".obj") {
-                  ImGui::OpenPopupOnItemClick("file popup", ImGuiPopupFlags_MouseButtonRight);
-                }
               }
-
+            
               //Pop up menus for files.
               if (tmpExtension == ".obj") {
                 if (ImGui::BeginPopupContextItem("file popup")) {
-                  if (ImGui::Button("Create data / JUST TESTING")) {
+                  if (ImGui::Button("Create actor from model / JUST TESTING")) {
+                  auto& sg = g_sceneGraph();
+                  ResourceRef tmpModel;
+                  FILE tmpFileModel(tmpPath);
+                  tmpModel = RM.resourceFromFile(tmpFileModel);
+                  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+                  SharedPtr<Actor> tmpActor = make_shared<Actor>();
+                  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+                  tmpActor->m_actorName = tmpPath.filename().stem().string();
+                  sg.addActor(tmpActor, sg.getRoot());
+                }
+                  if (ImGui::Button("Use giAMR in this model")) {
                     FILE tmpFile(tmpPath);
                     RM.createData(tmpFile);
-                  }
-                  if (ImGui::Button("Use giAMR in this model")) {
                     amr.setRefMesh(tmpPath);
-                    //RM.exportModel(tmpPath, ResourceRef());
                   }
                   ImGui::EndPopup();
                 }
               }
-
-              ImGui::Text(relativePathString.c_str());
+              if (tmpExtension == ".fbx") {
+                if (ImGui::BeginPopupContextItem("file popup fbx")) {
+                  
+                  if (ImGui::Button("Use giAMR in this model")) {
+                    Path tmpNewPath = Exporter::ExportAsObj(tmpPath, "obj");
+                    FILE tmpFile(tmpNewPath);
+                    RM.createData(tmpFile);
+                    amr.setRefMesh(tmpNewPath);
+                  }
+                  ImGui::EndPopup();
+                }
+              }
+                ImGui::Text(relativePathString.c_str());
             }
             ImGui::TableNextColumn();
 
           }
-
-        }
+    
+        }//
+    
         ImGui::Columns(1);
         ImGui::EndTable();
       }

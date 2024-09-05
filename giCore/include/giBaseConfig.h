@@ -50,12 +50,17 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
   static GIENGINE_API::E s_activeGraphicApi;
   static Path s_projectPath;
   static Path s_contentPath;
+  static Path s_binPath;
 
   //Plugins
   static Map<GIPLUGINS::E, bool> s_activePlugins;
 
   //giAMR
   static Path s_generatedPath;
+  static Path s_anacondaPath;
+  static Path s_nvdiffPath;
+  static String s_enviromentName;
+
 
   //Omniverse Settings
   static String s_existingStage;

@@ -160,7 +160,7 @@ namespace giEngineSDK {
     getFromFile(FILE& inFile);
 
     /**
-     * @brief 
+     * @brief    
      * @param    numTriangles 
      * @return   Returns .
      */
@@ -168,11 +168,19 @@ namespace giEngineSDK {
     createSphere(int32 numTriangles);
 
     /**
+     * @brief 
+     * @param inNumSubdivisions 
+     * @return 
+     */
+    ResourceRef
+    createQuadSphere(int32 inNumSubdivisions);
+
+    /**
      * @brief    .
      * @return   Returns .
      */
     void
-    createQuadSphere(int32 inNumSubdivisions);
+    exportQuadSphere(int32 inNumSubdivisions);
 
    public:
 

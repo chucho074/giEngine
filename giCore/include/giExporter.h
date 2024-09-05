@@ -14,7 +14,7 @@
 #include "giModel.h"
 
 namespace giEngineSDK {
-  class Exporter
+  class GI_CORE_EXPORT Exporter
   {
    public:
   	Exporter() = default;
@@ -24,9 +24,10 @@ namespace giEngineSDK {
   	ExportObj(Path inPath, SharedPtr<Model> inModel);
 
     static void
-  	ExportMtl(Path inPath);
+    ExportMtl(Path inPath);
 
-
+    static Path 
+    ExportAsObj(Path inPath, String inFileType);
 
    private:
     

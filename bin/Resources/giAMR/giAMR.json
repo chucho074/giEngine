@@ -13,9 +13,9 @@
     ],
     "iter": 5000,
     "learning_rate": 0.009999999776482582,
-    "out_dir": "G:/Dev/giTestProject/content/giAMR/spot.obj",
+    "out_dir": "G:/Dev/giTestProject/content/giAMR/silly_dancing.obj",
     "random_textures": false,
-    "ref_mesh": "G:/Dev/giTestProject/content\\spot.obj",
+    "ref_mesh": "G:/Dev/giTestProject/content\\silly_dancing.obj",
     "save_interval": 512,
     "skip_train": [
         "kd",

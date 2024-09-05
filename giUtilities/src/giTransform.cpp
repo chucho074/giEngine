@@ -41,7 +41,7 @@ namespace giEngineSDK {
     //Rotation
     Quaternion tempQuat(m_rotation, 0.7854f);
     //tempQuat.normalize();
-    tmpMatrix *= tempQuat.getMatrix();
+    //tmpMatrix *= tempQuat.getMatrix();
     
     //Translation
     tmpMatrix.m_xColumn.w = m_translation.x;

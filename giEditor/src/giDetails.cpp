@@ -10,10 +10,15 @@
  * @include
  */
 #include "giDetails.h"
+#include <giSpecificImplementations.h>
 #include <giSceneGraph.h>
 #include <giTransform.h>
 #include <giBaseOmniverse.h>
 #include <giBaseConfig.h>
+#include <giResourceManager.h>
+#include <giModel.h>
+#include <giStaticMesh.h>
+#include <giEditor.h>
 
 Details::Details() {
   
@@ -31,14 +36,19 @@ Details::update(float inDeltaTime) {
 
 void 
 Details::render() {
-  auto& sg = SceneGraph::instance();
+  auto& sg = g_sceneGraph();
+  auto& RM = g_resourceManager();
+  auto& gapi = g_graphicsAPI();
   ImGui::Begin("Details", nullptr, m_windowFlags);
 
   if (sg.getSelectedActor() != nullptr) { 
     auto tmpActor = sg.getSelectedActor();
+    //Actor name
+    ImGui::Text("Actor name: ");
+    ImGui::SameLine();
+    ImGui::InputText(" ", tmpActor->m_actorName.data(), tmpActor->m_actorName.size()+1);
 
-    ImGui::Text(String("Selected Actor: " + tmpActor->m_actorName).c_str());
-
+    ImGui::Separator();
     if (ImGui::CollapsingHeader("Transform", ImGuiWindowFlags_NoNav)) {
     
       ImGui::DragFloat3("Position", &sg.getSelectedActor()->m_transform.m_translation.x);
@@ -103,13 +113,48 @@ Details::render() {
       ImGui::SameLine();
       ImGui::Checkbox(" ", &m_scaleBlock);
     }
-
+    ImGui::Separator();
+    //Static Mesh
     //Verify if the actor has this information, if not, don't present this header.
-    //if(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh)) {
+    if(tmpActor->isStaticMesh) {
+      if (ImGui::CollapsingHeader("Static Mesh", ImGuiWindowFlags_NoNav)) {
+        SharedPtr<StaticMesh> tmpComponent = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
+        SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpComponent->getModel().m_id).lock());
+
+        ImGui::Text(String("Path: " + tmpModel->m_directory.string()).c_str());
+       
+      }
+    }
+    ImGui::Separator();
+    //Materials
+    if (tmpActor->isStaticMesh) {
       if(ImGui::CollapsingHeader("Materials", ImGuiWindowFlags_NoNav)) {
+        SharedPtr<StaticMesh> tmpComponent = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
+        SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpComponent->getModel().m_id).lock());
+        for (auto mesh : tmpModel->m_meshes) {
+          for (auto tex : mesh->m_textures) {
+            auto tmpTexture = dynamic_pointer_cast<Texture>(RM.getResource(tex.m_id).lock());
+            ImGui::Text(String("Path: " + tmpTexture->m_name).c_str());
+            ImGui::SameLine();
+            if (ImGui::Button("Change")) {
+              //Create a new texture
+              //giEngineSDK::FILE tmpFile(FileDialogs::openFileDialog());
+              //ResourceRef tmpRef = Decoder::decodeData(tmpFile);
+              //Change the ResourceRef for the new texture.
+              //tex = tmpRef;
+            }
+          }
+        }
+      }
+    }
+    ImGui::Separator();
+    if(ImGui::Button("Add")) {
+      ImGui::OpenPopup("Adding component");
+      if(ImGui::BeginPopup("Adding component")) {
         
       }
-    //}
+    }
+
   }
   ImGui::End();
 }

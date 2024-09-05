@@ -142,7 +142,7 @@ namespace giEngineSDK {
                                                                 GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
-    createViewport(1, inWidth, inHeight, 0, 0);
+    createViewport(1, inWidth, inHeight, 0, 0, 0.001, 100);
 
     if (S_OK == hr) {
       return true;
@@ -270,12 +270,16 @@ namespace giEngineSDK {
                               int32 inWidth, 
                               int32 inHeight, 
                               int32 inTopX, 
-                              int32 inTopY) {
+                              int32 inTopY,
+                              float inDepthMin, 
+                              float inDepthMax) {
 
     CD3D11_VIEWPORT VP(static_cast<float>(inTopX), 
                        static_cast<float>(inTopY), 
                        static_cast<float>(inWidth), 
-                       static_cast<float>(inHeight));
+                       static_cast<float>(inHeight), 
+                       static_cast<float>(inDepthMin), 
+                       static_cast<float>(inDepthMax));
 
     m_devContext->RSSetViewports(inNumVP, &VP);
 
@@ -709,6 +713,7 @@ namespace giEngineSDK {
     m_defaultDSV.reset();
 
     if(FAILED(m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0))) {
+      __debugbreak();
       Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
                                   "Error resizing the viewport Texture");
       return;
@@ -717,6 +722,7 @@ namespace giEngineSDK {
     SharedPtr<Texture2DDX> backBuffer(new Texture2DDX);
     if(FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), 
               (void**)&backBuffer->m_texture))) {
+      __debugbreak();
       Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
                                   "Error obtaining back buffer from swapchain");
       return;
@@ -725,6 +731,7 @@ namespace giEngineSDK {
     if(FAILED(m_device->CreateRenderTargetView(backBuffer->m_texture,
                                                nullptr,
                                                &backBuffer->m_renderTargetView))) {
+      __debugbreak();
       Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
                                   "Error creating the render target view for the back buffer");
       return;

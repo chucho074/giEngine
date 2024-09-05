@@ -29,19 +29,38 @@ namespace giEngineSDK {
   	
     ~AMR() = default;
 
+    /**
+     * @brief    Assings the path for a mesh to take as a reference.
+     * @param    inData        The path for the mesh.
+     */
     void
     setRefMesh(Path inData) override;
 
+    /**
+     * @brief    Runs the process for the tool.
+     */
     void
     run() override;
 
+    /**
+     * @brief    Reset the values for the tool.
+     */
     void
     reset() override;
 
 
    private:
+    /**
+     * @brief    Creates the information needed for the usage of the tool.
+     */
     void
     createJSON();
+
+    /**
+     * @brief    .
+     */
+    void
+    createBatFiles();
   };
 
   /**

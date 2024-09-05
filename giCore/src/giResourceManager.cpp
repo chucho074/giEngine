@@ -402,8 +402,44 @@ namespace giEngineSDK {
 
   }
 
-  void 
+  ResourceRef 
   ResourceManager::createQuadSphere(int32 inNumSubdivisions) {
+    // choose coordinates on the unit sphere
+    float a = 1.0f / sqrt(3.0f);
+
+    pmp::SurfaceMesh tmpPMPMesh;
+
+    // add the 8 vertices
+    auto v0 = tmpPMPMesh.add_vertex(pmp::Point(-a, -a, -a));
+    tmpPMPMesh.add_vertex_property("v:normal", pmp::Normal(1.f, 1.f, 1.f));
+    tmpPMPMesh.add_halfedge_property("h:tex", pmp::TexCoord(1.f, 1.f));
+
+    auto v1 = tmpPMPMesh.add_vertex(pmp::Point(a, -a, -a));
+    auto v2 = tmpPMPMesh.add_vertex(pmp::Point(a, a, -a));
+    auto v3 = tmpPMPMesh.add_vertex(pmp::Point(-a, a, -a));
+    auto v4 = tmpPMPMesh.add_vertex(pmp::Point(-a, -a, a));
+    auto v5 = tmpPMPMesh.add_vertex(pmp::Point(a, -a, a));
+    auto v6 = tmpPMPMesh.add_vertex(pmp::Point(a, a, a));
+    auto v7 = tmpPMPMesh.add_vertex(pmp::Point(-a, a, a));
+
+    tmpPMPMesh.add_quad(v3, v2, v1, v0);
+    tmpPMPMesh.add_quad(v2, v6, v5, v1);
+    tmpPMPMesh.add_quad(v5, v6, v7, v4);
+    tmpPMPMesh.add_quad(v0, v4, v7, v3);
+    tmpPMPMesh.add_quad(v3, v7, v6, v2);
+    tmpPMPMesh.add_quad(v1, v5, v4, v0);
+
+
+    for (int32 i = 1; i <= inNumSubdivisions; i++) {
+      catmull_clark_subdivision(tmpPMPMesh);
+    }
+
+
+    return ResourceRef();
+  }
+
+  void
+  ResourceManager::exportQuadSphere(int32 inNumSubdivisions) {
     auto& configs = g_engineConfigs();
     // choose coordinates on the unit sphere
     float a = 1.0f / sqrt(3.0f);

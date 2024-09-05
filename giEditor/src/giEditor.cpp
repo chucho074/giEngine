@@ -43,6 +43,10 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_hierarchy = make_shared<Hierarchy>();
 
   m_details = make_shared<Details>();
+
+  if (!configs.s_anacondaPath.empty()) {
+    m_askAnaconda = false;
+  }
 }
 
 void 
@@ -63,6 +67,7 @@ Editor::render() {
   auto& amr = g_AMR();
   auto& sg = g_sceneGraph();
   auto& rm = g_resourceManager();
+  auto& configs = g_engineConfigs();
 
   //Imgui docking space for windows
   ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
@@ -155,6 +160,7 @@ Editor::render() {
         if (ImGui::MenuItem("Sphere Sky")) {
           SharedPtr<Actor> tmpActor = make_shared<Actor>();
           SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createSphere(5000));
+          //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createQuadSphere(500));
           tmpActor->m_actorName = "Spehere skybox";
           tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
           sg.addActor(tmpActor, sg.getRoot());
@@ -169,8 +175,6 @@ Editor::render() {
       }
       ImGui::EndMenuBar();
     }
-
-    
     
     //Make a dockable space.
     dockspaceID = ImGui::GetID("HUB_DockSpace");
@@ -202,6 +206,32 @@ Editor::render() {
     ImGui::End();
   }*/
 
+  //Render other windows.
+  if(m_askAnaconda) { 
+    ImGui::OpenPopup("Anaconda Selection");
+  }
+  if(m_askAnaconda) { 
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize({ 450, 100 });
+    bool* tmpValue = &m_askAnaconda;
+    if (ImGui::BeginPopupModal("Anaconda Selection", tmpValue, ImGuiWindowFlags_AlwaysAutoResize
+                                                          | ImGuiWindowFlags_NoMove)) { //0
+      ImGui::Text("Please, select the folder of the anaconda files");
+      ImGui::Text("The correct path to search is: ../anaconda3/Scripts/");
+      if(ImGui::Button("Select")) {
+        configs.s_anacondaPath = FileDialogs::selectFolderDialog();
+        configs.s_anacondaPath = configs.s_anacondaPath.string() + "/";
+        configs.s_anacondaPath.make_preferred();
+        ImGui::CloseCurrentPopup();
+        m_askAnaconda = false;
+        //writeConfigs();
+      }
+      ImGui::EndPopup();
+  
+    }
+  }
+  
   //Render the content Browser.
   m_contentBrowser->render();
 
@@ -241,8 +271,6 @@ Editor::render() {
   if (amr.m_processWindow) {
     renderAMRprocess();
   }
-
-
 
   //After the own editor ui objects, call the render of ImGui. (Last)
   m_ui->render();
@@ -555,7 +583,7 @@ Editor::renderAMR() {
 
   if (ImGui::Button("Generate (quad sphere)")) {
     
-    RM.createQuadSphere(m_Subdiv);
+    RM.exportQuadSphere(m_Subdiv);
   
     amr.run();
     amr.m_renderWindow = false;

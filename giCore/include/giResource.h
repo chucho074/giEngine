@@ -50,7 +50,7 @@ namespace giEngineSDK {
     unload() = 0;
     
     //A reference of the type of resource;
-    RESOURCE_TYPE::E m_resourceType;
+    RESOURCE_TYPE::E m_resourceType = RESOURCE_TYPE::kUnknown;
    
   };
 

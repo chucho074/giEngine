@@ -49,7 +49,8 @@ Hierarchy::render() {
   auto tmpNodes = sg.getNodesByParent(root);
 
   ImGui::Begin("Hierarchy", nullptr, m_windowFlags); {
-    
+   
+    //Hierarchy list
     if(ImGui::BeginTable("Hierarchy List", 3, ImGuiTableFlags_Resizable | 
                                               ImGuiTableFlags_NoBordersInBody |
                                               ImGuiTableFlags_BordersV)) {
@@ -59,7 +60,7 @@ Hierarchy::render() {
       ImGui::TableHeadersRow();
       
       renderNode(root);
-      
+
       ImGui::EndTable();
     }
 
@@ -92,6 +93,7 @@ Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
   if (ImGui::IsItemClicked()) {
     sg.setSelectedActor(inNode->m_actor);
   }
+
 
   ImGui::TableNextColumn();
   ImGui::TextDisabled("Actor");

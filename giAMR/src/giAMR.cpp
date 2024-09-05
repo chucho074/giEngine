@@ -10,6 +10,7 @@
  * @include
  */
 #include "giAMR.h"
+#include "giBaseConfig.h"
 #include <iostream>
 
 namespace giEngineSDK {
@@ -25,7 +26,9 @@ namespace giEngineSDK {
   void
   AMR::run() {
     //Add a way to verify if there's info to use
+    //VALIDATE PATHS BEFORE RUNNING THE TOOL.
     createJSON();
+    createBatFiles();
     system("cmd /c start giAMR.bat");
   }
 
@@ -67,5 +70,24 @@ namespace giEngineSDK {
     o << std::setw(4) << tmpFile << std::endl;
   }
 
+
+  void 
+  AMR::createBatFiles() {
+    auto& configs = g_engineConfigs();
+
+    ofstream tmpFile("giAMR.bat");
+    tmpFile << "@echo off" << std::endl;
+
+    tmpFile << "call \"" + configs.s_anacondaPath.string() 
+                + "/activate.bat\" activate " + configs.s_enviromentName << std::endl;
+
+    tmpFile << "cd /d \"" + configs.s_nvdiffPath.string() + "\"" << std::endl;
+
+    tmpFile << "cmd /c \"python giAMR.py --config " + configs.s_binPath.string() 
+                + "/Resources/giAMR/giAMR.json & exit\"";
+
+    
+
+  }
 
 };

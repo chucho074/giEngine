@@ -85,7 +85,9 @@ namespace giEngineSDK {
                    int32 inWidth,
                    int32 inHeight,
                    int32 inTopX,
-                   int32 inTopY) override;
+                   int32 inTopY,
+                   float inDepthMin,
+                   float inDepthMax) override;
     
     /**
      * @brief    Create the Vertex Shader.

@@ -51,25 +51,25 @@ DirectXApp::onCreate() {
   //Sets Vela's model
   ResourceRef tmpModel;
   //FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
-  //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
+  FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
   //FILE tmpFileModel("Resources/Models/sphere.obj");
   //FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
 
-  /*tmpModel = RM.resourceFromFile(tmpFileModel);
+  tmpModel = RM.resourceFromFile(tmpFileModel);
   SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
   SharedPtr<Actor> tmpActor = make_shared<Actor>();
   tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
   tmpActor->m_actorName = "Vela2";
-  m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());*/
+  m_sceneGraph->addActor(tmpActor, m_sceneGraph->getRoot());
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
   shadowCamera->init(Degrees(75.0f).getRadians(),
                      1280.f / 720.f,
-                     0.01f,
+                     0.001f,
                      100000.0f);
 
-  shadowCamera->setPosition({ 360.0f, 280.0f, -200.0f, 0.0f },
+  shadowCamera->setPosition({ 360.0f, -280.0f, -200.0f, 0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f });
 

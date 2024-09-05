@@ -12,6 +12,7 @@
 #include "giWindowsImplementations.h"
 #if GI_PLATFORM == GI_PLATFORM_WIN32
 #include <windows.h>
+#include <shlobj_core.h>
 #endif
 
 #include <shlobj_core.h>
