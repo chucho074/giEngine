@@ -14,6 +14,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
 #include <yaml-cpp/yaml.h>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
@@ -194,6 +195,8 @@ namespace giEngineSDK {
       stbi_image_free(tmpImg);
       tmpTexture->m_path = inFileData.m_path;
       tmpTexture->m_name = inFileData.m_name;
+      tmpTexture->m_fullPath = inFileData.m_path;
+
 
       SamplerDesc sampDesc;
       sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
@@ -205,11 +208,14 @@ namespace giEngineSDK {
       sampDesc.maxLOD = 3.402823466e+38f;
       tmpTexture->m_samplerState = gapi.createSampler(sampDesc);
 
+
+
       return tmpTexture;
     }
 
     //Unload Data
     stbi_image_free(tmpImg);
+
 
     return tmpTexture;
   }
@@ -491,7 +497,12 @@ namespace giEngineSDK {
     }
 
     if (noTexture) {
-      tmpTextureRef = RM.m_missingTextureRef;
+      if(TEXTURE_TYPE::kSpecular == typeName) {
+        tmpTextureRef = RM.m_defaultRoughnessTextureRef;
+      }
+      else {
+        tmpTextureRef = RM.m_missingTextureRef;
+      }
     }
 
     return tmpTextureRef;

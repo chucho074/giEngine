@@ -166,7 +166,7 @@ namespace giEngineSDK {
     SharedPtr<SamplerState> m_sampler;
 
     //The color For the mesh
-    Vector4 m_meshColor{ 0.f, 0.f, 0.f, 1.f };
+    //Vector4 m_meshColor{ 0.f, 0.1f, 0.1f, 1.f };
     //Depth Stencil State
     SharedPtr<DepthStateDX> m_depthStateGBuffer;
 

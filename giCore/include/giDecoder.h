@@ -15,6 +15,7 @@
 #include "giResource.h"
 
 
+
 namespace giEngineSDK {
 
   struct ResourceRef;

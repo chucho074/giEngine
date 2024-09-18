@@ -96,8 +96,8 @@ ContentBrowser::render() {
               String tmpName = tmpPath.stem().string();
               if (tmpIterator.is_directory()) {
                 bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount,
-                  base_flags,
-                  tmpName.c_str());
+                                                   base_flags,
+                                                   tmpName.c_str());
 
                 GI_UNREFERENCED_PARAMETER(node_open);
 
@@ -121,8 +121,7 @@ ContentBrowser::render() {
   
       ImGui::TableNextColumn();
       //Back Button
-      SharedPtr<Texture>tmpLArrrow =
-        static_pointer_cast<Texture>(RM.getResource(RM.m_leftArrow.m_id).lock());
+      SharedPtr<Texture>tmpLArrrow = static_pointer_cast<Texture>(RM.getResource(RM.m_leftArrow.m_id).lock());
   
       if (ImGui::ImageButton(tmpLArrrow->m_texture->getApiTexture(),
                              { 15, 15 })) {
@@ -186,27 +185,28 @@ ContentBrowser::render() {
             //Shows the data if its sets any image
             if (tmpTexture) {
               if (ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
-                { tmpThumbnailSize, tmpThumbnailSize })) {
+                                     { tmpThumbnailSize, tmpThumbnailSize })) {
                 //Enter to the folder
+                m_currentDirectory = m_workingDirectory;
                 if (tmpIsDir) {
                   m_currentDirectory /= tmpPath.filename();
                 }
               }
-            
+              
               //Pop up menus for files.
               if (tmpExtension == ".obj") {
                 if (ImGui::BeginPopupContextItem("file popup")) {
                   if (ImGui::Button("Create actor from model / JUST TESTING")) {
-                  auto& sg = g_sceneGraph();
-                  ResourceRef tmpModel;
-                  FILE tmpFileModel(tmpPath);
-                  tmpModel = RM.resourceFromFile(tmpFileModel);
-                  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
-                  SharedPtr<Actor> tmpActor = make_shared<Actor>();
-                  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-                  tmpActor->m_actorName = tmpPath.filename().stem().string();
-                  sg.addActor(tmpActor, sg.getRoot());
-                }
+                    auto& sg = g_sceneGraph();
+                    ResourceRef tmpModel;
+                    FILE tmpFileModel(tmpPath);
+                    tmpModel = RM.resourceFromFile(tmpFileModel);
+                    SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+                    SharedPtr<Actor> tmpActor = make_shared<Actor>();
+                    tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+                    tmpActor->m_actorName = tmpPath.filename().stem().string();
+                    sg.addActor(tmpActor, sg.getRoot());
+                  }
                   if (ImGui::Button("Use giAMR in this model")) {
                     FILE tmpFile(tmpPath);
                     RM.createData(tmpFile);
@@ -217,11 +217,30 @@ ContentBrowser::render() {
               }
               if (tmpExtension == ".fbx") {
                 if (ImGui::BeginPopupContextItem("file popup fbx")) {
-                  
+                  if (ImGui::Button("Create actor from model / JUST TESTING")) {
+                    auto& sg = g_sceneGraph();
+                    ResourceRef tmpModel;
+                    FILE tmpFileModel(tmpPath);
+                    tmpModel = RM.resourceFromFile(tmpFileModel);
+                    SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+                    SharedPtr<Actor> tmpActor = make_shared<Actor>();
+                    tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+                    tmpActor->m_actorName = tmpPath.filename().stem().string();
+                    sg.addActor(tmpActor, sg.getRoot());
+                  }
                   if (ImGui::Button("Use giAMR in this model")) {
-                    Path tmpNewPath = Exporter::ExportAsObj(tmpPath, "obj");
-                    FILE tmpFile(tmpNewPath);
-                    RM.createData(tmpFile);
+                    //Path tmpNewPath = Exporter::ExportAsObj(tmpPath, "obj");
+                    //FILE tmpFile(tmpNewPath);
+
+                    ResourceRef tmpResource;
+                    FILE tmpFileModel(tmpPath);
+                    tmpResource = RM.resourceFromFile(tmpFileModel);
+                    SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpResource.m_id).lock());
+                    Path tmpNewPath = tmpPath;
+                    tmpNewPath.replace_extension("obj");
+                    Exporter::ExportObj(tmpNewPath, tmpModel);
+                    FILE tmpNewFileModel(tmpNewPath);
+                    RM.createData(tmpNewFileModel);
                     amr.setRefMesh(tmpNewPath);
                   }
                   ImGui::EndPopup();

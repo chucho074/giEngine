@@ -10,7 +10,11 @@
  * @include
  */
 #include "giExporter.h"
-#include <string>
+#include "giDecoder.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+#include <stb_image.h>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/Exporter.hpp>      // C++ exporter interface
@@ -53,51 +57,87 @@ namespace giEngineSDK {
       tmpOut += "g "+ inPath.stem().string()+ "_subd:polyToSubd1\n";
 
       //Usemtl
-      tmpOut += "usemtl mat"+ toString(matID) + "\n";
+      tmpOut += "usemtl mat" + toString(matID) + "\n";
       matID++;
       
 
       //Faces data
       String faces;
       for (int32 i = 0; i < mesh->m_facesList.size(); i += 3) {
-      //for (int32 i = 0; i+9 <= mesh->m_facesList.size(); i += 9) {
-        int32 v1 = mesh->m_facesList[i] + 1;
+      int32 v1 = mesh->m_facesList[i] + 1;
         int32 v2 = mesh->m_facesList[i + 1] + 1;
         int32 v3 = mesh->m_facesList[i + 2] + 1;
         faces += "f " + toString(v1) + '/' + toString(v1) + '/' + toString(v1) + ' '
                       + toString(v2) + '/' + toString(v2) + '/' + toString(v2) + ' '
                       + toString(v3) + '/' + toString(v3) + '/' + toString(v3) + '\n';
-
-        /*int32 actual = mesh->m_facesList[i];
-        faces += "f " + toString(mesh->m_facesList[i]) + '/' + toString(mesh->m_facesList[i + 1]) + '/' + toString(mesh->m_facesList[i + 2]) + ' '
-                      + toString(mesh->m_facesList[i + 3]) + '/' + toString(mesh->m_facesList[i + 4]) + '/' + toString(mesh->m_facesList[i + 5]) + ' '
-                      + toString(mesh->m_facesList[i + 6]) + '/' + toString(mesh->m_facesList[i + 7]) + '/' + toString(mesh->m_facesList[i + 8]) + '\n';*/
       }
       tmpOut += faces;
     }
     ofstream fout(inPath.string());
     fout << tmpOut;
-
-    ExportMtl(inPath);
+    
+    ExportMtl(inPath, inModel);
   }
 
 
   void 
-  Exporter::ExportMtl(Path inPath) {
-
+  Exporter::ExportMtl(Path inPath, SharedPtr<Model> inModel) {
+    auto& RM = g_resourceManager();
     String tmpOutMtl;
     
-    //Material data
-    tmpOutMtl += "newmtl mat0\n";
-    tmpOutMtl += "illum 4\n";
+    int32 matID = 0;
+    if (NULL == inModel) {
+      tmpOutMtl += "newmtl mat" + toString(matID) + "\n";
+      tmpOutMtl += "illum 4\n";
 
-    tmpOutMtl += ("Kd " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
-    tmpOutMtl += ("Ks " + toString(0.90) + " " + toString(0.90) + " " + toString(0.90) + "\n");
-    tmpOutMtl += ("Ka " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
-    tmpOutMtl += ("Tf " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
-    tmpOutMtl += ("Ni " + toString(1.00) + "\n");
+      tmpOutMtl += ("Kd " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Ks " + toString(0.00) + " " + toString(0.00) + " " + toString(0.00) + "\n");
+      tmpOutMtl += ("Ka " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Tf " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Ni " + toString(1.00) + "\n");
+      //Write files
+      Path tmpMtlPath = inPath;
+      tmpMtlPath.replace_extension(".mtl");
 
+      ofstream foutMtl(tmpMtlPath.string());
+      foutMtl << tmpOutMtl;
+      return;
+    }
 
+    for (auto mesh : inModel->m_meshes) {
+
+      //Material datap
+
+      tmpOutMtl += "newmtl mat" + toString(matID) + "\n";
+      matID++;
+      tmpOutMtl += "illum 4\n";
+
+      tmpOutMtl += ("Kd " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Ks " + toString(0.90) + " " + toString(0.90) + " " + toString(0.90) + "\n");
+      tmpOutMtl += ("Ka " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Tf " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+      tmpOutMtl += ("Ni " + toString(1.00) + "\n");
+
+      //Textures
+      if(!mesh->m_textures.empty()) {
+        for(auto resource : mesh->m_textures) {
+          SharedPtr<Texture> tmpTex = dynamic_pointer_cast<Texture>(RM.getResource(resource.m_id).lock());
+          switch(tmpTex->m_type) {
+            case TEXTURE_TYPE::kAlbedo: { 
+              tmpOutMtl += ("map_Kd " + inPath.parent_path().string() + "/" + tmpTex->m_name + ".png" + "\n");
+              break;
+            }
+            case TEXTURE_TYPE::kSpecular: {
+              tmpOutMtl += ("map_Ks " + inPath.parent_path().string() + "/" + tmpTex->m_name + ".png" + "\n");
+              break;
+            }
+            //case TEXTURE_TYPE::kDisplacement: {}
+          }
+          //Exports the texture as a png if is not already
+          ExportAsNewImage(inPath.parent_path().string() + "/" + tmpTex->m_name + ".png", tmpTex->m_fullPath);
+        }
+      }
+    }
     //Write files
     Path tmpMtlPath = inPath;
     tmpMtlPath.replace_extension(".mtl");
@@ -118,5 +158,33 @@ namespace giEngineSDK {
     inPath.replace_extension(inFileType);
     exporter.Export(scene, inFileType, inPath.string());
     return inPath;
+  }
+
+  void 
+  Exporter::ExportAsNewImage(Path inNewFilePath, Path inOldFilePath) {
+    int32 w = 0, h = 0, comp = 0;
+
+    comp = 4;
+
+    //Get the information of the image loadead.
+    uint8 * tmpImg = stbi_load(inOldFilePath.string().c_str(),
+                               &w, 
+                               &h, 
+                               &comp, 4);
+
+    //Create the texture with the information.
+    if (tmpImg) {
+      // Write the image to a PNG file
+      stbi_write_png(inNewFilePath.string().c_str(), w, h, comp, tmpImg, w * comp);
+
+      //Unload Data
+      stbi_image_free(tmpImg);
+
+      // Free the image memory
+      //delete[] tmpImg;
+      return;
+    }
+    //Unload Data
+    stbi_image_free(tmpImg);
   }
 }

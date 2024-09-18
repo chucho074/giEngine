@@ -45,7 +45,6 @@ namespace giEngineSDK {
     static void 
     exportModelFromMem(Path inPath, ResourceRef inResource);
 
-
    private:
 
   	/**

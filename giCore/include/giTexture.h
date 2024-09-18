@@ -28,6 +28,7 @@ namespace giEngineSDK {
       kGloss,
       kSpecular,
       kOpacity,
+      kDisplacement,
       kSuportedTextureTypes
     };
   }
@@ -56,6 +57,8 @@ namespace giEngineSDK {
 
     //The path of the file.
     Path m_path;
+
+    Path m_fullPath;
     
     //The texture.
     SharedPtr<Texture2D> m_texture;

@@ -49,6 +49,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giOmniverse", "giOmniverse\giOmniverse.vcxproj", "{BE84997F-668B-41DD-931F-576B884FB1B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giAMR", "giAMR\giAMR.vcxproj", "{D8E2250D-C8FD-43F2-9944-4A999370D8D6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EB17E95-6FFD-4E78-A336-75A798229FA7} = {6EB17E95-6FFD-4E78-A336-75A798229FA7}
+		{4E5979E7-8E58-4C71-8906-931883E0B749} = {4E5979E7-8E58-4C71-8906-931883E0B749}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

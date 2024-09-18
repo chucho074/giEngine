@@ -264,5 +264,6 @@
 #  pragma warning(disable : 4275)   //DLL interface warning
 #  pragma warning(disable : 4005)   //DX warning
 #  pragma warning(disable : 26812)  //Enum class warning
+#  pragma warning(disable : 4996)  //
 #endif
 

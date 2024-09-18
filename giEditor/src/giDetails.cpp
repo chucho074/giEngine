@@ -144,6 +144,7 @@ Details::render() {
               //tex = tmpRef;
             }
           }
+          ImGui::Separator();
         }
       }
     }

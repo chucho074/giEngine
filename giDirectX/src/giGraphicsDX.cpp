@@ -142,7 +142,7 @@ namespace giEngineSDK {
                                                                 GI_BIND_FLAG::kBIND_DEPTH_STENCIL));
 
     //Create and set a ViewPort
-    createViewport(1, inWidth, inHeight, 0, 0, 0.001, 100);
+    createViewport(1, inWidth, inHeight, 0, 0, 0, 1);
 
     if (S_OK == hr) {
       return true;

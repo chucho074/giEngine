@@ -490,6 +490,10 @@ namespace giEngineSDK {
 
     m_missingTextureRef = Decoder::decodeData(tmpMissingTextureFile);
 
+    FILE tmpDefaultRoughness("Resources/DefaultRoughness.png");
+
+    m_defaultRoughnessTextureRef = Decoder::decodeData(tmpDefaultRoughness);
+
   }
 
   void 
