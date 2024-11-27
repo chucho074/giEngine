@@ -38,7 +38,7 @@ void
 Details::render() {
   auto& sg = g_sceneGraph();
   auto& RM = g_resourceManager();
-  auto& gapi = g_graphicsAPI();
+  //auto& gapi = g_graphicsAPI();
   ImGui::Begin("Details", nullptr, m_windowFlags);
 
   if (sg.getSelectedActor() != nullptr) { 

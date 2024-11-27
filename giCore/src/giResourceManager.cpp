@@ -219,7 +219,7 @@ namespace giEngineSDK {
       int32 v2 = triangle.v2;
       int32 v3 = triangle.v3;
 
-      int32 v4 = newVertices.size();
+      int32 v4 = int32(newVertices.size());
       int32 v5 = v4 + 1;
       int32 v6 = v4 + 2;
 

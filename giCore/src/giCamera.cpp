@@ -167,7 +167,7 @@ namespace giEngineSDK {
   void 
   Camera::resize(int32 inW, int32 inH) {
     int32 tmpAR = inW / inH;
-    m_projMatrix = perspectiveFovLH(m_angle, tmpAR, m_near, m_far);
+    m_projMatrix = perspectiveFovLH(m_angle, float(tmpAR), m_near, m_far);
   }
 
 }

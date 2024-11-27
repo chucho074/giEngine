@@ -164,6 +164,7 @@ namespace giEngineSDK {
 
   SharedPtr<Resource>
   Decoder::decodeImage(FILE& inFileData, DECODER_FLAGS::E inFlags) {
+    GI_UNREFERENCED_PARAMETER(inFlags);
     auto& gapi = g_graphicsAPI().instance();
 
     int32 w = 0, h = 0, comp = 0;
@@ -323,8 +324,8 @@ namespace giEngineSDK {
       aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
       inInfo.totalVertices += mesh->mNumVertices;
       inInfo.totalFaces += mesh->mNumFaces;
-      for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
-        aiFace face = mesh->mFaces[i];
+      for (uint32 j = 0; j < mesh->mNumFaces; ++j) {
+        aiFace face = mesh->mFaces[j];
         inInfo.totalIndex += face.mNumIndices;
       }
     }
@@ -497,7 +498,7 @@ namespace giEngineSDK {
     }
 
     if (noTexture) {
-      if(TEXTURE_TYPE::kSpecular == typeName) {
+      if(TEXTURE_TYPE::kSpecular == typeName || TEXTURE_TYPE::kGloss == typeName) {
         tmpTextureRef = RM.m_defaultRoughnessTextureRef;
       }
       else {
@@ -645,24 +646,14 @@ namespace giEngineSDK {
                                                 TEXTURE_TYPE::kAlbedo));
 
         //For assimp, evaluates if the information is on normals or heights variables.
-        /*if (mesh->HasNormals()) {
-          aiString normalMapPath;
-          if (material->GetTexture(aiTextureType_HEIGHT, 1, &normalMapPath) == aiReturn_SUCCESS) {*/
-            //To change for the creation of the textures in the resource Manager.
-            textures.push_back(loadMaterialTextures(inModel,
-                                                    material,
-                                                    aiTextureType_NORMALS,
-                                                    //aiTextureType_HEIGHT, 
-                                                    TEXTURE_TYPE::kNormal));
-          /*}
-          else if(material->GetTexture(aiTextureType_NORMALS, 1, &normalMapPath) == aiReturn_SUCCESS) {*/
-            //To change for the creation of the textures in the resource Manager.
-            /*textures.push_back(loadMaterialTextures(inModel,
-                                                    material,
-                                                    aiTextureType_NORMALS,
-                                                    TEXTURE_TYPE::kNormal));*/
-         /* }
-        }*/
+       
+        //To change for the creation of the textures in the resource Manager.
+        textures.push_back(loadMaterialTextures(inModel,
+                                                material,
+                                                aiTextureType_NORMALS,
+                                                //aiTextureType_HEIGHT, 
+                                                TEXTURE_TYPE::kNormal));
+          
         
 
 
@@ -670,14 +661,14 @@ namespace giEngineSDK {
         textures.push_back(loadMaterialTextures(inModel,
                                                 material,
                                                 aiTextureType_SPECULAR, 
-                                                TEXTURE_TYPE::kSpecular));
+                                                TEXTURE_TYPE::kSpecular)); //Metalic (?)
 
 
         //To change for the creation of the textures in the resource Manager.
         textures.push_back(loadMaterialTextures(inModel,
                                                 material,
                                                 aiTextureType_SHININESS, 
-                                                TEXTURE_TYPE::kGloss));
+                                                TEXTURE_TYPE::kGloss)); //Roughness
 
       }
       else {

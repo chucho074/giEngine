@@ -35,8 +35,8 @@ ContentBrowser::init() {
 
 void 
 ContentBrowser::update(float inDeltaTime) {
-  auto& configs = g_engineConfigs().instance();
-  auto& RM = g_resourceManager().instance();
+  //auto& configs = g_engineConfigs();
+  //auto& RM = g_resourceManager();
 
   GI_UNREFERENCED_PARAMETER(inDeltaTime);
 

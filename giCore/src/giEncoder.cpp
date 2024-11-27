@@ -55,7 +55,8 @@ namespace giEngineSDK {
   
   void 
   Encoder::encodeOBJ(Path inPath, ResourceRef inModel) {
-    
+    GI_UNREFERENCED_PARAMETER(inPath);
+    GI_UNREFERENCED_PARAMETER(inModel);
   }
 
   void
@@ -183,7 +184,7 @@ namespace giEngineSDK {
 
   void 
   Encoder::exportModelFromMem(Path inPath, ResourceRef inModel) {
-    auto& RM = g_resourceManager();
+    //auto& RM = g_resourceManager();
 
     //MyMesh outMesh;
 
