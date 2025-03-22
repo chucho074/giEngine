@@ -48,7 +48,7 @@ PS_INPUT VS_GBUFFER(VS_INPUT inVS)
   
   //Position View
   float4 posView = mul(float4(inVS.Position.xyz, 1.0f), WorldView);
-  output.PosView = posView;
+  output.PosView = posView.xyz;
   
   //Position
   output.Position = mul(posView, Projection);

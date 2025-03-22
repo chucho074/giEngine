@@ -34,19 +34,41 @@ namespace giEngineSDK {
     tmpMatrix = Matrix4::IDENTITY;
 
     //Scale
-    tmpMatrix.m_xColumn.x = m_scale.x;
-    tmpMatrix.m_yColumn.y = m_scale.y;
-    tmpMatrix.m_zColumn.z = m_scale.z;
+    //tmpMatrix.m_xColumn.x = m_scale.x;
+    //tmpMatrix.m_yColumn.y = m_scale.y;
+    //tmpMatrix.m_zColumn.z = m_scale.z;
 
-    //Rotation
-    Quaternion tempQuat(m_rotation, 0.7854f);
-    //tempQuat.normalize();
-    //tmpMatrix *= tempQuat.getMatrix();
-    
+    ////Rotation
+    //Quaternion tempQuat(m_rotation, 0.7854f);
+    ////tempQuat.normalize();
+    ////tmpMatrix *= tempQuat.getMatrix();
+    //
+    ////Translation
+    //tmpMatrix.m_xColumn.w = m_translation.x;
+    //tmpMatrix.m_yColumn.w = m_translation.y;
+    //tmpMatrix.m_zColumn.w = m_translation.z;
+
+    //Column major
+
     //Translation
     tmpMatrix.m_xColumn.w = m_translation.x;
     tmpMatrix.m_yColumn.w = m_translation.y;
     tmpMatrix.m_zColumn.w = m_translation.z;
+    
+    //Rotation
+    //Quaternion tempQuat(m_rotation, 1.f);
+    //Quaternion tempQuat(1.57f, 0.f, 1.f, 0.f);
+    //tempQuat.normalize();
+    //tmpMatrix *= tempQuat.getMatrix();
+
+    //Scale
+    tmpMatrix.m_xColumn.x += m_scale.x;
+    tmpMatrix.m_yColumn.y += m_scale.y;
+    tmpMatrix.m_zColumn.z += m_scale.z;
+
+
+
+
 
     return tmpMatrix;
   }

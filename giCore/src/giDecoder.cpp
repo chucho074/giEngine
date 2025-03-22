@@ -165,7 +165,7 @@ namespace giEngineSDK {
   SharedPtr<Resource>
   Decoder::decodeImage(FILE& inFileData, DECODER_FLAGS::E inFlags) {
     GI_UNREFERENCED_PARAMETER(inFlags);
-    auto& gapi = g_graphicsAPI().instance();
+    auto& gapi = g_graphicsAPI();
 
     int32 w = 0, h = 0, comp = 0;
 

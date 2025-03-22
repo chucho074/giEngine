@@ -1,0 +1,13 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.0)
+
+newmtl Wood Light
+Kd 1 1 1
+Ka 0 0 0
+Ks 0.10980392 0.098039217 0.094117649
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 19
+illum 2
+

@@ -73,6 +73,13 @@ namespace giEngineSDK {
     return Quaternion((Vector3(x, y, z) * inScalar), (inScalar * w));
   }
 
+  Quaternion 
+  Quaternion::fromAxisAngle(float inAngle, Vector3 inRot) {
+    float halfAngle = inAngle * 0.5f;
+    float s = sin(halfAngle);
+    return Quaternion(inRot * s, cos(halfAngle));
+  }
+
   Quaternion
   Quaternion::normalize() {
     float tmpMag = sqrtf(powf(x, 2) + powf(y, 2) + powf(z, 2) + powf(w, 2));
@@ -126,19 +133,41 @@ namespace giEngineSDK {
     //rotMatrix.m_zColumn.z = 2 * (x * x + w * w) - 1;
 
 
-    rotMatrix.m_xColumn.x = 2 * (yy + zz) - 1;
-    rotMatrix.m_xColumn.y = 2 * (xy - zw);
-    rotMatrix.m_xColumn.z = 2 * (xz + yw);
+    //rotMatrix.m_xColumn.x = 2 * (yy + zz) - 1;
+    //rotMatrix.m_xColumn.y = 2 * (xy - zw);
+    //rotMatrix.m_xColumn.z = 2 * (xz + yw);
 
-    //
-    rotMatrix.m_yColumn.x = 2 * (xy + zw);
-    rotMatrix.m_yColumn.y = 2 * (xx + zz) - 1;
-    rotMatrix.m_yColumn.z = 2 * (yz - xw);
+    ////
+    //rotMatrix.m_yColumn.x = 2 * (xy + zw);
+    //rotMatrix.m_yColumn.y = 2 * (xx + zz) - 1;
+    //rotMatrix.m_yColumn.z = 2 * (yz - xw);
 
-    //
-    rotMatrix.m_zColumn.x = 2 * (xz - yw);
-    rotMatrix.m_zColumn.y = 2 * (yz = xw);
-    rotMatrix.m_zColumn.z = 2 * (xx + yy) - 1;
+    ////
+    //rotMatrix.m_zColumn.x = 2 * (xz - yw);
+    //rotMatrix.m_zColumn.y = 2 * (yz = xw);
+    //rotMatrix.m_zColumn.z = 2 * (xx + yy) - 1;
+
+    rotMatrix.m_xColumn.x = 1.f - 2.f * (yy + zz);
+    rotMatrix.m_xColumn.y = 2.f * (xy + zw);
+    rotMatrix.m_xColumn.z = 2.f * (xz - yw);
+    rotMatrix.m_xColumn.w = 1.f;
+
+    rotMatrix.m_yColumn.x = 2.f * (xy - zw);
+    rotMatrix.m_yColumn.y = 1.f - 2.f * (xx + zz);
+    rotMatrix.m_yColumn.z = 2.f * (yz + xw);
+    rotMatrix.m_yColumn.w = 1.f;
+
+    rotMatrix.m_zColumn.x = 2.f * (xz + yw);
+    rotMatrix.m_zColumn.y = 2.f * (yz - xw);
+    rotMatrix.m_zColumn.z = 1.f - 2.f * (xx + yy);
+    rotMatrix.m_zColumn.w = 1.f;
+
+    rotMatrix.m_wColumn.x = 1.f;
+    rotMatrix.m_wColumn.y = 1.f;
+    rotMatrix.m_wColumn.z = 1.f;
+    rotMatrix.m_wColumn.w = 1.f;
+
+
 
     return rotMatrix;
   }

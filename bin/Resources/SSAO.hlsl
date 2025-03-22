@@ -58,6 +58,7 @@ VS_OUTPUT VS_SSAO(VS_INPUT inVS) {
   VS_OUTPUT output;
   output.psPos = float4(inVS.msPos, 1.0f);
   output.TexCoord = inVS.TexCoord.xy;
+  output.TexCoord.y = 1 - output.TexCoord.y;
   return output;
 }
 
@@ -89,7 +90,7 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
     
     ao += DoAmbientOcclusion(input.TexCoord, coord1 * 0.25, p.xyz, n);
     ao += DoAmbientOcclusion(input.TexCoord, coord2 * 0.5,  p.xyz, n);
-    ao += DoAmbientOcclusion(input.TexCoord, coord2 * 0.75, p.xyz, n);
+    ao += DoAmbientOcclusion(input.TexCoord, coord1 * 0.75, p.xyz, n);
     ao += DoAmbientOcclusion(input.TexCoord, coord2,        p.xyz, n);
   }
   

@@ -1,8 +1,7 @@
 #include "giDXApp.h"
 
-int
+int32
 main() {
   DirectXApp dapp;
-  dapp.run();
-  return 0;
+  return dapp.run();
 }

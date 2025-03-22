@@ -56,6 +56,9 @@ namespace giEngineSDK {
     operator*(const float inScalar);
 
     Quaternion
+    fromAxisAngle(float inAngle, Vector3 inRot);
+
+    Quaternion
     normalize();
 
     Matrix4

@@ -29,10 +29,10 @@ namespace giEngineSDK {
 
     //Editor camera
     m_editorCamera = make_shared<Camera>();
-    m_editorCamera->init(Degrees(90.0f).getRadians(),
-                         1280.f / 720.f,
-                         0.001f,
-                         1000000.0f);
+    m_editorCamera->init(Degrees(75.0f).getRadians(),
+                         1280.f / 720.f,              //Obtener el size de la ventana actual
+                         3.f,
+                         10000.0f);
   }
 
   void

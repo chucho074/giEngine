@@ -64,7 +64,7 @@ DirectXApp::onCreate() {
 
   //Sets the shadow camera
   SharedPtr<Camera> shadowCamera = make_shared<Camera>();
-  shadowCamera->init(Degrees(75.0f).getRadians(),
+  shadowCamera->init(Degrees(35.0f).getRadians(),
                      1280.f / 720.f,
                      0.001f,
                      100000.0f);

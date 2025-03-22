@@ -36,7 +36,8 @@ namespace giEngineSDK {
 
     //Create SamplerState
     SamplerDesc sampDesc;
-    sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+    //sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
+    sampDesc.filter = GI_FILTER::kFILTER_MIN_MAG_MIP_POINT;
     sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
@@ -174,14 +175,14 @@ namespace giEngineSDK {
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
-                                               GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                               GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,
                                                GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Normales
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
-                                               GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                               GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,
                                                GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     //Albedo
@@ -234,7 +235,7 @@ namespace giEngineSDK {
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
                                              1,
-                                             GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                             GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,   //R32 solo
                                              GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                              | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
                                              | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
@@ -520,7 +521,7 @@ namespace giEngineSDK {
     auto& gapi = g_graphicsAPI();
     auto& RM = g_resourceManager();
 
-    auto& sgraph = SceneGraph::instance();
+    auto& sgraph = g_sceneGraph();
 
     gapi.omSetRenderTarget(inRenderTarget, inDS);
 
@@ -550,14 +551,14 @@ namespace giEngineSDK {
       gapi.psSetSamplerState(0, 1, inSampler);
     }
 
-    for (int i = 0; i < inConstantBuffers.size(); ++i) {
+    for (int32 i = 0; i < inConstantBuffers.size(); ++i) {
       if(inConstantBuffers[i] != nullptr) {
         gapi.vsSetConstantBuffer(i, inConstantBuffers[i]);
         gapi.psSetConstantBuffer(i, inConstantBuffers[i]);
       }
     }
 
-    int j = 0;
+    int32 j = 0;
     for (; j < inShaderResources.size(); ++j) {
       gapi.psSetShaderResource(j, inShaderResources[j]);
     }
