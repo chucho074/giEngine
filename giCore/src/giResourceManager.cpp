@@ -66,7 +66,7 @@ namespace giEngineSDK {
                                     DECODER_FLAGS::E inFlags) {
 
     //Send to read the file.
-    Decoder::readFile(inFile);
+    //Decoder::readFile(inFile);
 
     //Creates the References of the Resource.
     ResourceRef tmpRef = Decoder::decodeData(inFile, inFlags);
@@ -150,7 +150,7 @@ namespace giEngineSDK {
   }
 
   ResourceRef 
-  ResourceManager::createModelFromMem(Vector<SharedPtr<Mesh>> inMeshes, 
+  ResourceManager::createModelFromMem(Vector<SharedPtr<Mesh>>& inMeshes, 
                                       Vector<ResourceRef> inMaterials) {
     //Create the reference of the resource.
     ResourceRef tmpRef;
@@ -433,6 +433,7 @@ namespace giEngineSDK {
     for (int32 i = 1; i <= inNumSubdivisions; i++) {
       catmull_clark_subdivision(tmpPMPMesh);
     }
+
 
 
     return ResourceRef();

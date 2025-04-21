@@ -16,14 +16,14 @@ namespace giEngineSDK {
 
   namespace FILLMODE {
     enum E {
-      kSolid = 0,
-      kWireFrame
+      kWireFrame = 2,
+      kSolid = 3
     };
   }
 
   namespace CULLMODE {
     enum E {
-      kNone = 0,
+      kNone = 1,
       kFront,
       kBack
     };
@@ -38,5 +38,9 @@ namespace giEngineSDK {
     //Destructor
     virtual
   	~BaseRasterizerState() = default;
+
+    FILLMODE::E m_fillMode = FILLMODE::kSolid;
+
+    CULLMODE::E m_cullMode = CULLMODE::kNone;
   };
 }

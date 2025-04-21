@@ -41,13 +41,13 @@ namespace giEngineSDK {
   	~Input();
 
     /**
-     * 
+     * @brief   Initialize the input manager.
      */
     void 
     init(WindowHandle wHndl);
 
     /**
-     * 
+     * @brief   Update the input manager.
      */
     void 
     update();
@@ -110,7 +110,7 @@ namespace giEngineSDK {
 
    protected:
     /**
-    * 
+    * @brief   .
     */
   	void 
     setButtons();

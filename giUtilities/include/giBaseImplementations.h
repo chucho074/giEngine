@@ -24,7 +24,7 @@ namespace giEngineSDK {
      * @return   Returns the path of the file selected in the dialog.
      */
     static String 
-    openFileDialog(void* inWindowHandle) {
+    openFileDialog(void* inWindowHandle, const char* inFilters = m_fileFiltersProject) {
       GI_UNREFERENCED_PARAMETER(inWindowHandle);
       return String();
     };
@@ -42,5 +42,6 @@ namespace giEngineSDK {
 
     static inline const char* m_fileFilters = "All\0*.*\0Text\0*.txt\0giEngine Scenes\0*.giScene\0";
     static inline const char* m_fileFiltersProject = "giEngine Projects\0*.giProject\0";
+    static inline const char* m_fileFiltersImage = "Images\0*.png.jpeg*\0PNG\0*.png\0JPEG\0*.jpeg\0";
   };
 }

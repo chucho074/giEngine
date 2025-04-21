@@ -26,6 +26,6 @@ namespace giEngineSDK {
     }
 
     
-    ID3D11RasterizerState * m_rasterizerState;
+    ID3D11RasterizerState * m_rasterizerState = nullptr;
   };
 }

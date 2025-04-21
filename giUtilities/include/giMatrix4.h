@@ -40,9 +40,9 @@ namespace giEngineSDK {
      * @param    inColumW   Vector for the column w.
      */
     Matrix4(Vector4 inColumX,
-    Vector4 inColumY,
-    Vector4 inColumZ,
-    Vector4 inColumW) {
+            Vector4 inColumY,
+            Vector4 inColumZ,
+            Vector4 inColumW) {
     
       m_xColumn = inColumX;
       m_yColumn = inColumY;

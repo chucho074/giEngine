@@ -23,7 +23,7 @@ namespace giEngineSDK {
      * @return   Returns the path of the file selected in the dialog.
      */
     static String 
-    openFileDialog(void* inWindowHandle);
+    openFileDialog(void* inWindowHandle, const char* inFilters = m_fileFiltersProject);
 
     /**
      * @brief    For save as a new file in a dialog.

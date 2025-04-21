@@ -46,9 +46,9 @@ namespace giEngineSDK {
      * @param    inIndex       .
      * @param    inTextures    .
      */
-    Mesh(Vector<SimpleVertex> inVertex, 
-         Vector<uint32> inIndex, 
-         Vector<ResourceRef> inTextures);
+    Mesh(Vector<SimpleVertex>& inVertex, 
+         Vector<uint32>& inIndex, 
+         Vector<ResourceRef>& inTextures);
 
     ///Destructor
     ~Mesh();
@@ -71,6 +71,8 @@ namespace giEngineSDK {
     void 
     drawMesh();
 
+    void
+    changeRaster();
 
     //The vertex buffer for the mesh
     SharedPtr<Buffer> m_vertexBuffer = nullptr;
@@ -94,5 +96,7 @@ namespace giEngineSDK {
 
     //The reference for the path in Omniverse.
     String m_omniRefPath = "";
+
+    SharedPtr<BaseRasterizerState> m_rasterizerState = nullptr;
   };
 }

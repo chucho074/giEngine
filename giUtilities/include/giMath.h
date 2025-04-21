@@ -13,6 +13,9 @@
 
 #include "giPrerequisitesUtilities.h"
 #include "giPlatformMath.h"
+#include "giDegrees.h"
+#include "giRadians.h"
+
 
 #if GI_PLATFORM == GI_PLATFORM_WIN32
 #include "giWindowsMath.h"

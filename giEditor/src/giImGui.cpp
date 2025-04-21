@@ -684,7 +684,6 @@ UI::init(void* inWindow, Vector2 inWindowSize) {
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-
   ImGuiStyle& style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
@@ -720,7 +719,6 @@ UI::render() {
   //isMouseTouchingImGui();
 
   ImGuiIO& io = ImGui::GetIO();
-
 
   //ImGui::ShowDemoWindow();
 

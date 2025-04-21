@@ -12,13 +12,14 @@
 #include "giResourceManager.h"
 
 namespace giEngineSDK {
-  Mesh::Mesh(Vector<SimpleVertex> inVertex, 
-             Vector<uint32> inIndex, 
-             Vector<ResourceRef> inTextures) {
+  Mesh::Mesh(Vector<SimpleVertex>& inVertex, 
+             Vector<uint32>& inIndex, 
+             Vector<ResourceRef>& inTextures) {
     m_vertexVector = inVertex;
     m_facesList = inIndex;
     m_textures = inTextures;
 
+    m_rasterizerState = make_shared<BaseRasterizerState>();
     loadMesh();
   }
   
@@ -52,7 +53,13 @@ namespace giEngineSDK {
                                       GI_BIND_FLAG::kBIND_INDEX_BUFFER,
                                       m_facesList.data());
 
+    m_rasterizerState = GAPI.createRasterizer(m_rasterizerState->m_fillMode, 
+                                              m_rasterizerState->m_cullMode, 
+                                              false, 
+                                              false);
 
+    m_facesList.empty();
+    m_vertexVector.empty();
   }
 
   void
@@ -63,6 +70,8 @@ namespace giEngineSDK {
     for(uint32 i = 0; i < m_textures.size(); i++) {
 
       auto tmpResoruce = RM.getResource(m_textures[i].m_id);
+
+      GAPI.rsSetRasterizerState(m_rasterizerState);
 
       GAPI.psSetShaderResource(i, 
                                static_pointer_cast<Texture>(tmpResoruce.lock())->m_texture);

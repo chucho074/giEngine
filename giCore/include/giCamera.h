@@ -56,18 +56,6 @@ namespace giEngineSDK {
     update(float inDT) override;
 
     /**
-     * @brief   Update the Camera information.
-     */
-    void 
-    updateData();
-
-    /**
-     * @brief   Update the View Matrix information.
-     */
-    void
-    updateVM();
-
-    /**
      * @brief   Apply a movement in the camera position.
      * @param   inDT   The delta time.
      */
@@ -79,7 +67,7 @@ namespace giEngineSDK {
      * @param   inVect   The position to set the camera.
      */
     void 
-    setPosition(Vector4 inVect1, Vector4 inVect2, Vector4 inVect3);
+    setPosition(Vector4 inEyePos, Vector4 inVect2, Vector4 inVect3);
 
     /**
      * @brief   Update and get the View Matrix.
@@ -101,27 +89,32 @@ namespace giEngineSDK {
     void
     resize(int32 inW, int32 inH);
 
+    void
+    updateRotations();
+
    //private:
     float m_angle = 0;
     float m_aspectRatio = 0;
     float m_near = 0;
     float m_far = 0;
-    Vector4 m_eye = { 200.0f,  0.0f, 0.0f, 1.0f };  // En posicion del mundo
-    Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
-    Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
-    //Vector4 m_eye = { -200.f,  -200.0f, -200.0f, 1.0f };  // En posicion del mundo
+    Vector4 m_eye = { 0.0f, 0.0f, -10.0f, 1.0f };  // En posicion del mundo
+    Vector4 m_at  = { 0.f,  0.f,  0.0f, 1.0f };  // En posicion del mundo
+    //Vector4 m_eye = { 200.0f,  0.0f, 0.0f, 1.0f };  // En posicion del mundo
     //Vector4 m_at  = { -0.9f,  0.2f,  0.0f, 1.0f };  // En posicion del mundo
-    //Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
+    Vector4 m_upVect  = { 0.0f,  1.0f,  0.0f, 1.0f };  // Up del mundo
+    Vector3 m_YPR = Vector3::ZERO; //Yaw Pitch Roll Values
+
     Matrix4 m_viewMatrix;
     Matrix4 m_projMatrix;
-    Vector4 m_rightVector;
-    Vector4 m_up2;    //Up de la camara
-    Vector4 m_forward;
+    Vector4 m_rightVector;//Dir
+    Vector4 m_up2;    //Up de la camara - Dir
+    Vector4 m_forward; //Dir 
 
     float m_speed = 1.f;
 
     bool m_front, m_back, m_left, m_right = false;
     bool m_up, m_down = false;
+    bool m_YawPos = false, m_YawNeg = false;
 
     CAMERA_TYPE::E m_cameraType;
   };

@@ -10,7 +10,7 @@
  * @include
  */
 #include "giCamera.h"
-
+#include "giRadians.h"
 
 namespace giEngineSDK {
   Camera::Camera() {
@@ -22,7 +22,6 @@ namespace giEngineSDK {
     
     m_up2 = m_forward.cross(m_rightVector);
     //m_up2.normalize();
-
 
     m_front = false;
     m_back = false;
@@ -39,7 +38,6 @@ namespace giEngineSDK {
     m_aspectRatio = inAR;
     m_near = inNear;
     m_far = inFar;
-    updateData();
   }
   
   void 
@@ -47,98 +45,31 @@ namespace giEngineSDK {
     move(inDT);
   }
 
-  void
-  Camera::updateData() {
-    m_viewMatrix = lookToLH(m_eye, m_at, m_upVect);
-    
-    //updateVM();
-    //m_viewMatrix = m_viewMatrix.transpose();
-    
-    m_projMatrix = perspectiveFovLH(m_angle, m_aspectRatio, m_near, m_far);
-  }
-  
-  void 
-  Camera::updateVM() {
-    m_rightVector = m_viewMatrix.m_xColumn;
-    m_rightVector.w = 0.f;
-
-    m_up2 = m_viewMatrix.m_yColumn;
-    m_up2.w = 0.f;
-    
-    m_forward = m_viewMatrix.m_zColumn;
-    m_forward.w = 0.f;
-    
-    m_at = m_eye + m_forward;
-  }
   
   void 
   Camera::move(float inDT) {
     
-    Vector3 pos = Vector3(m_viewMatrix.m_wColumn.x,
-                          m_viewMatrix.m_wColumn.y,
-                          m_viewMatrix.m_wColumn.z);
-
-    Vector3 tmpVect;
-
-    if(m_front || m_back) {
-      tmpVect.x = m_viewMatrix.m_xColumn.x;
-      tmpVect.y = m_viewMatrix.m_yColumn.x;
-      tmpVect.z = m_viewMatrix.m_zColumn.x;
+    float velocity = m_speed * inDT;
+    if(m_front)
+      m_eye += m_forward * velocity;
+    if(m_back)
+      m_eye -= m_forward * velocity;
+    if(m_left)
+      m_eye -= m_rightVector * velocity;
+    if(m_right)
+      m_eye += m_rightVector * velocity;
+    if(m_up)
+      m_eye -= m_upVect * velocity;
+    if(m_down)
+      m_eye += m_upVect * velocity;
+    if(m_YawNeg) {
+      m_YPR.x -= 1 * inDT;
+      updateRotations();
     }
-    
-    if(m_right || m_left) {
-      tmpVect.x = m_viewMatrix.m_xColumn.z;
-      tmpVect.y = m_viewMatrix.m_yColumn.z;
-      tmpVect.z = m_viewMatrix.m_zColumn.z;
+    if(m_YawPos) {
+      m_YPR.x += 1 * inDT;
+      updateRotations();
     }
-
-    if(m_up || m_down) {
-      tmpVect.x = m_viewMatrix.m_xColumn.y;
-      tmpVect.y = m_viewMatrix.m_yColumn.y;
-      tmpVect.z = m_viewMatrix.m_zColumn.y;
-    }
-
-
-    float tmpSpeed = m_speed;
-
-    if(m_down || m_right || m_front) {
-      tmpSpeed = -m_speed;
-    }
-
-    auto tmpResult = tmpVect * (tmpSpeed * inDT);
-
-    pos += tmpResult;
-
-    m_viewMatrix.m_wColumn.x = pos.x;
-    m_viewMatrix.m_wColumn.y = pos.y;
-    m_viewMatrix.m_wColumn.z = pos.z;
-
-    //TESTING
-
-    /*float tmpSpeed = m_speed * inDT;
-
-    if (m_front) {
-      m_eye += (m_at * tmpSpeed);
-    }
-
-    if (m_back) {
-      m_eye -= (m_at * tmpSpeed);
-    }
-
-    if (m_right) {
-      auto tmpVector = m_at.cross(m_upVect);
-      tmpVector.normalize();
-      m_eye -= tmpVector* tmpSpeed;
-    }
-    
-    if (m_left) {
-      auto tmpVector = m_at.cross(m_upVect);
-      tmpVector.normalize();
-      m_eye += tmpVector * tmpSpeed;
-    }
-
-    m_viewMatrix = lookToLH(m_eye, m_at, m_upVect);*/
-
   }
 
   void 
@@ -146,21 +77,18 @@ namespace giEngineSDK {
     m_eye = inVect;
     m_at = inVect2;
     m_upVect = inVect3;
-    updateData();
   }
   
   Matrix4 
   Camera::getViewMatrix() {
-    //updateData();
+    m_at = (m_eye + m_forward);
+    m_viewMatrix = lookToLH(m_eye, m_at, m_upVect);
     return m_viewMatrix;
   }
   
   Matrix4 
   Camera::getProyectionMatrix() {
-    //Update the matrix
-    //updateData();
-
-    //Returns the matrix
+    m_projMatrix = perspectiveFovLH(m_angle, m_aspectRatio, m_near, m_far);
     return m_projMatrix;
   }
 
@@ -168,6 +96,37 @@ namespace giEngineSDK {
   Camera::resize(int32 inW, int32 inH) {
     int32 tmpAR = inW / inH;
     m_projMatrix = perspectiveFovLH(m_angle, float(tmpAR), m_near, m_far);
+  }
+
+  void 
+  Camera::updateRotations() {
+    /*Vector4 front;
+    front.x = cos(Radians(m_YPR.x).getRadians());
+    front.y = sin(Radians(m_YPR.y).getRadians());
+    front.z = sin(Radians(m_YPR.x).getRadians());
+    m_at = front;
+    m_at.normalize();
+
+    m_rightVector = m_at.cross(m_upVect);
+    m_rightVector.normalize();
+    m_upVect = m_rightVector.cross(m_at);
+    m_upVect.normalize();*/
+
+
+    float yawRad = Radians(m_YPR.x).getRadians();   // Yaw (horizontal)
+    float pitchRad = Radians(m_YPR.y).getRadians(); // Pitch (vertical)
+
+    // Cálculo correcto del vector forward
+    m_forward.x = cos(yawRad) * cos(pitchRad);
+    m_forward.y = sin(pitchRad);
+    m_forward.z = sin(yawRad) * cos(pitchRad);
+    m_forward.normalize();
+
+    // Recalcular los vectores de cámara
+    m_rightVector = m_forward.cross({0.0f, 1.0f, 0.0f, 0.0f}); // Siempre sobre Y global
+    m_rightVector.normalize();
+    m_up2 = m_rightVector.cross(m_forward);
+    m_up2.normalize();
   }
 
 }

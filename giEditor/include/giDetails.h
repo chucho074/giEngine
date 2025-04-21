@@ -30,7 +30,7 @@ class Details
    * @brief      Initialize the information.
    */
   void
-  init();
+  init(void* inHandler);
 
   /**
    * @brief      Update the information.
@@ -56,4 +56,5 @@ class Details
   
   bool m_scaleBlock = true;
 
+  void* m_windowHandle = nullptr;
 };

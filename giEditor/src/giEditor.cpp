@@ -43,6 +43,7 @@ Editor::init(void* inHandler, Vector2 inWindowSize) {
   m_hierarchy = make_shared<Hierarchy>();
 
   m_details = make_shared<Details>();
+  m_details->init(inHandler);
 
   if (!configs.s_anacondaPath.empty()) {
     m_askAnaconda = false;
@@ -164,11 +165,19 @@ Editor::render() {
           tmpActor->m_actorName = "Spehere skybox";
           tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
           sg.addActor(tmpActor, sg.getRoot());
+          tmpActor->m_transform.setScale({10000, 10000, 10000});
         }
 
         if (ImGui::MenuItem("Cube Sky")) {
-          /*SharedPtr<Actor> tmpActor = make_shared<Actor>();
-          tmpActor->m_actorName = "Spehere";*/
+          SharedPtr<Actor> tmpActor = make_shared<Actor>();
+          tmpActor->m_actorName = "SkyBox";
+          ResourceRef tmpModel;
+          FILE tmpFileModel("Resources/Models/Box_v2.fbx");
+          tmpModel = rm.resourceFromFile(tmpFileModel);
+          SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+          tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+          tmpActor->m_actorName = "Skybox";
+          sg.addActor(tmpActor, sg.getRoot());
 
         }
         ImGui::EndMenu();
@@ -347,13 +356,13 @@ Editor::renderCameraMovementWindow() {
 
   ImGui::Begin("Editor camera movement", tmpValue, ImGuiWindowFlags_NoScrollbar 
                                                    | ImGuiWindowFlags_NoDocking
-                                                   | ImGuiWindowFlags_NoResize
+                                                   //| ImGuiWindowFlags_NoResize
                                                    | ImGuiWindowFlags_NoCollapse);
   auto tmpMainCamera = sgraph.m_editorCamera;
 
-  String tmpX = toString(tmpMainCamera->m_viewMatrix.m_wColumn.x);
-  String tmpY = toString(tmpMainCamera->m_viewMatrix.m_wColumn.y);
-  String tmpZ = toString(tmpMainCamera->m_viewMatrix.m_wColumn.z);
+  String tmpX = toString(tmpMainCamera->m_eye.x);
+  String tmpY = toString(tmpMainCamera->m_eye.y);
+  String tmpZ = toString(tmpMainCamera->m_eye.z);
 
   ImGui::Text("Pos: ");
   ImGui::SameLine();
@@ -363,8 +372,19 @@ Editor::renderCameraMovementWindow() {
   ImGui::SameLine();
   ImGui::TextColored({0.f, 0.48f, 0.8f, 1.f},    tmpZ.substr(0, tmpZ.find(".")+3).c_str());
   
-
   ImGui::SliderFloat("Speed", &tmpMainCamera->m_speed, 0, 250);
+
+  float tmpYaw = Radians(tmpMainCamera->m_YPR.x).getDegrees();
+  ImGui::SliderFloat("Yaw", &tmpYaw, 0, 360.f);
+  tmpMainCamera->m_YPR.x = Degrees(tmpYaw).getRadians();
+
+  float tmpPitch = Radians(tmpMainCamera->m_YPR.y).getDegrees();
+  ImGui::SliderFloat("Pitch", &tmpPitch, 0, 360.f);
+  tmpMainCamera->m_YPR.y = Degrees(tmpPitch).getRadians();
+
+  if(ImGui::Button("update", {15,15})) {
+    tmpMainCamera->updateRotations();
+  }
 
   ImGui::End();
 }

@@ -20,7 +20,7 @@
 namespace giEngineSDK {
   
   String 
-  WindowsFileDialogs::openFileDialog(void* inWindowHandle) {
+  WindowsFileDialogs::openFileDialog(void* inWindowHandle, const char* inFilters) {
     OPENFILENAMEA ofn;
     char szFile[260] = { 0 };
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -28,7 +28,7 @@ namespace giEngineSDK {
     ofn.hwndOwner = (HWND)inWindowHandle;
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = sizeof(szFile);
-    ofn.lpstrFilter = m_fileFiltersProject;
+    ofn.lpstrFilter = inFilters;
     ofn.nFilterIndex = 1;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 

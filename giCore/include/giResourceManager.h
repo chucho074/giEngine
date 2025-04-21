@@ -117,7 +117,7 @@ namespace giEngineSDK {
      * @return 
      */
     ResourceRef
-    createModelFromMem(Vector<SharedPtr<Mesh>> inMeshes,
+    createModelFromMem(Vector<SharedPtr<Mesh>>& inMeshes,
                        Vector<ResourceRef> inMaterials = Vector<ResourceRef>());
 
     /**

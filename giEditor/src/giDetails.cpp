@@ -11,6 +11,7 @@
  */
 #include "giDetails.h"
 #include <giSpecificImplementations.h>
+#include <giResource.h>
 #include <giSceneGraph.h>
 #include <giTransform.h>
 #include <giBaseOmniverse.h>
@@ -19,14 +20,16 @@
 #include <giModel.h>
 #include <giStaticMesh.h>
 #include <giEditor.h>
+#include <giDecoder.h>
+
 
 Details::Details() {
   
 }
 
 void 
-Details::init() {
-  
+Details::init(void* inHandler) {
+  m_windowHandle = inHandler;
 }
 
 void 
@@ -132,16 +135,16 @@ Details::render() {
         SharedPtr<StaticMesh> tmpComponent = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
         SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpComponent->getModel().m_id).lock());
         for (auto mesh : tmpModel->m_meshes) {
-          for (auto tex : mesh->m_textures) {
-            auto tmpTexture = dynamic_pointer_cast<Texture>(RM.getResource(tex.m_id).lock());
+          for (int32 i = 0; i < mesh->m_textures.size(); ++i) {
+            auto tmpTexture = dynamic_pointer_cast<Texture>(RM.getResource(mesh->m_textures[i].m_id).lock());
             ImGui::Text(String("Path: " + tmpTexture->m_name).c_str());
             ImGui::SameLine();
             if (ImGui::Button("Change")) {
               //Create a new texture
-              //giEngineSDK::FILE tmpFile(FileDialogs::openFileDialog());
-              //ResourceRef tmpRef = Decoder::decodeData(tmpFile);
+              giEngineSDK::FILE tmpFile(FileDialogs::openFileDialog(m_windowHandle, FileDialogs::m_fileFiltersImage));
+              ResourceRef tmpRef = RM.resourceFromFile(tmpFile);
               //Change the ResourceRef for the new texture.
-              //tex = tmpRef;
+              mesh->m_textures[i] = tmpRef;
             }
           }
           ImGui::Separator();

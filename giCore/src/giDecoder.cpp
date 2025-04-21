@@ -224,6 +224,10 @@ namespace giEngineSDK {
   SharedPtr<Resource>
   Decoder::decodeModel(FILE& inFileData, DECODER_FLAGS::E inFlags) {
     
+    if(!fsys::exists(inFileData.m_path)) {
+      return SharedPtr<Resource>();
+    }
+
     Assimp::Importer importer;
 
     importer.ReadFile(inFileData.m_path.string(),
@@ -238,10 +242,9 @@ namespace giEngineSDK {
         || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
         || !tmpScene->mRootNode) {
       g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
+      __debugbreak();
       return SharedPtr<Resource>();
     }
-
-
 
     SharedPtr<Model> tmpModel = make_shared<Model>();
 
@@ -527,7 +530,7 @@ namespace giEngineSDK {
 
 
   SharedPtr<Mesh>
-  processMesh(WeakPtr<Model>inModel, 
+  processMesh(WeakPtr<Model> inModel, 
               aiMesh* mesh, 
               const aiScene* scene, 
               bool saveMat) {

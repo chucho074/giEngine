@@ -50,7 +50,9 @@ DirectXApp::onCreate() {
 
   //Sets Vela's model
   ResourceRef tmpModel;
+  //FILE tmpFileModel("Resources/Models/R8_chico.obj");
   FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Box_v2.fbx");
   //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
   //FILE tmpFileModel("Resources/Models/sphere.obj");
   //FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
@@ -148,6 +150,19 @@ DirectXApp::onUpdate(float inDeltaTime) {
     }
     else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kE)) {
       tmpCamera->m_down = false;
+    }
+    //Rotate
+    if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kZ)) {
+      tmpCamera->m_YawNeg = true;
+    }
+    else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kZ)) {
+      tmpCamera->m_YawNeg = false;
+    }
+    if(g_inputManager().isKeyPressed(KEYBOARD_KEYS::kC)) {
+      tmpCamera->m_YawPos = true;
+    }
+    else if(g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kC)) {
+      tmpCamera->m_YawPos = false;
     }
   }
 
