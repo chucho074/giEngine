@@ -712,7 +712,7 @@ namespace giEngineSDK {
     m_backBuffer.reset();
     m_defaultDSV.reset();
 
-    if(FAILED(m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0))) {
+    if(FAILED(m_swapChain->ResizeBuffers(0, inW, inH, DXGI_FORMAT_UNKNOWN, 0))) {
       __debugbreak();
       Logger::instance().SetError(ERROR_TYPE::kResizeTextures, 
                                   "Error resizing the viewport Texture");

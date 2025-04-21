@@ -31,7 +31,23 @@ namespace giEngineSDK {
     /**
      * @brief    Destructor.
      */
-    ~Texture2DDX() = default;
+    ~Texture2DDX() {
+      if(m_texture){
+        SAFE_RELEASE(m_texture);
+      }
+      if(m_subResourceData) {
+        SAFE_RELEASE(m_subResourceData);
+      }
+      if(m_depthStencilView) {
+        SAFE_RELEASE(m_depthStencilView);
+      }
+      if(m_renderTargetView) {
+        SAFE_RELEASE(m_renderTargetView);
+      }
+      if(m_UAV) {
+        SAFE_RELEASE(m_UAV);
+      }
+    };
   
     /**
      * @brief    Object for direct management of the texture.
