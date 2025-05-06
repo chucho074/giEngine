@@ -30,5 +30,7 @@ namespace giEngineSDK {
     m_desc.ComparisonFunc = (D3D11_COMPARISON_FUNC)inDesc.comparisonFunc;
     m_desc.MinLOD = inDesc.minLOD;
     m_desc.MaxLOD = inDesc.maxLOD;
+    //TODO: Change this pls
+    m_desc.MaxAnisotropy = 16;
   }
 }

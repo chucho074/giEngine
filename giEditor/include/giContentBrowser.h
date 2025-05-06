@@ -56,8 +56,23 @@ class ContentBrowser
   void
   changeWorkingDir(Path inWorkingDir);
 
+ protected:
+  void
+  drawFolders(Path& inIter,
+              int32& inTreeCount, 
+              int32& inSelectedNode);
+
  private:
+
+  ImGuiTreeNodeFlags m_treeFolders = ImGuiTreeNodeFlags_OpenOnArrow
+                                     | ImGuiTreeNodeFlags_OpenOnDoubleClick
+                                     | ImGuiTreeNodeFlags_SpanAvailWidth;
   
+  ImGuiTreeNodeFlags m_treeEmpty = ImGuiTreeNodeFlags_SpanAvailWidth
+                                    | ImGuiTreeNodeFlags_Leaf
+                                    | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+
   Path m_workingDirectory;
 
   Path m_currentDirectory;

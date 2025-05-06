@@ -38,6 +38,7 @@ namespace giEngineSDK {
     m_aspectRatio = inAR;
     m_near = inNear;
     m_far = inFar;
+    updateRotations();
   }
   
   void 
@@ -123,7 +124,12 @@ namespace giEngineSDK {
     m_forward.normalize();
 
     // Recalcular los vectores de cámara
-    m_rightVector = m_forward.cross({0.0f, 1.0f, 0.0f, 0.0f}); // Siempre sobre Y global
+
+    
+
+    m_up2 = m_forward.cross(m_rightVector);
+    m_rightVector = m_upVect.cross(m_forward);
+    //m_rightVector = m_forward.cross({0.0f, 1.0f, 0.0f, 0.0f}); // Siempre sobre Y global
     m_rightVector.normalize();
     m_up2 = m_rightVector.cross(m_forward);
     m_up2.normalize();

@@ -35,6 +35,15 @@ namespace giEngineSDK {
     void
     update();
 
+    void
+    startTimer();
+
+    void
+    stopTimer();
+
+    void
+    restartTimer();
+
     /**
      * @brief    Gets the time elapsed since application start.
      * @return   Returns .
@@ -55,6 +64,8 @@ namespace giEngineSDK {
     uint64 m_timeSinceStartMs = 0u;
 
     bool m_firstFrame = true;
+
+    bool m_timerRunning = false;
 
     /**
      * @brief    Time since start in seconds.

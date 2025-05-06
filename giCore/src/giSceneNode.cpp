@@ -107,12 +107,12 @@ namespace giEngineSDK {
 
   void 
   SceneNode::render() {
-    m_actor->render();
-
-    for(auto nodes : m_childs) {
-      nodes->render();
+    if(isActive) {
+      m_actor->render();
+      for(auto nodes : m_childs) {
+        nodes->render();
+      }
     }
-
   }
 
   void 

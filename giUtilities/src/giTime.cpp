@@ -16,12 +16,37 @@ namespace giEngineSDK {
   const double Time::MICRO_TO_SEC = 1.0 / 1000000.0;
 
   Time::Time() {
-    m_timer = std::make_unique<Timer>();
-    m_lastFrameTime = m_timer->getMicroseconds();
+    m_timer = make_unique<Timer>();
   }  
-  
+
+  void 
+  Time::startTimer() {
+    m_timerRunning = true;
+    m_lastFrameTime = m_timer->getMicroseconds();
+
+  }
+
+  void 
+  Time::stopTimer() {
+    update();
+    m_timerRunning = false;
+  }
+
+  void 
+  Time::restartTimer() {
+    m_timer->restart();
+    m_timerRunning = true;
+    m_timeSinceStartMs = 0;
+    m_timeSinceStart = 0.0f;
+    m_deltaTime = 0.0f;
+    m_firstFrame = true;
+    m_lastFrameTime = m_timer->getMicroseconds();
+
+  }
+
   void 
   Time::update() {
+
     uint64 currentFrameTime = m_timer->getMicroseconds();
 
     if (!m_firstFrame) {
@@ -38,8 +63,7 @@ namespace giEngineSDK {
     m_lastFrameTime = currentFrameTime;
   }
 
-
-  float 
+  float
   Time::getTime() const {
     return m_deltaTime;
   }

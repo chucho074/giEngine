@@ -25,7 +25,7 @@ namespace giEngineSDK {
   void 
   Renderer::create() {
     auto& gapi = g_graphicsAPI();
-    auto& sgraph = SceneGraph::instance();
+    auto& sgraph = g_sceneGraph();
     
     //Get the main camera
     m_mainCamera = sgraph.m_editorCamera;
@@ -37,7 +37,8 @@ namespace giEngineSDK {
     //Create SamplerState
     SamplerDesc sampDesc;
     //sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
-    sampDesc.filter = GI_FILTER::kFILTER_MIN_MAG_MIP_POINT;
+    //sampDesc.filter = GI_FILTER::kFILTER_MIN_MAG_MIP_POINT;
+    sampDesc.filter = GI_FILTER::kFILTER_ANISOTROPIC;
     sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.addressV = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
     sampDesc.addressW = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
@@ -189,7 +190,7 @@ namespace giEngineSDK {
     m_renderTargets.push_back(gapi.createTex2D(1280, 
                                                720, 
                                                1,
-                                               GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                               GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,
                                                GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
@@ -214,7 +215,7 @@ namespace giEngineSDK {
     //Positions
     layoutDescSSAO[0].semanticName = "POSITION";
     layoutDescSSAO[0].semanticIndex = 0;
-    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32_FLOAT;
+    layoutDescSSAO[0].format = GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT;
     layoutDescSSAO[0].inputSlot = 0;
     layoutDescSSAO[0].alignedByteOffset = ALIGN_ELEMENT;
     layoutDescSSAO[0].inputSlotClass = GI_INPUT_CLASSIFICATION::kINPUT_PER_VERTEX_DATA;
@@ -298,7 +299,7 @@ namespace giEngineSDK {
     m_ShadowTexture.push_back(gapi.createTex2D(1024, 
                                                1024, 
                                                1, 
-                                               GI_FORMAT::kFORMAT_R16_FLOAT, 
+                                               GI_FORMAT::kFORMAT_R32_FLOAT, 
                                                GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
 
@@ -353,7 +354,8 @@ namespace giEngineSDK {
     Lightcb.LightPos.x = 360;
     Lightcb.LightPos.y = 280;
     Lightcb.LightPos.z = -200;
-    Lightcb.ViewPos = m_mainCamera->m_viewMatrix.m_zColumn;
+    //Lightcb.ViewPos = m_mainCamera->m_viewMatrix.m_zColumn;
+    Lightcb.ViewPos = m_mainCamera->m_eye;
     Lightcb.InverseView = m_mainCamera->m_viewMatrix.inverse();
     m_cBufferLight = gapi.createBuffer(sizeof(LightConstantBuffer),
                                       GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
@@ -384,6 +386,8 @@ namespace giEngineSDK {
   
   void 
   Renderer::render() {
+
+    m_renderTimer.startTimer();
 
     auto& gapi = g_graphicsAPI();
 
@@ -504,6 +508,7 @@ namespace giEngineSDK {
     //Render in a diferent texture for the viewport in editor.
     gapi.omSetRenderTarget(tmpVectorForClear, gapi.getDefaultDephtStencil());
 
+    m_renderTimer.stopTimer();
   }
 
   void

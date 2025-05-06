@@ -25,6 +25,7 @@ namespace giEngineSDK {
     uint32 comparisonFunc = 0;
     float minLOD = 0.f;
     float maxLOD = 0.f;
+
   };
   
   /**

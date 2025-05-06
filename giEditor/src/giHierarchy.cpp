@@ -15,7 +15,6 @@
 
 
 Hierarchy::Hierarchy() {
-  
   init();
 }
 
@@ -58,7 +57,9 @@ Hierarchy::render() {
       ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoHide);
       ImGui::TableSetupColumn("Active", ImGuiTableColumnFlags_NoHide);
       ImGui::TableHeadersRow();
-      
+
+      ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
       renderNode(root);
 
       ImGui::EndTable();
@@ -94,9 +95,12 @@ Hierarchy::renderNode(SharedPtr<SceneNode> inNode) {
     sg.setSelectedActor(inNode->m_actor);
   }
 
-
   ImGui::TableNextColumn();
   ImGui::TextDisabled("Actor");
+
+  ImGui::TableNextColumn();
+  //TODO: Fix the functionality of the checkbox.
+  ImGui::Checkbox("", &inNode->isActive);
 
   if (0 < inNode->m_childs.size() && tmpOpenNode) {
     for (auto& nodes : inNode->m_childs) {

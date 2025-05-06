@@ -81,5 +81,7 @@ namespace giEngineSDK {
     SharedPtr<Actor> m_actor;
 
     UUID m_nodeId;
+
+    bool isActive = true;
   };
 }

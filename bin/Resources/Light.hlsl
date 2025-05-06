@@ -154,5 +154,7 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
   return float4(pow(((albedo.xyz * LightIntensity0) + (specu)), 1.0f/gamma), 1);
   //return float4(pow((((1-shadow) * (albedo.xyz * NdL * LightIntensity0)) + (specu)) * ao, 1.0f/gamma), 1);
   //return float4(albedo.xyz, 1);
-
+  
+  
+  //Check the AO
 }

@@ -14,6 +14,7 @@
 #include <giModule.h>
 #include <giModel.h>
 #include <giMatrix4.h>
+#include <giTime.h>
 
 namespace giEngineSDK {
   class BaseRenderer : public Module<BaseRenderer>
@@ -66,6 +67,9 @@ namespace giEngineSDK {
     setObject(BaseRenderer* inRenderer) {
       BaseRenderer::_instance() = inRenderer;
      }*/
+
+
+    Time m_renderTimer;
   };
 
   GI_CORE_EXPORT BaseRenderer& 

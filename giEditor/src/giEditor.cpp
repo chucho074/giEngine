@@ -24,6 +24,7 @@
 #include <giFile.h>
 #include <giFileSystem.h>
 #include <giBaseAMR.h>
+#include <giBaseRenderer.h>
 
 using giEngineSDK::FILE;
 
@@ -161,6 +162,10 @@ Editor::render() {
         if (ImGui::MenuItem("Sphere Sky")) {
           SharedPtr<Actor> tmpActor = make_shared<Actor>();
           SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createSphere(5000));
+          ResourceRef tmpModel;
+          //FILE tmpFileModel("Resources/Models/Generated/sphere.obj");
+          //tmpModel = rm.resourceFromFile(tmpFileModel);
+          //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
           //SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(rm.createQuadSphere(500));
           tmpActor->m_actorName = "Spehere skybox";
           tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
@@ -309,6 +314,9 @@ Editor::renderPerformanceWindow() {
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
               / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+
+  ImGui::Text("Render Time: %.5f", g_renderer().m_renderTimer.getTime());
+
   ImGui::End();
 }
 
@@ -321,7 +329,7 @@ Editor::renderAboutWindow() {
 
   ImGui::Text("Gioco Engine developed by: Jesus Alberto Del Moral Cupil");
   ImGui::Separator();
-  ImGui::Text("Contact: idv18c.jmoral@uartesdigitales.edu.mx");
+  ImGui::Text("Contact: edgv18c.jmoral@uartesdigitales.edu.mx");
   ImGui::Separator();
 
   ImGui::End();
@@ -329,7 +337,7 @@ Editor::renderAboutWindow() {
 
 ResourceRef
 Editor::openFileDilog() {
-  auto& RM = g_resourceManager().instance();
+  auto& RM = g_resourceManager();
 
   if (auto tmpPath = FileDialogs::openFileDialog(m_windowHandle); !tmpPath.empty()) {
     giEngineSDK::FILE tmpOpenFile(tmpPath);

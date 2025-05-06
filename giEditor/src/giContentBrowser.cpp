@@ -65,209 +65,214 @@ ContentBrowser::render() {
 
   ImGui::Begin("Content Browser", nullptr, m_windowFlags);
 
-
   static float tmpThumbnailSize = 74;
-  
-  //Left Panel
-  if (ImGui::BeginTable("BrowserTable", 2, ImGuiTableFlags_BordersInnerV 
-                                           | ImGuiTableFlags_Resizable
-                                           | ImGuiTableFlags_ScrollY)) {
-  
+
+  ImGui::BeginChild("LeftSide", 
+                    {ImGui::GetContentRegionAvail().x * 0.15f, 
+                     ImGui::GetContentRegionAvail().y - (ImGui::GetFontSize()*1.8f)},
+                    false, 
+                    ImGuiWindowFlags_HorizontalScrollbar
+                    | ImGuiWindowFlags_AlwaysAutoResize);
+  if(ImGui::BeginTable("Left Table", 1, ImGuiTableFlags_ScrollY)) {
     ImGui::TableNextColumn();
-    
-    if (ImGui::BeginTable("Left Table", 1, ImGuiTableFlags_ScrollY)) {
-      ImGui::TableNextColumn();
-      int32 tmpTreeCount = 0;
-      ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow 
-                                      | ImGuiTreeNodeFlags_OpenOnDoubleClick 
-                                      | ImGuiTreeNodeFlags_SpanAvailWidth;
-  
-      ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-      //Create the root folder for the project.
-      bool root_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount, 
-                                         base_flags,
-                                         configs.s_projectName.c_str());
-      tmpTreeCount++;
-      //if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
-        if(root_open) {
-          if (!m_workingDirectory.empty()) {
-            for (auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
-              auto& tmpPath = tmpIterator.path();
-              String tmpName = tmpPath.stem().string();
-              if (tmpIterator.is_directory()) {
-                bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount,
-                                                   base_flags,
-                                                   tmpName.c_str());
+    int32 tmpTreeCount = 0;
+    int32 tmpSelectedNode = 0;
 
-                GI_UNREFERENCED_PARAMETER(node_open);
-
-                //ImGui::TreePop();
-
-              }
-              tmpTreeCount++;
-            }
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    //Create the root folder for the project.
+    bool root_open = ImGui::TreeNodeEx((void*)(intptr_t)tmpTreeCount,
+                                       m_treeFolders,
+                                       //configs.s_projectName.c_str());
+                                       "Content");
+    tmpTreeCount++;
+    if(root_open) {
+      if(!m_workingDirectory.empty()) {
+        
+        drawFolders(m_workingDirectory, tmpTreeCount, tmpSelectedNode);
+        /*for(auto& tmpIterator : fsys::directory_iterator(m_workingDirectory)) {
+          if(tmpIterator.is_directory()) {
+            drawFolders(tmpIterator, tmpTreeCount, tmpSelectedNode);
           }
-        }
-      //}
+        }*/
+      }
+
+
       ImGui::TreePop();
-      ImGui::EndTable();
     }
-  
-    //Right Panel
-    ImGui::TableNextColumn();
 
-    if (ImGui::BeginTable("RightSide", 1, ImGuiTableFlags_BordersInnerH
-                                          | ImGuiTableFlags_PreciseWidths)) {
-  
-      ImGui::TableNextColumn();
-      //Back Button
-      SharedPtr<Texture>tmpLArrrow = static_pointer_cast<Texture>(RM.getResource(RM.m_leftArrow.m_id).lock());
-  
-      if (ImGui::ImageButton(tmpLArrrow->m_texture->getApiTexture(),
-                             { 15, 15 })) {
-        m_currentDirectory = m_currentDirectory.parent_path();
-      }
-  
-      ImGui::TableNextColumn();
-  
-      static float tmpPadding = 16.0f;
-      float tmpCellSize = tmpThumbnailSize + tmpPadding;
-      float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
-      int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
-    
-      if (ImGui::BeginTable("Browser", tmpColumnCount,  ImGuiTableFlags_ScrollY)) {
-    
-        ImGui::TableNextColumn();
-    
-        //Iterate in directory
-        if (!m_currentDirectory.empty()) {
-          for (auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
 
-            const auto& tmpPath = tmpIterator.path();
-            auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
-            String relativePathString = relativePath.filename().string();
-            bool tmpIsDir = false;
-            SharedPtr<Texture> tmpTexture;
-            String tmpExtension = tmpPath.extension().string();
-            //Show Folders
-            if (tmpIterator.is_directory()) {
-              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
-              tmpIsDir = true;
-            }
-
-            //Show files
-            else {
-              if (tmpExtension == ".obj") {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_objIcon.m_id).lock());
-              }
-
-              else if (tmpExtension == ".fbx") {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fbxIcon.m_id).lock());
-              }
-
-              else if (tmpExtension == ".mtl") {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_mtlIcon.m_id).lock());
-              }
-
-              else if (tmpExtension == ".png") {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_pngIcon.m_id).lock());
-              }
-
-              else if (tmpExtension == ".jpg") {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_jpgIcon.m_id).lock());
-              }
-
-              else {
-                tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fileIcon.m_id).lock());
-              }
-
-            }
-            //Shows the data if its sets any image
-            if (tmpTexture) {
-              if (ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
-                                     { tmpThumbnailSize, tmpThumbnailSize })) {
-                //Enter to the folder
-                m_currentDirectory = m_workingDirectory;
-                if (tmpIsDir) {
-                  m_currentDirectory /= tmpPath.filename();
-                }
-              }
-              
-              //Pop up menus for files.
-              if (tmpExtension == ".obj") {
-                if (ImGui::BeginPopupContextItem("file popup")) {
-                  if (ImGui::Button("Create actor from model / JUST TESTING")) {
-                    auto& sg = g_sceneGraph();
-                    ResourceRef tmpModel;
-                    FILE tmpFileModel(tmpPath);
-                    tmpModel = RM.resourceFromFile(tmpFileModel);
-                    SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
-                    SharedPtr<Actor> tmpActor = make_shared<Actor>();
-                    tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-                    tmpActor->m_actorName = tmpPath.filename().stem().string();
-                    sg.addActor(tmpActor, sg.getRoot());
-                  }
-                  if (ImGui::Button("Use giAMR in this model")) {
-                    FILE tmpFile(tmpPath);
-                    RM.createData(tmpFile);
-                    amr.setRefMesh(tmpPath);
-                  }
-                  ImGui::EndPopup();
-                }
-              }
-              if (tmpExtension == ".fbx") {
-                if (ImGui::BeginPopupContextItem("file popup fbx")) {
-                  if (ImGui::Button("Create actor from model / JUST TESTING")) {
-                    auto& sg = g_sceneGraph();
-                    ResourceRef tmpModel;
-                    FILE tmpFileModel(tmpPath);
-                    tmpModel = RM.resourceFromFile(tmpFileModel);
-                    SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
-                    SharedPtr<Actor> tmpActor = make_shared<Actor>();
-                    tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
-                    tmpActor->m_actorName = tmpPath.filename().stem().string();
-                    sg.addActor(tmpActor, sg.getRoot());
-                  }
-                  if (ImGui::Button("Use giAMR in this model")) {
-                    //Path tmpNewPath = Exporter::ExportAsObj(tmpPath, "obj");
-                    //FILE tmpFile(tmpNewPath);
-
-                    ResourceRef tmpResource;
-                    FILE tmpFileModel(tmpPath);
-                    tmpResource = RM.resourceFromFile(tmpFileModel);
-                    SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpResource.m_id).lock());
-                    Path tmpNewPath = tmpPath;
-                    tmpNewPath.replace_extension("obj");
-                    Exporter::ExportObj(tmpNewPath, tmpModel);
-                    FILE tmpNewFileModel(tmpNewPath);
-                    RM.createData(tmpNewFileModel);
-                    amr.setRefMesh(tmpNewPath);
-                  }
-                  ImGui::EndPopup();
-                }
-              }
-                ImGui::Text(relativePathString.c_str());
-            }
-            ImGui::TableNextColumn();
-
-          }
-    
-        }//
-    
-        ImGui::Columns(1);
-        ImGui::EndTable();
-      }
-    
-
-      ImGui::TableNextColumn();
-
-      ImGui::PushItemWidth(100);
-      ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 100);
-    }
-    ImGui::EndTable();
     ImGui::EndTable();
   }
+  ImGui::EndChild();
 
+  ImGui::SameLine();
+  
+  ImGui::BeginChild("RightSide", 
+                    {0, 
+                    ImGui::GetContentRegionAvail().y - (ImGui::GetFontSize() * 1.8f)}, 
+                    true, 
+                    ImGuiWindowFlags_None);
+  //Top bar
+  auto tmpSize = ImGui::CalcTextSize("Import");
+
+  if(ImGui::Button("Import", {(tmpSize.x * ImGui::GetFontSize()) / 10, 
+                              (tmpSize.y * ImGui::GetFontSize()) / 10})) {
+    //TODO: Open the import dialog.
+
+  }
+
+  ImGui::SameLine();
+
+  SharedPtr<Texture>tmpLArrrow = static_pointer_cast<Texture>(RM.getResource(RM.m_leftArrow.m_id).lock());
+  if(ImGui::ImageButton(tmpLArrrow->m_texture->getApiTexture(),
+                        {18, 18})) {
+    m_currentDirectory = m_currentDirectory.parent_path();
+  }
+  
+  //////////////////////////////////////////////////////////////////////////
+  if(ImGui::BeginTable("RightSide", 1, ImGuiTableFlags_BordersInnerH
+                                       | ImGuiTableFlags_PreciseWidths
+                                       | ImGuiTableColumnFlags_NoClip)) {
+
+    ImGui::TableNextColumn();
+
+    static float tmpPadding = 16.0f;
+    float tmpCellSize = tmpThumbnailSize + tmpPadding;
+    float tmpPanelWidth = ImGui::GetContentRegionAvail().x;
+    int32 tmpColumnCount = (int32)(tmpPanelWidth / tmpCellSize);
+
+    if(ImGui::BeginTable("Browser", tmpColumnCount, ImGuiTableFlags_ScrollY)) {
+
+      ImGui::TableNextColumn();
+
+      //Iterate in directory
+      if(!m_currentDirectory.empty()) {
+        bool tmpIsDir = false;
+        SharedPtr<Texture> tmpTexture;
+
+        for(auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
+
+          const auto& tmpPath = tmpIterator.path();
+          auto relativePath = fsys::relative(tmpPath, m_workingDirectory);
+          String relativePathString = relativePath.filename().string();
+          String tmpExtension = tmpPath.extension().string();
+          //Show Folders
+          if(tmpIterator.is_directory()) {
+            tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_folderIcon.m_id).lock());
+            tmpIsDir = true;
+          }
+
+          //Show files
+          else {
+            if(tmpExtension == ".obj") {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_objIcon.m_id).lock());
+            }
+
+            else if(tmpExtension == ".fbx") {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fbxIcon.m_id).lock());
+            }
+
+            else if(tmpExtension == ".mtl") {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_mtlIcon.m_id).lock());
+            }
+
+            else if(tmpExtension == ".png") {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_pngIcon.m_id).lock());
+            }
+
+            else if(tmpExtension == ".jpg") {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_jpgIcon.m_id).lock());
+            }
+
+            else {
+              tmpTexture = static_pointer_cast<Texture>(RM.getResource(RM.m_fileIcon.m_id).lock());
+            }
+
+          }
+          //Shows the data if its sets any image
+          if(tmpTexture) {
+            if(ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
+               {tmpThumbnailSize, tmpThumbnailSize})) {
+              //Enter to the folder
+              m_currentDirectory = m_workingDirectory;
+              if(tmpIsDir) {
+                m_currentDirectory /= tmpPath.filename();
+              }
+            }
+
+            //Pop up menus for files.
+            if(tmpExtension == ".obj") {
+              if(ImGui::BeginPopupContextItem("file popup")) {
+                if(ImGui::Button("Create actor from model / JUST TESTING")) {
+                  auto& sg = g_sceneGraph();
+                  ResourceRef tmpModel;
+                  FILE tmpFileModel(tmpPath);
+                  tmpModel = RM.resourceFromFile(tmpFileModel);
+                  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+                  SharedPtr<Actor> tmpActor = make_shared<Actor>();
+                  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+                  tmpActor->m_actorName = tmpPath.filename().stem().string();
+                  sg.addActor(tmpActor, sg.getRoot());
+                }
+                if(ImGui::Button("Use giAMR in this model")) {
+                  FILE tmpFile(tmpPath);
+                  RM.createData(tmpFile);
+                  amr.setRefMesh(tmpPath);
+                }
+                ImGui::EndPopup();
+              }
+            }
+            if(tmpExtension == ".fbx") {
+              if(ImGui::BeginPopupContextItem("file popup fbx")) {
+                if(ImGui::Button("Create actor from model / JUST TESTING")) {
+                  auto& sg = g_sceneGraph();
+                  ResourceRef tmpModel;
+                  FILE tmpFileModel(tmpPath);
+                  tmpModel = RM.resourceFromFile(tmpFileModel);
+                  SharedPtr<StaticMesh> modelComponent = make_shared<StaticMesh>(tmpModel);
+                  SharedPtr<Actor> tmpActor = make_shared<Actor>();
+                  tmpActor->addComponent(modelComponent, COMPONENT_TYPE::kStaticMesh);
+                  tmpActor->m_actorName = tmpPath.filename().stem().string();
+                  sg.addActor(tmpActor, sg.getRoot());
+                }
+                if(ImGui::Button("Use giAMR in this model")) {
+                  //Path tmpNewPath = Exporter::ExportAsObj(tmpPath, "obj");
+                  //FILE tmpFile(tmpNewPath);
+
+                  ResourceRef tmpResource;
+                  FILE tmpFileModel(tmpPath);
+                  tmpResource = RM.resourceFromFile(tmpFileModel);
+                  SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpResource.m_id).lock());
+                  Path tmpNewPath = tmpPath;
+                  tmpNewPath.replace_extension("obj");
+                  Exporter::ExportObj(tmpNewPath, tmpModel);
+                  FILE tmpNewFileModel(tmpNewPath);
+                  RM.createData(tmpNewFileModel);
+                  amr.setRefMesh(tmpNewPath);
+                }
+                ImGui::EndPopup();
+              }
+            }
+            ImGui::Text(relativePathString.c_str());
+          }
+          ImGui::TableNextColumn();
+
+        }
+
+      }//
+
+      ImGui::Columns(1);
+      ImGui::EndTable();
+    }
+    ImGui::TableNextColumn();
+    ImGui::EndTable();
+
+  }
+  ImGui::EndChild();
+
+  ImGui::PushItemWidth(100);
+  ImGui::SliderFloat("Thumbnail Size", &tmpThumbnailSize, 16, 100);
+  
   ImGui::End();
 }
 
@@ -280,4 +285,29 @@ void
 ContentBrowser::changeWorkingDir(Path inWorkingDir) {
   m_workingDirectory = inWorkingDir;
   m_currentDirectory = m_workingDirectory;
+}
+
+void 
+ContentBrowser::drawFolders(Path& inIter,
+                            int32& inTreeCount, 
+                            int32& inSelectedNode) {
+  for (auto& tmpIterator : fsys::directory_iterator(inIter)) {
+    Path tmpPath = tmpIterator.path();
+    String tmpName = tmpPath.stem().string();
+    if(tmpIterator.is_directory()) {
+      //ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+      bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)inTreeCount,
+                                         fsys::is_empty(tmpPath) ? m_treeEmpty : m_treeFolders,
+                                         tmpName.c_str());
+
+      inTreeCount++;
+      if(ImGui::IsItemClicked()) {
+        inSelectedNode = inTreeCount;
+      }
+      if(node_open && !fsys::is_empty(tmpPath)) {
+        drawFolders(tmpPath, inTreeCount, inSelectedNode);
+        ImGui::TreePop();
+      }
+    }
+  }
 }
