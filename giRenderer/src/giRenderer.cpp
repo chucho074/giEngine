@@ -669,7 +669,7 @@ namespace giEngineSDK {
       m_renderTargets.push_back(gapi.createTex2D(inW, 
                                                  inH, 
                                                  1,
-                                                 GI_FORMAT::kFORMAT_R8G8B8A8_UNORM,
+                                                 GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,
                                                  GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                                  | GI_BIND_FLAG::kBIND_SHADER_RESOURCE));
     }

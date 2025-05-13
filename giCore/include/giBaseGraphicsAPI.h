@@ -70,9 +70,7 @@ namespace giEngineSDK {
     
     /**
      * @brief    In charge of the creation of the device & SwapChain
-     * @param    inWindow      The window object.
-     * @param    inWidth       The width of the screen.
-     * @param    inHeight      The height of the screen.     
+     * @param    inWindow      The window object
      */
     virtual void 
     init(void *) {};

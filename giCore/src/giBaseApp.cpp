@@ -71,7 +71,7 @@ BaseApp::run() {
     else {
 
       //Update Time.
-      m_time->update();
+      //m_time->update();
       //float deltaTime = g_time().getTime();
 
       //Update Game Logic.

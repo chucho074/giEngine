@@ -96,7 +96,7 @@ namespace giEngineSDK {
 
     tmpMaterialRef.m_type = RESOURCE_TYPE::kMaterial;
 
-    newMaterial->m_textures = inReferences;
+    //newMaterial->m_textures = inReferences;
 
     m_loadedResources.insert({tmpMaterialRef.m_id, newMaterial});
 
@@ -112,16 +112,16 @@ namespace giEngineSDK {
       //Get the material.
       auto tmpMaterial = static_pointer_cast<Material>(tmpResource);
       //Iterate into the textures.
-      for(auto iterTex : tmpMaterial->m_textures) {
-        if (RESOURCE_TYPE::kTexture == iterTex.m_type) {
-          //Get the resource of the texture.
-          auto tmpRef = m_loadedResources.find(iterTex.m_id)->second;
-          //Get the texture.
-          auto tmpTexture = static_pointer_cast<Texture>(tmpRef);
-          //Save the name of the texture.
-          tmpNames.push_back(tmpTexture->m_name);
-        }
-      }
+      //for(auto iterTex : tmpMaterial->m_textures) {
+      //  if (RESOURCE_TYPE::kTexture == iterTex.m_type) {
+      //    //Get the resource of the texture.
+      //    auto tmpRef = m_loadedResources.find(iterTex.m_id)->second;
+      //    //Get the texture.
+      //    auto tmpTexture = static_pointer_cast<Texture>(tmpRef);
+      //    //Save the name of the texture.
+      //    tmpNames.push_back(tmpTexture->m_name);
+      //  }
+      //}
     }
     return tmpNames;
   }
@@ -134,15 +134,15 @@ namespace giEngineSDK {
         RESOURCE_TYPE::kMaterial == inMaterialRef.m_type) {
       //Get the material.
       auto tmpMaterial = static_pointer_cast<Material>(tmpResource);
-      for (auto iterTex : tmpMaterial->m_textures) {
-        //Get the resource of the texture.
-        auto tmpRef = m_loadedResources.find(iterTex.m_id)->second;
-        //Get the texture.
-        if(auto tmpTexture = static_pointer_cast<Texture>(tmpRef); 
-           inTextureName == tmpTexture->m_name) {
-          return iterTex;
-        }
-      }
+      //for (auto iterTex : tmpMaterial->m_textures) {
+      //  //Get the resource of the texture.
+      //  auto tmpRef = m_loadedResources.find(iterTex.m_id)->second;
+      //  //Get the texture.
+      //  if(auto tmpTexture = static_pointer_cast<Texture>(tmpRef); 
+      //     inTextureName == tmpTexture->m_name) {
+      //    return iterTex;
+      //  }
+      //}
 
       return ResourceRef();
     }

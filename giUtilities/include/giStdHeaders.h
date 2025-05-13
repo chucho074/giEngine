@@ -171,7 +171,7 @@ namespace giEngineSDK {
 
   namespace fsys = std::filesystem;
 
-  using Path = std::filesystem::path;
+  using Path = fsys::path;
 
   //Wstring & String converters functions
  /* String 

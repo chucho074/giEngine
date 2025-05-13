@@ -182,6 +182,7 @@
     <ClCompile Include="src\giDecoder.cpp" />
     <ClCompile Include="src\giEncoder.cpp" />
     <ClCompile Include="src\giExporter.cpp" />
+    <ClCompile Include="src\giMaterial.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giModel.cpp" />
     <ClCompile Include="src\giResourceManager.cpp" />

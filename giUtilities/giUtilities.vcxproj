@@ -194,6 +194,7 @@
     <ClCompile Include="src\giWindowsImplementations.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\giDirectoryWatcher.h" />
     <ClInclude Include="include\giBaseImplementations.h" />
     <ClInclude Include="include\giFile.h" />
     <ClInclude Include="include\giFileSystem.h" />

@@ -65,10 +65,16 @@ namespace giEngineSDK {
       m_eye += m_upVect * velocity;
     if(m_YawNeg) {
       m_YPR.x -= 1 * inDT;
+      if(Radians(m_YPR.x) < Radians(0.f)) {
+        m_YPR.x = Degrees(360.f).getRadians();
+      }
       updateRotations();
     }
     if(m_YawPos) {
       m_YPR.x += 1 * inDT;
+      if(Radians(m_YPR.x) > Degrees(360.f).getRadians()) {
+        m_YPR.x = 0.f;
+      }
       updateRotations();
     }
   }

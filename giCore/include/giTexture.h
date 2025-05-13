@@ -23,6 +23,7 @@ namespace giEngineSDK {
       kAlbedo,
       kMetalic,
       kRoughness,
+      kEmissive,
       kAmbientOclussion,
       kNormal,
       kGloss,

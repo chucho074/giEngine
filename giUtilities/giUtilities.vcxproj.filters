@@ -177,5 +177,8 @@
     <ClInclude Include="include\giSpecificImplementations.h">
       <Filter>Source Files\Platform Specifics\Base</Filter>
     </ClInclude>
+    <ClInclude Include="includes\giDirectoryWatcher.h">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
