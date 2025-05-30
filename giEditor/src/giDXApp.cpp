@@ -51,9 +51,9 @@ DirectXApp::onCreate() {
   //Sets Vela's model
   ResourceRef tmpModel;
   //FILE tmpFileModel("Resources/Models/R8_chico.obj");
-  FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
   //FILE tmpFileModel("Resources/Models/Box_v2.fbx");
-  //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
+  FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
   //FILE tmpFileModel("Resources/Models/sphere.obj");
   //FILE tmpFileModel("G:/Dev/giTestProject/content/spot.obj");
 

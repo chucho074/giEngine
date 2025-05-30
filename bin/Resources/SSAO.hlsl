@@ -86,7 +86,7 @@ PS_OUTPUT PS_SSAO(PS_INPUT input) {
   for (int j = 0; j < iterations; ++j) {
     float2 coord1 = reflect(vec[j], rand) * rad;
     float2 coord2 = float2(coord1.x * 0.707 - coord1.y * 0.707,
-                           coord1.x * 0.707 + coord1.y * 0.707);
+                           coord1.x * 0.707 + coord1.y * 0.707); //Sen & cos de 45
     
     ao += DoAmbientOcclusion(input.TexCoord, coord1 * 0.25, p.xyz, n);
     ao += DoAmbientOcclusion(input.TexCoord, coord2 * 0.5,  p.xyz, n);

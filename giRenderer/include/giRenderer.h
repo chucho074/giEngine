@@ -76,10 +76,11 @@ namespace giEngineSDK {
    */
   struct BlurConstantBuffer {
     Vector2 Viewport;   
-    float Gamma = 1.0f;
     Vector2 TextureSize;   
-    Vector3 Garbage;   //Just for the 16 magic
+    float Gamma = 1.0f;
+    Vector3 __padding;   //Just for the 16 magic
   };
+
 
 
   class Renderer : public BaseRenderer
@@ -235,6 +236,9 @@ namespace giEngineSDK {
 
     float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f }; // red, green, blue, alpha
   };
+
+  //////////////////////////////////////////////////////////////////////////
+
 
   /**
    * @brief   Create the gAPI with a dll.

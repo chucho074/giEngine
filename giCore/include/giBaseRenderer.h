@@ -59,6 +59,14 @@ namespace giEngineSDK {
       GI_UNREFERENCED_PARAMETER(inH);
     };
 
+    //virtual void 
+    //setMaterialConstantBuffer();
+
+    virtual void
+    updateShaders() {
+      
+    }
+
     /**
      * @brief    Set the object of the Graphics API.
      * @param    inAPI   The api to set.

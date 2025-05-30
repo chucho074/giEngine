@@ -112,8 +112,8 @@ namespace giEngineSDK {
 
     /**
      * @brief 
-     * @param inMeshes 
-     * @param inMaterials 
+     * @param    inMeshes 
+     * @param    inMaterials 
      * @return 
      */
     ResourceRef
@@ -152,15 +152,15 @@ namespace giEngineSDK {
     saveFile(FILE& inFile);
     
     /**
-     * @brief 
-     * @param    inFile 
-     * @return   Returns .
+     * @brief    Gets the information of a model.
+     * @param    inFile        The model to read.
+     * @return   Returns the information of a readed model.
      */
     ModelInfo
     getFromFile(FILE& inFile);
 
     /**
-     * @brief    
+     * @brief    .
      * @param    numTriangles 
      * @return   Returns .
      */
@@ -168,9 +168,9 @@ namespace giEngineSDK {
     createSphere(int32 numTriangles);
 
     /**
-     * @brief 
-     * @param inNumSubdivisions 
-     * @return 
+     * @brief    .
+     * @param    inNumSubdivisions 
+     * @return   .
      */
     ResourceRef
     createQuadSphere(int32 inNumSubdivisions);

@@ -187,6 +187,12 @@ Editor::render() {
         }
         ImGui::EndMenu();
       }
+      if (ImGui::BeginMenu("Shaders")) {
+        if(ImGui::MenuItem("Update Shaders")) {
+          
+        }
+        ImGui::EndMenu();
+      }
       ImGui::EndMenuBar();
     }
     

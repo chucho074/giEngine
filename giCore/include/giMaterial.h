@@ -20,6 +20,23 @@
 
 namespace giEngineSDK {
   
+
+  /**
+   * @struct   MaterialConstantBuffer.
+   * @brief    For the information of the materials.
+   */
+  struct MaterialConstantBuffer {
+    Vector3 AlbedoColor = Vector3::ZERO;
+    Vector3 EmissiveColor = Vector3::ZERO;
+    float metalic = 0.f;
+    float roughness = 0.f;
+    float ambientOclussion = 0.f;
+    float opacity = 0.f;
+    float gloss = 0.f;
+    float specular = 0.f;
+  };
+
+
   namespace MATERIAL_FLAGS {
     enum E {
       kTWO_SIDES
@@ -54,7 +71,7 @@ namespace giEngineSDK {
     }
 
     inline StringView
-    getName() {
+    getName() const {
       return m_name;
     }
 
@@ -168,6 +185,77 @@ namespace giEngineSDK {
       m_specular = inSpecular;
     }
 
+    /**
+     * @brief    Gets the albedo color of the material.
+     * @return   The albedo color of the material.
+     */
+    inline Vector3
+    getAlbedoColor() const {
+      return m_albedoColor;
+    }
+
+    /**
+     * @brief    Gets the emissive color of the material.
+     * @return   The emissive color of the material.
+     */
+    inline Vector3
+    getEmissiveColor() const {
+      return m_emissiveColor;
+    }
+
+    /**
+     * @brief    Gets the metallic value of the material.
+     * @return   The metallic value of the material.
+     */
+    inline float
+    getMetallicValue() const {
+      return m_metalic;
+    }
+
+    /**
+     * @brief    Gets the roughness value of the material.
+     * @return   The roughness value of the material.
+     */
+    inline float
+    getRoughnessValue() const {
+      return m_roughness;
+    }
+
+    /**
+     * @brief    Gets the ambient oclussion value of the material.
+     * @return   The ambient oclussion value of the material.
+     */
+    inline float
+    getAmbientOclussionValue() const {
+      return m_ambientOclussion;
+    }
+
+    /**
+     * @brief    Gets the opacity value of the material.
+     * @return   The opacity value of the material.
+     */
+    inline float
+    getOpacityValue() const {
+      return m_opacity;
+    }
+    
+    /**
+     * @brief    Gets the gloss value of the material.
+     * @return   The gloss value of the material.
+     */
+    inline float
+    getGlossValue() const {
+      return m_gloss;
+    }
+
+    /**
+     * @brief    Gets the specular value of the material.
+     * @return   The specular value of the material.
+     */
+    inline float
+    getSpecularValue() const {
+      return m_specular;
+    }
 
     void
     render();
@@ -176,14 +264,14 @@ namespace giEngineSDK {
   	
     String m_name;
 
-    Vector3 m_albedoColor;
-    Vector3 m_emissiveColor;
-    float m_metalic;
-    float m_roughness;
-    float m_ambientOclussion;
-    float m_opacity;
-    float m_gloss;
-    float m_specular;
+    Vector3 m_albedoColor = Vector3::ZERO;
+    Vector3 m_emissiveColor = Vector3::ZERO;
+    float m_metalic = 0.f;
+    float m_roughness = 0.f;
+    float m_ambientOclussion = 0.f;
+    float m_opacity = 0.f;
+    float m_gloss = 0.f;
+    float m_specular = 0.f;
 
     Map<TEXTURE_TYPE::E, ResourceRef> m_textureMaps;
 
