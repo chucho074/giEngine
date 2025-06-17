@@ -18,11 +18,18 @@ namespace giEngineSDK {
   class GI_CORE_EXPORT StaticMesh : public Component
   {
    public:
+    StaticMesh() = default;
+
     //Default Constructor
     StaticMesh(ResourceRef inRes) : m_model(inRes) {};
 
     //Desturctor
     ~StaticMesh();
+
+    void
+    setNewModel(ResourceRef inRes) {
+      m_model = inRes;
+    }
 
     void 
     update(float inDeltaTime) override;

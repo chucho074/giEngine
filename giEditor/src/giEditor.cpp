@@ -188,7 +188,7 @@ Editor::render() {
         ImGui::EndMenu();
       }
       if (ImGui::BeginMenu("Shaders")) {
-        if(ImGui::MenuItem("Update Shaders")) {
+        if(ImGui::MenuItem("Reload Shaders")) {
           
         }
         ImGui::EndMenu();

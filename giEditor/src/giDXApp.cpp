@@ -71,13 +71,13 @@ DirectXApp::onCreate() {
                      0.001f,
                      100000.0f);
 
-  shadowCamera->setPosition({ 360.0f, -280.0f, -200.0f, 0.0f },
-                            { 0.0f,   1.0f,    0.0f,   0.0f },
+  shadowCamera->setPosition({ -2145.0f, 1150.0f, 277.0f, 0.0f },
+                            { 0.0f,   0.0f,    0.0f,   0.0f },
                             { 0.0f,   1.0f,    0.0f,   0.0f });
 
   SharedPtr<Actor> lightActor = make_shared<Actor>();
   lightActor->m_actorName = "Light";
-  lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kCamera);
+  lightActor->addComponent(shadowCamera, COMPONENT_TYPE::kLightCamera);
   m_sceneGraph->addActor(lightActor, m_sceneGraph->getRoot());
 
   //Set Topology
@@ -139,17 +139,17 @@ DirectXApp::onUpdate(float inDeltaTime) {
     }
     //Get up input
     if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kQ)) {
-      tmpCamera->m_up = true;
+      tmpCamera->m_down = true;
     }
     else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kQ)) {
-      tmpCamera->m_up = false;
+      tmpCamera->m_down = false;
     }
     //Get down input
     if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kE)) {
-      tmpCamera->m_down = true;
+      tmpCamera->m_up = true;
     }
     else if (g_inputManager().isKeyReleassed(KEYBOARD_KEYS::kE)) {
-      tmpCamera->m_down = false;
+      tmpCamera->m_up = false;
     }
     //Rotate
     if (g_inputManager().isKeyPressed(KEYBOARD_KEYS::kZ)) {

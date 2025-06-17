@@ -191,7 +191,13 @@ namespace giEngineSDK {
     ResourceRef m_missingTextureRef;
     
     //The reference to the missing texture for the Roughness.
-    ResourceRef m_defaultRoughnessTextureRef;
+    ResourceRef m_defaultWhiteTex;
+    
+    //The reference to the missing texture for the Roughness.
+    ResourceRef m_defaultNormalTex;
+    
+    //The reference to the missing texture for the Roughness.
+    ResourceRef m_defaultTex;
 
     //The reference to the left arrow texture.
     ResourceRef m_leftArrow;

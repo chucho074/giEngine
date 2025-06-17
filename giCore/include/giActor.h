@@ -68,6 +68,9 @@ namespace giEngineSDK {
     SharedPtr<Component>&
     getComponent(COMPONENT_TYPE::E inComponent);
 
+    bool
+    hasComponent(COMPONENT_TYPE::E inComponent) const;
+
    //protected:
 
     /**

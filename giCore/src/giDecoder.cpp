@@ -198,7 +198,6 @@ namespace giEngineSDK {
       tmpTexture->m_name = inFileData.m_name;
       tmpTexture->m_fullPath = inFileData.m_path;
 
-
       SamplerDesc sampDesc;
       sampDesc.filter = GI_FILTER::kFILTER_MINIMUM_MIN_POINT_MAG_LINEAR_MIP_POINT;
       sampDesc.addressU = GI_TEXTURE_ADDRESS_MODE::kTEXTURE_ADDRESS_WRAP;
@@ -209,9 +208,11 @@ namespace giEngineSDK {
       sampDesc.maxLOD = 3.402823466e+38f;
       tmpTexture->m_samplerState = gapi.createSampler(sampDesc);
 
-
-
       return tmpTexture;
+    }
+    else {
+      g_logger().SetError(ERROR_TYPE::kImageLoading, "Failed to load an image");
+      __debugbreak();
     }
 
     //Unload Data
@@ -502,7 +503,13 @@ namespace giEngineSDK {
 
     if (noTexture) {
       if(TEXTURE_TYPE::kSpecular == typeName || TEXTURE_TYPE::kGloss == typeName) {
-        tmpTextureRef = RM.m_defaultRoughnessTextureRef;
+        tmpTextureRef = RM.m_defaultTex;
+      }
+      else if(TEXTURE_TYPE::kAlbedo == typeName) {
+        tmpTextureRef = RM.m_defaultWhiteTex;
+      }
+      else if(TEXTURE_TYPE::kNormal == typeName) {
+        tmpTextureRef = RM.m_defaultNormalTex;
       }
       else {
         tmpTextureRef = RM.m_missingTextureRef;

@@ -60,9 +60,9 @@ namespace giEngineSDK {
     if(m_right)
       m_eye += m_rightVector * velocity;
     if(m_up)
-      m_eye -= m_upVect * velocity;
-    if(m_down)
       m_eye += m_upVect * velocity;
+    if(m_down)
+      m_eye -= m_upVect * velocity;
     if(m_YawNeg) {
       m_YPR.x -= 1 * inDT;
       if(Radians(m_YPR.x) < Radians(0.f)) {
@@ -80,10 +80,10 @@ namespace giEngineSDK {
   }
 
   void 
-  Camera::setPosition(Vector4 inVect, Vector4 inVect2, Vector4 inVect3) {
-    m_eye = inVect;
-    m_at = inVect2;
-    m_upVect = inVect3;
+  Camera::setPosition(Vector4 inEyePos, Vector4 inLookAt, Vector4 inUp) {
+    m_eye = inEyePos;
+    m_at = inLookAt;
+    m_upVect = inUp;
   }
   
   Matrix4 
@@ -123,16 +123,13 @@ namespace giEngineSDK {
     float yawRad = Radians(m_YPR.x).getRadians();   // Yaw (horizontal)
     float pitchRad = Radians(m_YPR.y).getRadians(); // Pitch (vertical)
 
-    // Cálculo correcto del vector forward
+    // Calculo correcto del vector forward
     m_forward.x = cos(yawRad) * cos(pitchRad);
     m_forward.y = sin(pitchRad);
     m_forward.z = sin(yawRad) * cos(pitchRad);
     m_forward.normalize();
 
     // Recalcular los vectores de cámara
-
-    
-
     m_up2 = m_forward.cross(m_rightVector);
     m_rightVector = m_upVect.cross(m_forward);
     //m_rightVector = m_forward.cross({0.0f, 1.0f, 0.0f, 0.0f}); // Siempre sobre Y global

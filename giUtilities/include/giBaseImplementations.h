@@ -42,6 +42,7 @@ namespace giEngineSDK {
 
     static inline const char* m_fileFilters = "All\0*.*\0Text\0*.txt\0giEngine Scenes\0*.giScene\0";
     static inline const char* m_fileFiltersProject = "giEngine Projects\0*.giProject\0";
-    static inline const char* m_fileFiltersImage = "Images\0*.png.jpeg*\0PNG\0*.png\0JPEG\0*.jpeg\0";
+    static inline const char* m_fileFiltersImage   = "Images\0*.png.jpeg*\0PNG\0*.png\0JPEG\0*.jpeg\0";
+    static inline const char* m_fileFiltersModels  = "Models\0*.*\0OBJ\0*.obj\FBX\0*.fbx\0";
   };
 }

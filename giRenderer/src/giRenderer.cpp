@@ -31,7 +31,7 @@ namespace giEngineSDK {
     m_mainCamera = sgraph.m_editorCamera;
 
     //Get the Shadow Camera
-    auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kCamera);
+    auto& lightCamera = sgraph.getActorByName("Light")->getComponent(COMPONENT_TYPE::kLightCamera);
     m_ShadowCamera = static_pointer_cast<Camera>(lightCamera);
 
     //Create SamplerState
@@ -236,7 +236,7 @@ namespace giEngineSDK {
     m_SSAOTexture.push_back(gapi.createTex2D(1280,
                                              720, 
                                              1,
-                                             GI_FORMAT::kFORMAT_R32G32B32A32_FLOAT,   //R32 solo
+                                             GI_FORMAT::kFORMAT_R32_FLOAT,   //R32 solo
                                              GI_BIND_FLAG::kBIND_RENDER_TARGET 
                                              | GI_BIND_FLAG::kBIND_SHADER_RESOURCE
                                              | GI_BIND_FLAG::kBIND_UNORDERED_ACCESS));
@@ -351,9 +351,12 @@ namespace giEngineSDK {
 
     LightConstantBuffer Lightcb;
     Lightcb.LightIntensity = 2;
-    Lightcb.LightPos.x = 360;
-    Lightcb.LightPos.y = 280;
-    Lightcb.LightPos.z = -200;
+    /*Lightcb.LightPos.x =  360;
+    Lightcb.LightPos.y =  280;
+    Lightcb.LightPos.z = -200;*/
+    Lightcb.LightPos.x = m_ShadowCamera->m_eye.x;
+    Lightcb.LightPos.y = m_ShadowCamera->m_eye.y;
+    Lightcb.LightPos.z = m_ShadowCamera->m_eye.z;
     //Lightcb.ViewPos = m_mainCamera->m_viewMatrix.m_zColumn;
     Lightcb.ViewPos = m_mainCamera->m_eye;
     Lightcb.InverseView = m_mainCamera->m_viewMatrix.inverse();
@@ -375,13 +378,34 @@ namespace giEngineSDK {
     tmpConstantCamera.mProjection = m_mainCamera->getProyectionMatrix().transpose();
 
     //Create Constant Buffer for Camera
-    m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
-                                        GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
-                                        nullptr);
+    if(!m_cBufferCamera) {
+      m_cBufferCamera = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                          GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                          nullptr);
+    }
     //Update the Camera Constant Buffer 
     gapi.updateSubresource(m_cBufferCamera, 
                            &tmpConstantCamera, 
                            sizeof(tmpConstantCamera));
+
+
+    //Sets the view matrix
+    CameraConstantBuffer tmpConstantShadowCamera;
+    tmpConstantShadowCamera.mView = m_ShadowCamera->getViewMatrix().transpose();
+
+    //Sets the projection matrix
+    tmpConstantShadowCamera.mProjection = m_ShadowCamera->getProyectionMatrix().transpose();
+
+    //Create Constant Buffer for Camera
+    if(m_cBufferShadow) {
+      m_cBufferShadow = gapi.createBuffer(sizeof(CameraConstantBuffer),
+                                          GI_BIND_FLAG::kBIND_CONSTANT_BUFFER,
+                                          nullptr);
+    }
+    //Update the Camera Constant Buffer 
+    gapi.updateSubresource(m_cBufferShadow,
+                           &tmpConstantShadowCamera,
+                           sizeof(tmpConstantShadowCamera));
   }
   
   void 
@@ -447,6 +471,7 @@ namespace giEngineSDK {
     /************************************************************************/
     Vector<SharedPtr<Buffer>> tmpBlurVConstants;
     tmpBlurVConstants.push_back(m_cBufferBlur);
+    
 
     renderData(m_SSAOTexture,
                nullptr,

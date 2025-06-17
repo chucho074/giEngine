@@ -20,6 +20,7 @@ namespace giEngineSDK {
   namespace ERROR_TYPE {
     enum E {
       kModelLoading = 0,
+      kImageLoading,
       kWindowCreation,
       kPluginLoading,
       kAnimationLoading,

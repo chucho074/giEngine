@@ -174,11 +174,12 @@ namespace giEngineSDK {
 
   void
   ResourceManager::renderResource(ResourceRef inReference) {
-    
-     auto& tmpRes = m_loadedResources.find(inReference.m_id)->second;
-     if(RESOURCE_TYPE::kModel == inReference.m_type) {
-       static_pointer_cast<Model>(tmpRes)->drawModel();
-     }
+    if(inReference.m_id != UUID::ZERO) {
+      auto& tmpRes = m_loadedResources.find(inReference.m_id)->second;
+      if(RESOURCE_TYPE::kModel == inReference.m_type) {
+        static_pointer_cast<Model>(tmpRes)->drawModel();
+      }
+    }
   }
 
   void 
@@ -487,13 +488,21 @@ namespace giEngineSDK {
   void
   ResourceManager::createMissingTexture() {
 
-    FILE tmpMissingTextureFile("Resources/missingTexture.png");
+    FILE tmpMissingTextureFile("Resources/Textures/missingTextureV2.png");
 
     m_missingTextureRef = Decoder::decodeData(tmpMissingTextureFile);
 
-    FILE tmpDefaultRoughness("Resources/DefaultRoughness.png");
+    FILE tmpDefaultTex("Resources/Textures/DefaultRough.png");
 
-    m_defaultRoughnessTextureRef = Decoder::decodeData(tmpDefaultRoughness);
+    m_defaultTex = Decoder::decodeData(tmpDefaultTex);
+
+    FILE tmpDefaultNormalTex("Resources/Textures/DefaultNormal.png");
+
+    m_defaultNormalTex = Decoder::decodeData(tmpDefaultNormalTex);
+
+    FILE tmpDefaultWhiteTex("Resources/Textures/DefaultWhite.png");
+
+    m_defaultWhiteTex = Decoder::decodeData(tmpDefaultWhiteTex);
 
   }
 

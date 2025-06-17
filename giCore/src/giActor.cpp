@@ -11,6 +11,7 @@
  */
 #include "giActor.h"
 #include "giBaseRenderer.h"
+#include "giCamera.h"
 
 namespace giEngineSDK {
 
@@ -49,6 +50,11 @@ namespace giEngineSDK {
   Actor::update(float inDeltaTime) {
     if (!m_components.empty()) {
       for (auto components : m_components) {
+        if(components.first == COMPONENT_TYPE::kLightCamera) {
+          auto camera = static_pointer_cast<Camera>(components.second);
+          auto pos = m_transform.m_translation;
+          camera->setPosition({pos.x, pos.y, pos.z, 0}, {0, 0, 0, 0}, {0, 1, 0, 0});
+        }
         components.second->update(inDeltaTime);
       }
     }
@@ -56,9 +62,9 @@ namespace giEngineSDK {
 
   void 
   Actor::render() {
-    auto renderer = BaseRenderer::instancePtr();
+    auto& renderer = g_renderer();
     auto tmpMatrix = m_transform.getMatrix();
-    renderer->setTransform(tmpMatrix);
+    renderer.setTransform(tmpMatrix);
 
     if(!m_components.empty()) {
       for (auto components : m_components) {
@@ -80,6 +86,16 @@ namespace giEngineSDK {
     auto tmp = m_components.find(inComponent);
     
     return tmp->second;
+  }
+
+  bool 
+  Actor::hasComponent(COMPONENT_TYPE::E inComponent) const {
+    if (m_components.count(inComponent) > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 }

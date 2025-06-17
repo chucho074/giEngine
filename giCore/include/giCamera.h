@@ -67,7 +67,7 @@ namespace giEngineSDK {
      * @param   inVect   The position to set the camera.
      */
     void 
-    setPosition(Vector4 inEyePos, Vector4 inVect2, Vector4 inVect3);
+    setPosition(Vector4 inEyePos, Vector4 inLookAt, Vector4 inUp);
 
     /**
      * @brief   Update and get the View Matrix.

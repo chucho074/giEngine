@@ -25,7 +25,7 @@ namespace giEngineSDK {
 
   void 
   StaticMesh::render() {
-    auto& RM = g_resourceManager().instance();
+    auto& RM = g_resourceManager();
 
     RM.renderResource(m_model);
   }

@@ -25,6 +25,7 @@ namespace giEngineSDK {
       kTexture,
       kAudio,
       kFont,
+      kShader,
       kSuportedResourceTypes
     };
   }

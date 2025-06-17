@@ -56,6 +56,13 @@ Details::render() {
     
       ImGui::DragFloat3("Position", &sg.getSelectedActor()->m_transform.m_translation.x);
       if(ImGui::IsItemEdited()) {
+        //Test Camera light
+        if(sg.getSelectedActor()->hasComponent(COMPONENT_TYPE::kLightCamera)) {
+          auto& component = sg.getSelectedActor()->getComponent(COMPONENT_TYPE::kLightCamera);
+          auto lightCamera = dynamic_pointer_cast<Camera>(component);
+          auto pos = sg.getSelectedActor()->m_transform.m_translation;
+          lightCamera->setPosition({pos.x, pos.y, pos.z, 0}, {0,0,0,0}, {0,1,0,0});
+        }
         auto iter = EngineConfigs::s_activePlugins.find(GIPLUGINS::kOmniverse);
         if (iter != EngineConfigs::s_activePlugins.end()) {
 
@@ -120,13 +127,38 @@ Details::render() {
     //Static Mesh
     //Verify if the actor has this information, if not, don't present this header.
     if(tmpActor->isStaticMesh) {
-      if (ImGui::CollapsingHeader("Static Mesh", ImGuiWindowFlags_NoNav)) {
-        SharedPtr<StaticMesh> tmpComponent = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
-        SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpComponent->getModel().m_id).lock());
+      auto tmpStaticMesh = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
 
-        ImGui::Text(String("Path: " + tmpModel->m_directory.string()).c_str());
-       
+      if (ImGui::CollapsingHeader("Static Mesh", ImGuiWindowFlags_NoNav)) {
+        if(tmpStaticMesh->getModel().m_id != UUID::ZERO) {
+          SharedPtr<StaticMesh> tmpComponent = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
+          SharedPtr<Model> tmpModel = dynamic_pointer_cast<Model>(RM.getResource(tmpComponent->getModel().m_id).lock());
+
+          ImGui::Text(String("Path: " + tmpModel->m_directory.string()).c_str());
+          if(ImGui::Button("Change")) {
+            //Create a new texture
+            giEngineSDK::FILE tmpFile(FileDialogs::openFileDialog(m_windowHandle, FileDialogs::m_fileFiltersModels));
+            if (!tmpFile.m_path.empty()) {
+              ResourceRef tmpRef = RM.resourceFromFile(tmpFile);
+              auto tmpStaticMesh = dynamic_pointer_cast<StaticMesh>(tmpActor->getComponent(COMPONENT_TYPE::kStaticMesh));
+              tmpStaticMesh->setNewModel(tmpRef);
+            }
+
+          }
+         
+        }
+        else {
+          if(ImGui::Button("Add")) {
+            //Create a new texture
+            giEngineSDK::FILE tmpFile(FileDialogs::openFileDialog(m_windowHandle, FileDialogs::m_fileFiltersModels));
+            if(!tmpFile.m_path.empty()) {
+              ResourceRef tmpRef = RM.resourceFromFile(tmpFile);
+              tmpStaticMesh->setNewModel(tmpRef);
+            }
+          }
+        }
       }
+      
     }
     ImGui::Separator();
     //Materials
@@ -153,10 +185,13 @@ Details::render() {
     }
     ImGui::Separator();
     if(ImGui::Button("Add")) {
-      ImGui::OpenPopup("Adding component");
+      SharedPtr<StaticMesh> tmpComponent = make_shared<StaticMesh>();
+      tmpActor->addComponent(tmpComponent, COMPONENT_TYPE::kStaticMesh);
+      
+      /*ImGui::OpenPopup("Adding component");
       if(ImGui::BeginPopup("Adding component")) {
         
-      }
+      }*/
     }
 
   }
