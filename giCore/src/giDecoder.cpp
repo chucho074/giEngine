@@ -28,6 +28,8 @@
 #include "giTexture.h"
 #include "giBaseConfig.h"
 
+#include "giExporter.h"
+
 namespace giEngineSDK {
   
   void
@@ -41,6 +43,27 @@ namespace giEngineSDK {
               aiMesh* mesh, 
               const aiScene* scene, 
               bool saveMat);
+
+  void
+  processData(ModelInfo& inInfo, 
+              aiNode* node,
+              const aiScene* inScene) {
+    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
+      aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
+      inInfo.totalVertices += mesh->mNumVertices;
+      inInfo.totalFaces += mesh->mNumFaces;
+      for (uint32 j = 0; j < mesh->mNumFaces; ++j) {
+        aiFace face = mesh->mFaces[j];
+        inInfo.totalIndex += face.mNumIndices;
+      }
+    }
+    // then do the same for each of its children
+    for (uint32 i = 0; i < node->mNumChildren; i++) {
+      processData(inInfo, node->mChildren[i], inScene);
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////
 
   ResourceRef
   Decoder::decodeData(FILE& inFileData, 
@@ -77,11 +100,15 @@ namespace giEngineSDK {
       return tmpRef;
     }
 
+
+    if (EXTENSION_TYPE::E::kgiModel) {
+      
+    }
+
     //case EXTENSION_TYPE::E::kHLSL: {}
     
     //case EXTENSION_TYPE::E::kgiTEX2D: {}
     
-    //case EXTENSION_TYPE::E::kgiModel: {}
     
     //case EXTENSION_TYPE::E::kgiShader: {}
     return tmpRef;
@@ -90,12 +117,15 @@ namespace giEngineSDK {
   void 
   Decoder::decodeFile(FILE& inFileData) {
     if (EXTENSION_TYPE::kgiScene == inFileData.m_extension) {
-      Decoder::decodeGiScene(inFileData);
-
+      decodeGiScene(inFileData);
     }
 
     if (EXTENSION_TYPE::kgiProject == inFileData.m_extension) {
       decodeGiProject(inFileData);
+    }
+
+    if (EXTENSION_TYPE::kgiModel == inFileData.m_extension) {
+      
     }
   }
 
@@ -225,8 +255,11 @@ namespace giEngineSDK {
   SharedPtr<Resource>
   Decoder::decodeModel(FILE& inFileData, DECODER_FLAGS::E inFlags) {
     
+    auto& configs = g_engineConfigs();
+
     if(!fsys::exists(inFileData.m_path)) {
-      return SharedPtr<Resource>();
+      return SharedPtr<Resource>();  //TODO: Devolver un modelo default... cube?
+      g_logger().SetError(ERROR_TYPE::kModelLoading, "The model path doesn't exist");
     }
 
     Assimp::Importer importer;
@@ -260,6 +293,11 @@ namespace giEngineSDK {
       processNode(tmpModel, tmpScene->mRootNode, tmpScene);
     }
     
+    // Exports in the project path.
+    Exporter::ExportAsGiModel(configs.s_contentPath.string() 
+                               + "/" + inFileData.m_path.stem().string() + ".giModel",
+                              tmpModel);
+
     return tmpModel;
   }
 
@@ -317,25 +355,6 @@ namespace giEngineSDK {
         }
       }
 
-    }
-  }
-
-  void
-  processData(ModelInfo& inInfo, 
-              aiNode* node,
-              const aiScene* inScene) {
-    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
-      aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
-      inInfo.totalVertices += mesh->mNumVertices;
-      inInfo.totalFaces += mesh->mNumFaces;
-      for (uint32 j = 0; j < mesh->mNumFaces; ++j) {
-        aiFace face = mesh->mFaces[j];
-        inInfo.totalIndex += face.mNumIndices;
-      }
-    }
-    // then do the same for each of its children
-    for (uint32 i = 0; i < node->mNumChildren; i++) {
-      processData(inInfo, node->mChildren[i], inScene);
     }
   }
 
@@ -416,7 +435,53 @@ namespace giEngineSDK {
     return tmpInfo;
   }
 
-  //
+  bool
+  Decoder::importModel(FILE& inFile, DECODER_FLAGS::E inFlags) {
+    auto& configs = g_engineConfigs();
+
+    if(!fsys::exists(inFile.m_path)) {
+      return false;
+    }
+
+    Assimp::Importer importer;
+
+    importer.ReadFile(inFile.m_path.string(),
+                      aiProcessPreset_TargetRealtime_MaxQuality |
+                      aiProcess_TransformUVCoords |
+                      aiProcess_ConvertToLeftHanded |
+                      aiProcess_Triangulate);
+
+    const aiScene* tmpScene = importer.GetOrphanedScene();
+
+    if(!tmpScene
+       || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
+       || !tmpScene->mRootNode) {
+      g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
+      __debugbreak();
+      return false;
+    }
+
+    SharedPtr<Model> tmpModel = make_shared<Model>();
+
+    tmpModel->m_directory = inFile.m_path;
+
+    tmpModel->m_resourceType = RESOURCE_TYPE::kModel;
+
+    if(inFlags == DECODER_FLAGS::kNoMaterial) {
+      processNode(tmpModel, tmpScene->mRootNode, tmpScene, false);
+    }
+    else {
+      processNode(tmpModel, tmpScene->mRootNode, tmpScene);
+    }
+
+    // Exports in the project path.
+    Exporter::ExportAsGiModel(configs.s_contentPath.string()
+                              + "/" + inFile.m_path.stem().string() + ".giModel",
+                              tmpModel);
+    return true;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////
 
   String 
   getPathCorrectly(String inFile) {

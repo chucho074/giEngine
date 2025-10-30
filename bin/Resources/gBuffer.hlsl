@@ -80,7 +80,7 @@ PS_OUTPUT PS_GBUFFER(PS_INPUT inPS)
   //Normals & Roughness
   float3 normal = NormaTexture.Sample(SamplState, inPS.TexCoord).xyz;
   normal = (normal * 2.0f) - 1.0f;
-  normal = normalize(mul(normal, inPS.TBN).xyz);
+  //normal = normalize(mul(normal, inPS.TBN).xyz);
   output.Normal.xyz = normal;
   output.Normal.w = RoughTexture.Sample(SamplState, inPS.TexCoord).x;
   //output.Normal.w = 1;

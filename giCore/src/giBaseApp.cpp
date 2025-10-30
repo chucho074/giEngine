@@ -90,8 +90,60 @@ BaseApp::run() {
 }
 
 void 
+BaseApp::reloadDlls() {
+  
+  //Shut down the systems
+  BaseRenderer::shutDown();
+  GraphicsAPI::shutDown();
+  BaseInput::shutDown();
+
+  ConsoleOut << "Reloading the important dlls" << ConsoleLine;
+
+  //Get the window handle
+  WindowHandle handle = m_window.getSystemHandle();
+
+  //Start the inputManager
+  if(m_loaderInput.loadPlugin("giInput_d.dll")) {
+    auto createInputManager = reinterpret_cast<funCreateInputManager>(m_loaderInput.getProcedureByName("createInputManager"));
+
+    BaseInput::startUp();
+    BaseInput* input = createInputManager();
+    g_inputManager().setObject(input);
+    m_inputManager = &g_inputManager();
+    //Initialize the inputs.
+    m_inputManager->init(m_window.getSystemHandle());
+    m_inputManager->updateSize(m_width, m_height);
+  }
+
+  //Start the Graphics
+  if(m_loaderGAPI.loadPlugin("giDirectX_d.dll")) {
+    auto createGraphicsAPI = reinterpret_cast<funCreateGraphicsAPI>(m_loaderGAPI.getProcedureByName("createGraphicsAPI"));
+
+    GraphicsAPI::startUp();
+    GraphicsAPI* GAPI = createGraphicsAPI();
+    g_graphicsAPI().setObject(GAPI);
+    m_gapi = &g_graphicsAPI();
+    //Initialize the Graphics API
+    m_gapi->init(reinterpret_cast<void*>(handle));
+  }
+
+  //Start the Renderer
+  if(m_loaderRenderer.loadPlugin("giRenderer_d.dll")) {
+    auto createRenderer = reinterpret_cast<funCreateRenderer>(m_loaderRenderer.getProcedureByName("createRenderer"));
+
+    BaseRenderer::startUp();
+    BaseRenderer* renderer = createRenderer();
+    g_renderer().setObject(renderer);
+    m_renderer = &g_renderer();
+    m_renderer->create();
+  }
+}
+
+void 
 BaseApp::createWindow() {
   
+  auto& configs = g_engineConfigs();
+
   if (m_window.isOpen()) {
     return;
   }
@@ -100,11 +152,11 @@ BaseApp::createWindow() {
 
   m_window.create(VideoMode(m_width, m_height),
                   tmpTitle.c_str(),
-                  sf::Style::Default);
+                  EngineConfigs::s_decoratedWindow ? sf::Style::Default : sf::Style::None);
 
-  m_window.setPosition({ 0, 0 });
+  //TODO: Center the window in the screen + window size.
+  m_window.setPosition({ 100, 100 });
 
-  
 }
 
 void 
@@ -249,6 +301,7 @@ BaseApp::destroySystems() {
   m_window.close();
   BaseRenderer::shutDown();
   GraphicsAPI::shutDown();
+  BaseInput::shutDown();
   SceneGraph::shutDown();
   Time::shutDown();
   Logger::shutDown();

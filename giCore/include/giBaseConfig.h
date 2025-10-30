@@ -69,6 +69,7 @@ class GI_CORE_EXPORT EngineConfigs : public Module<EngineConfigs>
 
   //Editor Settings
   //static UUID s_lastScene;
+  static bool s_decoratedWindow;
   
   
   //Renderer Settings

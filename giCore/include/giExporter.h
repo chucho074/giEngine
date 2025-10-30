@@ -32,6 +32,9 @@ namespace giEngineSDK {
     static void
     ExportAsNewImage(Path inNewFilePath, Path inOldFilePath);
 
+    static void
+    ExportAsGiModel(Path inPath, SharedPtr<Model> inModel);
+
    private:
     
   };

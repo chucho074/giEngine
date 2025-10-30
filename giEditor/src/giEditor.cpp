@@ -72,10 +72,21 @@ Editor::render() {
   auto& configs = g_engineConfigs();
 
   //Imgui docking space for windows
-  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+  ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID);
 
   //The docking space ID.
   static ImGuiID dockspaceID = 0;
+
+  //Tile bar of the app
+  if (configs.s_decoratedWindow = false) {
+    float titleBarHeight = 60.0f;
+    
+
+
+    ImGui::SameLine();
+  }
+
+  
 
   //The main bar of the app
   ImGui::BeginMainMenuBar(); {
@@ -96,11 +107,16 @@ Editor::render() {
       if (ImGui::MenuItem("Import")) {
         renderImport();
       }
-      if (ImGui::MenuItem("Export")) {}
+      if (ImGui::MenuItem("Export")) {
+        
+      }
 
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit")) {
+      if (ImGui::MenuItem("Reload dlls")) {
+        reloadDLLs = true;
+      }
       if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
       if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}
       ImGui::Separator();
@@ -317,9 +333,7 @@ Editor::renderPerformanceWindow() {
   ImGui::Begin("Performance", tmpValue, ImGuiWindowFlags_NoScrollbar 
                                         | ImGuiWindowFlags_NoCollapse);
 
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f 
-              / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
   ImGui::Text("Render Time: %.5f", g_renderer().m_renderTimer.getTime());
 
@@ -464,10 +478,10 @@ Editor::renderProjectCreationSelection() {
     
 
     //Save & save as
-  //Verify if the project is created.
-  //If the project is created, search for the scene with a same name in the folder.
-  //If the project is not created & there is no saving path, create the project file and
-  //present the save dialog for the actual scene.
+    //Verify if the project is created.
+    //If the project is created, search for the scene with a same name in the folder.
+    //If the project is not created & there is no saving path, create the project file and
+    //present the save dialog for the actual scene.
 
     //Set as a modal in the engine.
     ImGui::EndPopup();
@@ -481,6 +495,7 @@ Editor::renderImport() {
   //Sends the data to the decoder to decode the file to import and save the data into the
   //project path.
   
+  auto& RM = g_resourceManager();
 
   
   //Create a folder for models, materials, textures is a good idea?

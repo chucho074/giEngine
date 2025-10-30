@@ -61,6 +61,15 @@ namespace giEngineSDK {
     init();
 
     /**
+     * @brief    Function to create a resource from a file.
+     * @param    inFile        The file to read.
+     * @param    inFlags       The flags to use for the decoder.
+     * @return   Returns the reference of the resource created by reading the file.
+     */
+    void
+    importModel(FILE& inFile, DECODER_FLAGS::E inFlags = DECODER_FLAGS::kNoFlags);
+
+    /**
      * @brief    Function to read a file and create a resource.
      * @param    inFile        The file to read.
      * @return   Returns the reference of the resource created by reading the file.

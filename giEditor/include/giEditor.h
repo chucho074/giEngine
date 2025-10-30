@@ -12,6 +12,8 @@
 #pragma once
 #include <giResourceManager.h>
 #include <giFile.h>
+
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "giImGui.h"
 #include "giContentBrowser.h"
 #include "giHierarchy.h"
@@ -118,43 +120,44 @@ class Editor
   void 
   saveFileDilog();
 
+  bool reloadDLLs = false;
 
  private:
    
-   SharedPtr<UI> m_ui;
+  SharedPtr<UI> m_ui;
 
-   SharedPtr<ContentBrowser> m_contentBrowser;
+  SharedPtr<ContentBrowser> m_contentBrowser;
 
-   SharedPtr<Hierarchy> m_hierarchy;
+  SharedPtr<Hierarchy> m_hierarchy;
 
-   SharedPtr<Details> m_details;
+  SharedPtr<Details> m_details;
 
-   void * m_windowHandle = nullptr;
+  void * m_windowHandle = nullptr;
 
-   bool m_touchingImGui = false;
+  bool m_touchingImGui = false;
 
-   void* m_windowsHandle = nullptr;
+  void* m_windowsHandle = nullptr;
 
-   bool m_startOmniverse = false;
+  bool m_startOmniverse = false;
 
-   bool m_isRunningOmniverse = false;
+  bool m_isRunningOmniverse = false;
 
 
-   //Bools for rendering the diferent windows.
+  //Bools for rendering the diferent windows.
 
-   bool m_renderPerformance = true;
+  bool m_renderPerformance = true;
 
-   bool m_renderAbout = false;
+  bool m_renderAbout = false;
 
-   bool m_renderCamera = true;
+  bool m_renderCamera = true;
 
-   //The window for creation/selection of projects.
-   bool m_renderProjectSelection = true;
+  //The window for creation/selection of projects.
+  bool m_renderProjectSelection = true;
 
-   //To change
-   Path m_savingPath;
+  //To change
+  Path m_savingPath;
 
-   int32 m_Subdiv = 0;
+  int32 m_Subdiv = 0;
 
-   bool m_askAnaconda = true;
+  bool m_askAnaconda = true;
 };

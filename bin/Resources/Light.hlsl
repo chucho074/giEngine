@@ -95,7 +95,7 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
   //Normals
   float4 normal = NormTexture.Sample(SamplState, Input.TexCoord);
   float roughness = normal.w;
-  normal.w = 0.0f;
+  normal.w = 1.0f;
   //Albedo
   float4 albedo = DiffTexture.Sample(SamplState, Input.TexCoord);
   albedo.xyz = pow(albedo.xyz,  gamma).xyz;
@@ -119,11 +119,11 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
   
   float3 H = normalize(viewDir + LightDir);
   float E = 0.001f; 
-  float NdH = max(E, dot(normal, H));
+  float NdH = max(E, dot(normal.xyz, H));
   float HdL = saturate(dot(H, LightDir));
   float HdV = saturate(dot(H, viewDir));
 
-  float3 Reflect = normalize(reflect(-viewDir, normal));
+  float3 Reflect = normalize(reflect(-viewDir, normal.xyz));
   
   float D = ndf_GGX(NdH, roughness);
   float3 F = fresnelSchlick(specular, HdL);
@@ -147,6 +147,7 @@ float4 ps_main(PS_INPUT Input) : SV_TARGET0
   float lastDepth = shadowTexCoord.z;
   shadow = lastDepth + 0.1 > depth ? 0.0f : 1.0f;
 
+  return normal;
   //return float4(viewLightDir.xyz, 1.0f);
   //return float4(pow(albedo.xyz * DiffuseLightIntensity + (emissive.xyz * EmissiveIntensitivy0), 1.0f/gamma), 1) * ao;
   //return float4(pow(((albedo.xyz * NdL * LightIntensity0) + (specu)) /** ao*/, 1.0f/gamma), 1);

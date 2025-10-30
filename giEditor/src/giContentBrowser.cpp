@@ -71,8 +71,7 @@ ContentBrowser::render() {
                     {ImGui::GetContentRegionAvail().x * 0.15f, 
                      ImGui::GetContentRegionAvail().y - (ImGui::GetFontSize()*1.8f)},
                     false, 
-                    ImGuiWindowFlags_HorizontalScrollbar
-                    | ImGuiWindowFlags_AlwaysAutoResize);
+                    ImGuiChildFlags_None);
   if(ImGui::BeginTable("Left Table", 1, ImGuiTableFlags_ScrollY)) {
     ImGui::TableNextColumn();
     int32 tmpTreeCount = 0;
@@ -124,7 +123,7 @@ ContentBrowser::render() {
   ImGui::SameLine();
 
   SharedPtr<Texture>tmpLArrrow = static_pointer_cast<Texture>(RM.getResource(RM.m_leftArrow.m_id).lock());
-  if(ImGui::ImageButton(tmpLArrrow->m_texture->getApiTexture(),
+  if(ImGui::ImageButton("Image", tmpLArrrow->m_texture->getApiTexture(),
                         {18, 18})) {
     m_currentDirectory = m_currentDirectory.parent_path();
   }
@@ -191,7 +190,7 @@ ContentBrowser::render() {
           }
           //Shows the data if its sets any image
           if(tmpTexture) {
-            if(ImGui::ImageButton(tmpTexture->m_texture->getApiTexture(),
+            if(ImGui::ImageButton("Image2", tmpTexture->m_texture->getApiTexture(),
                {tmpThumbnailSize, tmpThumbnailSize})) {
               //Enter to the folder
               m_currentDirectory = m_workingDirectory;

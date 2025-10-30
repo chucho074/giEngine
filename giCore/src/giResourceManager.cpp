@@ -61,6 +61,13 @@ namespace giEngineSDK {
 
   }
 
+  void
+  ResourceManager::importModel(FILE& inFile, DECODER_FLAGS::E inFlags) {
+    // Check if the file exists
+    Decoder::importModel(inFile, inFlags);
+    return;
+  }
+
   ResourceRef
   ResourceManager::resourceFromFile(FILE& inFile, 
                                     DECODER_FLAGS::E inFlags) {
@@ -70,6 +77,8 @@ namespace giEngineSDK {
 
     //Creates the References of the Resource.
     ResourceRef tmpRef = Decoder::decodeData(inFile, inFlags);
+
+
     
     //Return the reference.
     return tmpRef;

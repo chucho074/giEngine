@@ -187,4 +187,27 @@ namespace giEngineSDK {
     //Unload Data
     stbi_image_free(tmpImg);
   }
+
+  void 
+  Exporter::ExportAsGiModel(Path inPath, SharedPtr<Model> inModel) {
+    ofstream outBin(inPath.string(), std::ios::binary);
+    if (!outBin.is_open()) {
+      g_logger().SetError(ERROR_TYPE::kEncodingFile, 
+                          "Failed to export a model as a bin file");
+      __debugbreak();
+      return;
+    }
+    // Write the model data to the binary file
+    for(auto& iterMesh : inModel->m_meshes) {
+      int32 vertexListSize = iterMesh->m_vertexVector.size();
+      outBin.write(reinterpret_cast<const char*>(&vertexListSize), sizeof(int32));
+      outBin.write(reinterpret_cast<const char*>(&iterMesh->m_vertexVector[0]), sizeof(SimpleVertex) * vertexListSize);
+      int32 faceListSize = iterMesh->m_facesList.size();
+      outBin.write(reinterpret_cast<const char*>(&faceListSize), sizeof(uint32) * faceListSize);
+      outBin.write(reinterpret_cast<const char*>(&iterMesh->m_facesList[0]), sizeof(uint32) * faceListSize);
+    }
+    outBin.close();
+    ConsoleOut << "Model exported as a binary file: " << inPath.string() << ConsoleLine;
+  }
+
 }

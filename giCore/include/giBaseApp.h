@@ -58,7 +58,7 @@ class GI_CORE_EXPORT BaseApp
    * @brief    Virtual Method in charge of creating a virtual method.
    */
   virtual void 
-  onCreate() {};
+  onCreate() = 0;
 
   /**
    * @brief    Virtual Method in charge of destroying the settings and members.
@@ -98,6 +98,12 @@ class GI_CORE_EXPORT BaseApp
     GI_UNREFERENCED_PARAMETER(inW);
     GI_UNREFERENCED_PARAMETER(inH);
   };
+
+  /**
+   * @brief      Reloads the DLLs of the engine.
+   */
+  void
+  reloadDlls();
 
  private:
   /**

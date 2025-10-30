@@ -59,9 +59,12 @@ namespace giEngineSDK {
     static void
     readFile(FILE& inFile);
 
+    //
     static ModelInfo
     decodeGiData(FILE& inFile);
     
+    static bool
+    importModel(FILE& inFile, DECODER_FLAGS::E inFlags);
 
   private:
 
