@@ -52,8 +52,8 @@ DirectXApp::onCreate() {
   ResourceRef tmpModel;
   //FILE tmpFileModel("Resources/Models/BistroExt.obj");
   //FILE tmpFileModel("Resources/Models/R8_chico.obj");
-  //FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
-  FILE tmpFileModel("Resources/Models/Rex/Rex_mat.obj");
+  FILE tmpFileModel("Resources/Models/Vela2/Vela2.fbx");
+  //FILE tmpFileModel("Resources/Models/Rex/Rex_mat.obj");
   //FILE tmpFileModel("Resources/Models/Box_v2.fbx");
   //FILE tmpFileModel("Resources/Models/Sponza/Sponza.fbx");
   //FILE tmpFileModel("Resources/Models/sphere.obj");

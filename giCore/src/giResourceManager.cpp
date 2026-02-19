@@ -106,10 +106,13 @@ namespace giEngineSDK {
     tmpMaterialRef.m_type = RESOURCE_TYPE::kMaterial;
 
     //newMaterial->m_textures = inReferences;
-
-    m_loadedResources.insert({tmpMaterialRef.m_id, newMaterial});
-
-    return tmpMaterialRef;
+    if(newMaterial) {
+      m_loadedResources.insert({tmpMaterialRef.m_id, newMaterial});
+      return tmpMaterialRef;
+    }
+    else {
+      return ResourceRef();
+    }
   }
 
   Vector<StringView>
@@ -176,9 +179,14 @@ namespace giEngineSDK {
     }
     
     //Insert the model in the resources list
-    m_loadedResources.insert({tmpRef.m_id, tmpModel});
+    if(tmpModel) {
+      m_loadedResources.insert({tmpRef.m_id, tmpModel});
+      return tmpRef;
+    }
+    else {
+      return ResourceRef();
+    }
 
-    return tmpRef;
   }
 
   void

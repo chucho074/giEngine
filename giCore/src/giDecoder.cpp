@@ -79,11 +79,19 @@ namespace giEngineSDK {
       || EXTENSION_TYPE::E::kPNG == inFileData.m_extension
       || EXTENSION_TYPE::E::kTGA == inFileData.m_extension) {
 
-      RM.m_loadedResources.insert({tmpRef.m_id,
-                                   Decoder::decodeImage(inFileData, inFlags)});
+      auto tmpImg = Decoder::decodeImage(inFileData, inFlags);
 
-      tmpRef.m_type = RESOURCE_TYPE::kTexture;
-      return tmpRef;
+      if(tmpImg) {
+        RM.m_loadedResources.insert({tmpRef.m_id,
+                                     tmpImg});
+
+        tmpRef.m_type = RESOURCE_TYPE::kTexture;
+        return tmpRef;
+      }
+      else {
+        //Log Warning
+        return ResourceRef();
+      }
     }
 
         
@@ -92,12 +100,19 @@ namespace giEngineSDK {
       || EXTENSION_TYPE::E::k3DS == inFileData.m_extension
       || EXTENSION_TYPE::E::kOBJ == inFileData.m_extension) {
 
-      RM.m_loadedResources.insert({ tmpRef.m_id,
-                                   Decoder::decodeModel(inFileData, inFlags)});
+      auto tmpModel = Decoder::decodeModel(inFileData, inFlags);
+      if(tmpModel) {
+        RM.m_loadedResources.insert({tmpRef.m_id,
+                                     tmpModel});
 
-      tmpRef.m_type = RESOURCE_TYPE::kModel;
+        tmpRef.m_type = RESOURCE_TYPE::kModel;
 
-      return tmpRef;
+        return tmpRef;
+      }
+      else {
+        //Log Warning
+        return ResourceRef();
+      }
     }
 
 
@@ -294,9 +309,9 @@ namespace giEngineSDK {
     }
     
     // Exports in the project path.
-    Exporter::ExportAsGiModel(configs.s_contentPath.string() 
-                               + "/" + inFileData.m_path.stem().string() + ".giModel",
-                              tmpModel);
+    //Exporter::ExportAsGiModel(configs.s_contentPath.string() 
+    //                           + "/" + inFileData.m_path.stem().string() + ".giModel",
+    //                          tmpModel);
 
     return tmpModel;
   }

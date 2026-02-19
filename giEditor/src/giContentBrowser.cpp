@@ -149,6 +149,8 @@ ContentBrowser::render() {
         bool tmpIsDir = false;
         SharedPtr<Texture> tmpTexture;
 
+        //TODO: Verify if m_currentDirectory exists & if not, set a default path.
+
         for(auto& tmpIterator : fsys::directory_iterator(m_currentDirectory)) {
 
           const auto& tmpPath = tmpIterator.path();
@@ -290,22 +292,24 @@ void
 ContentBrowser::drawFolders(Path& inIter,
                             int32& inTreeCount, 
                             int32& inSelectedNode) {
-  for (auto& tmpIterator : fsys::directory_iterator(inIter)) {
-    Path tmpPath = tmpIterator.path();
-    String tmpName = tmpPath.stem().string();
-    if(tmpIterator.is_directory()) {
-      //ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-      bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)inTreeCount,
-                                         fsys::is_empty(tmpPath) ? m_treeEmpty : m_treeFolders,
-                                         tmpName.c_str());
+  if(fsys::exists(inIter)) {
+    for (auto& tmpIterator : fsys::directory_iterator(inIter)) {
+      Path tmpPath = tmpIterator.path();
+      String tmpName = tmpPath.stem().string();
+      if(tmpIterator.is_directory()) {
+        //ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)inTreeCount,
+                                           fsys::is_empty(tmpPath) ? m_treeEmpty : m_treeFolders,
+                                           tmpName.c_str());
 
-      inTreeCount++;
-      if(ImGui::IsItemClicked()) {
-        inSelectedNode = inTreeCount;
-      }
-      if(node_open && !fsys::is_empty(tmpPath)) {
-        drawFolders(tmpPath, inTreeCount, inSelectedNode);
-        ImGui::TreePop();
+        inTreeCount++;
+        if(ImGui::IsItemClicked()) {
+          inSelectedNode = inTreeCount;
+        }
+        if(node_open && !fsys::is_empty(tmpPath)) {
+          drawFolders(tmpPath, inTreeCount, inSelectedNode);
+          ImGui::TreePop();
+        }
       }
     }
   }
