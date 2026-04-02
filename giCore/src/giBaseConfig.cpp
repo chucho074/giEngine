@@ -39,7 +39,7 @@ String EngineConfigs::s_enviromentName = "dmodel";
 String EngineConfigs::s_existingStage = "";
 String EngineConfigs::s_destinationPath = "omniverse://localhost/Users/giProjects/";
 
-bool EngineConfigs::s_decoratedWindow = false;
+bool EngineConfigs::s_decoratedWindow = true;
 
 //Editor Settings
 

@@ -62,22 +62,41 @@ namespace giEngineSDK {
   void
   Encoder::encodeGiProject(FILE& inFileData) {
     auto& configs = g_engineConfigs();
+    //TODO: Validate if the file already exists before try to create it.
+    //TODO: Validate if is going to be a binary or YAML file before try to create it.
+
+    //YAML creation
     YAML::Emitter tmpOutput;
     tmpOutput << YAML::BeginMap;
+    //giProjectVersion
+    tmpOutput << YAML::Key << "giProjectVersion";
+    tmpOutput << YAML::Value << configs.s_giProjectVersion;
+    //Engine Version
+    tmpOutput << YAML::Key << "Engine Version";
+    tmpOutput << YAML::Value << configs.s_engineVersion;
+    //Project Name
     tmpOutput << YAML::Key << "Project Name";
     tmpOutput << YAML::Value << configs.s_projectName;
-
+    //Project version
+    tmpOutput << YAML::Key << "Project Version";
+    tmpOutput << YAML::Value << configs.s_projectVersion;
+    //Project Path
     tmpOutput << YAML::Key << "Project Path";
     tmpOutput << YAML::Value << configs.s_projectPath.string();
-
+    //Content Path
     tmpOutput << YAML::Key << "Content Path";
     tmpOutput << YAML::Value << configs.s_contentPath.string();
-
+    //Last Scene
+    tmpOutput << YAML::Key << "Last Scene";
+    tmpOutput << YAML::Value << configs.s_lastScene.string();
+    //Plugins
+    //Graphics API
     tmpOutput << YAML::Key << "Active Graphic API";
-    tmpOutput << YAML::Value << configs.s_activeGraphicApi;
-
+    tmpOutput << YAML::Value << configs.s_activeGraphicApi;   //TODO: Change to the settings/configs file
+    //Omniverse stage
     tmpOutput << YAML::Key << "Omniverse stage";
     tmpOutput << YAML::Value << configs.s_existingStage;
+
 
     tmpOutput << YAML::EndMap;
 

@@ -152,6 +152,9 @@ namespace giEngineSDK {
     auto& RM = g_resourceManager();
 
 
+    //TODO: Validate if the file exist before try to open it.
+    //TODO: Validate if the file is binary or text before try to open it.
+
     ifstream tmpStream(inFileData.m_path);
     std::stringstream tmpStr;
     tmpStr << tmpStream.rdbuf();
@@ -496,7 +499,7 @@ namespace giEngineSDK {
     return true;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////// ASSIMP
 
   String 
   getPathCorrectly(String inFile) {
